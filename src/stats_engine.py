@@ -103,6 +103,10 @@ class ProStatsFetcher:
                 logger.debug("No game today for %s", name)
                 result = empty_stats()
                 result["next_game"] = next_game
+                if next_game:
+                    result["stats_summary"] = f"Next: {next_game['display']}"
+                else:
+                    result["stats_summary"] = "No game scheduled"
                 return result
 
             result = self._extract_stats(player, player_id, game)
@@ -156,8 +160,8 @@ class ProStatsFetcher:
     def _find_next_game(self, player_id: int, team: str) -> Optional[dict]:
         """Find the next scheduled game for a player's team."""
         try:
-            # Look ahead up to 7 days
-            for days_ahead in range(1, 8):
+            # Look ahead up to 14 days (catches spring training start)
+            for days_ahead in range(1, 15):
                 future_date = self._today + timedelta(days=days_ahead)
                 future_str = future_date.strftime("%m/%d/%Y")
 
@@ -714,7 +718,8 @@ class ESPNScraper(BaseSchoolScraper):
     )
 
     def __init__(self):
-        self._scoreboard_cache: Optional[dict] = None
+        self._scoreboard_cache: dict[str, dict] = {}  # date_str -> scoreboard JSON
+        self._today = date.today()
 
     def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
         try:
@@ -731,46 +736,134 @@ class ESPNScraper(BaseSchoolScraper):
             player_stats = self._find_player(player_name, summary)
             if player_stats:
                 result.update(player_stats)
+            else:
+                # Game found but player not in boxscore — provide context-specific message
+                status = result.get("game_status", "")
+                if status == "Live":
+                    result["stats_summary"] = "In lineup — stats updating"
+                elif status == "Final":
+                    result["stats_summary"] = "Game final — stats pending"
+                # If Scheduled, _extract_game_context already set "Game at X:XX PM ET"
 
             return result
         except Exception:
             logger.info("ESPN fetch failed for %s @ %s", player_name, team)
             return None
 
+    # ----- next game lookup -----
+
+    def find_next_game(self, team: str) -> Optional[dict]:
+        """Search ESPN scoreboards for the team's next game (up to 3 days ahead)."""
+        team_lower = team.lower()
+        for days_ahead in range(1, 4):
+            future_date = self._today + timedelta(days=days_ahead)
+            date_str = future_date.strftime("%Y%m%d")
+            try:
+                scoreboard = self._get_scoreboard(date_str)
+                for event in scoreboard.get("events", []):
+                    for comp in event.get("competitions", []):
+                        for competitor in comp.get("competitors", []):
+                            team_info = competitor.get("team", {})
+                            names = [
+                                team_info.get("displayName", ""),
+                                team_info.get("shortDisplayName", ""),
+                                team_info.get("location", ""),
+                                team_info.get("name", ""),
+                            ]
+                            if any(team_lower == n.lower() for n in names) or \
+                               any(team_lower in n.lower() for n in names):
+                                # Determine opponent and home/away
+                                home_comp = away_comp = None
+                                for c in comp.get("competitors", []):
+                                    if c.get("homeAway") == "home":
+                                        home_comp = c
+                                    else:
+                                        away_comp = c
+
+                                home_name = home_comp.get("team", {}).get("shortDisplayName", "") if home_comp else ""
+                                away_name = away_comp.get("team", {}).get("shortDisplayName", "") if away_comp else ""
+
+                                # Check if this team is the home team
+                                is_home = False
+                                if home_comp:
+                                    home_names = [
+                                        home_comp.get("team", {}).get("displayName", ""),
+                                        home_comp.get("team", {}).get("location", ""),
+                                    ]
+                                    is_home = any(team_lower == n.lower() or team_lower in n.lower() for n in home_names)
+
+                                if is_home:
+                                    opponent = away_name
+                                    home_away = "vs"
+                                else:
+                                    opponent = home_name
+                                    home_away = "@"
+
+                                game_time = self._format_espn_time(comp.get("date", event.get("date", "")))
+                                display = f"{home_away} {opponent} — {future_date.strftime('%a %m/%d')}"
+                                if game_time:
+                                    display += f" {game_time}"
+
+                                return {
+                                    "date": future_date.strftime("%a %m/%d"),
+                                    "date_full": future_date.isoformat(),
+                                    "opponent": opponent,
+                                    "home_away": home_away,
+                                    "time": game_time,
+                                    "display": display,
+                                }
+            except Exception:
+                logger.debug("Error fetching ESPN scoreboard for %s", date_str)
+                continue
+        return None
+
     # ----- internal helpers -----
 
-    def _get_scoreboard(self) -> dict:
-        if self._scoreboard_cache is None:
-            resp = requests.get(self.SCOREBOARD_URL, timeout=15)
+    def _get_scoreboard(self, date_str: str = None) -> dict:
+        """Fetch ESPN scoreboard for a specific date (YYYYMMDD). Caches per date."""
+        if date_str is None:
+            date_str = self._today.strftime("%Y%m%d")
+        if date_str not in self._scoreboard_cache:
+            url = f"{self.SCOREBOARD_URL}?dates={date_str}&limit=200"
+            resp = requests.get(url, timeout=15)
             resp.raise_for_status()
-            self._scoreboard_cache = resp.json()
-        return self._scoreboard_cache
+            self._scoreboard_cache[date_str] = resp.json()
+        return self._scoreboard_cache[date_str]
 
     def _find_game(self, team: str) -> Optional[dict]:
         """Find today's game for the given team from the ESPN scoreboard."""
-        scoreboard = self._get_scoreboard()
+        today_str = self._today.strftime("%Y%m%d")
+        yesterday_str = (self._today - timedelta(days=1)).strftime("%Y%m%d")
         team_lower = team.lower()
 
-        # Two passes: exact match first, then substring fallback.
-        # This prevents "South Carolina" matching "South Carolina Upstate".
-        for exact in (True, False):
-            for event in scoreboard.get("events", []):
-                for comp in event.get("competitions", []):
-                    for competitor in comp.get("competitors", []):
-                        team_info = competitor.get("team", {})
-                        names = [
-                            team_info.get("displayName", ""),
-                            team_info.get("shortDisplayName", ""),
-                            team_info.get("location", ""),
-                            team_info.get("name", ""),
-                        ]
-                        if exact:
-                            matched = any(team_lower == n.lower() for n in names)
-                        else:
-                            matched = any(team_lower in n.lower() for n in names)
+        # Check today's scoreboard first, then yesterday's for late-night spillover
+        for sb_date in (today_str, yesterday_str):
+            scoreboard = self._get_scoreboard(sb_date)
+            # Two passes: exact match first, then substring fallback.
+            for exact in (True, False):
+                for event in scoreboard.get("events", []):
+                    for comp in event.get("competitions", []):
+                        # For yesterday's games, only include those still In Progress
+                        if sb_date == yesterday_str:
+                            status_desc = comp.get("status", {}).get("type", {}).get("description", "")
+                            if "Progress" not in status_desc:
+                                continue
 
-                        if matched:
-                            return self._build_game_info(event, comp)
+                        for competitor in comp.get("competitors", []):
+                            team_info = competitor.get("team", {})
+                            names = [
+                                team_info.get("displayName", ""),
+                                team_info.get("shortDisplayName", ""),
+                                team_info.get("location", ""),
+                                team_info.get("name", ""),
+                            ]
+                            if exact:
+                                matched = any(team_lower == n.lower() for n in names)
+                            else:
+                                matched = any(team_lower in n.lower() for n in names)
+
+                            if matched:
+                                return self._build_game_info(event, comp)
         return None
 
     def _build_game_info(self, event: dict, comp: dict) -> dict:
@@ -996,8 +1089,20 @@ class NCAAStatsFetcher:
                 )
                 continue
 
-        logger.info("No NCAA stats found for %s @ %s", name, team)
-        return empty_stats()
+        # No game today — try to find next game via ESPN
+        logger.info("No NCAA stats found for %s @ %s — checking next game", name, team)
+        result = empty_stats()
+        try:
+            next_game = self._espn.find_next_game(team)
+            if next_game:
+                result["next_game"] = next_game
+                result["stats_summary"] = f"Next: {next_game['display']}"
+            else:
+                result["stats_summary"] = "No game scheduled"
+        except Exception:
+            logger.debug("Next game lookup failed for %s", team)
+            result["stats_summary"] = "No game scheduled"
+        return result
 
 
 # =========================================================================

@@ -12,9 +12,11 @@ import json
 import logging
 import os
 import sys
+from datetime import date
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts
 from src.config import (
+    NCAA_GAME_LOG_PATH,
     OUTPUT_PATH,
     ROSTER_URL,
     WINDOW_7D_PATH,
@@ -51,6 +53,81 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     }
 
 
+def _store_ncaa_game_log(player: dict, stats: dict, game_logs: dict):
+    """
+    If an NCAA player has a Final game with actual stats, append to game_logs dict.
+    Deduplicates by date so repeated cron runs don't double-count.
+    """
+    if player.get("level") != "NCAA":
+        return
+    if stats.get("game_status") != "Final":
+        return
+    # Must have actual stats (not just game context)
+    if stats.get("at_bats", 0) == 0 and stats.get("ip", 0) == 0:
+        return
+
+    key = f"{player['player_name']}|{player['team']}"
+    today_str = date.today().isoformat()
+
+    if key not in game_logs:
+        game_logs[key] = []
+
+    # Deduplicate by date
+    if any(entry["date"] == today_str for entry in game_logs[key]):
+        return
+
+    # Build stats entry
+    entry_stats = {
+        "h": stats.get("hits", 0),
+        "ab": stats.get("at_bats", 0),
+        "hr": stats.get("home_runs", 0),
+        "rbi": stats.get("rbi", 0),
+        "r": stats.get("runs", 0),
+        "bb": stats.get("walks", 0),
+        "k": 0,
+        "sb": stats.get("stolen_bases", 0),
+        "hbp": 0,
+        "sf": 0,
+        "doubles": 0,
+        "triples": 0,
+    }
+
+    # Pitcher fields
+    if stats.get("is_pitcher_line"):
+        entry_stats.update({
+            "ip": str(stats.get("ip", 0)),
+            "earned_runs": stats.get("earned_runs", 0),
+            "er": stats.get("earned_runs", 0),
+            "strikeouts": stats.get("strikeouts", 0),
+            "k": stats.get("strikeouts", 0),
+            "walks_allowed": stats.get("walks_allowed", 0),
+            "bb": stats.get("walks_allowed", 0),
+            "hits_allowed": stats.get("hits_allowed", 0),
+        })
+
+    game_logs[key].append({"date": today_str, "stats": entry_stats})
+
+
+def _load_ncaa_game_logs() -> dict:
+    """Load existing NCAA game logs from disk."""
+    if os.path.exists(NCAA_GAME_LOG_PATH):
+        try:
+            with open(NCAA_GAME_LOG_PATH) as f:
+                return json.load(f)
+        except Exception:
+            logger.warning("Failed to load NCAA game logs, starting fresh")
+    return {}
+
+
+def _save_ncaa_game_logs(game_logs: dict):
+    """Persist NCAA game logs to disk."""
+    os.makedirs(os.path.dirname(NCAA_GAME_LOG_PATH), exist_ok=True)
+    with open(NCAA_GAME_LOG_PATH, "w") as f:
+        json.dump(game_logs, f, indent=2, ensure_ascii=False)
+    total_games = sum(len(v) for v in game_logs.values())
+    logger.info("Saved NCAA game logs: %d players, %d total game entries", len(game_logs), total_games)
+
+
 def run_live():
     """Full pipeline: fetch roster + recruits -> fetch stats -> grade -> alert -> write JSON."""
     logger.info("Starting live pulse run")
@@ -72,6 +149,7 @@ def run_live():
     fetcher = StatsFetcher()
     analyzer = PerformanceAnalyzer()
     pulse = []
+    ncaa_game_logs = _load_ncaa_game_logs()
 
     for player in all_players:
         name = player["player_name"]
@@ -81,6 +159,9 @@ def run_live():
             analysis = analyzer.analyze(player, stats)
             entry = build_pulse_entry(player, stats, analysis)
             pulse.append(entry)
+
+            # Accumulate NCAA game logs for window stats
+            _store_ncaa_game_log(player, stats, ncaa_game_logs)
 
             # Only send Slack alerts for clients, not recruits
             if is_client:
@@ -99,6 +180,7 @@ def run_live():
 
     # 3. Write output
     write_output(pulse)
+    _save_ncaa_game_logs(ncaa_game_logs)
 
 
 def run_mock():

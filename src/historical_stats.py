@@ -2,7 +2,7 @@
 SV Dugout Pulse — Historical Stats Aggregator
 
 Fetches and aggregates player statistics over time windows (7D/30D/Season).
-Handles both MLB (via API) and NCAA (via baseline snapshots).
+Handles both MLB (via API) and NCAA (via accumulated game logs from ESPN boxscores).
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ import statsapi
 
 from .config import (
     NCAA_BASELINES_PATH,
+    NCAA_GAME_LOG_PATH,
     WINDOW_7D_PATH,
     WINDOW_30D_PATH,
     WINDOW_SEASON_PATH,
@@ -470,6 +471,151 @@ class NCAABaselineManager:
 
 
 # =============================================================================
+# NCAA Game Log Accumulator
+# =============================================================================
+
+
+class NCAAGameLogAggregator:
+    """
+    Aggregate NCAA player stats from accumulated ESPN boxscore game logs.
+
+    Since no NCAA aggregate stats API exists, main.py appends per-game stats
+    to ncaa_game_log.json during each live run. This class reads those logs
+    and aggregates over a date window, identically to MLBHistoricalFetcher.
+
+    Game log format:
+        {"PlayerName|Team": [{"date": "2026-02-15", "stats": {h, ab, hr, ...}}, ...]}
+    """
+
+    def __init__(self, game_log_path: str = NCAA_GAME_LOG_PATH):
+        self.game_log_path = game_log_path
+        self._game_logs: dict = {}
+        self._load()
+
+    def _load(self):
+        if os.path.exists(self.game_log_path):
+            try:
+                with open(self.game_log_path) as f:
+                    self._game_logs = json.load(f)
+            except Exception:
+                logger.exception("Failed to load NCAA game logs")
+                self._game_logs = {}
+
+    @staticmethod
+    def _player_key(player_name: str, team: str) -> str:
+        return f"{player_name}|{team}"
+
+    def fetch_window(
+        self, player_name: str, team: str, position: str,
+        start_date: date, end_date: date
+    ) -> Optional[dict]:
+        """Aggregate game log stats within the given date window."""
+        key = self._player_key(player_name, team)
+        entries = self._game_logs.get(key, [])
+        if not entries:
+            return None
+
+        # Filter to date range
+        games_in_range = []
+        for entry in entries:
+            try:
+                game_date = datetime.strptime(entry["date"], "%Y-%m-%d").date()
+                if start_date <= game_date <= end_date:
+                    games_in_range.append(entry["stats"])
+            except (ValueError, KeyError):
+                continue
+
+        if not games_in_range:
+            return None
+
+        is_pitcher = position == "Pitcher"
+        if is_pitcher:
+            return self._aggregate_pitcher(games_in_range)
+        return self._aggregate_batter(games_in_range)
+
+    def _aggregate_batter(self, games: list[dict]) -> dict:
+        totals = {
+            "pa": 0, "ab": 0, "h": 0, "doubles": 0, "triples": 0,
+            "hr": 0, "rbi": 0, "r": 0, "bb": 0, "k": 0, "sb": 0,
+            "hbp": 0, "sf": 0,
+        }
+        for g in games:
+            totals["ab"] += int(g.get("ab", 0))
+            totals["h"] += int(g.get("h", 0))
+            totals["doubles"] += int(g.get("doubles", 0))
+            totals["triples"] += int(g.get("triples", 0))
+            totals["hr"] += int(g.get("hr", 0))
+            totals["rbi"] += int(g.get("rbi", 0))
+            totals["r"] += int(g.get("r", 0))
+            totals["bb"] += int(g.get("bb", 0))
+            totals["k"] += int(g.get("k", 0))
+            totals["sb"] += int(g.get("sb", 0))
+            totals["hbp"] += int(g.get("hbp", 0))
+            totals["sf"] += int(g.get("sf", 0))
+
+        totals["pa"] = totals["ab"] + totals["bb"] + totals["hbp"] + totals["sf"]
+        avg = totals["h"] / totals["ab"] if totals["ab"] > 0 else 0
+        obp = (
+            (totals["h"] + totals["bb"] + totals["hbp"]) / totals["pa"]
+            if totals["pa"] > 0 else 0
+        )
+        singles = totals["h"] - totals["doubles"] - totals["triples"] - totals["hr"]
+        tb = singles + (2 * totals["doubles"]) + (3 * totals["triples"]) + (4 * totals["hr"])
+        slg = tb / totals["ab"] if totals["ab"] > 0 else 0
+        ops = obp + slg
+
+        return {
+            "games_played": len(games),
+            "pa": totals["pa"], "ab": totals["ab"], "h": totals["h"],
+            "hr": totals["hr"], "rbi": totals["rbi"], "r": totals["r"],
+            "bb": totals["bb"], "k": totals["k"], "sb": totals["sb"],
+            "avg": avg, "obp": obp, "slg": slg, "ops": ops,
+            "is_pitcher": False,
+        }
+
+    def _aggregate_pitcher(self, games: list[dict]) -> dict:
+        totals = {"outs": 0, "h": 0, "er": 0, "bb": 0, "k": 0, "hr": 0}
+        for g in games:
+            ip_str = str(g.get("ip", "0"))
+            totals["outs"] += self._ip_to_outs(ip_str)
+            totals["h"] += int(g.get("h", g.get("hits_allowed", 0)))
+            totals["er"] += int(g.get("er", g.get("earned_runs", 0)))
+            totals["bb"] += int(g.get("bb", g.get("walks_allowed", 0)))
+            totals["k"] += int(g.get("k", g.get("strikeouts", 0)))
+            totals["hr"] += int(g.get("hr", 0))
+
+        ip = totals["outs"] / 3
+        era = (totals["er"] * 9) / ip if ip > 0 else 0
+        whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
+
+        return {
+            "games_played": len(games),
+            "ip": ip,
+            "ip_display": self._outs_to_ip_display(totals["outs"]),
+            "h": totals["h"], "er": totals["er"], "bb": totals["bb"],
+            "k": totals["k"], "hr": totals["hr"],
+            "era": era, "whip": whip,
+            "is_pitcher": True,
+        }
+
+    @staticmethod
+    def _ip_to_outs(ip_str: str) -> int:
+        try:
+            if "." in ip_str:
+                parts = ip_str.split(".")
+                return (int(parts[0]) * 3) + int(parts[1])
+            return int(float(ip_str)) * 3
+        except (ValueError, IndexError):
+            return 0
+
+    @staticmethod
+    def _outs_to_ip_display(outs: int) -> str:
+        innings = outs // 3
+        partial = outs % 3
+        return f"{innings}.{partial}" if partial else str(innings)
+
+
+# =============================================================================
 # Window Stats Aggregator
 # =============================================================================
 
@@ -485,7 +631,7 @@ class WindowStatsAggregator:
 
     def __init__(self):
         self.mlb_fetcher = MLBHistoricalFetcher()
-        self.ncaa_manager = NCAABaselineManager()
+        self.ncaa_game_log = NCAAGameLogAggregator()
         self._today = date.today()
         # Approximate season start (adjust based on actual season)
         self._season_start = date(self._today.year, 2, 1)  # Feb 1
@@ -536,11 +682,8 @@ class WindowStatsAggregator:
         if level == "Pro":
             stats = self.mlb_fetcher.fetch_window(name, team, position, start_date, end_date)
         elif level == "NCAA":
-            # NCAA uses baseline deltas
-            days_ago = (end_date - start_date).days
-            baseline = self.ncaa_manager.get_baseline(name, team, days_ago)
-            current = self.ncaa_manager.get_baseline(name, team, 0)
-            stats = self.ncaa_manager.calculate_window_stats(current, baseline, position) if current else None
+            # NCAA uses accumulated game logs from ESPN boxscores
+            stats = self.ncaa_game_log.fetch_window(name, team, position, start_date, end_date)
         else:
             stats = None
 

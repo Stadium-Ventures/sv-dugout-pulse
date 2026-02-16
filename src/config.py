@@ -80,6 +80,7 @@ WINDOW_7D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_7
 WINDOW_30D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_30d.json")
 WINDOW_SEASON_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_season.json")
 NCAA_BASELINES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_baselines.json")
+NCAA_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_game_log.json")
 
 # ---------------------------------------------------------------------------
 # Logging

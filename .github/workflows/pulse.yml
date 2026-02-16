@@ -55,8 +55,9 @@ jobs:
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          set -eo pipefail
           python -c "import src.config; import src.roster_manager; import src.stats_engine; import src.performance_analyzer; import src.alerts; print('All imports OK')"
-          python main.py
+          python main.py 2>&1 | tee /dev/stderr
 
       - name: Run historical aggregation
         if: steps.mode.outputs.mode == 'historical' || steps.mode.outputs.mode == 'both'
@@ -64,8 +65,9 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
         run: |
+          set -eo pipefail
           python -c "import src.historical_stats; import src.window_grader; print('Historical imports OK')"
-          python main.py --historical
+          python main.py --historical 2>&1 | tee /dev/stderr
 
       - name: Commit updated pulse data
         run: |
