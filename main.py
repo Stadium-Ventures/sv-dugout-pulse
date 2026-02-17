@@ -215,6 +215,61 @@ def _supplement_yesterday(pulse: list):
     logger.info("Yesterday pulse: %d total entries", len(existing))
 
 
+def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: PerformanceAnalyzer):
+    """Dedicated yesterday-only fetch pass.
+
+    Runs scrapers with yesterday_only=True so they skip today's games and
+    only return Final results from yesterday.  Merges results into the
+    yesterday_pulse.json file.
+    """
+    # Load existing yesterday entries (from rotation)
+    existing = []
+    if os.path.exists(YESTERDAY_PULSE_PATH):
+        try:
+            with open(YESTERDAY_PULSE_PATH) as f:
+                data = json.load(f)
+            existing = data.get("players", [])
+        except Exception:
+            pass
+
+    existing_names = {p["player_name"] for p in existing}
+    added = 0
+
+    for player in all_players:
+        name = player["player_name"]
+        if name in existing_names:
+            continue  # already have yesterday data for this player
+
+        try:
+            stats = fetcher.fetch_yesterday(player)
+            if stats is None or stats.get("game_status") != "Final":
+                continue
+
+            stats["is_yesterday"] = True
+            analysis = analyzer.analyze(player, stats)
+            entry = build_pulse_entry(player, stats, analysis)
+            existing.append(entry)
+            existing_names.add(name)
+            added += 1
+            logger.info("Yesterday pass: %s | %s", name, stats.get("stats_summary", "—"))
+        except Exception:
+            logger.debug("Yesterday pass failed for %s — skipping", name)
+            continue
+
+    if not existing:
+        return
+
+    envelope = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_date": (date.today() - timedelta(days=1)).isoformat(),
+        "players": existing,
+    }
+    os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
+    with open(YESTERDAY_PULSE_PATH, "w") as f:
+        json.dump(envelope, f, indent=2, ensure_ascii=False)
+    logger.info("Yesterday pulse: %d total entries (%d added this pass)", len(existing), added)
+
+
 def run_live():
     """Full pipeline: fetch roster + recruits -> fetch stats -> grade -> alert -> write JSON."""
     logger.info("Starting live pulse run")
@@ -271,6 +326,11 @@ def run_live():
     # 3. Write output
     write_output(pulse)
     _supplement_yesterday(pulse)
+
+    # 4. Dedicated yesterday-only pass — catches players whose yesterday
+    #    games were shadowed by today's games in the main fetch
+    _fetch_yesterday_pass(all_players, fetcher, analyzer)
+
     _save_ncaa_game_logs(ncaa_game_logs)
 
 

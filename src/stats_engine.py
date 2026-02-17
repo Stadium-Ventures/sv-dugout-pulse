@@ -502,10 +502,12 @@ class BaseSchoolScraper(abc.ABC):
     """
 
     @abc.abstractmethod
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         """
         Return a stats dict for the player, or None if unavailable.
         Must not raise — catch and log internally.
+
+        If *yesterday_only* is True, only return Final results from yesterday.
         """
         ...
 
@@ -522,7 +524,7 @@ class SidearmScraper(BaseSchoolScraper):
         # Add URLs as you discover them
     }
 
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         base_url = self.SIDEARM_URLS.get(team)
         if not base_url:
             logger.debug("No Sidearm URL configured for %s", team)
@@ -555,7 +557,7 @@ class StatBroadcastScraper(BaseSchoolScraper):
         # Add URLs as you discover them
     }
 
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         url = self.STATBROADCAST_URLS.get(team)
         if not url:
             logger.debug("No StatBroadcast URL configured for %s", team)
@@ -582,7 +584,7 @@ class NCAAOrgScraper(BaseSchoolScraper):
 
     BASE_URL = "https://stats.ncaa.org"
 
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
             # stats.ncaa.org requires team lookup -> schedule -> boxscore
             # This is a structural placeholder — the site changes frequently
@@ -613,11 +615,11 @@ class NCAAComScraper(BaseSchoolScraper):
         self._boxscore_cache: dict[str, dict] = {}
         self._today = date.today()
 
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
-            game_info = self._find_game(team)
+            game_info = self._find_game(team, yesterday_only=yesterday_only)
             if not game_info:
-                logger.debug("No NCAA.com game found for %s", team)
+                logger.debug("No NCAA.com game found for %s (yesterday_only=%s)", team, yesterday_only)
                 return None
 
             game_id = game_info["game_id"]
@@ -656,13 +658,22 @@ class NCAAComScraper(BaseSchoolScraper):
             self._scoreboard_cache[date_str] = resp.json().get("games", [])
         return self._scoreboard_cache[date_str]
 
-    def _find_game(self, team: str) -> Optional[dict]:
-        """Search today then yesterday for a game matching the team."""
+    def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        """Search today then yesterday for a game matching the team.
+
+        If *yesterday_only* is True, skip today and only return Final games
+        from yesterday's scoreboard.
+        """
         team_lower = team.lower()
         today = self._today
         yesterday = today - timedelta(days=1)
 
-        for check_date in (today, yesterday):
+        if yesterday_only:
+            dates_to_check = (yesterday,)
+        else:
+            dates_to_check = (today, yesterday)
+
+        for check_date in dates_to_check:
             date_str = check_date.strftime("%Y/%m/%d")
             games = self._get_scoreboard(date_str)
             is_yesterday = (check_date == yesterday)
@@ -671,6 +682,16 @@ class NCAAComScraper(BaseSchoolScraper):
             for exact in (True, False):
                 for g in games:
                     game = g.get("game", {})
+                    state = game.get("gameState", "")
+
+                    if yesterday_only:
+                        # Only accept final games
+                        if state != "final":
+                            continue
+                    elif is_yesterday and state not in ("final", "live"):
+                        # Normal mode: for yesterday, only include live or final
+                        continue
+
                     for side in ("home", "away"):
                         side_info = game.get(side, {})
                         names_dict = side_info.get("names", {})
@@ -683,11 +704,6 @@ class NCAAComScraper(BaseSchoolScraper):
                             seo,
                         ]
                         if self._team_matches(team_lower, names, exact):
-                            # For yesterday, only include live or final
-                            state = game.get("gameState", "")
-                            if is_yesterday and state not in ("final", "live"):
-                                continue
-
                             opp_side = "away" if side == "home" else "home"
                             opp_name = game.get(opp_side, {}).get("names", {}).get("short", "?")
                             home_name = game.get("home", {}).get("names", {}).get("short", "?")
@@ -962,7 +978,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         "Wake Forest": "wake-forest-demon-deacons",
     }
 
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         slug = self.TEAM_SLUGS.get(team)
         if not slug:
             logger.debug("No D1Baseball slug configured for %s", team)
@@ -975,14 +991,14 @@ class D1BaseballScraper(BaseSchoolScraper):
             resp = requests.get(schedule_url, timeout=15)
             resp.raise_for_status()
 
-            return self._find_player_box_score(player_name, team, resp.text)
+            return self._find_player_box_score(player_name, team, resp.text, yesterday_only=yesterday_only)
 
         except Exception:
             logger.info("D1Baseball fetch failed for %s @ %s", player_name, team)
             return None
 
     def _find_player_box_score(
-        self, player_name: str, team: str, html: str
+        self, player_name: str, team: str, html: str, yesterday_only: bool = False
     ) -> Optional[dict]:
         """
         Parse D1Baseball schedule page to find today's (or yesterday's) game,
@@ -995,12 +1011,18 @@ class D1BaseballScraper(BaseSchoolScraper):
             # D1Baseball uses format: /games/{game-slug}/boxscore
             today = date.today()
             yesterday = today - timedelta(days=1)
-            date_needles = [
-                today.strftime("%m/%d"),
-                today.strftime("%b %d"),
-                yesterday.strftime("%m/%d"),
-                yesterday.strftime("%b %d"),
-            ]
+            if yesterday_only:
+                date_needles = [
+                    yesterday.strftime("%m/%d"),
+                    yesterday.strftime("%b %d"),
+                ]
+            else:
+                date_needles = [
+                    today.strftime("%m/%d"),
+                    today.strftime("%b %d"),
+                    yesterday.strftime("%m/%d"),
+                    yesterday.strftime("%b %d"),
+                ]
 
             game_links = soup.select('a[href*="/boxscore"]')
 
@@ -1172,11 +1194,11 @@ class ESPNScraper(BaseSchoolScraper):
         self._summary_cache: dict[str, dict] = {}  # game_id -> summary JSON
         self._today = date.today()
 
-    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
-            game_info = self._find_game(team)
+            game_info = self._find_game(team, yesterday_only=yesterday_only)
             if not game_info:
-                logger.debug("No ESPN game found today for %s", team)
+                logger.debug("No ESPN game found for %s (yesterday_only=%s)", team, yesterday_only)
                 return None
 
             summary = self._get_summary(game_info["id"])
@@ -1291,22 +1313,37 @@ class ESPNScraper(BaseSchoolScraper):
             self._scoreboard_cache[date_str] = resp.json()
         return self._scoreboard_cache[date_str]
 
-    def _find_game(self, team: str) -> Optional[dict]:
-        """Find today's game for the given team from the ESPN scoreboard."""
+    def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        """Find a game for the given team from the ESPN scoreboard.
+
+        If *yesterday_only* is True, skip today entirely and only return
+        Final games from yesterday's scoreboard.
+        """
         today_str = self._today.strftime("%Y%m%d")
         yesterday_str = (self._today - timedelta(days=1)).strftime("%Y%m%d")
         team_lower = team.lower()
 
-        # Check today's scoreboard first, then yesterday's for late-night spillover
-        for sb_date in (today_str, yesterday_str):
+        if yesterday_only:
+            dates_to_check = (yesterday_str,)
+        else:
+            # Check today's scoreboard first, then yesterday's for late-night spillover
+            dates_to_check = (today_str, yesterday_str)
+
+        for sb_date in dates_to_check:
             scoreboard = self._get_scoreboard(sb_date)
+            is_yesterday = (sb_date == yesterday_str)
             # Two passes: exact match first, then substring fallback.
             for exact in (True, False):
                 for event in scoreboard.get("events", []):
                     for comp in event.get("competitions", []):
-                        # For yesterday's games, include In Progress and Final
-                        if sb_date == yesterday_str:
-                            status_desc = comp.get("status", {}).get("type", {}).get("description", "")
+                        status_desc = comp.get("status", {}).get("type", {}).get("description", "")
+
+                        if yesterday_only:
+                            # Only accept Final games
+                            if "Final" not in status_desc:
+                                continue
+                        elif is_yesterday:
+                            # Normal mode: for yesterday's games, include In Progress and Final
                             if "Progress" not in status_desc and "Final" not in status_desc:
                                 continue
 
@@ -1320,7 +1357,7 @@ class ESPNScraper(BaseSchoolScraper):
                             ]
                             if self._team_matches(team_lower, names, exact):
                                 info = self._build_game_info(event, comp)
-                                info["is_yesterday"] = (sb_date == yesterday_str)
+                                info["is_yesterday"] = is_yesterday
                                 return info
         return None
 
@@ -1562,33 +1599,24 @@ class NCAAStatsFetcher:
             or result.get("is_pitcher_line", False)
         )
 
-    def fetch(self, player: dict) -> dict:
-        """
-        Attempt to fetch stats for an NCAA player using a waterfall approach.
+    def _waterfall_fetch(self, player: dict, yesterday_only: bool = False) -> Optional[dict]:
+        """Internal waterfall: try each scraper in order.
 
-        Tries each scraper in order.  If a scraper returns game context but
-        no actual player stats (e.g. ESPN found the game but couldn't match
-        the player in the boxscore), the context is saved and the next
-        scraper is tried.  The first scraper that returns real stats wins.
-        If none do, the best game-context result is returned so the UI can
-        still show the game score / status.
+        Returns the best result found, or None if no game was found at all.
         """
         name = player.get("player_name", "")
         team = player.get("team", "")
 
         scrapers = self._school_scrapers.get(team, self._default_chain)
-
-        best_context = None  # game context from first scraper that found a game
+        best_context = None
 
         for scraper in scrapers:
             try:
-                result = scraper.fetch_stats(name, team)
+                result = scraper.fetch_stats(name, team, yesterday_only=yesterday_only)
                 if result is None:
                     continue
 
-                # If this result has actual player stats, we're done
                 if self._has_player_stats(result):
-                    # Merge game context from earlier scraper if this one lacks it
                     if best_context and not result.get("game_context"):
                         result["game_context"] = best_context.get("game_context", "")
                         result["game_status"] = best_context.get("game_status", result.get("game_status", "N/A"))
@@ -1596,7 +1624,6 @@ class NCAAStatsFetcher:
                         result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
                     return result
 
-                # No player stats — save game context and keep trying
                 if best_context is None:
                     best_context = result
                     logger.info(
@@ -1612,11 +1639,25 @@ class NCAAStatsFetcher:
                 )
                 continue
 
-        # If any scraper found the game but none found player stats, return
-        # that context so the UI still shows the game info
-        if best_context:
-            logger.info("Waterfall exhausted for %s @ %s — returning game context only", name, team)
-            return best_context
+        return best_context  # may be None
+
+    def fetch(self, player: dict) -> dict:
+        """
+        Attempt to fetch stats for an NCAA player using a waterfall approach.
+
+        Tries each scraper in order.  If a scraper returns game context but
+        no actual player stats (e.g. ESPN found the game but couldn't match
+        the player in the boxscore), the context is saved and the next
+        scraper is tried.  The first scraper that returns real stats wins.
+        If none do, the best game-context result is returned so the UI can
+        still show the game score / status.
+        """
+        name = player.get("player_name", "")
+        team = player.get("team", "")
+
+        result = self._waterfall_fetch(player)
+        if result:
+            return result
 
         # No game today — try to find next game via ESPN
         logger.info("No NCAA game found for %s @ %s — checking next game", name, team)
@@ -1632,6 +1673,13 @@ class NCAAStatsFetcher:
             logger.debug("Next game lookup failed for %s", team)
             result["stats_summary"] = "No game scheduled"
         return result
+
+    def fetch_yesterday(self, player: dict) -> Optional[dict]:
+        """Fetch only yesterday's Final stats for an NCAA player.
+
+        Returns the result dict or None if no yesterday game was found.
+        """
+        return self._waterfall_fetch(player, yesterday_only=True)
 
 
 # =========================================================================
@@ -1657,3 +1705,14 @@ class StatsFetcher:
         else:
             logger.warning("Unknown level '%s' for %s", level, player.get("player_name"))
             return empty_stats()
+
+    def fetch_yesterday(self, player: dict) -> Optional[dict]:
+        """Fetch only yesterday's Final stats for a player.
+
+        Returns the result dict or None if no yesterday game was found.
+        Pro players don't need this (MLB API returns date-specific data).
+        """
+        level = player.get("level", "")
+        if level == "NCAA":
+            return self.ncaa.fetch_yesterday(player)
+        return None
