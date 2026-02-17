@@ -2,7 +2,9 @@
 SV Dugout Pulse — Historical Stats Aggregator
 
 Fetches and aggregates player statistics over time windows (7D/30D/Season).
-Handles both MLB (via API) and NCAA (via accumulated game logs from ESPN boxscores).
+- MLB: game logs via statsapi
+- NCAA Season: cumulative stats fetched directly from NCAA.com (via proxy API)
+- NCAA 7D/30D: daily cumulative snapshots → delta calculation
 """
 
 from __future__ import annotations
@@ -10,9 +12,11 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time
 from datetime import date, datetime, timedelta
 from typing import Optional
 
+import requests
 import statsapi
 
 from .config import (
@@ -620,6 +624,576 @@ class NCAAGameLogAggregator:
 
 
 # =============================================================================
+# NCAA Game Log Backfiller (fetch boxscores for missed games)
+# =============================================================================
+
+
+class NCAAGameLogBackfiller:
+    """
+    Backfill NCAA game logs by fetching boxscores for all recent games
+    involving roster teams.  Uses the NCAA.com proxy API (same as
+    NCAAComScraper) to find games and extract per-player stats.
+
+    This ensures that players who appeared in ANY game get season data,
+    even if the cron didn't catch the game while live.
+    """
+
+    SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/baseball/d1"
+    BOXSCORE_URL = "https://ncaa-api.henrygd.me/game"
+    SEASON_START = date(2026, 2, 14)  # Opening day 2026
+
+    def __init__(self, game_log_path: str = NCAA_GAME_LOG_PATH):
+        self.game_log_path = game_log_path
+        self._scoreboard_cache: dict[str, list] = {}
+        self._boxscore_cache: dict[str, dict] = {}
+
+    def backfill(self, players: list[dict]):
+        """
+        Backfill game logs for all NCAA roster players.
+        Iterates over dates since season start, finds games for our teams,
+        fetches boxscores, and stores per-game stats.
+        """
+        # Load existing game logs
+        game_logs = {}
+        if os.path.exists(self.game_log_path):
+            try:
+                with open(self.game_log_path) as f:
+                    game_logs = json.load(f)
+            except Exception:
+                game_logs = {}
+
+        # Build lookup: team -> list of (player_name, position)
+        ncaa_players = [p for p in players if p.get("level") == "NCAA"]
+        teams: dict[str, list[dict]] = {}
+        for p in ncaa_players:
+            team = p.get("team", "")
+            if team not in teams:
+                teams[team] = []
+            teams[team].append(p)
+
+        if not teams:
+            return
+
+        logger.info("Backfilling NCAA game logs for %d teams since %s", len(teams), self.SEASON_START)
+
+        today = date.today()
+        check_date = self.SEASON_START
+        games_found = 0
+        entries_added = 0
+
+        while check_date <= today:
+            date_str = check_date.strftime("%Y/%m/%d")
+            games = self._get_scoreboard(date_str)
+
+            for g in games:
+                game = g.get("game", {})
+                state = game.get("gameState", "")
+                if state != "final":
+                    continue
+
+                game_id = game.get("gameID")
+                if not game_id:
+                    continue
+
+                game_date = check_date.isoformat()
+
+                # Check if any of our teams are in this game
+                for side in ("home", "away"):
+                    side_info = game.get(side, {})
+                    names_dict = side_info.get("names", {})
+                    short_name = names_dict.get("short", "")
+                    full_name = names_dict.get("full", "")
+                    seo_name = names_dict.get("seo", "").replace("-", " ")
+
+                    # Match against our team names
+                    matched_team = self._match_team(
+                        [short_name, full_name, seo_name], teams
+                    )
+                    if not matched_team:
+                        continue
+
+                    games_found += 1
+                    is_home = (side == "home")
+
+                    # Fetch boxscore and extract stats for our players
+                    box = self._get_boxscore(game_id)
+                    if not box:
+                        continue
+
+                    for player in teams[matched_team]:
+                        name = player["player_name"]
+                        key = f"{name}|{matched_team}"
+                        position = player.get("position", "") or player.get("tags", {}).get("position", "Hitter")
+
+                        # Skip if we already have this game
+                        if key in game_logs:
+                            if any(e["date"] == game_date for e in game_logs[key]):
+                                continue
+
+                        stats = self._extract_player_stats(name, is_home, box)
+                        if stats is None:
+                            continue
+
+                        if key not in game_logs:
+                            game_logs[key] = []
+
+                        game_logs[key].append({"date": game_date, "stats": stats})
+                        entries_added += 1
+
+            check_date += timedelta(days=1)
+            time.sleep(0.1)
+
+        # Save
+        if entries_added > 0:
+            os.makedirs(os.path.dirname(self.game_log_path), exist_ok=True)
+            with open(self.game_log_path, "w") as f:
+                json.dump(game_logs, f, indent=2, ensure_ascii=False)
+
+        total_games = sum(len(v) for v in game_logs.values())
+        logger.info(
+            "Game log backfill: checked %d team-games, added %d entries. "
+            "Total: %d players, %d game entries.",
+            games_found, entries_added, len(game_logs), total_games,
+        )
+
+    def _get_scoreboard(self, date_str: str) -> list:
+        if date_str in self._scoreboard_cache:
+            return self._scoreboard_cache[date_str]
+        try:
+            resp = requests.get(f"{self.SCOREBOARD_URL}/{date_str}", timeout=15)
+            resp.raise_for_status()
+            data = resp.json().get("games", [])
+            self._scoreboard_cache[date_str] = data
+            return data
+        except Exception:
+            logger.debug("Scoreboard fetch failed for %s", date_str)
+            self._scoreboard_cache[date_str] = []
+            return []
+
+    def _get_boxscore(self, game_id) -> Optional[dict]:
+        gid = str(game_id)
+        if gid in self._boxscore_cache:
+            return self._boxscore_cache[gid]
+        try:
+            resp = requests.get(f"{self.BOXSCORE_URL}/{game_id}/boxscore", timeout=15)
+            if resp.status_code != 200:
+                self._boxscore_cache[gid] = None
+                return None
+            data = resp.json()
+            self._boxscore_cache[gid] = data
+            return data
+        except Exception:
+            self._boxscore_cache[gid] = None
+            return None
+
+    # Map roster team names to NCAA scoreboard short names
+    TEAM_ALIAS = {
+        "SE Louisiana": "Southeastern La.",
+        "USF": "South Fla.",
+        "Ohio State": "Ohio St.",
+        "Southern Miss": "Southern Miss.",
+        "Saint Josephs": "Saint Joseph's",
+        "Florida State": "Florida St.",
+        "Michigan State": "Michigan St.",
+        "Mississippi State": "Mississippi St.",
+        "Arizona State": "Arizona St.",
+        "Sacramento State": "Sacramento St.",
+        "Kennesaw State": "Kennesaw St.",
+    }
+
+    @classmethod
+    def _match_team(cls, api_names: list[str], our_teams: dict[str, list]) -> Optional[str]:
+        """Match NCAA API team names against our roster team names."""
+        for api_name in api_names:
+            api_lower = api_name.lower()
+            for our_team in our_teams:
+                our_lower = our_team.lower()
+                # Exact match
+                if api_lower == our_lower:
+                    return our_team
+                # Alias match
+                alias = cls.TEAM_ALIAS.get(our_team, "")
+                if alias and alias.lower() == api_lower:
+                    return our_team
+                # Common "State" -> "St." pattern
+                if our_lower.replace(" state", " st.") == api_lower:
+                    return our_team
+        return None
+
+    def _extract_player_stats(self, player_name: str, is_home: bool, box: dict) -> Optional[dict]:
+        """Extract per-game stats for a specific player from a boxscore."""
+        name_parts = player_name.split()
+        player_last = name_parts[-1].lower()
+        player_first = name_parts[0].lower() if len(name_parts) > 1 else ""
+
+        teams = box.get("teams", [])
+        target_team_id = None
+        for t in teams:
+            if t.get("isHome") == is_home:
+                target_team_id = t.get("teamId")
+                break
+
+        for tb in box.get("teamBoxscore", []):
+            if target_team_id and str(tb.get("teamId")) != str(target_team_id):
+                continue
+
+            candidates = []
+            for ps in tb.get("playerStats", []):
+                last = ps.get("lastName", "").lower()
+                if last == player_last or (len(player_last) > 2 and last.startswith(player_last[:3])):
+                    candidates.append(ps)
+
+            if len(candidates) > 1 and player_first:
+                narrowed = [ps for ps in candidates if ps.get("firstName", "").lower().startswith(player_first[:3])]
+                if narrowed:
+                    candidates = narrowed
+
+            for ps in candidates:
+                pitcher = ps.get("pitcherStats")
+                batter = ps.get("batterStats")
+                if pitcher:
+                    ip_str = pitcher.get("inningsPitched", "0") or "0"
+                    return {
+                        "h": 0, "ab": 0, "hr": 0, "rbi": 0, "r": 0,
+                        "bb": 0, "k": 0, "sb": 0, "hbp": 0, "sf": 0,
+                        "doubles": 0, "triples": 0,
+                        "ip": ip_str,
+                        "earned_runs": int(pitcher.get("earnedRunsAllowed", 0) or 0),
+                        "er": int(pitcher.get("earnedRunsAllowed", 0) or 0),
+                        "strikeouts": int(pitcher.get("strikeouts", 0) or 0),
+                        "walks_allowed": int(pitcher.get("walksAllowed", 0) or 0),
+                        "hits_allowed": int(pitcher.get("hitsAllowed", 0) or 0),
+                    }
+                if batter:
+                    ab = int(batter.get("atBats", 0) or 0)
+                    bb = int(batter.get("walks", 0) or 0)
+                    if ab == 0 and bb == 0:
+                        return None  # didn't play
+                    return {
+                        "h": int(batter.get("hits", 0) or 0),
+                        "ab": ab,
+                        "hr": 0,
+                        "rbi": int(batter.get("runsBattedIn", 0) or 0),
+                        "r": int(batter.get("runsScored", 0) or 0),
+                        "bb": bb,
+                        "k": int(batter.get("strikeouts", 0) or 0),
+                        "sb": 0, "hbp": 0, "sf": 0,
+                        "doubles": 0, "triples": 0,
+                    }
+        return None
+
+
+# =============================================================================
+# NCAA Cumulative Season Stats (via NCAA.com API proxy)
+# =============================================================================
+
+
+class NCAASeasonStatsFetcher:
+    """
+    Fetch cumulative season statistics for NCAA players from NCAA.com
+    via the ncaa-api.henrygd.me proxy.
+
+    Pulls leaderboard pages for key stat categories and merges them into
+    per-player cumulative stat dicts.  Results are cached for the lifetime
+    of this object (one run).
+    """
+
+    BASE_URL = "https://ncaa-api.henrygd.me/stats/baseball/d1/current/individual"
+
+    # Stat endpoints to fetch.  Key = stat_id, value = list of fields to extract.
+    HITTER_ENDPOINTS = {
+        200: {"fields": ["G", "AB", "H"], "rate": "BA", "rate_key": "avg_raw"},  # BA — widest coverage
+        504: {"fields": ["BB", "HBP", "SF", "SH"], "rate": "PCT", "rate_key": "obp"},  # OBP
+        321: {"fields": ["TB"], "rate": "SLG PCT", "rate_key": "slg"},  # SLG
+        201: {"fields": ["HR"]},    # HR per game (has total HR)
+        339: {"fields": ["K"]},     # Toughest to K (has total K)
+        487: {"fields": ["RBI"]},   # RBI total
+        485: {"fields": ["R"]},     # Runs total
+        492: {"fields": ["SB"]},    # SB total
+    }
+
+    PITCHER_ENDPOINTS = {
+        205: {"fields": ["App", "IP", "R", "ER"], "rate": "ERA", "rate_key": "era"},  # ERA
+        596: {"fields": ["BB", "HA"], "rate": "WHIP", "rate_key": "whip"},             # WHIP
+        207: {"fields": ["SO"]},   # K/9 (has SO total)
+    }
+
+    # Map roster team names → NCAA API abbreviated names where they differ.
+    TEAM_NAME_MAP = {
+        "Florida State": "Florida St.",
+        "Ohio State": "Ohio St.",
+        "USF": "South Fla.",
+        "Southern Miss": "Southern Miss.",
+        "SE Louisiana": "Southeastern La.",
+        "Sacramento State": "Sacramento St.",
+        "Saint Josephs": "Saint Joseph's",
+        "Coastal Carolina": "Coastal Caro.",
+        "NC State": "NC State",
+        "Mississippi State": "Mississippi St.",
+        "Michigan State": "Michigan St.",
+        "Arizona State": "Arizona St.",
+        "Oregon State": "Oregon St.",
+        "Fresno State": "Fresno St.",
+        "Penn State": "Penn St.",
+        "Iowa State": "Iowa St.",
+        "Kennesaw State": "Kennesaw St.",
+        "Wichita State": "Wichita St.",
+    }
+
+    def __init__(self):
+        self._hitter_cache: dict[str, dict] = {}   # "Name|Team" → stats
+        self._pitcher_cache: dict[str, dict] = {}
+        self._fetched = False
+
+    def _ncaa_team_name(self, roster_team: str) -> str:
+        """Convert roster team name to NCAA API team name."""
+        return self.TEAM_NAME_MAP.get(roster_team, roster_team)
+
+    @staticmethod
+    def _player_key(name: str, team: str) -> str:
+        return f"{name}|{team}"
+
+    def _ensure_fetched(self):
+        """Fetch all stat leaderboards once per run."""
+        if self._fetched:
+            return
+        self._fetched = True
+
+        logger.info("Fetching NCAA cumulative season stats from NCAA API...")
+
+        # Fetch hitter stats
+        for stat_id, meta in self.HITTER_ENDPOINTS.items():
+            self._fetch_stat_pages(stat_id, meta, is_pitcher=False)
+
+        # Fetch pitcher stats
+        for stat_id, meta in self.PITCHER_ENDPOINTS.items():
+            self._fetch_stat_pages(stat_id, meta, is_pitcher=True)
+
+        logger.info(
+            "NCAA season stats loaded: %d hitters, %d pitchers",
+            len(self._hitter_cache), len(self._pitcher_cache),
+        )
+
+    def _fetch_stat_pages(self, stat_id: int, meta: dict, is_pitcher: bool):
+        """Fetch all pages for a single stat endpoint and merge into cache."""
+        cache = self._pitcher_cache if is_pitcher else self._hitter_cache
+        page = 1
+        while True:
+            url = f"{self.BASE_URL}/{stat_id}?page={page}"
+            try:
+                resp = requests.get(url, timeout=15)
+                resp.raise_for_status()
+                data = resp.json()
+            except Exception:
+                logger.warning("NCAA API fetch failed: %s page %d", stat_id, page)
+                break
+
+            entries = data.get("data", [])
+            if not entries:
+                break
+
+            for entry in entries:
+                name = entry.get("Name", "")
+                team = entry.get("Team", "")
+                if not name or not team:
+                    continue
+
+                key = self._player_key(name, team)
+                if key not in cache:
+                    cache[key] = {"_name": name, "_team": team}
+
+                # Extract fields
+                for field in meta.get("fields", []):
+                    if field in entry:
+                        cache[key][field.lower()] = self._parse_num(entry[field])
+
+                # Extract rate stat
+                rate_field = meta.get("rate")
+                rate_key = meta.get("rate_key")
+                if rate_field and rate_key and rate_field in entry:
+                    cache[key][rate_key] = self._parse_float(entry[rate_field])
+
+            total_pages = data.get("pages", 1)
+            if page >= total_pages:
+                break
+            page += 1
+            time.sleep(0.15)  # be polite to the API
+
+    def get_season_stats(self, player_name: str, team: str, position: str) -> Optional[dict]:
+        """
+        Return cumulative season stats for an NCAA player.
+        Returns a dict compatible with the window stats format, or None.
+        """
+        self._ensure_fetched()
+
+        ncaa_team = self._ncaa_team_name(team)
+        is_pitcher = position == "Pitcher"
+        cache = self._pitcher_cache if is_pitcher else self._hitter_cache
+
+        # Try exact name + team match
+        key = self._player_key(player_name, ncaa_team)
+        stats = cache.get(key)
+
+        # Fallback: try last-name match within the same team
+        if stats is None:
+            last_name = player_name.split()[-1].lower()
+            for k, v in cache.items():
+                if v["_team"] == ncaa_team and v["_name"].split()[-1].lower() == last_name:
+                    stats = v
+                    break
+
+        if stats is None:
+            return None
+
+        if is_pitcher:
+            return self._build_pitcher_result(stats)
+        return self._build_hitter_result(stats)
+
+    def get_cumulative_snapshot(self, player_name: str, team: str, position: str) -> Optional[dict]:
+        """
+        Return raw cumulative stats for baseline storage (7D/30D delta calculation).
+        These are the raw counting stats, not formatted for display.
+        """
+        self._ensure_fetched()
+
+        ncaa_team = self._ncaa_team_name(team)
+        is_pitcher = position == "Pitcher"
+        cache = self._pitcher_cache if is_pitcher else self._hitter_cache
+
+        key = self._player_key(player_name, ncaa_team)
+        stats = cache.get(key)
+
+        if stats is None:
+            last_name = player_name.split()[-1].lower()
+            for k, v in cache.items():
+                if v["_team"] == ncaa_team and v["_name"].split()[-1].lower() == last_name:
+                    stats = v
+                    break
+
+        if stats is None:
+            return None
+
+        # Return raw counting stats for snapshot storage
+        if is_pitcher:
+            return {
+                "ip": stats.get("ip", 0),
+                "er": stats.get("er", 0),
+                "h": stats.get("ha", 0),
+                "bb": stats.get("bb", 0),
+                "k": stats.get("so", 0),
+            }
+        return {
+            "ab": stats.get("ab", 0),
+            "h": stats.get("h", 0),
+            "bb": stats.get("bb", 0),
+            "hbp": stats.get("hbp", 0),
+            "sf": stats.get("sf", 0),
+            "hr": stats.get("hr", 0),
+            "tb": stats.get("tb", 0),
+            "k": stats.get("k", 0),
+            "rbi": stats.get("rbi", 0),
+            "r": stats.get("r", 0),
+            "sb": stats.get("sb", 0),
+            "pa": stats.get("ab", 0) + stats.get("bb", 0) + stats.get("hbp", 0) + stats.get("sf", 0),
+        }
+
+    def _build_hitter_result(self, stats: dict) -> dict:
+        """Build a formatted hitter stats dict from cached NCAA data."""
+        ab = stats.get("ab", 0)
+        h = stats.get("h", 0)
+        bb = stats.get("bb", 0)
+        hbp = stats.get("hbp", 0)
+        sf = stats.get("sf", 0)
+        hr = stats.get("hr", 0)
+        tb = stats.get("tb", 0)
+        pa = ab + bb + hbp + sf
+
+        avg = stats.get("avg_raw", h / ab if ab > 0 else 0)
+        obp = stats.get("obp", (h + bb + hbp) / pa if pa > 0 else 0)
+        slg = stats.get("slg", tb / ab if ab > 0 else 0)
+        ops = obp + slg
+
+        return {
+            "games_played": stats.get("g", 0),
+            "pa": pa,
+            "ab": ab,
+            "h": h,
+            "hr": hr,
+            "rbi": stats.get("rbi", 0),
+            "r": stats.get("r", 0),
+            "bb": bb,
+            "k": stats.get("k", 0),
+            "sb": stats.get("sb", 0),
+            "avg": avg,
+            "obp": obp,
+            "slg": slg,
+            "ops": ops,
+            "is_pitcher": False,
+        }
+
+    def _build_pitcher_result(self, stats: dict) -> dict:
+        """Build a formatted pitcher stats dict from cached NCAA data."""
+        ip_raw = stats.get("ip", 0)
+        # IP from NCAA API is a display string like "10.0" — convert to float
+        ip_outs = self._ip_to_outs(str(ip_raw))
+        ip = ip_outs / 3
+
+        er = stats.get("er", 0)
+        bb = stats.get("bb", 0)
+        ha = stats.get("ha", 0)
+        so = stats.get("so", 0)
+
+        era = stats.get("era", (er * 9) / ip if ip > 0 else 0)
+        whip = stats.get("whip", (bb + ha) / ip if ip > 0 else 0)
+
+        return {
+            "games_played": stats.get("app", 0),
+            "ip": ip,
+            "ip_display": self._outs_to_ip_display(ip_outs),
+            "h": ha,
+            "er": er,
+            "bb": bb,
+            "k": so,
+            "era": era,
+            "whip": whip,
+            "is_pitcher": True,
+        }
+
+    @staticmethod
+    def _parse_num(val) -> int:
+        """Parse a string like '4' or '0' to int, tolerating non-numeric."""
+        try:
+            return int(val)
+        except (ValueError, TypeError):
+            return 0
+
+    @staticmethod
+    def _parse_float(val) -> float:
+        """Parse a string like '.667' or '1.23' to float."""
+        try:
+            s = str(val).lstrip(".")
+            return float(f"0.{s}") if val and str(val).startswith(".") else float(val)
+        except (ValueError, TypeError):
+            return 0.0
+
+    @staticmethod
+    def _ip_to_outs(ip_str: str) -> int:
+        try:
+            if "." in str(ip_str):
+                parts = str(ip_str).split(".")
+                return (int(parts[0]) * 3) + int(parts[1])
+            return int(float(ip_str)) * 3
+        except (ValueError, IndexError):
+            return 0
+
+    @staticmethod
+    def _outs_to_ip_display(outs: int) -> str:
+        innings = outs // 3
+        partial = outs % 3
+        return f"{innings}.{partial}" if partial else str(innings)
+
+
+# =============================================================================
 # Window Stats Aggregator
 # =============================================================================
 
@@ -636,6 +1210,9 @@ class WindowStatsAggregator:
     def __init__(self):
         self.mlb_fetcher = MLBHistoricalFetcher()
         self.ncaa_game_log = NCAAGameLogAggregator()
+        self.ncaa_season = NCAASeasonStatsFetcher()
+        self.ncaa_baselines = NCAABaselineManager()
+        self.ncaa_backfiller = NCAAGameLogBackfiller()
         self._today = date.today()
         # Approximate season start (adjust based on actual season)
         self._season_start = date(self._today.year, 2, 1)  # Feb 1
@@ -649,12 +1226,26 @@ class WindowStatsAggregator:
         """
         results = {"7d": [], "30d": [], "season": []}
 
+        # Backfill game logs from boxscores for any games we missed
+        self.ncaa_backfiller.backfill(players)
+        # Reload game logs after backfill
+        self.ncaa_game_log = NCAAGameLogAggregator()
+
+        # Store today's cumulative snapshots for NCAA players (enables 7D/30D deltas)
+        for player in players:
+            if player.get("level") == "NCAA":
+                name = player.get("player_name", "")
+                team = player.get("team", "")
+                position = player.get("position", "") or player.get("tags", {}).get("position", "Hitter")
+                snapshot = self.ncaa_season.get_cumulative_snapshot(name, team, position)
+                if snapshot:
+                    self.ncaa_baselines.store_baseline(name, team, snapshot, self._today)
+
         for player in players:
             name = player.get("player_name", "")
             team = player.get("team", "")
             level = player.get("level", "")
             position = player.get("position", "") or player.get("tags", {}).get("position", "Hitter")
-            is_client = player.get("is_client", True)
 
             logger.info("Processing windows for %s (%s)", name, level)
 
@@ -682,12 +1273,11 @@ class WindowStatsAggregator:
         position = player.get("position", "") or player.get("tags", {}).get("position", "Hitter")
         is_client = player.get("is_client", True)
 
-        # Fetch stats based on level
+        # Fetch stats based on level and window
         if level == "Pro":
             stats = self.mlb_fetcher.fetch_window(name, team, position, start_date, end_date)
         elif level == "NCAA":
-            # NCAA uses accumulated game logs from ESPN boxscores
-            stats = self.ncaa_game_log.fetch_window(name, team, position, start_date, end_date)
+            stats = self._fetch_ncaa_window(name, team, position, window)
         else:
             stats = None
 
@@ -717,6 +1307,37 @@ class WindowStatsAggregator:
             "games_played": stats.get("games_played", 0),
             "last_updated": datetime.utcnow().isoformat() + "Z",
         }
+
+    def _fetch_ncaa_window(self, name: str, team: str, position: str, window: str) -> Optional[dict]:
+        """Fetch NCAA stats for a given window.
+
+        - Season: try NCAA API leaderboards first, fall back to game logs.
+        - 7D/30D: compute delta from daily cumulative snapshots (baselines),
+          fall back to game-log accumulation.
+        """
+        if window == "season":
+            # Try NCAA API leaderboards first (widest stats)
+            result = self.ncaa_season.get_season_stats(name, team, position)
+            if result and result.get("games_played", 0) > 0:
+                return result
+            # Fall back to aggregated game logs
+            return self.ncaa_game_log.fetch_window(
+                name, team, position, self._season_start, self._today
+            )
+
+        # For 7D/30D: try baseline delta first, fall back to game logs
+        current = self.ncaa_season.get_cumulative_snapshot(name, team, position)
+        if current is not None:
+            days = 7 if window == "7d" else 30
+            baseline = self.ncaa_baselines.get_baseline(name, team, days)
+            delta = self.ncaa_baselines.calculate_window_stats(current, baseline, position)
+            if delta is not None:
+                return delta
+
+        # Fall back to accumulated game logs
+        days = 7 if window == "7d" else 30
+        start = self._today - timedelta(days=days)
+        return self.ncaa_game_log.fetch_window(name, team, position, start, self._today)
 
     def _empty_stats(self, position: str) -> dict:
         """Return empty stats dict for sparse data."""

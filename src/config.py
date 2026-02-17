@@ -67,8 +67,8 @@ WINDOW_PITCHER_SOLID_ERA = 3.50
 WINDOW_PITCHER_QUIET_ERA = 5.00
 
 # Minimum sample sizes (show "--" if below threshold)
-WINDOW_MIN_PA = {"7d": 5, "30d": 20, "season": 50}
-WINDOW_MIN_IP = {"7d": 2.0, "30d": 8.0, "season": 20.0}
+WINDOW_MIN_PA = {"7d": 3, "30d": 10, "season": 3}
+WINDOW_MIN_IP = {"7d": 1.0, "30d": 4.0, "season": 1.0}
 
 # ---------------------------------------------------------------------------
 # Output
