@@ -32,6 +32,7 @@ def empty_stats() -> dict:
         "game_status": "N/A",
         "game_time": None,  # Scheduled start time (e.g., "7:05 PM ET")
         "next_game": None,  # Dict with date, opponent, time for next game
+        "game_date": None,  # ISO date string of the actual game (YYYY-MM-DD)
         "is_pitcher_line": False,
         # Raw fields used by the analyzer
         "hits": 0,
@@ -94,7 +95,7 @@ class ProStatsFetcher:
                 logger.info("Player not found in MLB lookup: %s", name)
                 return empty_stats()
 
-            game = self._find_todays_game(player_id)
+            game = self._find_todays_game(player_id, team)
 
             # Always try to get next game info
             next_game = self._find_next_game(player_id, team)
@@ -134,13 +135,28 @@ class ProStatsFetcher:
             logger.exception("MLB player lookup failed for %s", name)
         return None
 
-    def _find_todays_game(self, player_id: int) -> Optional[dict]:
+    def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
         """Find a game today that involves the player's team."""
         try:
             schedule = statsapi.schedule(date=self._today_str)
-            # Check if the player is in any of today's games
-            for game in schedule:
-                boxscore = statsapi.boxscore_data(game["game_id"])
+
+            # Pre-filter schedule by team name to avoid unnecessary boxscore calls
+            team_lower = team.lower() if team else ""
+            if team_lower:
+                candidates = [
+                    g for g in schedule
+                    if team_lower in g.get("home_name", "").lower()
+                    or team_lower in g.get("away_name", "").lower()
+                ]
+            else:
+                candidates = schedule
+
+            for game in candidates:
+                try:
+                    boxscore = statsapi.boxscore_data(game["game_id"])
+                except Exception:
+                    logger.debug("Boxscore fetch failed for game %s — skipping", game["game_id"])
+                    continue
                 # Search both teams' rosters
                 for side in ("home", "away"):
                     players = boxscore.get(f"{side}Batters", []) + boxscore.get(
@@ -232,6 +248,10 @@ class ProStatsFetcher:
         # Get scheduled game time
         game_time = self._format_game_time(sched.get("game_datetime", ""))
         result["game_time"] = game_time
+
+        # Populate game_date
+        game_datetime = sched.get("game_datetime", "")
+        result["game_date"] = game_datetime[:10] if game_datetime and len(game_datetime) >= 10 else self._today.isoformat()
 
         if status == "Final":
             result["game_context"] = f"{away} {away_score}, {home} {home_score} | Final"
@@ -843,10 +863,10 @@ class ESPNScraper(BaseSchoolScraper):
             for exact in (True, False):
                 for event in scoreboard.get("events", []):
                     for comp in event.get("competitions", []):
-                        # For yesterday's games, only include those still In Progress
+                        # For yesterday's games, include In Progress and Final
                         if sb_date == yesterday_str:
                             status_desc = comp.get("status", {}).get("type", {}).get("description", "")
-                            if "Progress" not in status_desc:
+                            if "Progress" not in status_desc and "Final" not in status_desc:
                                 continue
 
                         for competitor in comp.get("competitors", []):
@@ -863,7 +883,9 @@ class ESPNScraper(BaseSchoolScraper):
                                 matched = any(team_lower in n.lower() for n in names)
 
                             if matched:
-                                return self._build_game_info(event, comp)
+                                info = self._build_game_info(event, comp)
+                                info["is_yesterday"] = (sb_date == yesterday_str)
+                                return info
         return None
 
     def _build_game_info(self, event: dict, comp: dict) -> dict:
@@ -929,6 +951,14 @@ class ESPNScraper(BaseSchoolScraper):
         else:
             result["game_context"] = f"{away} vs {home} | {status}"
             result["game_status"] = status
+
+        # Populate game_date from ESPN event datetime
+        event_date_str = game_info.get("date", "")
+        if event_date_str and len(event_date_str) >= 10:
+            result["game_date"] = event_date_str[:10]
+        if game_info.get("is_yesterday"):
+            result["is_yesterday"] = True
+
         return result
 
     @staticmethod

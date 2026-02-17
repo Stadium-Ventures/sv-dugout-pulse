@@ -12,7 +12,7 @@ import json
 import logging
 import os
 import sys
-from datetime import date
+from datetime import date, datetime, timezone
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts
 from src.config import (
@@ -41,6 +41,8 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "game_context": stats.get("game_context", ""),
         "game_status": stats.get("game_status", "N/A"),
         "game_time": stats.get("game_time"),
+        "game_date": stats.get("game_date"),
+        "is_yesterday": stats.get("is_yesterday", False),
         "next_game": stats.get("next_game"),
         "performance_grade": analysis["performance_grade"],
         "social_search_url": analysis["social_search_url"],
@@ -67,13 +69,13 @@ def _store_ncaa_game_log(player: dict, stats: dict, game_logs: dict):
         return
 
     key = f"{player['player_name']}|{player['team']}"
-    today_str = date.today().isoformat()
+    game_date_str = stats.get("game_date") or date.today().isoformat()
 
     if key not in game_logs:
         game_logs[key] = []
 
     # Deduplicate by date
-    if any(entry["date"] == today_str for entry in game_logs[key]):
+    if any(entry["date"] == game_date_str for entry in game_logs[key]):
         return
 
     # Build stats entry
@@ -105,7 +107,7 @@ def _store_ncaa_game_log(player: dict, stats: dict, game_logs: dict):
             "hits_allowed": stats.get("hits_allowed", 0),
         })
 
-    game_logs[key].append({"date": today_str, "stats": entry_stats})
+    game_logs[key].append({"date": game_date_str, "stats": entry_stats})
 
 
 def _load_ncaa_game_logs() -> dict:
@@ -194,7 +196,10 @@ def run_mock():
         sys.exit(1)
 
     with open(OUTPUT_PATH) as f:
-        pulse = json.load(f)
+        raw = json.load(f)
+
+    # Support both envelope format and legacy array format
+    pulse = raw["players"] if isinstance(raw, dict) else raw
 
     logger.info("Loaded %d mock entries from %s", len(pulse), OUTPUT_PATH)
     # In mock mode we just validate the file exists and is loadable.
@@ -207,10 +212,14 @@ def run_mock():
 
 
 def write_output(pulse: list[dict]):
-    """Write the pulse list to data/current_pulse.json."""
+    """Write the pulse list to data/current_pulse.json with generated_at envelope."""
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    envelope = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "players": pulse,
+    }
     with open(OUTPUT_PATH, "w") as f:
-        json.dump(pulse, f, indent=2, ensure_ascii=False)
+        json.dump(envelope, f, indent=2, ensure_ascii=False)
     logger.info("Wrote %d entries to %s", len(pulse), OUTPUT_PATH)
 
 

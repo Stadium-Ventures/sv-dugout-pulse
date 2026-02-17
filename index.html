@@ -244,6 +244,96 @@
   .btn:hover { background: var(--surface-hover); border-color: #4a4e5a; }
   .btn-copy.copied { background: rgba(34,197,94,0.15); border-color: var(--live-green); color: var(--live-green); }
 
+  /* ---- Stale data banner ---- */
+  .stale-banner {
+    display: none;
+    background: rgba(234,179,8,0.15);
+    border: 1px solid rgba(234,179,8,0.3);
+    color: #fde047;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0.5rem auto;
+  }
+
+  /* ---- Auto-refresh indicator ---- */
+  .auto-refresh-indicator {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--live-green);
+    margin-top: 0.25rem;
+  }
+  .auto-refresh-indicator.active { display: flex; }
+  .auto-refresh-dot {
+    width: 6px; height: 6px;
+    background: var(--live-green);
+    border-radius: 50%;
+    animation: pulse-dot 1.5s infinite;
+  }
+
+  /* ---- Yesterday badge ---- */
+  .badge-yesterday { background: rgba(245,158,11,0.2); color: var(--accent-orange); }
+
+  /* ---- Collapsed no-game section ---- */
+  .no-game-section {
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+  }
+  .no-game-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.6rem 0.8rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 600;
+    user-select: none;
+  }
+  .no-game-header:hover { color: var(--text); border-color: #3a3e4a; }
+  .no-game-chevron {
+    transition: transform 0.2s;
+    font-size: 0.7rem;
+  }
+  .no-game-header.open .no-game-chevron { transform: rotate(90deg); }
+  .no-game-list {
+    display: none;
+    padding: 0.5rem 0;
+  }
+  .no-game-list.open { display: block; }
+  .no-game-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    border-bottom: 1px solid rgba(42,46,58,0.5);
+  }
+  .no-game-row:last-child { border-bottom: none; }
+  .no-game-name {
+    font-weight: 600;
+    color: var(--text);
+    min-width: 140px;
+  }
+  .no-game-team {
+    min-width: 100px;
+  }
+  .no-game-next {
+    flex: 1;
+    text-align: right;
+    font-size: 0.75rem;
+  }
+
   /* ---- Empty state ---- */
   .empty {
     text-align: center;
@@ -360,7 +450,12 @@
 <div class="header">
   <h1>SV Dugout Pulse</h1>
   <div class="subtitle" id="updated"></div>
+  <div class="auto-refresh-indicator" id="autoRefreshIndicator">
+    <div class="auto-refresh-dot"></div>
+    <span>Auto-refreshing</span>
+  </div>
 </div>
+<div class="stale-banner" id="staleBanner"></div>
 
 <div class="time-tabs">
   <button class="time-tab active" data-window="today">Today</button>
@@ -402,6 +497,13 @@
 </div>
 
 <div class="grid" id="grid"></div>
+<div class="no-game-section" id="noGameSection" style="display:none;">
+  <div class="no-game-header" id="noGameHeader" onclick="toggleNoGame()">
+    <span class="no-game-chevron">&#x25B6;</span>
+    <span id="noGameLabel">No game today</span>
+  </div>
+  <div class="no-game-list" id="noGameList"></div>
+</div>
 <div class="empty" id="empty" style="display:none;">No players match the current filters.</div>
 
 <script>
@@ -418,6 +520,8 @@ const WINDOW_GRADE_CLASS = {
 };
 
 let allPlayers = [];
+let dataGeneratedAt = null;
+let autoRefreshTimer = null;
 let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all' };
 
 // Time window state
@@ -475,6 +579,7 @@ function renderCard(p) {
   const isClient = p.is_client !== false;
   const pri = p.tags.roster_priority || 4;
   const priClass = `badge-t${Math.min(pri, 4)}`;
+  const isYesterday = p.is_yesterday === true;
 
   // Game time display for scheduled games
   const gameTimeHtml = isScheduled && p.game_time
@@ -486,11 +591,15 @@ function renderCard(p) {
     ? `<div class="next-game"><span class="next-label">Next:</span> <span class="next-value">${esc(p.next_game.display)}</span></div>`
     : '';
 
+  // Encode player data for copy-for-text
+  const encodedPlayer = encodeURIComponent(JSON.stringify(p));
+
   return `
     <div class="card${isLive ? ' live' : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
         <span class="player-name">${esc(p.player_name)}</span>
+        ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
         <span class="badge ${priClass}">T${pri}</span>
@@ -506,7 +615,7 @@ function renderCard(p) {
         ${p.tags.draft_class && p.tags.draft_class !== 'N/A' ? `<span class="tag">${esc(p.tags.draft_class)}</span>` : ''}
       </div>
       <div class="card-actions">
-        <button class="btn btn-copy" onclick="copyStats(this, '${esc(p.stats_summary, true)}')">Copy Stats</button>
+        <button class="btn btn-copy" onclick="copyForText(this, '${encodedPlayer}')">Copy for Text</button>
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
       </div>
     </div>`;
@@ -643,18 +752,53 @@ function sortWindowPlayers(players) {
 function render() {
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
+  const noGameSection = document.getElementById('noGameSection');
 
   if (currentWindow === 'today') {
-    // Today view - use existing card renderer
-    const filtered = sortPlayers(allPlayers.filter(matchesFilters));
-    if (filtered.length === 0) {
+    const allFiltered = allPlayers.filter(matchesFilters);
+
+    // Split into active (have a game) and no-game players
+    const hasStatusFilter = filters.status !== 'all';
+    const activePlayers = allFiltered.filter(p => p.game_status !== 'N/A');
+    const noGamePlayers = hasStatusFilter ? [] : allFiltered.filter(p => p.game_status === 'N/A');
+
+    const sorted = sortPlayers(activePlayers);
+
+    if (sorted.length === 0 && noGamePlayers.length === 0) {
       grid.innerHTML = '';
       empty.style.display = 'block';
+      empty.textContent = 'No players match the current filters.';
+      noGameSection.style.display = 'none';
     } else {
       empty.style.display = 'none';
-      grid.innerHTML = filtered.map(renderCard).join('');
+      grid.innerHTML = sorted.map(renderCard).join('');
     }
+
+    // Render collapsed no-game section
+    if (noGamePlayers.length > 0) {
+      noGameSection.style.display = 'block';
+      document.getElementById('noGameLabel').textContent = `No game today (${noGamePlayers.length})`;
+      const sortedNoGame = noGamePlayers.slice().sort((a, b) => {
+        const ac = a.is_client !== false ? 0 : 1;
+        const bc = b.is_client !== false ? 0 : 1;
+        if (ac !== bc) return ac - bc;
+        return (a.tags.roster_priority || 99) - (b.tags.roster_priority || 99);
+      });
+      document.getElementById('noGameList').innerHTML = sortedNoGame.map(p => {
+        const nextText = p.next_game ? p.next_game.display : 'No game scheduled';
+        return `<div class="no-game-row">
+          <span class="no-game-name">${esc(p.player_name)}</span>
+          <span class="no-game-team">${esc(p.team)}</span>
+          <span class="no-game-next">${esc(nextText)}</span>
+        </div>`;
+      }).join('');
+    } else {
+      noGameSection.style.display = 'none';
+    }
+
+    manageAutoRefresh();
   } else {
+    noGameSection.style.display = 'none';
     // Window view - use window card renderer
     const data = windowData[currentWindow] || [];
     const filtered = sortWindowPlayers(data.filter(matchesWindowFilters));
@@ -717,12 +861,85 @@ async function switchWindow(window) {
   render();
 }
 
-function copyStats(btn, text) {
-  navigator.clipboard.writeText(text).then(() => {
+function copyForText(btn, encodedPlayer) {
+  const p = JSON.parse(decodeURIComponent(encodedPlayer));
+  const firstName = p.player_name.split(' ')[0];
+  const gk = gradeKey(p.performance_grade);
+  let msg;
+  if (gk === 'Milestone' || gk === 'Standout') {
+    msg = `Great game ${firstName}! ${p.stats_summary}`;
+  } else if (gk === 'Good') {
+    msg = `Solid outing ${firstName}! ${p.stats_summary}`;
+  } else if (gk === 'Routine') {
+    msg = `${firstName}: ${p.stats_summary}`;
+  } else if (gk === 'Soft Flag') {
+    msg = `Tough one today ${firstName}. Tomorrow's a new day`;
+  } else {
+    msg = p.stats_summary || '';
+  }
+  navigator.clipboard.writeText(msg).then(() => {
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy Stats'; btn.classList.remove('copied'); }, 1500);
+    setTimeout(() => { btn.textContent = 'Copy for Text'; btn.classList.remove('copied'); }, 1500);
   });
+}
+
+function updateTimestamp() {
+  const el = document.getElementById('updated');
+  const banner = document.getElementById('staleBanner');
+  if (!dataGeneratedAt) {
+    el.textContent = 'Last updated: unknown';
+    return;
+  }
+  const genDate = new Date(dataGeneratedAt);
+  const now = new Date();
+  const diffMin = Math.round((now - genDate) / 60000);
+  el.textContent = 'Data from ' + genDate.toLocaleString();
+  if (diffMin > 30) {
+    banner.textContent = `Data is ${diffMin} minutes old — run the pipeline to refresh`;
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function manageAutoRefresh() {
+  const hasLive = allPlayers.some(p => p.game_status === 'Live');
+  const indicator = document.getElementById('autoRefreshIndicator');
+  if (hasLive && currentWindow === 'today') {
+    if (!autoRefreshTimer) {
+      autoRefreshTimer = setInterval(async () => {
+        try {
+          const resp = await fetch('data/current_pulse.json');
+          if (!resp.ok) return;
+          const raw = await resp.json();
+          if (Array.isArray(raw)) {
+            allPlayers = raw;
+            dataGeneratedAt = null;
+          } else {
+            allPlayers = raw.players || [];
+            dataGeneratedAt = raw.generated_at || null;
+          }
+          updateTimestamp();
+          render();
+        } catch (e) { console.error('Auto-refresh failed:', e); }
+      }, 120000);
+    }
+    indicator.classList.add('active');
+  } else {
+    if (autoRefreshTimer) {
+      clearInterval(autoRefreshTimer);
+      autoRefreshTimer = null;
+    }
+    indicator.classList.remove('active');
+  }
+}
+
+function toggleNoGame() {
+  const header = document.getElementById('noGameHeader');
+  const list = document.getElementById('noGameList');
+  header.classList.toggle('open');
+  list.classList.toggle('open');
 }
 
 // Filter buttons
@@ -743,12 +960,18 @@ document.querySelectorAll('.time-tab').forEach(tab => {
   tab.addEventListener('click', () => switchWindow(tab.dataset.window));
 });
 
-// Load data
+// Load data — supports both envelope {generated_at, players} and legacy array
 fetch('data/current_pulse.json')
   .then(r => r.json())
-  .then(data => {
-    allPlayers = data;
-    document.getElementById('updated').textContent = 'Last updated: ' + new Date().toLocaleString();
+  .then(raw => {
+    if (Array.isArray(raw)) {
+      allPlayers = raw;
+      dataGeneratedAt = null;
+    } else {
+      allPlayers = raw.players || [];
+      dataGeneratedAt = raw.generated_at || null;
+    }
+    updateTimestamp();
     render();
   })
   .catch(() => {
