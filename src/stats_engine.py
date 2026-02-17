@@ -579,7 +579,7 @@ class NCAAComScraper(BaseSchoolScraper):
                 if status == "Live":
                     result["stats_summary"] = "In lineup — stats updating"
                 elif status == "Final":
-                    result["stats_summary"] = "Game final — stats pending"
+                    result["stats_summary"] = "DNP — game final"
 
             return result
 
@@ -691,9 +691,13 @@ class NCAAComScraper(BaseSchoolScraper):
                     pitcher = ps.get("pitcherStats")
                     batter = ps.get("batterStats")
                     if pitcher:
-                        return self._parse_pitching(pitcher)
+                        result = self._parse_pitching(pitcher)
+                        result["_player_found"] = True
+                        return result
                     if batter:
-                        return self._parse_batting(batter)
+                        result = self._parse_batting(batter)
+                        result["_player_found"] = True
+                        return result
         return None
 
     # ---- context / parsing ----
@@ -1081,6 +1085,7 @@ class ESPNScraper(BaseSchoolScraper):
             result = self._extract_game_context(game_info)
             player_stats = self._find_player(player_name, summary)
             if player_stats:
+                player_stats["_player_found"] = True
                 result.update(player_stats)
             else:
                 # Game found but player not in boxscore — provide context-specific message
@@ -1088,7 +1093,7 @@ class ESPNScraper(BaseSchoolScraper):
                 if status == "Live":
                     result["stats_summary"] = "In lineup — stats updating"
                 elif status == "Final":
-                    result["stats_summary"] = "Game final — stats pending"
+                    result["stats_summary"] = "DNP — game final"
                 # If Scheduled, _extract_game_context already set "Game at X:XX PM ET"
 
             return result
@@ -1438,11 +1443,15 @@ class NCAAStatsFetcher:
         scraper in the waterfall.
 
         Scheduled games (no stats expected yet) are also accepted.
+        A ``_player_found`` flag (set by scrapers that locate the player
+        in a box score) is also accepted — covers 0-AB appearances like
+        pinch runners or walk-only plate appearances.
         """
         if result.get("game_status") in ("Scheduled", "N/A"):
             return True  # no stats expected — accept as-is
         return (
-            result.get("at_bats", 0) > 0
+            result.get("_player_found", False)
+            or result.get("at_bats", 0) > 0
             or result.get("ip", 0) > 0
             or result.get("is_pitcher_line", False)
         )
