@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import abc
 import logging
+import re
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
 
@@ -81,6 +82,53 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
 
             if not reject:
                 return True
+    return False
+
+
+def _normalize_last_name(name: str) -> str:
+    """Strip suffixes like Jr, Sr, II, III, IV and lowercase."""
+    name = name.strip().lower()
+    # Remove trailing suffixes (with or without dots/commas)
+    name = re.sub(r"[,\s]+(jr\.?|sr\.?|ii|iii|iv|v)$", "", name)
+    return name.strip()
+
+
+def _names_match(roster_name: str, box_name: str) -> bool:
+    """Compare last names using multiple strategies.
+
+    1. Exact match after normalization (suffix stripping)
+    2. Substring containment
+    3. Hyphenated name handling (either part matches)
+    4. startswith for truncated names (NCAA API truncates to ~10-12 chars)
+    """
+    r = _normalize_last_name(roster_name)
+    b = _normalize_last_name(box_name)
+
+    if not r or not b:
+        return False
+
+    # Exact match
+    if r == b:
+        return True
+
+    # Substring containment (current behavior)
+    if r in b or b in r:
+        return True
+
+    # Hyphenated: "Smith-Jones" matches "Smith" or "Jones"
+    for part in r.split("-"):
+        part = part.strip()
+        if part and (part == b or part in b or b in part):
+            return True
+    for part in b.split("-"):
+        part = part.strip()
+        if part and (part == r or part in r or r in part):
+            return True
+
+    # Truncation: NCAA API sometimes truncates names
+    if len(b) >= 8 and (r.startswith(b) or b.startswith(r)):
+        return True
+
     return False
 
 
@@ -562,6 +610,7 @@ class NCAAComScraper(BaseSchoolScraper):
 
     def __init__(self):
         self._scoreboard_cache: dict[str, dict] = {}
+        self._boxscore_cache: dict[str, dict] = {}
         self._today = date.today()
 
     def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
@@ -671,15 +720,23 @@ class NCAAComScraper(BaseSchoolScraper):
     # ---- box score ----
 
     def _get_boxscore(self, game_id) -> Optional[dict]:
+        gid = str(game_id)
+        if gid in self._boxscore_cache:
+            logger.debug("Boxscore cache hit for game %s", gid)
+            return self._boxscore_cache[gid]
         url = f"{self.BOXSCORE_URL}/{game_id}/boxscore"
         resp = requests.get(url, timeout=15)
         if resp.status_code != 200:
             return None
-        return resp.json()
+        data = resp.json()
+        self._boxscore_cache[gid] = data
+        return data
 
     def _find_player(self, player_name: str, is_home: bool, box: dict) -> Optional[dict]:
-        """Find a player in the box score by last name."""
-        player_last = player_name.split()[-1].lower()
+        """Find a player in the box score by last name, with fuzzy matching."""
+        name_parts = player_name.split()
+        player_last = name_parts[-1]
+        player_first = name_parts[0].lower() if len(name_parts) > 1 else ""
 
         # Match our team in the box score by home/away
         # The teams array has isHome, and teamBoxscore order matches
@@ -694,25 +751,39 @@ class NCAAComScraper(BaseSchoolScraper):
             if target_team_id and str(tb.get("teamId")) != str(target_team_id):
                 continue
 
+            # Collect all last-name matches for disambiguation
+            candidates = []
             for ps in tb.get("playerStats", []):
-                last_name = ps.get("lastName", "").lower()
-                if player_last in last_name or last_name in player_last:
-                    pitcher = ps.get("pitcherStats")
-                    batter = ps.get("batterStats")
-                    if pitcher:
-                        result = self._parse_pitching(pitcher)
-                        result["_player_found"] = True
-                        return result
-                    if batter:
-                        ab = int(batter.get("atBats", 0) or 0)
-                        bb = int(batter.get("walks", 0) or 0)
-                        # Skip players listed in box score with 0 AB and 0 BB
-                        # — they appear on the roster but didn't actually play
-                        if ab == 0 and bb == 0:
-                            return None
-                        result = self._parse_batting(batter)
-                        result["_player_found"] = True
-                        return result
+                last_name = ps.get("lastName", "")
+                if _names_match(player_last, last_name):
+                    candidates.append(ps)
+
+            # First-name disambiguation when multiple players share a last name
+            if len(candidates) > 1 and player_first:
+                narrowed = [
+                    ps for ps in candidates
+                    if ps.get("firstName", "").lower().startswith(player_first[:3])
+                ]
+                if narrowed:
+                    candidates = narrowed
+
+            for ps in candidates:
+                pitcher = ps.get("pitcherStats")
+                batter = ps.get("batterStats")
+                if pitcher:
+                    result = self._parse_pitching(pitcher)
+                    result["_player_found"] = True
+                    return result
+                if batter:
+                    ab = int(batter.get("atBats", 0) or 0)
+                    bb = int(batter.get("walks", 0) or 0)
+                    # Skip players listed in box score with 0 AB and 0 BB
+                    # — they appear on the roster but didn't actually play
+                    if ab == 0 and bb == 0:
+                        return None
+                    result = self._parse_batting(batter)
+                    result["_player_found"] = True
+                    return result
         return None
 
     # ---- context / parsing ----
@@ -745,10 +816,19 @@ class NCAAComScraper(BaseSchoolScraper):
             result["game_context"] = f"{away} vs {home} | {state}"
             result["game_status"] = state
 
-        # Populate game_date
+        # Populate game_date (normalize to YYYY-MM-DD)
         start_date = game_info.get("start_date", "")
-        if start_date and len(start_date) >= 10:
-            result["game_date"] = start_date[:10]
+        if start_date:
+            # Handle MM/DD/YYYY format from NCAA API
+            if "/" in start_date:
+                try:
+                    result["game_date"] = datetime.strptime(
+                        start_date.split()[0], "%m/%d/%Y"
+                    ).date().isoformat()
+                except ValueError:
+                    pass
+            elif len(start_date) >= 10:
+                result["game_date"] = start_date[:10]
         if game_info.get("is_yesterday"):
             result["is_yesterday"] = True
 
@@ -762,7 +842,9 @@ class NCAAComScraper(BaseSchoolScraper):
         r = int(bs.get("runsScored", 0) or 0)
         bb = int(bs.get("walks", 0) or 0)
         k = int(bs.get("strikeouts", 0) or 0)
-        # NCAA API doesn't split HR/SB in batterStats — check hittingSeason if needed
+        # NCAA per-game batterStats doesn't include HR or SB fields.
+        # These are available in the season-level hittingSeason endpoint but
+        # not broken out per game — this is a known NCAA API limitation.
         hr = 0
         sb = 0
 
@@ -777,6 +859,8 @@ class NCAAComScraper(BaseSchoolScraper):
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if k:
+            parts.append(_fmt(k, "K"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -787,6 +871,7 @@ class NCAAComScraper(BaseSchoolScraper):
             "runs": r,
             "stolen_bases": sb,
             "walks": bb,
+            "strikeouts": k,
         }
 
     @staticmethod
@@ -1084,6 +1169,7 @@ class ESPNScraper(BaseSchoolScraper):
 
     def __init__(self):
         self._scoreboard_cache: dict[str, dict] = {}  # date_str -> scoreboard JSON
+        self._summary_cache: dict[str, dict] = {}  # game_id -> summary JSON
         self._today = date.today()
 
     def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
@@ -1267,11 +1353,16 @@ class ESPNScraper(BaseSchoolScraper):
         }
 
     def _get_summary(self, game_id: str) -> Optional[dict]:
+        if game_id in self._summary_cache:
+            logger.debug("ESPN summary cache hit for game %s", game_id)
+            return self._summary_cache[game_id]
         resp = requests.get(
             f"{self.SUMMARY_URL}?event={game_id}", timeout=15
         )
         resp.raise_for_status()
-        return resp.json()
+        data = resp.json()
+        self._summary_cache[game_id] = data
+        return data
 
     def _extract_game_context(self, game_info: dict) -> dict:
         """Build game context dict from ESPN scoreboard data."""

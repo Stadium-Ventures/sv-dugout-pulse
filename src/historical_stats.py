@@ -515,11 +515,15 @@ class NCAAGameLogAggregator:
         if not entries:
             return None
 
-        # Filter to date range
+        # Filter to date range (handle both YYYY-MM-DD and MM/DD/YYYY formats)
         games_in_range = []
         for entry in entries:
             try:
-                game_date = datetime.strptime(entry["date"], "%Y-%m-%d").date()
+                d = entry["date"]
+                if "/" in d:
+                    game_date = datetime.strptime(d, "%m/%d/%Y").date()
+                else:
+                    game_date = datetime.strptime(d, "%Y-%m-%d").date()
                 if start_date <= game_date <= end_date:
                     games_in_range.append(entry["stats"])
             except (ValueError, KeyError):

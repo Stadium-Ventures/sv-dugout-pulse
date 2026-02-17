@@ -12,7 +12,7 @@ import json
 import logging
 import os
 import sys
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts
 from src.config import (
@@ -22,6 +22,7 @@ from src.config import (
     WINDOW_7D_PATH,
     WINDOW_30D_PATH,
     WINDOW_SEASON_PATH,
+    YESTERDAY_PULSE_PATH,
 )
 from src.historical_stats import WindowStatsAggregator, write_window_json
 from src.performance_analyzer import PerformanceAnalyzer
@@ -86,7 +87,7 @@ def _store_ncaa_game_log(player: dict, stats: dict, game_logs: dict):
         "rbi": stats.get("rbi", 0),
         "r": stats.get("runs", 0),
         "bb": stats.get("walks", 0),
-        "k": 0,
+        "k": stats.get("strikeouts", 0),
         "sb": stats.get("stolen_bases", 0),
         "hbp": 0,
         "sf": 0,
@@ -130,9 +131,96 @@ def _save_ncaa_game_logs(game_logs: dict):
     logger.info("Saved NCAA game logs: %d players, %d total game entries", len(game_logs), total_games)
 
 
+def _rotate_yesterday():
+    """On first run of a new day, save previous day's Final results as yesterday.
+
+    Uses ET (UTC-5) for day boundaries so late-night games ending at 11 PM ET
+    are correctly attributed to their calendar day.
+    """
+    if not os.path.exists(OUTPUT_PATH):
+        return
+    try:
+        with open(OUTPUT_PATH) as f:
+            old = json.load(f)
+        old_gen = old.get("generated_at", "")
+        if not old_gen:
+            return
+
+        # Compare dates in ET
+        ET = timezone(timedelta(hours=-5))
+        old_dt = datetime.fromisoformat(old_gen).astimezone(ET)
+        now_et = datetime.now(ET)
+
+        if old_dt.date() >= now_et.date():
+            return  # Same day — no rotation needed
+
+        old_players = old.get("players", [])
+        finals = [p for p in old_players if p.get("game_status") == "Final"]
+
+        if not finals:
+            return
+
+        envelope = {
+            "generated_at": old_gen,
+            "source_date": old_dt.date().isoformat(),
+            "players": finals,
+        }
+        os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
+        with open(YESTERDAY_PULSE_PATH, "w") as f:
+            json.dump(envelope, f, indent=2, ensure_ascii=False)
+        logger.info(
+            "Rotated %d Final entries to yesterday_pulse.json (from %s)",
+            len(finals), old_dt.date(),
+        )
+    except Exception:
+        logger.warning("Failed to rotate yesterday pulse data")
+
+
+def _supplement_yesterday(pulse: list):
+    """Add is_yesterday Final entries from the current run to yesterday file.
+
+    Merges with existing entries (from rotation) so no data is lost.
+    """
+    new_entries = [
+        p for p in pulse
+        if p.get("is_yesterday") and p.get("game_status") == "Final"
+    ]
+    if not new_entries:
+        return
+
+    # Load existing yesterday file to merge
+    existing = []
+    if os.path.exists(YESTERDAY_PULSE_PATH):
+        try:
+            with open(YESTERDAY_PULSE_PATH) as f:
+                data = json.load(f)
+            existing = data.get("players", [])
+        except Exception:
+            pass
+
+    # Merge: add new entries for players not already present
+    existing_names = {p["player_name"] for p in existing}
+    for entry in new_entries:
+        if entry["player_name"] not in existing_names:
+            existing.append(entry)
+
+    envelope = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source_date": (date.today() - timedelta(days=1)).isoformat(),
+        "players": existing,
+    }
+    os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
+    with open(YESTERDAY_PULSE_PATH, "w") as f:
+        json.dump(envelope, f, indent=2, ensure_ascii=False)
+    logger.info("Yesterday pulse: %d total entries", len(existing))
+
+
 def run_live():
     """Full pipeline: fetch roster + recruits -> fetch stats -> grade -> alert -> write JSON."""
     logger.info("Starting live pulse run")
+
+    # Rotate previous day's Final results to yesterday file before overwriting
+    _rotate_yesterday()
 
     # Reset alert tracking for this run
     reset_sent_alerts()
@@ -182,6 +270,7 @@ def run_live():
 
     # 3. Write output
     write_output(pulse)
+    _supplement_yesterday(pulse)
     _save_ncaa_game_logs(ncaa_game_logs)
 
 
