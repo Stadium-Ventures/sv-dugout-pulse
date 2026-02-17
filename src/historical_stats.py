@@ -1352,6 +1352,13 @@ class WindowStatsAggregator:
             "is_pitcher": False, "games_played": 0,
         }
 
+    @staticmethod
+    def _fmt_rate(val: float) -> str:
+        """Format a rate stat: .455 for <1.000, 1.363 for >=1.000."""
+        if val >= 1.0:
+            return f"{val:.3f}"
+        return f"{val:.3f}"[1:]  # strip leading "0" → ".455"
+
     def _format_stats(self, stats: dict, window: str, position: str) -> dict:
         """Format stats for display, using '--' for sparse data."""
         is_pitcher = stats.get("is_pitcher", position == "Pitcher")
@@ -1378,10 +1385,10 @@ class WindowStatsAggregator:
                 "ab": stats.get("ab", 0) if not sparse else "--",
                 "h": stats.get("h", 0) if not sparse else "--",
                 "hr": stats.get("hr", 0) if not sparse else "--",
-                "avg": f".{int(stats.get('avg', 0) * 1000):03d}"[1:] if not sparse else "--",
-                "obp": f".{int(stats.get('obp', 0) * 1000):03d}"[1:] if not sparse else "--",
-                "slg": f".{int(stats.get('slg', 0) * 1000):03d}"[1:] if not sparse else "--",
-                "ops": f".{int(stats.get('ops', 0) * 1000):03d}"[1:] if not sparse else "--",
+                "avg": self._fmt_rate(stats.get("avg", 0)) if not sparse else "--",
+                "obp": self._fmt_rate(stats.get("obp", 0)) if not sparse else "--",
+                "slg": self._fmt_rate(stats.get("slg", 0)) if not sparse else "--",
+                "ops": self._fmt_rate(stats.get("ops", 0)) if not sparse else "--",
             }
 
     def _calculate_grade(self, stats: dict, window: str, position: str) -> str:

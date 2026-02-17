@@ -638,23 +638,23 @@ function renderWindowCard(p) {
       <div class="stat-row pitcher-row">
         <div class="stat-cell">
           <span class="stat-label">IP</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ip || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ip ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">K</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.k || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.k ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">BB</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.bb || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.bb ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">ERA</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.era || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.era ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">WHIP</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.whip || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.whip ?? '--'}</span>
         </div>
       </div>`;
   } else {
@@ -663,37 +663,37 @@ function renderWindowCard(p) {
       <div class="stat-row">
         <div class="stat-cell">
           <span class="stat-label">PA</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.pa || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.pa ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">AB</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ab || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ab ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">H</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.h || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.h ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">HR</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.hr || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.hr ?? '--'}</span>
         </div>
       </div>
       <div class="stat-row">
         <div class="stat-cell">
           <span class="stat-label">AVG</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.avg || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.avg ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">OBP</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.obp || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.obp ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">SLG</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.slg || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.slg ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">OPS</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ops || '--'}</span>
+          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ops ?? '--'}</span>
         </div>
       </div>`;
   }
