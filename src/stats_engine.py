@@ -22,6 +22,68 @@ from .config import ROSTER_URL
 logger = logging.getLogger(__name__)
 
 
+# ===== Shared helpers =====
+
+# School-name qualifiers that indicate a different school when they appear
+# as a suffix ("Florida State") or prefix ("North Florida") to a base name.
+_SUFFIX_QUALIFIERS = {
+    "a&t", "state", "st", "st.", "central", "wilmington", "charlotte",
+    "greensboro", "pembroke", "asheville", "a&m", "am", "at", "tech",
+    "southern", "northern", "eastern", "western", "international",
+    "atlantic", "pacific", "gulf", "upstate", "baptist", "christian",
+    "lutheran", "wesleyan", "methodist", "valley", "polytechnic",
+    "poly", "marymount", "of",
+}
+_PREFIX_QUALIFIERS = {
+    "north", "south", "east", "west", "central", "se", "ne", "sw", "nw",
+    "coastal", "fiu",
+}
+
+
+def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool:
+    """Match our team name against candidate name strings.
+
+    *exact* mode: equality only.
+    *substring* mode: ``team_lower in name``, but rejects false positives where
+    the candidate is actually a different school, e.g.:
+        - "florida" in "florida state"   → False (suffix qualifier "state")
+        - "florida" in "north florida"   → False (prefix qualifier "north")
+        - "florida" in "florida gators"  → True  (mascot, not qualifier)
+        - "carolina" in "coastal carolina" → only if searching for "carolina"
+    """
+    for n in names:
+        n_lower = n.lower()
+        if not n_lower:
+            continue
+        if exact:
+            if team_lower == n_lower:
+                return True
+        else:
+            if team_lower not in n_lower:
+                continue
+
+            reject = False
+
+            # Suffix guard: "florida" in "florida state" — check word after match
+            if n_lower.startswith(team_lower) and len(n_lower) > len(team_lower):
+                suffix = n_lower[len(team_lower):].strip()
+                first_word = suffix.split()[0] if suffix else ""
+                if first_word in _SUFFIX_QUALIFIERS:
+                    reject = True
+
+            # Prefix guard: "florida" in "north florida" — check word before match
+            idx = n_lower.find(team_lower)
+            if idx > 0:
+                prefix = n_lower[:idx].strip()
+                last_word = prefix.split()[-1] if prefix else ""
+                if last_word in _PREFIX_QUALIFIERS:
+                    reject = True
+
+            if not reject:
+                return True
+    return False
+
+
 # ===== Shared data structures =====
 
 def empty_stats() -> dict:
@@ -478,6 +540,266 @@ class NCAAOrgScraper(BaseSchoolScraper):
             return None
 
 
+class NCAAComScraper(BaseSchoolScraper):
+    """
+    Scraper using the NCAA.com public data (via ncaa-api proxy).
+
+    Flow: scoreboard → find game by team → fetch box score → find player.
+    Covers all D1 programs with individual player box scores.
+    """
+
+    SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/baseball/d1"
+    BOXSCORE_URL = "https://ncaa-api.henrygd.me/game"
+
+    def __init__(self):
+        self._scoreboard_cache: dict[str, dict] = {}
+        self._today = date.today()
+
+    def fetch_stats(self, player_name: str, team: str) -> Optional[dict]:
+        try:
+            game_info = self._find_game(team)
+            if not game_info:
+                logger.debug("No NCAA.com game found for %s", team)
+                return None
+
+            game_id = game_info["game_id"]
+            box = self._get_boxscore(game_id)
+            if not box:
+                return None
+
+            # Determine which team is ours
+            is_home = game_info["team_side"] == "home"
+            player_stats = self._find_player(player_name, is_home, box)
+
+            result = self._build_context(game_info)
+            if player_stats:
+                result.update(player_stats)
+            else:
+                status = result.get("game_status", "")
+                if status == "Live":
+                    result["stats_summary"] = "In lineup — stats updating"
+                elif status == "Final":
+                    result["stats_summary"] = "Game final — stats pending"
+
+            return result
+
+        except Exception:
+            logger.info("NCAAComScraper failed for %s @ %s", player_name, team)
+            return None
+
+    # ---- scoreboard / game lookup ----
+
+    def _get_scoreboard(self, date_str: str) -> list:
+        """Fetch NCAA scoreboard for a date (YYYY/MM/DD). Caches per date."""
+        if date_str not in self._scoreboard_cache:
+            url = f"{self.SCOREBOARD_URL}/{date_str}"
+            resp = requests.get(url, timeout=15)
+            resp.raise_for_status()
+            self._scoreboard_cache[date_str] = resp.json().get("games", [])
+        return self._scoreboard_cache[date_str]
+
+    def _find_game(self, team: str) -> Optional[dict]:
+        """Search today then yesterday for a game matching the team."""
+        team_lower = team.lower()
+        today = self._today
+        yesterday = today - timedelta(days=1)
+
+        for check_date in (today, yesterday):
+            date_str = check_date.strftime("%Y/%m/%d")
+            games = self._get_scoreboard(date_str)
+            is_yesterday = (check_date == yesterday)
+
+            # Two passes: exact then substring (with school-qualifier guard)
+            for exact in (True, False):
+                for g in games:
+                    game = g.get("game", {})
+                    for side in ("home", "away"):
+                        side_info = game.get(side, {})
+                        names_dict = side_info.get("names", {})
+                        # Use short/full for matching; seo uses hyphens that
+                        # break qualifier logic so normalize it
+                        seo = names_dict.get("seo", "").replace("-", " ")
+                        names = [
+                            names_dict.get("short", ""),
+                            names_dict.get("full", ""),
+                            seo,
+                        ]
+                        if self._team_matches(team_lower, names, exact):
+                            # For yesterday, only include live or final
+                            state = game.get("gameState", "")
+                            if is_yesterday and state not in ("final", "live"):
+                                continue
+
+                            opp_side = "away" if side == "home" else "home"
+                            opp_name = game.get(opp_side, {}).get("names", {}).get("short", "?")
+                            home_name = game.get("home", {}).get("names", {}).get("short", "?")
+                            away_name = game.get("away", {}).get("names", {}).get("short", "?")
+
+                            return {
+                                "game_id": game.get("gameID"),
+                                "team_id": side_info.get("teamId"),
+                                "team_side": side,
+                                "opponent": opp_name,
+                                "home_name": home_name,
+                                "away_name": away_name,
+                                "home_score": game.get("home", {}).get("score", "0"),
+                                "away_score": game.get("away", {}).get("score", "0"),
+                                "state": state,
+                                "is_yesterday": is_yesterday,
+                                "start_time": game.get("startTime", ""),
+                                "start_date": game.get("startDate", ""),
+                            }
+        return None
+
+    @staticmethod
+    def _team_matches(team_lower: str, names: list[str], exact: bool) -> bool:
+        """Match team name, guarding against school-name false positives.
+
+        Uses the shared ``_school_name_matches`` helper.
+        """
+        return _school_name_matches(team_lower, names, exact)
+
+    # ---- box score ----
+
+    def _get_boxscore(self, game_id) -> Optional[dict]:
+        url = f"{self.BOXSCORE_URL}/{game_id}/boxscore"
+        resp = requests.get(url, timeout=15)
+        if resp.status_code != 200:
+            return None
+        return resp.json()
+
+    def _find_player(self, player_name: str, is_home: bool, box: dict) -> Optional[dict]:
+        """Find a player in the box score by last name."""
+        player_last = player_name.split()[-1].lower()
+
+        # Match our team in the box score by home/away
+        # The teams array has isHome, and teamBoxscore order matches
+        teams = box.get("teams", [])
+        target_team_id = None
+        for t in teams:
+            if t.get("isHome") == is_home:
+                target_team_id = t.get("teamId")
+                break
+
+        for tb in box.get("teamBoxscore", []):
+            if target_team_id and str(tb.get("teamId")) != str(target_team_id):
+                continue
+
+            for ps in tb.get("playerStats", []):
+                last_name = ps.get("lastName", "").lower()
+                if player_last in last_name or last_name in player_last:
+                    pitcher = ps.get("pitcherStats")
+                    batter = ps.get("batterStats")
+                    if pitcher:
+                        return self._parse_pitching(pitcher)
+                    if batter:
+                        return self._parse_batting(batter)
+        return None
+
+    # ---- context / parsing ----
+
+    def _build_context(self, game_info: dict) -> dict:
+        """Build game context dict from NCAA.com game data."""
+        result = empty_stats()
+        state = game_info["state"]
+        home = game_info["home_name"]
+        away = game_info["away_name"]
+        hs = game_info["home_score"]
+        a_s = game_info["away_score"]
+
+        if state == "final":
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | Final"
+            result["game_status"] = "Final"
+        elif state == "live":
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | Live"
+            result["game_status"] = "Live"
+        elif state == "pre":
+            result["game_context"] = f"{away} vs {home}"
+            result["game_status"] = "Scheduled"
+            start = game_info.get("start_time", "")
+            if start:
+                result["game_time"] = start
+                result["stats_summary"] = f"Game at {start}"
+            else:
+                result["stats_summary"] = "Game today"
+        else:
+            result["game_context"] = f"{away} vs {home} | {state}"
+            result["game_status"] = state
+
+        # Populate game_date
+        start_date = game_info.get("start_date", "")
+        if start_date and len(start_date) >= 10:
+            result["game_date"] = start_date[:10]
+        if game_info.get("is_yesterday"):
+            result["is_yesterday"] = True
+
+        return result
+
+    @staticmethod
+    def _parse_batting(bs: dict) -> dict:
+        h = int(bs.get("hits", 0) or 0)
+        ab = int(bs.get("atBats", 0) or 0)
+        rbi = int(bs.get("runsBattedIn", 0) or 0)
+        r = int(bs.get("runsScored", 0) or 0)
+        bb = int(bs.get("walks", 0) or 0)
+        k = int(bs.get("strikeouts", 0) or 0)
+        # NCAA API doesn't split HR/SB in batterStats — check hittingSeason if needed
+        hr = 0
+        sb = 0
+
+        parts = [f"{h}-{ab}"]
+        if hr:
+            parts.append(f"{hr} HR" if hr > 1 else "HR")
+        if rbi:
+            parts.append(f"{rbi} RBI")
+        if r:
+            parts.append(f"{r} R")
+        if sb:
+            parts.append(f"{sb} SB")
+        if bb:
+            parts.append(f"{bb} BB")
+
+        return {
+            "stats_summary": ", ".join(parts),
+            "hits": h,
+            "at_bats": ab,
+            "home_runs": hr,
+            "rbi": rbi,
+            "runs": r,
+            "stolen_bases": sb,
+            "walks": bb,
+        }
+
+    @staticmethod
+    def _parse_pitching(ps: dict) -> dict:
+        ip_str = ps.get("inningsPitched", "0") or "0"
+        ip = float(ip_str) if str(ip_str).replace(".", "").isdigit() else 0.0
+        h = int(ps.get("hitsAllowed", 0) or 0)
+        er = int(ps.get("earnedRunsAllowed", 0) or 0)
+        k = int(ps.get("strikeouts", 0) or 0)
+        bb = int(ps.get("walksAllowed", 0) or 0)
+
+        parts = [f"{ip_str} IP"]
+        if h:
+            parts.append(f"{h} H")
+        parts.append(f"{er} ER")
+        parts.append(f"{k} K")
+        if bb:
+            parts.append(f"{bb} BB")
+
+        qs = ip >= 6.0 and er <= 3
+        return {
+            "stats_summary": ", ".join(parts),
+            "is_pitcher_line": True,
+            "ip": ip,
+            "earned_runs": er,
+            "strikeouts": k,
+            "walks_allowed": bb,
+            "hits_allowed": h,
+            "quality_start": qs,
+        }
+
+
 class D1BaseballScraper(BaseSchoolScraper):
     """
     Scraper for D1Baseball.com — covers all D1 programs.
@@ -559,7 +881,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         self, player_name: str, team: str, html: str
     ) -> Optional[dict]:
         """
-        Parse D1Baseball schedule page to find today's game,
+        Parse D1Baseball schedule page to find today's (or yesterday's) game,
         then fetch and parse the box score for the player.
         """
         try:
@@ -567,18 +889,22 @@ class D1BaseballScraper(BaseSchoolScraper):
 
             # Find links to box scores (typically contain "/boxscore/" in href)
             # D1Baseball uses format: /games/{game-slug}/boxscore
-            today_str = date.today().strftime("%m/%d")
+            today = date.today()
+            yesterday = today - timedelta(days=1)
+            date_needles = [
+                today.strftime("%m/%d"),
+                today.strftime("%b %d"),
+                yesterday.strftime("%m/%d"),
+                yesterday.strftime("%b %d"),
+            ]
 
-            # Look for game rows with today's date
             game_links = soup.select('a[href*="/boxscore"]')
 
             for link in game_links:
-                # Check if this game is from today
                 row = link.find_parent("tr") or link.find_parent("div")
                 if row:
                     row_text = row.get_text()
-                    # Look for today's date in various formats
-                    if today_str in row_text or date.today().strftime("%b %d") in row_text:
+                    if any(needle in row_text for needle in date_needles):
                         box_url = self.BASE_URL + link.get("href", "")
                         return self._parse_box_score(player_name, box_url)
 
@@ -790,8 +1116,8 @@ class ESPNScraper(BaseSchoolScraper):
                                 team_info.get("location", ""),
                                 team_info.get("name", ""),
                             ]
-                            if any(team_lower == n.lower() for n in names) or \
-                               any(team_lower in n.lower() for n in names):
+                            if self._team_matches(team_lower, names, exact=True) or \
+                               self._team_matches(team_lower, names, exact=False):
                                 # Determine opponent and home/away
                                 home_comp = away_comp = None
                                 for c in comp.get("competitors", []):
@@ -810,7 +1136,8 @@ class ESPNScraper(BaseSchoolScraper):
                                         home_comp.get("team", {}).get("displayName", ""),
                                         home_comp.get("team", {}).get("location", ""),
                                     ]
-                                    is_home = any(team_lower == n.lower() or team_lower in n.lower() for n in home_names)
+                                    is_home = self._team_matches(team_lower, home_names, exact=True) or \
+                                             self._team_matches(team_lower, home_names, exact=False)
 
                                 if is_home:
                                     opponent = away_name
@@ -838,6 +1165,14 @@ class ESPNScraper(BaseSchoolScraper):
         return None
 
     # ----- internal helpers -----
+
+    @staticmethod
+    def _team_matches(team_lower: str, names: list[str], exact: bool) -> bool:
+        """Match team name, guarding against school-name false positives.
+
+        Uses the shared ``_school_name_matches`` helper.
+        """
+        return _school_name_matches(team_lower, names, exact)
 
     def _get_scoreboard(self, date_str: str = None) -> dict:
         """Fetch ESPN scoreboard for a specific date (YYYYMMDD). Caches per date."""
@@ -877,12 +1212,7 @@ class ESPNScraper(BaseSchoolScraper):
                                 team_info.get("location", ""),
                                 team_info.get("name", ""),
                             ]
-                            if exact:
-                                matched = any(team_lower == n.lower() for n in names)
-                            else:
-                                matched = any(team_lower in n.lower() for n in names)
-
-                            if matched:
+                            if self._team_matches(team_lower, names, exact):
                                 info = self._build_game_info(event, comp)
                                 info["is_yesterday"] = (sb_date == yesterday_str)
                                 return info
@@ -1072,6 +1402,7 @@ class NCAAStatsFetcher:
 
     def __init__(self):
         self._espn = ESPNScraper()
+        self._ncaa_com = NCAAComScraper()
         self._sidearm = SidearmScraper()
         self._statbroadcast = StatBroadcastScraper()
         self._ncaa_org = NCAAOrgScraper()
@@ -1084,32 +1415,79 @@ class NCAAStatsFetcher:
             # "Coastal Carolina": [self._statbroadcast, self._ncaa_org],
         }
 
-        # Default fallback chain for schools without a specific entry
-        # ESPN first (best: JSON API, all D1, live + final), then HTML scrapers
+        # Default waterfall chain:
+        #   1. ESPN — fast JSON API, all D1, good for game status/scores/live
+        #   2. NCAA.com — JSON API with individual player box scores
+        #   3. D1Baseball, Sidearm, StatBroadcast, NCAA.org — additional fallbacks
         self._default_chain: list[BaseSchoolScraper] = [
             self._espn,
+            self._ncaa_com,
+            self._d1baseball,
             self._sidearm,
             self._statbroadcast,
-            self._d1baseball,
             self._ncaa_org,
         ]
 
+    @staticmethod
+    def _has_player_stats(result: dict) -> bool:
+        """Return True if the result contains actual player stat lines.
+
+        A result from a scraper that found the game but NOT the player's
+        individual stats will have at_bats == 0 and ip == 0.  We use this
+        to decide whether to accept the result or keep trying the next
+        scraper in the waterfall.
+
+        Scheduled games (no stats expected yet) are also accepted.
+        """
+        if result.get("game_status") in ("Scheduled", "N/A"):
+            return True  # no stats expected — accept as-is
+        return (
+            result.get("at_bats", 0) > 0
+            or result.get("ip", 0) > 0
+            or result.get("is_pitcher_line", False)
+        )
+
     def fetch(self, player: dict) -> dict:
         """
-        Attempt to fetch stats for an NCAA player.
-        Tries school-specific scrapers first, then the default chain.
-        Never raises — returns empty_stats() on total failure.
+        Attempt to fetch stats for an NCAA player using a waterfall approach.
+
+        Tries each scraper in order.  If a scraper returns game context but
+        no actual player stats (e.g. ESPN found the game but couldn't match
+        the player in the boxscore), the context is saved and the next
+        scraper is tried.  The first scraper that returns real stats wins.
+        If none do, the best game-context result is returned so the UI can
+        still show the game score / status.
         """
         name = player.get("player_name", "")
         team = player.get("team", "")
 
         scrapers = self._school_scrapers.get(team, self._default_chain)
 
+        best_context = None  # game context from first scraper that found a game
+
         for scraper in scrapers:
             try:
                 result = scraper.fetch_stats(name, team)
-                if result is not None:
+                if result is None:
+                    continue
+
+                # If this result has actual player stats, we're done
+                if self._has_player_stats(result):
+                    # Merge game context from earlier scraper if this one lacks it
+                    if best_context and not result.get("game_context"):
+                        result["game_context"] = best_context.get("game_context", "")
+                        result["game_status"] = best_context.get("game_status", result.get("game_status", "N/A"))
+                        result.setdefault("game_date", best_context.get("game_date"))
+                        result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
                     return result
+
+                # No player stats — save game context and keep trying
+                if best_context is None:
+                    best_context = result
+                    logger.info(
+                        "%s found game for %s @ %s but no player stats — trying next scraper",
+                        scraper.__class__.__name__, name, team,
+                    )
             except Exception:
                 logger.exception(
                     "Scraper %s crashed for %s @ %s",
@@ -1119,8 +1497,14 @@ class NCAAStatsFetcher:
                 )
                 continue
 
+        # If any scraper found the game but none found player stats, return
+        # that context so the UI still shows the game info
+        if best_context:
+            logger.info("Waterfall exhausted for %s @ %s — returning game context only", name, team)
+            return best_context
+
         # No game today — try to find next game via ESPN
-        logger.info("No NCAA stats found for %s @ %s — checking next game", name, team)
+        logger.info("No NCAA game found for %s @ %s — checking next game", name, team)
         result = empty_stats()
         try:
             next_game = self._espn.find_next_game(team)
