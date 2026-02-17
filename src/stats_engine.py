@@ -84,6 +84,15 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
     return False
 
 
+def _fmt(n: int, label: str) -> str:
+    """Format a batting stat: omit count when 1 (baseball convention).
+
+    ``_fmt(1, "HR")`` → ``"HR"``
+    ``_fmt(2, "RBI")`` → ``"2 RBI"``
+    """
+    return label if n == 1 else f"{n} {label}"
+
+
 # ===== Shared data structures =====
 
 def empty_stats() -> dict:
@@ -370,13 +379,13 @@ class ProStatsFetcher:
 
         parts = [f"{h}-{ab}"]
         if hr:
-            parts.append(f"{hr} HR" if hr > 1 else "HR")
+            parts.append(_fmt(hr, "HR"))
         if rbi:
-            parts.append(f"{rbi} RBI")
+            parts.append(_fmt(rbi, "RBI"))
         if r:
-            parts.append(f"{r} R")
+            parts.append(_fmt(r, "R"))
         if sb:
-            parts.append(f"{sb} SB")
+            parts.append(_fmt(sb, "SB"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -695,6 +704,12 @@ class NCAAComScraper(BaseSchoolScraper):
                         result["_player_found"] = True
                         return result
                     if batter:
+                        ab = int(batter.get("atBats", 0) or 0)
+                        bb = int(batter.get("walks", 0) or 0)
+                        # Skip players listed in box score with 0 AB and 0 BB
+                        # — they appear on the roster but didn't actually play
+                        if ab == 0 and bb == 0:
+                            return None
                         result = self._parse_batting(batter)
                         result["_player_found"] = True
                         return result
@@ -753,15 +768,15 @@ class NCAAComScraper(BaseSchoolScraper):
 
         parts = [f"{h}-{ab}"]
         if hr:
-            parts.append(f"{hr} HR" if hr > 1 else "HR")
+            parts.append(_fmt(hr, "HR"))
         if rbi:
-            parts.append(f"{rbi} RBI")
+            parts.append(_fmt(rbi, "RBI"))
         if r:
-            parts.append(f"{r} R")
+            parts.append(_fmt(r, "R"))
         if sb:
-            parts.append(f"{sb} SB")
+            parts.append(_fmt(sb, "SB"))
         if bb:
-            parts.append(f"{bb} BB")
+            parts.append(_fmt(bb, "BB"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -991,13 +1006,13 @@ class D1BaseballScraper(BaseSchoolScraper):
 
         parts = [f"{h}-{ab}"]
         if hr:
-            parts.append(f"{hr} HR" if hr > 1 else "HR")
+            parts.append(_fmt(hr, "HR"))
         if rbi:
-            parts.append(f"{rbi} RBI")
+            parts.append(_fmt(rbi, "RBI"))
         if r:
-            parts.append(f"{r} R")
+            parts.append(_fmt(r, "R"))
         if sb:
-            parts.append(f"{sb} SB")
+            parts.append(_fmt(sb, "SB"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -1348,15 +1363,15 @@ class ESPNScraper(BaseSchoolScraper):
 
         parts = [f"{h}-{ab}"]
         if hr:
-            parts.append(f"{hr} HR" if hr > 1 else "HR")
+            parts.append(_fmt(hr, "HR"))
         if rbi:
-            parts.append(f"{rbi} RBI")
+            parts.append(_fmt(rbi, "RBI"))
         if r:
-            parts.append(f"{r} R")
+            parts.append(_fmt(r, "R"))
         if sb:
-            parts.append(f"{sb} SB")
+            parts.append(_fmt(sb, "SB"))
         if bb:
-            parts.append(f"{bb} BB")
+            parts.append(_fmt(bb, "BB"))
 
         return {
             "stats_summary": ", ".join(parts),
