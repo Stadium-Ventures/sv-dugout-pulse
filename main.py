@@ -323,8 +323,15 @@ def run_live():
             logger.exception("Failed to process %s — skipping", name)
             continue
 
-    # 3. Write output
-    write_output(pulse)
+    # 3. Write output — exclude yesterday's games from the Today tab
+    ET = timezone(timedelta(hours=-5))
+    today_str = datetime.now(ET).date().isoformat()
+    today_pulse = [
+        p for p in pulse
+        if not p.get("is_yesterday")
+        and (not p.get("game_date") or p["game_date"] >= today_str)
+    ]
+    write_output(today_pulse)
     _supplement_yesterday(pulse)
 
     # 4. Dedicated yesterday-only pass — catches players whose yesterday
