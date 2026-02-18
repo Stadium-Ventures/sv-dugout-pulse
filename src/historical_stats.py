@@ -1319,6 +1319,15 @@ class WindowStatsAggregator:
             # Try NCAA API leaderboards first (widest stats)
             result = self.ncaa_season.get_season_stats(name, team, position)
             if result and result.get("games_played", 0) > 0:
+                # Supplement counting stats from game logs where API leaderboard
+                # qualification thresholds may have excluded the player
+                gl = self.ncaa_game_log.fetch_window(
+                    name, team, position, self._season_start, self._today
+                )
+                if gl:
+                    for key in ("rbi", "r", "sb"):
+                        if result.get(key, 0) == 0 and gl.get(key, 0) > 0:
+                            result[key] = gl[key]
                 return result
             # Fall back to aggregated game logs
             return self.ncaa_game_log.fetch_window(
@@ -1385,6 +1394,9 @@ class WindowStatsAggregator:
                 "ab": stats.get("ab", 0) if not sparse else "--",
                 "h": stats.get("h", 0) if not sparse else "--",
                 "hr": stats.get("hr", 0) if not sparse else "--",
+                "rbi": stats.get("rbi", 0) if not sparse else "--",
+                "r": stats.get("r", 0) if not sparse else "--",
+                "sb": stats.get("sb", 0) if not sparse else "--",
                 "avg": self._fmt_rate(stats.get("avg", 0)) if not sparse else "--",
                 "obp": self._fmt_rate(stats.get("obp", 0)) if not sparse else "--",
                 "slg": self._fmt_rate(stats.get("slg", 0)) if not sparse else "--",

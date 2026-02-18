@@ -398,6 +398,10 @@
     font-variant-numeric: tabular-nums;
   }
   .stat-value.sparse { color: var(--text-dim); }
+  .stat-value.rate-hot { color: #4ade80; }
+  .stat-value.rate-warm { color: #86efac; }
+  .stat-value.rate-cold { color: #fca5a5; }
+  .stat-value.rate-ice { color: #f87171; }
 
   /* Window grades */
   .window-grade {
@@ -623,6 +627,27 @@ function windowGradeKey(g) {
   return 'Insufficient';
 }
 
+function rateColor(val, thresholds) {
+  // thresholds = [hot, warm, cold] e.g. [.900, .750, .550] for OPS
+  if (val === '--' || val == null) return '';
+  const n = parseFloat(val);
+  if (isNaN(n)) return '';
+  if (n >= thresholds[0]) return 'rate-hot';
+  if (n >= thresholds[1]) return 'rate-warm';
+  if (n < thresholds[2]) return 'rate-ice';
+  return '';
+}
+
+function eraColor(val) {
+  if (val === '--' || val == null) return '';
+  const n = parseFloat(val);
+  if (isNaN(n)) return '';
+  if (n <= 2.00) return 'rate-hot';
+  if (n <= 3.50) return 'rate-warm';
+  if (n >= 5.00) return 'rate-ice';
+  return '';
+}
+
 function renderWindowCard(p) {
   const position = p.tags?.position || 'Hitter';
   const isPitcher = position === 'Pitcher';
@@ -630,70 +655,74 @@ function renderWindowCard(p) {
   const gc = WINDOW_GRADE_CLASS[gk] || 'grade-insufficient';
   const isClient = p.is_client !== false;
   const stats = p.stats || {};
+  const gp = p.games_played ?? 0;
+  const gpLabel = gp === 1 ? '1 G' : `${gp} G`;
 
   let statsHtml;
   if (isPitcher) {
     const isSparse = stats.ip === '--';
+    const sp = isSparse ? 'sparse' : '';
     statsHtml = `
       <div class="stat-row pitcher-row">
         <div class="stat-cell">
           <span class="stat-label">IP</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ip ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.ip ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">K</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.k ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.k ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">BB</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.bb ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.bb ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">ERA</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.era ?? '--'}</span>
+          <span class="stat-value ${sp} ${isSparse ? '' : eraColor(stats.era)}">${stats.era ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">WHIP</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.whip ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.whip ?? '--'}</span>
         </div>
       </div>`;
   } else {
     const isSparse = stats.pa === '--';
+    const sp = isSparse ? 'sparse' : '';
     statsHtml = `
       <div class="stat-row">
         <div class="stat-cell">
           <span class="stat-label">PA</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.pa ?? '--'}</span>
-        </div>
-        <div class="stat-cell">
-          <span class="stat-label">AB</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ab ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.pa ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">H</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.h ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.h ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">HR</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.hr ?? '--'}</span>
+          <span class="stat-value ${sp}">${stats.hr ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">RBI</span>
+          <span class="stat-value ${sp}">${stats.rbi ?? '--'}</span>
         </div>
       </div>
       <div class="stat-row">
         <div class="stat-cell">
+          <span class="stat-label">R</span>
+          <span class="stat-value ${sp}">${stats.r ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">SB</span>
+          <span class="stat-value ${sp}">${stats.sb ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
           <span class="stat-label">AVG</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.avg ?? '--'}</span>
-        </div>
-        <div class="stat-cell">
-          <span class="stat-label">OBP</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.obp ?? '--'}</span>
-        </div>
-        <div class="stat-cell">
-          <span class="stat-label">SLG</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.slg ?? '--'}</span>
+          <span class="stat-value ${sp} ${isSparse ? '' : rateColor(stats.avg, [.350, .275, .200])}">${stats.avg ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">OPS</span>
-          <span class="stat-value ${isSparse ? 'sparse' : ''}">${stats.ops ?? '--'}</span>
+          <span class="stat-value ${sp} ${isSparse ? '' : rateColor(stats.ops, [.900, .750, .550])}">${stats.ops ?? '--'}</span>
         </div>
       </div>`;
   }
@@ -704,11 +733,11 @@ function renderWindowCard(p) {
         <span class="player-name">${esc(p.player_name)}</span>
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
+        <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
       <div class="window-grade ${gc}">${esc(p.window_grade || '— No Data')}</div>
       ${statsHtml}
-      ${p.games_played ? `<div class="games-played">${p.games_played} game${p.games_played !== 1 ? 's' : ''} played</div>` : ''}
     </div>`;
 }
 
@@ -731,6 +760,15 @@ function sortWindowPlayers(players) {
     const aG = gradeOrder.indexOf(windowGradeKey(a.window_grade));
     const bG = gradeOrder.indexOf(windowGradeKey(b.window_grade));
     if (aG !== bG) return aG - bG;
+    // Within same grade: sort by OPS (hitters) or ERA (pitchers) desc/asc
+    const aOps = parseFloat(a.stats?.ops) || 0;
+    const bOps = parseFloat(b.stats?.ops) || 0;
+    const aEra = parseFloat(a.stats?.era);
+    const bEra = parseFloat(b.stats?.era);
+    // If both have ERA (pitchers), lower ERA first
+    if (!isNaN(aEra) && !isNaN(bEra) && aEra !== bEra) return aEra - bEra;
+    // Otherwise sort by OPS descending
+    if (aOps !== bOps) return bOps - aOps;
     // Roster priority
     return (a.tags?.roster_priority || 99) - (b.tags?.roster_priority || 99);
   });
