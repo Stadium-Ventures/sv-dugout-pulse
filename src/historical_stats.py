@@ -1334,19 +1334,22 @@ class WindowStatsAggregator:
                 name, team, position, self._season_start, self._today
             )
 
-        # For 7D/30D: try baseline delta first, fall back to game logs
+        # For 7D/30D: if the window covers the entire season, reuse season stats
+        days = 7 if window == "7d" else 30
+        window_start = self._today - timedelta(days=days)
+        if window_start <= self._season_start:
+            return self._fetch_ncaa_window(name, team, position, "season")
+
+        # Try baseline delta first
         current = self.ncaa_season.get_cumulative_snapshot(name, team, position)
         if current is not None:
-            days = 7 if window == "7d" else 30
             baseline = self.ncaa_baselines.get_baseline(name, team, days)
             delta = self.ncaa_baselines.calculate_window_stats(current, baseline, position)
             if delta is not None:
                 return delta
 
         # Fall back to accumulated game logs
-        days = 7 if window == "7d" else 30
-        start = self._today - timedelta(days=days)
-        return self.ncaa_game_log.fetch_window(name, team, position, start, self._today)
+        return self.ncaa_game_log.fetch_window(name, team, position, window_start, self._today)
 
     def _empty_stats(self, position: str) -> dict:
         """Return empty stats dict for sparse data."""
