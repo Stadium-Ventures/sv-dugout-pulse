@@ -617,31 +617,41 @@ class NCAAComScraper(BaseSchoolScraper):
 
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
-            game_info = self._find_game(team, yesterday_only=yesterday_only)
-            if not game_info:
+            all_games = self._find_all_games(team, yesterday_only=yesterday_only)
+            if not all_games:
                 logger.debug("No NCAA.com game found for %s (yesterday_only=%s)", team, yesterday_only)
                 return None
 
-            game_id = game_info["game_id"]
-            box = self._get_boxscore(game_id)
-            if not box:
-                return None
+            # Try each game — return the first where the player has stats
+            # (handles doubleheaders where player appears in only one game)
+            first_context = None
+            for game_info in all_games:
+                game_id = game_info["game_id"]
+                box = self._get_boxscore(game_id)
+                if not box:
+                    continue
 
-            # Determine which team is ours
-            is_home = game_info["team_side"] == "home"
-            player_stats = self._find_player(player_name, is_home, box)
+                is_home = game_info["team_side"] == "home"
+                player_stats = self._find_player(player_name, is_home, box)
 
-            result = self._build_context(game_info)
-            if player_stats:
-                result.update(player_stats)
-            else:
-                status = result.get("game_status", "")
+                result = self._build_context(game_info)
+                if first_context is None:
+                    first_context = result
+
+                if player_stats:
+                    result.update(player_stats)
+                    return result
+
+            # Player not found in any game — use first game's context
+            if first_context is not None:
+                status = first_context.get("game_status", "")
                 if status == "Live":
-                    result["stats_summary"] = "In lineup — stats updating"
+                    first_context["stats_summary"] = "In lineup — stats updating"
                 elif status == "Final":
-                    result["stats_summary"] = "DNP — game final"
+                    first_context["stats_summary"] = "DNP — game final"
+                return first_context
 
-            return result
+            return None
 
         except Exception:
             logger.info("NCAAComScraper failed for %s @ %s", player_name, team)
@@ -658,8 +668,10 @@ class NCAAComScraper(BaseSchoolScraper):
             self._scoreboard_cache[date_str] = resp.json().get("games", [])
         return self._scoreboard_cache[date_str]
 
-    def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
-        """Search today then yesterday for a game matching the team.
+    def _find_all_games(self, team: str, yesterday_only: bool = False) -> list[dict]:
+        """Find ALL games for the given team (handles doubleheaders).
+
+        Returns a list of game info dicts (may be empty).
 
         If *yesterday_only* is True, skip today and only return Final games
         from yesterday's scoreboard.
@@ -672,6 +684,9 @@ class NCAAComScraper(BaseSchoolScraper):
             dates_to_check = (yesterday,)
         else:
             dates_to_check = (today, yesterday)
+
+        results = []
+        seen_ids = set()
 
         for check_date in dates_to_check:
             date_str = check_date.strftime("%Y/%m/%d")
@@ -704,26 +719,37 @@ class NCAAComScraper(BaseSchoolScraper):
                             seo,
                         ]
                         if self._team_matches(team_lower, names, exact):
-                            opp_side = "away" if side == "home" else "home"
-                            opp_name = game.get(opp_side, {}).get("names", {}).get("short", "?")
-                            home_name = game.get("home", {}).get("names", {}).get("short", "?")
-                            away_name = game.get("away", {}).get("names", {}).get("short", "?")
+                            game_id = game.get("gameID")
+                            if game_id not in seen_ids:
+                                seen_ids.add(game_id)
+                                opp_side = "away" if side == "home" else "home"
+                                opp_name = game.get(opp_side, {}).get("names", {}).get("short", "?")
+                                home_name = game.get("home", {}).get("names", {}).get("short", "?")
+                                away_name = game.get("away", {}).get("names", {}).get("short", "?")
 
-                            return {
-                                "game_id": game.get("gameID"),
-                                "team_id": side_info.get("teamId"),
-                                "team_side": side,
-                                "opponent": opp_name,
-                                "home_name": home_name,
-                                "away_name": away_name,
-                                "home_score": game.get("home", {}).get("score", "0"),
-                                "away_score": game.get("away", {}).get("score", "0"),
-                                "state": state,
-                                "is_yesterday": is_yesterday,
-                                "start_time": game.get("startTime", ""),
-                                "start_date": game.get("startDate", ""),
-                            }
-        return None
+                                results.append({
+                                    "game_id": game_id,
+                                    "team_id": side_info.get("teamId"),
+                                    "team_side": side,
+                                    "opponent": opp_name,
+                                    "home_name": home_name,
+                                    "away_name": away_name,
+                                    "home_score": game.get("home", {}).get("score", "0"),
+                                    "away_score": game.get("away", {}).get("score", "0"),
+                                    "state": state,
+                                    "is_yesterday": is_yesterday,
+                                    "start_time": game.get("startTime", ""),
+                                    "start_date": game.get("startDate", ""),
+                                })
+        return results
+
+    def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        """Find a game for the given team (returns first match).
+
+        Prefer _find_all_games when the caller needs doubleheader support.
+        """
+        games = self._find_all_games(team, yesterday_only=yesterday_only)
+        return games[0] if games else None
 
     @staticmethod
     def _team_matches(team_lower: str, names: list[str], exact: bool) -> bool:
@@ -1026,15 +1052,28 @@ class D1BaseballScraper(BaseSchoolScraper):
 
             game_links = soup.select('a[href*="/boxscore"]')
 
+            # Collect ALL matching box score links (handles doubleheaders)
+            candidate_urls = []
             for link in game_links:
                 row = link.find_parent("tr") or link.find_parent("div")
                 if row:
                     row_text = row.get_text()
                     if any(needle in row_text for needle in date_needles):
                         box_url = self.BASE_URL + link.get("href", "")
-                        return self._parse_box_score(player_name, box_url)
+                        if box_url not in candidate_urls:
+                            candidate_urls.append(box_url)
 
-            logger.debug("No game found today on D1Baseball for %s", team)
+            # Try each game — return the first where the player has stats
+            for box_url in candidate_urls:
+                result = self._parse_box_score(player_name, box_url)
+                if result:
+                    return result
+
+            if candidate_urls:
+                logger.debug("Player %s not found in %d D1Baseball box scores for %s",
+                             player_name, len(candidate_urls), team)
+            else:
+                logger.debug("No game found today on D1Baseball for %s", team)
             return None
 
         except Exception:
@@ -1196,30 +1235,39 @@ class ESPNScraper(BaseSchoolScraper):
 
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
-            game_info = self._find_game(team, yesterday_only=yesterday_only)
-            if not game_info:
+            all_games = self._find_all_games(team, yesterday_only=yesterday_only)
+            if not all_games:
                 logger.debug("No ESPN game found for %s (yesterday_only=%s)", team, yesterday_only)
                 return None
 
-            summary = self._get_summary(game_info["id"])
-            if not summary:
-                return None
+            # Try each game — return the first where the player has stats
+            # (handles doubleheaders where player appears in only one game)
+            first_context = None
+            for game_info in all_games:
+                summary = self._get_summary(game_info["id"])
+                if not summary:
+                    continue
 
-            result = self._extract_game_context(game_info)
-            player_stats = self._find_player(player_name, summary)
-            if player_stats:
-                player_stats["_player_found"] = True
-                result.update(player_stats)
-            else:
-                # Game found but player not in boxscore — provide context-specific message
-                status = result.get("game_status", "")
+                result = self._extract_game_context(game_info)
+                if first_context is None:
+                    first_context = result
+
+                player_stats = self._find_player(player_name, summary)
+                if player_stats:
+                    player_stats["_player_found"] = True
+                    result.update(player_stats)
+                    return result
+
+            # Player not found in any game — use first game's context
+            if first_context is not None:
+                status = first_context.get("game_status", "")
                 if status == "Live":
-                    result["stats_summary"] = "In lineup — stats updating"
+                    first_context["stats_summary"] = "In lineup — stats updating"
                 elif status == "Final":
-                    result["stats_summary"] = "DNP — game final"
-                # If Scheduled, _extract_game_context already set "Game at X:XX PM ET"
+                    first_context["stats_summary"] = "DNP — game final"
+                return first_context
 
-            return result
+            return None
         except Exception:
             logger.info("ESPN fetch failed for %s @ %s", player_name, team)
             return None
@@ -1313,8 +1361,11 @@ class ESPNScraper(BaseSchoolScraper):
             self._scoreboard_cache[date_str] = resp.json()
         return self._scoreboard_cache[date_str]
 
-    def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
-        """Find a game for the given team from the ESPN scoreboard.
+    def _find_all_games(self, team: str, yesterday_only: bool = False) -> list[dict]:
+        """Find ALL games for the given team from the ESPN scoreboard.
+
+        Returns a list of game info dicts (may be empty). Handles doubleheaders
+        by collecting every matching game rather than returning the first one.
 
         If *yesterday_only* is True, skip today entirely and only return
         Final games from yesterday's scoreboard.
@@ -1328,6 +1379,9 @@ class ESPNScraper(BaseSchoolScraper):
         else:
             # Check today's scoreboard first, then yesterday's for late-night spillover
             dates_to_check = (today_str, yesterday_str)
+
+        results = []
+        seen_ids = set()
 
         for sb_date in dates_to_check:
             scoreboard = self._get_scoreboard(sb_date)
@@ -1358,8 +1412,19 @@ class ESPNScraper(BaseSchoolScraper):
                             if self._team_matches(team_lower, names, exact):
                                 info = self._build_game_info(event, comp)
                                 info["is_yesterday"] = is_yesterday
-                                return info
-        return None
+                                game_id = info.get("id", "")
+                                if game_id not in seen_ids:
+                                    seen_ids.add(game_id)
+                                    results.append(info)
+        return results
+
+    def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        """Find a game for the given team (returns first match).
+
+        Prefer _find_all_games when the caller needs doubleheader support.
+        """
+        games = self._find_all_games(team, yesterday_only=yesterday_only)
+        return games[0] if games else None
 
     def _build_game_info(self, event: dict, comp: dict) -> dict:
         """Extract game info from an ESPN event/competition."""
