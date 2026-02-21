@@ -41,8 +41,47 @@ _PREFIX_QUALIFIERS = {
 }
 
 
+# Common NCAA abbreviation expansions used by the NCAA.com API.
+# Applied to both the search term and candidate names before matching.
+_ABBREV_MAP = {
+    "st.": "state",
+    "miss.": "mississippi",
+    "mich.": "michigan",
+    "ill.": "illinois",
+    "ky.": "kentucky",
+    "tenn.": "tennessee",
+    "colo.": "colorado",
+    "caro.": "carolina",
+    "ind.": "indiana",
+    "fla.": "florida",
+    "mo.": "missouri",
+    "la.": "louisiana",
+    "ark.": "arkansas",
+    "ala.": "alabama",
+    "ga.": "georgia",
+    "so.": "southern",
+    "u.": "university",
+}
+
+
+def _expand_abbreviations(name: str) -> str:
+    """Expand common NCAA abbreviations so names can match.
+
+    e.g. "Florida St." → "Florida State", "Southern Miss." → "Southern Mississippi"
+    """
+    result = name
+    for abbrev, full in _ABBREV_MAP.items():
+        # Case-insensitive word replacement
+        pattern = re.compile(re.escape(abbrev), re.IGNORECASE)
+        result = pattern.sub(full, result)
+    return result
+
+
 def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool:
     """Match our team name against candidate name strings.
+
+    Expands common NCAA abbreviations (e.g. "St." → "State") before matching
+    so that roster names like "Florida State" match API names like "Florida St."
 
     *exact* mode: equality only.
     *substring* mode: ``team_lower in name``, but rejects false positives where
@@ -52,30 +91,42 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
         - "florida" in "florida gators"  → True  (mascot, not qualifier)
         - "carolina" in "coastal carolina" → only if searching for "carolina"
     """
+    # Expand abbreviations on the search term once
+    team_expanded = _expand_abbreviations(team_lower).lower()
+
     for n in names:
         n_lower = n.lower()
         if not n_lower:
             continue
+
+        # Also try with abbreviations expanded
+        n_expanded = _expand_abbreviations(n_lower).lower()
+
         if exact:
-            if team_lower == n_lower:
+            if team_expanded == n_expanded or team_lower == n_lower:
                 return True
         else:
-            if team_lower not in n_lower:
+            # Check both raw and expanded forms
+            if team_lower not in n_lower and team_expanded not in n_expanded:
                 continue
 
             reject = False
 
+            # Use expanded forms for the qualifier guards
+            check_team = team_expanded
+            check_name = n_expanded
+
             # Suffix guard: "florida" in "florida state" — check word after match
-            if n_lower.startswith(team_lower) and len(n_lower) > len(team_lower):
-                suffix = n_lower[len(team_lower):].strip()
+            if check_name.startswith(check_team) and len(check_name) > len(check_team):
+                suffix = check_name[len(check_team):].strip()
                 first_word = suffix.split()[0] if suffix else ""
                 if first_word in _SUFFIX_QUALIFIERS:
                     reject = True
 
             # Prefix guard: "florida" in "north florida" — check word before match
-            idx = n_lower.find(team_lower)
+            idx = check_name.find(check_team)
             if idx > 0:
-                prefix = n_lower[:idx].strip()
+                prefix = check_name[:idx].strip()
                 last_word = prefix.split()[-1] if prefix else ""
                 if last_word in _PREFIX_QUALIFIERS:
                     reject = True
