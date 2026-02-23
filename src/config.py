@@ -82,6 +82,7 @@ WINDOW_SEASON_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "wind
 YESTERDAY_PULSE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "yesterday_pulse.json")
 NCAA_BASELINES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_baselines.json")
 NCAA_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_game_log.json")
+SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
 
 # ---------------------------------------------------------------------------
 # Logging
