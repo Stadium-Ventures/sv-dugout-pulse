@@ -242,7 +242,7 @@
     text-decoration: none;
   }
   .btn:hover { background: var(--surface-hover); border-color: #4a4e5a; }
-  .btn-copy.copied { background: rgba(34,197,94,0.15); border-color: var(--live-green); color: var(--live-green); }
+
 
   /* (stale banner removed — pipeline runs on schedule) */
 
@@ -582,9 +582,6 @@ function renderCard(p) {
     ? `<div class="next-game"><span class="next-label">Next:</span> <span class="next-value">${esc(p.next_game.display)}</span></div>`
     : '';
 
-  // Encode player data for copy-for-text
-  const encodedPlayer = encodeURIComponent(JSON.stringify(p));
-
   return `
     <div class="card${isLive ? ' live' : ''}">
       <div class="card-top">
@@ -606,7 +603,6 @@ function renderCard(p) {
         ${p.tags.draft_class && p.tags.draft_class !== 'N/A' ? `<span class="tag">${esc(p.tags.draft_class)}</span>` : ''}
       </div>
       <div class="card-actions">
-        <button class="btn btn-copy" onclick="copyForText(this, '${encodedPlayer}')">Copy for Text</button>
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
       </div>
     </div>`;
@@ -905,29 +901,6 @@ async function switchWindow(window) {
   }
 
   render();
-}
-
-function copyForText(btn, encodedPlayer) {
-  const p = JSON.parse(decodeURIComponent(encodedPlayer));
-  const firstName = p.player_name.split(' ')[0];
-  const gk = gradeKey(p.performance_grade);
-  let msg;
-  if (gk === 'Milestone' || gk === 'Standout') {
-    msg = `Great game ${firstName}! ${p.stats_summary}`;
-  } else if (gk === 'Good') {
-    msg = `Solid outing ${firstName}! ${p.stats_summary}`;
-  } else if (gk === 'Routine') {
-    msg = `${firstName}: ${p.stats_summary}`;
-  } else if (gk === 'Soft Flag') {
-    msg = `Tough one today ${firstName}. Tomorrow's a new day`;
-  } else {
-    msg = p.stats_summary || '';
-  }
-  navigator.clipboard.writeText(msg).then(() => {
-    btn.textContent = 'Copied!';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = 'Copy for Text'; btn.classList.remove('copied'); }, 1500);
-  });
 }
 
 function updateTimestamp() {
