@@ -426,6 +426,62 @@
     margin-top: 0.5rem;
   }
 
+  /* ---- Search bar ---- */
+  .search-wrap {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 0 0 0.5rem;
+  }
+  .search-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input::placeholder { color: var(--text-dim); }
+  .search-input:focus { border-color: var(--accent-blue); }
+  .search-wrap { position: relative; }
+  .search-icon {
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    pointer-events: none;
+  }
+
+  /* ---- XBH highlights in stats line ---- */
+  .stat-highlight-hr {
+    color: #fbbf24;
+    font-weight: 700;
+  }
+  .stat-highlight-xbh {
+    color: #a78bfa;
+    font-weight: 700;
+  }
+
+  /* ---- Pull-to-refresh ---- */
+  .pull-refresh {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--accent-blue);
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    line-height: 2.5rem;
+  }
+  .pull-refresh.active {
+    height: 2.5rem;
+    opacity: 1;
+  }
+
   /* ---- Responsive ---- */
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
@@ -437,6 +493,8 @@
 </style>
 </head>
 <body>
+
+<div class="pull-refresh" id="pullRefresh">Refreshing...</div>
 
 <div class="header">
   <h1>SV Dugout Pulse</h1>
@@ -452,6 +510,11 @@
   <button class="time-tab" data-window="7d">7 Days</button>
   <button class="time-tab" data-window="30d">30 Days</button>
   <button class="time-tab" data-window="season">Season</button>
+</div>
+
+<div class="search-wrap">
+  <span class="search-icon">&#x1F50D;</span>
+  <input type="text" class="search-input" id="searchInput" placeholder="Search players..." autocomplete="off">
 </div>
 
 <div class="filters">
@@ -513,6 +576,7 @@ let allPlayers = [];
 let dataGeneratedAt = null;
 let autoRefreshTimer = null;
 let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all' };
+let searchQuery = '';
 
 // Time window state
 let currentWindow = 'today';
@@ -553,6 +617,7 @@ function sortPlayers(players) {
 }
 
 function matchesFilters(p) {
+  if (searchQuery && !p.player_name.toLowerCase().includes(searchQuery)) return false;
   if (filters.roster === 'client' && p.is_client === false) return false;
   if (filters.roster === 'following' && p.is_client !== false) return false;
   if (filters.level !== 'all' && p.level !== filters.level) return false;
@@ -594,7 +659,7 @@ function renderCard(p) {
       </div>
       <div class="team-name">${esc(p.team)}</div>
       <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
-      <div class="stats-line">${esc(p.stats_summary)}</div>
+      <div class="stats-line">${highlightStats(p.stats_summary)}</div>
       ${p.game_context ? `<div class="game-context">${esc(p.game_context)}</div>` : ''}
       ${gameTimeHtml}
       ${nextGameHtml}
@@ -612,6 +677,15 @@ function esc(s, forAttr) {
   if (!s) return '';
   s = s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   if (forAttr) s = s.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  return s;
+}
+
+function highlightStats(summary) {
+  if (!summary) return '';
+  let s = esc(summary);
+  s = s.replace(/\b(\d+\s)?(HR)\b/g, '<span class="stat-highlight-hr">$&</span>');
+  s = s.replace(/\b(\d+\s)?(3B)\b/g, '<span class="stat-highlight-xbh">$&</span>');
+  s = s.replace(/\b(\d+\s)?(2B)\b/g, '<span class="stat-highlight-xbh">$&</span>');
   return s;
 }
 
@@ -738,6 +812,7 @@ function renderWindowCard(p) {
 }
 
 function matchesWindowFilters(p) {
+  if (searchQuery && !p.player_name.toLowerCase().includes(searchQuery)) return false;
   if (filters.roster === 'client' && p.is_client === false) return false;
   if (filters.roster === 'following' && p.is_client !== false) return false;
   if (filters.level !== 'all' && p.level !== filters.level) return false;
@@ -909,8 +984,18 @@ function updateTimestamp() {
     el.textContent = '';
     return;
   }
-  const genDate = new Date(dataGeneratedAt);
-  el.textContent = 'Data from ' + genDate.toLocaleString();
+  const now = new Date();
+  const gen = new Date(dataGeneratedAt);
+  const diffMin = Math.floor((now - gen) / 60000);
+  if (diffMin < 1) {
+    el.textContent = 'Updated just now';
+  } else if (diffMin < 60) {
+    el.textContent = `Updated ${diffMin}m ago`;
+  } else if (diffMin < 1440) {
+    el.textContent = `Updated ${Math.floor(diffMin / 60)}h ago`;
+  } else {
+    el.textContent = 'Updated ' + gen.toLocaleString();
+  }
 }
 
 function manageAutoRefresh() {
@@ -969,6 +1054,69 @@ document.querySelectorAll('.filter-group').forEach(group => {
 document.querySelectorAll('.time-tab').forEach(tab => {
   tab.addEventListener('click', () => switchWindow(tab.dataset.window));
 });
+
+// Search input
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  render();
+});
+
+// Relative timestamp refresh
+setInterval(updateTimestamp, 60000);
+
+// Swipe gestures + pull-to-refresh
+const TAB_ORDER = ['today', 'yesterday', '7d', '30d', 'season'];
+let touchStartX = 0, touchStartY = 0, touchTracking = false;
+
+document.addEventListener('touchstart', e => {
+  if (e.target.closest('input, button, a, select')) { touchTracking = false; return; }
+  touchTracking = true;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  if (!touchTracking) return;
+  touchTracking = false;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+  if (absDx < 30 && absDy < 30) return;
+  // Horizontal swipe → switch tabs
+  if (absDx > 50 && absDx > absDy * 1.5) {
+    const idx = TAB_ORDER.indexOf(currentWindow);
+    if (dx < 0 && idx < TAB_ORDER.length - 1) switchWindow(TAB_ORDER[idx + 1]);
+    else if (dx > 0 && idx > 0) switchWindow(TAB_ORDER[idx - 1]);
+    return;
+  }
+  // Pull down at top → refresh
+  if (dy > 80 && absDy > absDx * 2 && window.scrollY <= 0) {
+    refreshData();
+  }
+}, { passive: true });
+
+async function refreshData() {
+  const indicator = document.getElementById('pullRefresh');
+  indicator.classList.add('active');
+  try {
+    const path = WINDOW_PATHS[currentWindow];
+    const resp = await fetch(path + '?t=' + Date.now());
+    if (!resp.ok) return;
+    const raw = await resp.json();
+    if (currentWindow === 'today') {
+      allPlayers = Array.isArray(raw) ? raw : (raw.players || []);
+      dataGeneratedAt = Array.isArray(raw) ? null : (raw.generated_at || null);
+      updateTimestamp();
+    } else if (currentWindow === 'yesterday') {
+      windowData.yesterday = raw.players || [];
+    } else {
+      windowData[currentWindow] = raw;
+    }
+    render();
+  } catch (e) { console.error('Refresh failed:', e); }
+  finally { setTimeout(() => indicator.classList.remove('active'), 500); }
+}
 
 // Load data — supports both envelope {generated_at, players} and legacy array
 fetch('data/current_pulse.json')
