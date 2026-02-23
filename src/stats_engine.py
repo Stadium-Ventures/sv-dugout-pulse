@@ -306,41 +306,46 @@ class ProStatsFetcher:
         return None
 
     def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
-        """Find a game today that involves the player's team."""
+        """Find a game today that involves the player's team.
+
+        Uses team-name matching from the schedule first.  Only falls back to
+        the expensive boxscore player-search when no team name is available.
+        This ensures pre-game, in-progress, and final spring-training games
+        (where roster lists may be incomplete) are always detected.
+        """
         try:
             schedule = statsapi.schedule(date=self._today_str)
 
-            # Pre-filter schedule by team name to avoid unnecessary boxscore calls
             team_lower = team.lower() if team else ""
+
+            # ---- Fast path: match by team name (handles all game statuses) ----
             if team_lower:
-                candidates = [
-                    g for g in schedule
-                    if team_lower in g.get("home_name", "").lower()
-                    or team_lower in g.get("away_name", "").lower()
-                ]
-            else:
-                candidates = schedule
+                for game in schedule:
+                    home_match = team_lower in game.get("home_name", "").lower()
+                    away_match = team_lower in game.get("away_name", "").lower()
+                    if home_match or away_match:
+                        side = "home" if home_match else "away"
+                        status = game.get("status", "")
+                        # For started/final games, try to fetch boxscore for stats
+                        boxscore = {}
+                        if status not in ("Pre-Game", "Scheduled", "Warmup"):
+                            try:
+                                boxscore = statsapi.boxscore_data(game["game_id"])
+                            except Exception:
+                                logger.debug("Boxscore fetch failed for game %s", game["game_id"])
+                        return {
+                            "game_id": game["game_id"],
+                            "boxscore": boxscore,
+                            "schedule": game,
+                            "side": side,
+                        }
 
-            for game in candidates:
-                status = game.get("status", "")
-
-                # For pre-game / scheduled games, boxscore rosters aren't
-                # populated yet.  Return the game based on team match alone.
-                if status in ("Pre-Game", "Scheduled", "Warmup"):
-                    side = "home" if team_lower in game.get("home_name", "").lower() else "away"
-                    return {
-                        "game_id": game["game_id"],
-                        "boxscore": {},
-                        "schedule": game,
-                        "side": side,
-                    }
-
+            # ---- Slow path: no team name, search boxscores for player ID ----
+            for game in schedule:
                 try:
                     boxscore = statsapi.boxscore_data(game["game_id"])
                 except Exception:
-                    logger.debug("Boxscore fetch failed for game %s — skipping", game["game_id"])
                     continue
-                # Search both teams' rosters
                 for side in ("home", "away"):
                     players = boxscore.get(f"{side}Batters", []) + boxscore.get(
                         f"{side}Pitchers", []
@@ -475,6 +480,12 @@ class ProStatsFetcher:
                 ):
                     result.update(self._parse_batter_line(entry))
                     break
+
+        # If we have a game but no individual stats yet, set a useful summary
+        if result["stats_summary"] == "No game data" and result["game_status"] == "Live":
+            result["stats_summary"] = "In game — no AB yet"
+        elif result["stats_summary"] == "No game data" and result["game_status"] == "Final":
+            result["stats_summary"] = "DNP — game final"
 
         return result
 
