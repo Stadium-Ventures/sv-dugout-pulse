@@ -41,8 +41,8 @@ jobs:
           # Check if this is a manual run with specific mode
           if [ "${{ github.event.inputs.mode }}" != "" ]; then
             echo "mode=${{ github.event.inputs.mode }}" >> $GITHUB_OUTPUT
-          # Check if this is the 6am historical run (11:00 UTC)
-          elif [ "$(date -u +%H)" = "11" ] && [ "$(date -u +%M)" -lt "15" ]; then
+          # Use the cron expression that triggered the run (reliable, unlike clock time)
+          elif [ "${{ github.event.schedule }}" = "0 11 * * *" ]; then
             echo "mode=historical" >> $GITHUB_OUTPUT
           else
             echo "mode=live" >> $GITHUB_OUTPUT
