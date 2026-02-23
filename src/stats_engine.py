@@ -242,6 +242,8 @@ class ProStatsFetcher:
     def __init__(self):
         self._games_cache: dict[str, list] = {}
         self._player_cache: dict[str, int] = {}
+        self._team_info_cache: dict[int, dict] = {}  # team_id -> {name, sport_id, parent_id, parent_name}
+        self._player_team_cache: dict[int, dict] = {}  # player_id -> team info
         self._today = date.today()
         self._today_str = self._today.strftime("%m/%d/%Y")
 
@@ -304,104 +306,179 @@ class ProStatsFetcher:
                 if results:
                     player_id = results[0]["id"]
                     self._player_cache[name] = player_id
+                    # Cache the team ID from the lookup result
+                    ct = results[0].get("currentTeam", {})
+                    if isinstance(ct, dict) and ct.get("id"):
+                        self._resolve_team(ct["id"])
+                        self._player_team_cache[player_id] = ct["id"]
                     return player_id
         except Exception:
             logger.exception("Player lookup failed for %s", name)
         return None
 
-    def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
-        """Find a game today that involves the player's team.
-
-        Uses team-name matching from the schedule first.  Only falls back to
-        the expensive boxscore player-search when no team name is available.
-        This ensures pre-game, in-progress, and final spring-training games
-        (where roster lists may be incomplete) are always detected.
-        """
+    def _resolve_team(self, team_id: int) -> dict:
+        """Fetch and cache team details (name, sport level, parent org)."""
+        if team_id in self._team_info_cache:
+            return self._team_info_cache[team_id]
         try:
-            schedule = statsapi.schedule(date=self._today_str)
+            resp = requests.get(
+                f"https://statsapi.mlb.com/api/v1/teams/{team_id}",
+                timeout=10,
+            )
+            resp.raise_for_status()
+            t = resp.json()["teams"][0]
+            info = {
+                "team_id": team_id,
+                "name": t.get("name", ""),
+                "sport_id": t.get("sport", {}).get("id", 1),
+                "parent_id": t.get("parentOrgId"),
+                "parent_name": t.get("parentOrgName", ""),
+            }
+            self._team_info_cache[team_id] = info
+            return info
+        except Exception:
+            logger.debug("Failed to resolve team %d", team_id)
+            return {"team_id": team_id, "name": "", "sport_id": 1, "parent_id": None, "parent_name": ""}
 
-            team_lower = team.lower() if team else ""
+    def _get_schedule(self, sport_id: int, team_id: Optional[int] = None) -> list:
+        """Fetch today's schedule for a given sport level, with caching."""
+        cache_key = (sport_id, team_id or 0)
+        if cache_key in self._games_cache:
+            return self._games_cache[cache_key]
 
-            # ---- Fast path: match by team name (handles all game statuses) ----
-            if team_lower:
-                for game in schedule:
-                    home_match = team_lower in game.get("home_name", "").lower()
-                    away_match = team_lower in game.get("away_name", "").lower()
-                    if home_match or away_match:
-                        side = "home" if home_match else "away"
-                        status = game.get("status", "")
-                        # For started/final games, try to fetch boxscore for stats
-                        boxscore = {}
-                        if status not in ("Pre-Game", "Scheduled", "Warmup"):
-                            try:
-                                boxscore = statsapi.boxscore_data(game["game_id"])
-                            except Exception:
-                                logger.debug("Boxscore fetch failed for game %s", game["game_id"])
-                        return {
-                            "game_id": game["game_id"],
-                            "boxscore": boxscore,
-                            "schedule": game,
-                            "side": side,
-                        }
+        try:
+            if team_id:
+                games = statsapi.schedule(date=self._today_str, team=team_id, sportId=sport_id)
+            else:
+                games = statsapi.schedule(date=self._today_str, sportId=sport_id)
+            self._games_cache[cache_key] = games
+            return games
+        except Exception:
+            logger.debug("Schedule fetch failed for sportId=%d, team=%s", sport_id, team_id)
+            return []
 
-            # ---- Slow path: no team name, search boxscores for player ID ----
-            for game in schedule:
-                try:
-                    boxscore = statsapi.boxscore_data(game["game_id"])
-                except Exception:
-                    continue
-                for side in ("home", "away"):
-                    players = boxscore.get(f"{side}Batters", []) + boxscore.get(
-                        f"{side}Pitchers", []
+    def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
+        """Find a game today for the player's team.
+
+        Search strategy:
+        1. MLB schedule by roster team name (handles spring training)
+        2. MiLB schedule by player's actual team (handles regular season)
+        3. Parent MLB team schedule as fallback
+        """
+        team_lower = team.lower() if team else ""
+
+        try:
+            # --- 1. Search MLB schedule by roster team name ---
+            mlb_schedule = self._get_schedule(sport_id=1)
+            game = self._match_team_in_schedule(mlb_schedule, team_lower)
+            if game:
+                return game
+
+            # --- 2. Search player's actual MiLB team schedule ---
+            api_team_id = self._player_team_cache.get(player_id)
+            if api_team_id:
+                team_info = self._resolve_team(api_team_id)
+                if team_info["sport_id"] != 1:
+                    milb_schedule = self._get_schedule(
+                        sport_id=team_info["sport_id"],
+                        team_id=api_team_id,
                     )
-                    if player_id in players:
-                        return {
-                            "game_id": game["game_id"],
-                            "boxscore": boxscore,
-                            "schedule": game,
-                            "side": side,
-                        }
+                    game = self._match_team_in_schedule(
+                        milb_schedule, team_info["name"].lower(),
+                    )
+                    if game:
+                        return game
+
+                    # --- 3. Fallback: parent MLB team (spring training) ---
+                    if team_info["parent_id"]:
+                        parent_info = self._resolve_team(team_info["parent_id"])
+                        game = self._match_team_in_schedule(
+                            mlb_schedule, parent_info["name"].lower(),
+                        )
+                        if game:
+                            return game
+
         except Exception:
             logger.exception("Error searching today's games for player %d", player_id)
         return None
 
+    def _match_team_in_schedule(self, schedule: list, team_lower: str) -> Optional[dict]:
+        """Find the first game in *schedule* matching *team_lower*."""
+        if not team_lower:
+            return None
+        for game in schedule:
+            home_match = team_lower in game.get("home_name", "").lower()
+            away_match = team_lower in game.get("away_name", "").lower()
+            if home_match or away_match:
+                side = "home" if home_match else "away"
+                status = game.get("status", "")
+                boxscore = {}
+                if status not in ("Pre-Game", "Scheduled", "Warmup"):
+                    try:
+                        boxscore = statsapi.boxscore_data(game["game_id"])
+                    except Exception:
+                        logger.debug("Boxscore fetch failed for game %s", game["game_id"])
+                return {
+                    "game_id": game["game_id"],
+                    "boxscore": boxscore,
+                    "schedule": game,
+                    "side": side,
+                }
+        return None
+
     def _find_next_game(self, player_id: int, team: str) -> Optional[dict]:
-        """Find the next scheduled game for a player's team."""
+        """Find the next scheduled game for a player's team.
+
+        Searches MLB schedule by roster team name, then the player's actual
+        MiLB team schedule if available.
+        """
+        team_lower = team.lower() if team else ""
+
+        # Collect team names + sport IDs to search
+        search_targets = []
+        if team_lower:
+            search_targets.append((team_lower, 1))  # MLB schedule
+
+        # Add MiLB team if known
+        api_team_id = self._player_team_cache.get(player_id)
+        if api_team_id:
+            info = self._resolve_team(api_team_id)
+            if info["sport_id"] != 1:
+                search_targets.append((info["name"].lower(), info["sport_id"]))
+
+        if not search_targets:
+            return None
+
         try:
-            # Look ahead up to 14 days (catches spring training start)
             for days_ahead in range(1, 15):
                 future_date = self._today + timedelta(days=days_ahead)
                 future_str = future_date.strftime("%m/%d/%Y")
 
-                schedule = statsapi.schedule(date=future_str)
-                for game in schedule:
-                    # Check if this team is playing
-                    home = game.get("home_name", "")
-                    away = game.get("away_name", "")
+                for search_name, sport_id in search_targets:
+                    try:
+                        schedule = statsapi.schedule(date=future_str, sportId=sport_id)
+                    except Exception:
+                        continue
 
-                    # Match team name (partial match for flexibility)
-                    team_lower = team.lower()
-                    if team_lower in home.lower() or team_lower in away.lower():
-                        # Determine opponent
-                        if team_lower in home.lower():
-                            opponent = away
-                            home_away = "vs"
-                        else:
-                            opponent = home
-                            home_away = "@"
-
-                        # Parse game time
-                        game_time = self._format_game_time(game.get("game_datetime", ""))
-
-                        return {
-                            "date": future_date.strftime("%a %m/%d"),
-                            "date_full": future_date.isoformat(),
-                            "opponent": opponent,
-                            "home_away": home_away,
-                            "time": game_time,
-                            "display": f"{home_away} {opponent} - {future_date.strftime('%a %m/%d')} {game_time}" if game_time else f"{home_away} {opponent} - {future_date.strftime('%a %m/%d')}",
-                        }
-
+                    for game in schedule:
+                        home = game.get("home_name", "").lower()
+                        away = game.get("away_name", "").lower()
+                        if search_name in home or search_name in away:
+                            if search_name in home:
+                                opponent = game.get("away_name", "")
+                                home_away = "vs"
+                            else:
+                                opponent = game.get("home_name", "")
+                                home_away = "@"
+                            game_time = self._format_game_time(game.get("game_datetime", ""))
+                            return {
+                                "date": future_date.strftime("%a %m/%d"),
+                                "date_full": future_date.isoformat(),
+                                "opponent": opponent,
+                                "home_away": home_away,
+                                "time": game_time,
+                                "display": f"{home_away} {opponent} - {future_date.strftime('%a %m/%d')} {game_time}" if game_time else f"{home_away} {opponent} - {future_date.strftime('%a %m/%d')}",
+                            }
             return None
         except Exception:
             logger.debug("Error finding next game for %s", team)
