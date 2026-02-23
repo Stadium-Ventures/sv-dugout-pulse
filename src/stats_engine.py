@@ -564,7 +564,10 @@ class ProStatsFetcher:
 
         # If we have a game but no individual stats yet, set a useful summary
         if result["stats_summary"] == "No game data" and result["game_status"] == "Live":
-            result["stats_summary"] = "In game — no AB yet"
+            if position == "Pitcher":
+                result["stats_summary"] = "Game in progress — not yet pitching"
+            else:
+                result["stats_summary"] = "Game in progress — no AB yet"
         elif result["stats_summary"] == "No game data" and result["game_status"] == "Final":
             result["stats_summary"] = "DNP — game final"
 
