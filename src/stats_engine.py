@@ -541,48 +541,77 @@ class ProStatsFetcher:
             result["game_status"] = status
 
         # Find the player's stats line in the boxscore
-        pid_str = f"ID{player_id}"
         position = player.get("position", "Hitter")
+        found_in_box = False
 
         if position == "Pitcher":
             result["is_pitcher_line"] = True
             pitchers = box.get(f"{game['side']}Pitchers", [])
             for entry in pitchers:
-                if isinstance(entry, dict) and str(player_id) in str(
-                    entry.get("personId", "")
-                ):
-                    result.update(self._parse_pitcher_line(entry))
+                if isinstance(entry, dict) and entry.get("personId") == player_id:
+                    found_in_box = True
+                    ip_val = entry.get("ip", "0")
+                    if float(ip_val) if ip_val else 0:
+                        result.update(self._parse_pitcher_line(entry))
+                    else:
+                        result["stats_summary"] = "On the mound"
                     break
         else:
             batters = box.get(f"{game['side']}Batters", [])
             for entry in batters:
-                if isinstance(entry, dict) and str(player_id) in str(
-                    entry.get("personId", "")
-                ):
-                    result.update(self._parse_batter_line(entry))
+                if isinstance(entry, dict) and entry.get("personId") == player_id:
+                    found_in_box = True
+                    ab = int(entry.get("ab", 0))
+                    bb = int(entry.get("bb", 0))
+                    if ab + bb > 0:
+                        result.update(self._parse_batter_line(entry))
+                    else:
+                        # In lineup but no plate appearance yet
+                        order_str = entry.get("battingOrder", "")
+                        pos = entry.get("position", "")
+                        is_sub = entry.get("substitution", False)
+                        if is_sub:
+                            result["stats_summary"] = f"Entered game ({pos})" if pos else "Entered game"
+                        elif order_str and order_str.isdigit():
+                            spot = int(order_str) // 100
+                            result["stats_summary"] = f"In lineup — batting {self._ordinal(spot)} ({pos})" if pos else f"In lineup — batting {self._ordinal(spot)}"
+                        else:
+                            result["stats_summary"] = f"In lineup ({pos})" if pos else "In lineup"
                     break
 
-        # If we have a game but no individual stats yet, set a useful summary
-        if result["stats_summary"] == "No game data" and result["game_status"] == "Live":
-            if position == "Pitcher":
-                result["stats_summary"] = "Game in progress — not yet pitching"
-            else:
-                result["stats_summary"] = "Game in progress — no AB yet"
-        elif result["stats_summary"] == "No game data" and result["game_status"] == "Final":
-            result["stats_summary"] = "DNP — game final"
+        # Fallback for players not found in the boxscore at all
+        if not found_in_box and result["stats_summary"] == "No game data":
+            if result["game_status"] == "Live":
+                if position == "Pitcher":
+                    result["stats_summary"] = "Game in progress — not yet pitching"
+                else:
+                    result["stats_summary"] = "Game in progress — not in lineup"
+            elif result["game_status"] == "Final":
+                result["stats_summary"] = "DNP — game final"
 
         return result
 
     @staticmethod
+    def _ordinal(n: int) -> str:
+        """Return ordinal string: 1→'1st', 2→'2nd', 3→'3rd', 4→'4th', etc."""
+        if 11 <= n % 100 <= 13:
+            return f"{n}th"
+        return f"{n}{['th','st','nd','rd','th'][min(n % 10, 4)]}"
+
+    @staticmethod
     def _parse_batter_line(entry: dict) -> dict:
-        """Parse a batter's boxscore entry into our stats dict."""
-        stats = entry.get("stats", {})
-        h = int(stats.get("hits", 0))
-        ab = int(stats.get("atBats", 0))
-        hr = int(stats.get("homeRuns", 0))
-        rbi = int(stats.get("rbi", 0))
-        r = int(stats.get("runs", 0))
-        sb = int(stats.get("stolenBases", 0))
+        """Parse a batter's boxscore entry into our stats dict.
+
+        statsapi.boxscore_data() returns flat dicts with short string keys:
+            {"ab": "3", "h": "1", "hr": "0", "rbi": "1", "r": "0", "sb": "0", ...}
+        """
+        h = int(entry.get("h", 0))
+        ab = int(entry.get("ab", 0))
+        hr = int(entry.get("hr", 0))
+        rbi = int(entry.get("rbi", 0))
+        r = int(entry.get("r", 0))
+        sb = int(entry.get("sb", 0))
+        bb = int(entry.get("bb", 0))
 
         parts = [f"{h}-{ab}"]
         if hr:
@@ -593,6 +622,8 @@ class ProStatsFetcher:
             parts.append(_fmt(r, "R"))
         if sb:
             parts.append(_fmt(sb, "SB"))
+        if bb:
+            parts.append(_fmt(bb, "BB"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -602,21 +633,30 @@ class ProStatsFetcher:
             "rbi": rbi,
             "runs": r,
             "stolen_bases": sb,
+            "walks": bb,
         }
 
     @staticmethod
     def _parse_pitcher_line(entry: dict) -> dict:
-        """Parse a pitcher's boxscore entry into our stats dict."""
-        stats = entry.get("stats", {})
-        ip_str = stats.get("inningsPitched", "0")
+        """Parse a pitcher's boxscore entry into our stats dict.
+
+        statsapi.boxscore_data() returns flat dicts with short string keys:
+            {"ip": "6.0", "h": "4", "er": "2", "bb": "1", "k": "7", "hr": "0", ...}
+        Win/loss/save info is in the "note" field: "(W, 1-0)", "(L, 0-1)", "(S, 2)".
+        """
+        ip_str = entry.get("ip", "0") or "0"
         ip = float(ip_str) if ip_str else 0.0
-        er = int(stats.get("earnedRuns", 0))
-        k = int(stats.get("strikeOuts", 0))
-        bb = int(stats.get("baseOnBalls", 0))
-        ha = int(stats.get("hits", 0))
-        sv = int(stats.get("saves", 0))
-        w = stats.get("wins", 0)
-        l = stats.get("losses", 0)
+        er = int(entry.get("er", 0))
+        k = int(entry.get("k", 0))
+        bb = int(entry.get("bb", 0))
+        ha = int(entry.get("h", 0))
+        hr = int(entry.get("hr", 0))
+
+        # Parse W/L/S from note field
+        note = entry.get("note", "")
+        w = "(W," in note or "(W)" in note
+        l = "(L," in note or "(L)" in note
+        sv = "(S," in note or "(S)" in note or "(SV," in note
 
         parts = [f"{ip_str} IP"]
         if ha:
@@ -625,6 +665,8 @@ class ProStatsFetcher:
         parts.append(f"{k} K")
         if bb:
             parts.append(f"{bb} BB")
+        if hr:
+            parts.append(f"{hr} HR")
         if sv:
             parts.append("SV")
         if w:
@@ -642,9 +684,9 @@ class ProStatsFetcher:
             "strikeouts": k,
             "walks_allowed": bb,
             "hits_allowed": ha,
-            "saves": sv,
-            "win": bool(w),
-            "loss": bool(l),
+            "saves": 1 if sv else 0,
+            "win": w,
+            "loss": l,
             "quality_start": qs,
         }
 
