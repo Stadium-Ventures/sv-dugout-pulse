@@ -1193,10 +1193,52 @@ class D1BaseballScraper(BaseSchoolScraper):
         try:
             resp = requests.get(box_url, timeout=15)
             resp.raise_for_status()
-            return self._find_player_in_sidearm(player_name, resp.text)
+            result = self._find_player_in_sidearm(player_name, resp.text)
+
+            # Supplement HR count from scoring summary if the batting table
+            # didn't have an HR column (many Sidearm layouts omit it)
+            if result and not result.get("is_pitcher_line") and result.get("home_runs", 0) == 0:
+                hr = self._count_hrs_from_summary(player_name, resp.text)
+                if hr > 0:
+                    result["home_runs"] = hr
+                    # Rebuild stats_summary with HR included
+                    parts = [f"{result.get('hits', 0)}-{result.get('at_bats', 0)}"]
+                    parts.append(_fmt(hr, "HR"))
+                    if result.get("rbi", 0):
+                        parts.append(_fmt(result["rbi"], "RBI"))
+                    if result.get("runs", 0):
+                        parts.append(_fmt(result["runs"], "R"))
+                    if result.get("stolen_bases", 0):
+                        parts.append(_fmt(result["stolen_bases"], "SB"))
+                    if result.get("walks", 0):
+                        parts.append(_fmt(result["walks"], "BB"))
+                    result["stats_summary"] = ", ".join(parts)
+
+            return result
         except Exception:
             logger.debug("Failed to fetch Sidearm box score at %s", box_url)
             return None
+
+    @staticmethod
+    def _count_hrs_from_summary(player_name: str, html: str) -> int:
+        """Count home runs from the Sidearm scoring summary table.
+
+        Sidearm scoring summaries contain entries like:
+        "Bailey,Myles homered to left center (396 ft), RBI"
+
+        Only searches visible text in <td> and <div> elements to avoid
+        double-counting from embedded JavaScript data.
+        """
+        player_last = player_name.split()[-1].lower()
+        soup = BeautifulSoup(html, "html.parser")
+
+        # Remove script/style tags to avoid matching embedded JS data
+        for tag in soup.select("script, style"):
+            tag.decompose()
+
+        text = soup.get_text()
+        pattern = rf"{re.escape(player_last)},\s*\w+\s+homered"
+        return len(re.findall(pattern, text, re.IGNORECASE))
 
     def _find_player_in_sidearm(self, player_name: str, html: str) -> Optional[dict]:
         """Find a player's stats in a Sidearm-format box score page.
