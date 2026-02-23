@@ -780,16 +780,16 @@ function renderWindowCard(p) {
       </div>
       <div class="stat-row">
         <div class="stat-cell">
-          <span class="stat-label">R</span>
-          <span class="stat-value ${sp}">${stats.r ?? '--'}</span>
-        </div>
-        <div class="stat-cell">
-          <span class="stat-label">SB</span>
-          <span class="stat-value ${sp}">${stats.sb ?? '--'}</span>
-        </div>
-        <div class="stat-cell">
           <span class="stat-label">AVG</span>
           <span class="stat-value ${sp} ${isSparse ? '' : rateColor(stats.avg, [.350, .275, .200])}">${stats.avg ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">OBP</span>
+          <span class="stat-value ${sp} ${isSparse ? '' : rateColor(stats.obp, [.400, .330, .280])}">${stats.obp ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">SLG</span>
+          <span class="stat-value ${sp} ${isSparse ? '' : rateColor(stats.slg, [.550, .420, .320])}">${stats.slg ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">OPS</span>

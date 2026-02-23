@@ -41,8 +41,11 @@ logger = logging.getLogger(__name__)
 class MLBHistoricalFetcher:
     """Fetch and aggregate MLB stats over date ranges using game logs."""
 
+    _SPORT_IDS = [1, 11, 12, 13, 14]  # MLB, AAA, AA, High-A, A
+
     def __init__(self):
         self._player_cache: dict[str, int] = {}  # name -> player_id
+        self._player_sport: dict[int, int] = {}   # player_id -> sport_id
 
     def fetch_window(
         self, player_name: str, team: str, position: str, start_date: date, end_date: date
@@ -75,16 +78,32 @@ class MLBHistoricalFetcher:
             return None
 
     def _lookup_player(self, name: str) -> Optional[int]:
-        """Search MLB for a player ID by name, with caching."""
+        """Search MLB/MiLB for a player ID by name, with caching."""
         if name in self._player_cache:
             return self._player_cache[name]
 
         try:
-            results = statsapi.lookup_player(name)
-            if results:
-                player_id = results[0]["id"]
-                self._player_cache[name] = player_id
-                return player_id
+            for sport_id in self._SPORT_IDS:
+                results = statsapi.lookup_player(name, sportId=sport_id)
+                if results:
+                    player_id = results[0]["id"]
+                    self._player_cache[name] = player_id
+                    # Track which sport level this player belongs to
+                    ct = results[0].get("currentTeam", {})
+                    if isinstance(ct, dict) and ct.get("id"):
+                        try:
+                            resp = requests.get(
+                                f"https://statsapi.mlb.com/api/v1/teams/{ct['id']}",
+                                timeout=10,
+                            )
+                            t = resp.json()["teams"][0]
+                            self._player_sport[player_id] = t.get("sport", {}).get("id", sport_id)
+                        except Exception:
+                            self._player_sport[player_id] = sport_id
+                    else:
+                        self._player_sport[player_id] = sport_id
+                    logger.debug("Found %s at sportId=%d (id=%d)", name, self._player_sport[player_id], player_id)
+                    return player_id
         except Exception:
             logger.debug("MLB player lookup failed for %s", name)
 
@@ -106,12 +125,14 @@ class MLBHistoricalFetcher:
             hitting_log = []
             pitching_log = []
 
+            sport_id = self._player_sport.get(player_id, 1)
+
             try:
                 hitting_data = statsapi.player_stat_data(
                     player_id,
                     group="hitting",
                     type="gameLog",
-                    sportId=1,
+                    sportId=sport_id,
                 )
                 if hitting_data and "stats" in hitting_data:
                     for stat_group in hitting_data["stats"]:
@@ -126,7 +147,7 @@ class MLBHistoricalFetcher:
                     player_id,
                     group="pitching",
                     type="gameLog",
-                    sportId=1,
+                    sportId=sport_id,
                 )
                 if pitching_data and "stats" in pitching_data:
                     for stat_group in pitching_data["stats"]:
