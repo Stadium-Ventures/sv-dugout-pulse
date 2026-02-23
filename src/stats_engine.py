@@ -1000,136 +1000,336 @@ class NCAAComScraper(BaseSchoolScraper):
 class D1BaseballScraper(BaseSchoolScraper):
     """
     Scraper for D1Baseball.com — covers all D1 programs.
-    Has consistent box score structure across schools.
-    Good for post-game summaries and live scoring.
+
+    Uses the D1Baseball dynamic scores API to discover games, then follows
+    the box score link (typically to the school's Sidearm page) for player stats.
+    No per-school configuration needed — works for every D1 game.
     """
 
-    BASE_URL = "https://d1baseball.com"
+    SCORES_URL = (
+        "https://d1baseball.com/wp-content/plugins/integritive/dynamic-scores.php"
+    )
 
-    # Map school names to their D1Baseball team slug
-    # Example: "Florida" -> "florida-gators"
-    TEAM_SLUGS: dict[str, str] = {
-        # Power 5 + major programs — add more as needed
-        "Alabama": "alabama-crimson-tide",
-        "Arizona": "arizona-wildcats",
-        "Arkansas": "arkansas-razorbacks",
-        "Auburn": "auburn-tigers",
-        "Clemson": "clemson-tigers",
-        "Coastal Carolina": "coastal-carolina-chanticleers",
-        "Dallas Baptist": "dallas-baptist-patriots",
-        "Duke": "duke-blue-devils",
-        "FIU": "fiu-panthers",
-        "Florida": "florida-gators",
-        "Florida State": "florida-state-seminoles",
-        "Fordham": "fordham-rams",
-        "Georgia Tech": "georgia-tech-yellow-jackets",
-        "LSU": "lsu-tigers",
-        "Mercer": "mercer-bears",
-        "Miami": "miami-hurricanes",
-        "Michigan": "michigan-wolverines",
-        "Mississippi State": "mississippi-state-bulldogs",
-        "North Carolina": "north-carolina-tar-heels",
-        "Ohio State": "ohio-state-buckeyes",
-        "Oklahoma": "oklahoma-sooners",
-        "Oklahoma State": "oklahoma-state-cowboys",
-        "Ole Miss": "ole-miss-rebels",
-        "Oregon": "oregon-ducks",
-        "Oregon State": "oregon-state-beavers",
-        "Rutgers": "rutgers-scarlet-knights",
-        "Sacramento State": "sacramento-state-hornets",
-        "SE Louisiana": "southeastern-louisiana-lions",
-        "South Carolina": "south-carolina-gamecocks",
-        "Southern Miss": "southern-miss-golden-eagles",
-        "Stanford": "stanford-cardinal",
-        "Stony Brook": "stony-brook-seawolves",
-        "TCU": "tcu-horned-frogs",
-        "Tennessee": "tennessee-volunteers",
-        "Texas": "texas-longhorns",
-        "Texas A&M": "texas-am-aggies",
-        "Texas Tech": "texas-tech-red-raiders",
-        "UCF": "ucf-knights",
-        "USF": "usf-bulls",
-        "Vanderbilt": "vanderbilt-commodores",
-        "Virginia": "virginia-cavaliers",
-        "Virginia Tech": "virginia-tech-hokies",
-        "Wake Forest": "wake-forest-demon-deacons",
-    }
+    def __init__(self):
+        self._scores_cache: dict[str, str] = {}  # date_str -> HTML content
+        self._today = date.today()
 
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
-        slug = self.TEAM_SLUGS.get(team)
-        if not slug:
-            logger.debug("No D1Baseball slug configured for %s", team)
-            return None
-
         try:
-            # D1Baseball box scores are at /teams/{slug}/schedule
-            # We look for today's game and parse the box score
-            schedule_url = f"{self.BASE_URL}/teams/{slug}/schedule"
-            resp = requests.get(schedule_url, timeout=15)
-            resp.raise_for_status()
+            tiles = self._find_all_game_tiles(team, yesterday_only=yesterday_only)
+            if not tiles:
+                logger.debug("No D1Baseball game found for %s (yesterday_only=%s)", team, yesterday_only)
+                return None
 
-            return self._find_player_box_score(player_name, team, resp.text, yesterday_only=yesterday_only)
+            first_context = None
+            for tile_info in tiles:
+                context = self._build_tile_context(tile_info)
+                if first_context is None:
+                    first_context = context
 
+                box_url = tile_info.get("box_score_url")
+                if not box_url:
+                    continue
+
+                player_stats = self._parse_sidearm_box_score(player_name, box_url)
+                if player_stats:
+                    context.update(player_stats)
+                    return context
+
+            # Player not found in any game — return game context
+            if first_context is not None:
+                status = first_context.get("game_status", "")
+                if status == "Live":
+                    first_context["stats_summary"] = "In lineup — stats updating"
+                elif status == "Final":
+                    first_context["stats_summary"] = "DNP — game final"
+                return first_context
+
+            return None
         except Exception:
             logger.info("D1Baseball fetch failed for %s @ %s", player_name, team)
             return None
 
-    def _find_player_box_score(
-        self, player_name: str, team: str, html: str, yesterday_only: bool = False
-    ) -> Optional[dict]:
-        """
-        Parse D1Baseball schedule page to find today's (or yesterday's) game,
-        then fetch and parse the box score for the player.
+    # ---- scores API / game discovery ----
+
+    def _get_scores(self, date_str: str) -> str:
+        """Fetch D1Baseball scores HTML for a date (YYYYMMDD). Caches per date."""
+        if date_str not in self._scores_cache:
+            resp = requests.get(
+                self.SCORES_URL,
+                params={"date": date_str},
+                headers={
+                    "Referer": "https://d1baseball.com/scores/",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                timeout=15,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            self._scores_cache[date_str] = data.get("content", {}).get("d1-scores", "")
+        return self._scores_cache[date_str]
+
+    def _find_all_game_tiles(self, team: str, yesterday_only: bool = False) -> list[dict]:
+        """Find all game tiles for a team from the D1Baseball scores page."""
+        today_str = self._today.strftime("%Y%m%d")
+        yesterday_str = (self._today - timedelta(days=1)).strftime("%Y%m%d")
+        team_lower = team.lower()
+
+        if yesterday_only:
+            dates_to_check = [(yesterday_str, True)]
+        else:
+            dates_to_check = [(today_str, False), (yesterday_str, True)]
+
+        results = []
+        seen_keys = set()
+
+        for date_str, is_yesterday in dates_to_check:
+            html = self._get_scores(date_str)
+            if not html:
+                continue
+
+            soup = BeautifulSoup(html, "html.parser")
+            tiles = soup.select(".d1-score-tile")
+
+            for tile in tiles:
+                home_name = tile.get("data-home-name", "")
+                road_name = tile.get("data-road-name", "")
+
+                # Match team using data-home-name/data-road-name or data-search
+                matched = False
+                for name in (home_name, road_name):
+                    if _school_name_matches(team_lower, [name], exact=True):
+                        matched = True
+                        break
+                if not matched:
+                    # Try data-search attributes (e.g. "fsu florida state")
+                    for team_div in tile.select(".team"):
+                        search_str = team_div.get("data-search", "")
+                        if team_lower in search_str.lower():
+                            matched = True
+                            break
+
+                if not matched:
+                    continue
+
+                tile_key = tile.get("data-key", "")
+                if tile_key in seen_keys:
+                    continue
+                seen_keys.add(tile_key)
+
+                # Status filtering
+                is_final = "status-final" in tile.get("class", [])
+                is_live = "status-in-progress" in tile.get("class", [])
+
+                if yesterday_only and not is_final:
+                    continue
+                if is_yesterday and not (is_final or is_live):
+                    continue
+
+                # Extract box score link
+                box_link = tile.select_one(".box-score-links a")
+                box_url = box_link.get("href", "") if box_link else ""
+
+                # Extract scores
+                teams = tile.select(".team")
+                road_score = home_score = "0"
+                if len(teams) >= 2:
+                    road_score = self._extract_score(teams[0])
+                    home_score = self._extract_score(teams[1])
+
+                status = "Final" if is_final else "Live" if is_live else "Scheduled"
+
+                results.append({
+                    "home_name": home_name,
+                    "road_name": road_name,
+                    "home_score": home_score,
+                    "road_score": road_score,
+                    "status": status,
+                    "is_yesterday": is_yesterday,
+                    "box_score_url": box_url,
+                    "tile_key": tile_key,
+                })
+
+        return results
+
+    @staticmethod
+    def _extract_score(team_div) -> str:
+        """Extract the runs score from a D1Baseball tile team div."""
+        runs = team_div.select_one(".score-runs")
+        if runs:
+            text = runs.get_text(strip=True)
+            # Strip the "R" label if present
+            return re.sub(r"[^\d]", "", text) or "0"
+        return "0"
+
+    def _build_tile_context(self, tile_info: dict) -> dict:
+        """Build game context dict from a D1Baseball tile."""
+        result = empty_stats()
+        home = tile_info["home_name"]
+        away = tile_info["road_name"]
+        hs = tile_info["home_score"]
+        a_s = tile_info["road_score"]
+        status = tile_info["status"]
+
+        if status == "Final":
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | Final"
+            result["game_status"] = "Final"
+        elif status == "Live":
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | Live"
+            result["game_status"] = "Live"
+        else:
+            result["game_context"] = f"{away} vs {home}"
+            result["game_status"] = "Scheduled"
+
+        if tile_info.get("is_yesterday"):
+            result["is_yesterday"] = True
+
+        return result
+
+    # ---- Sidearm box score parsing ----
+
+    def _parse_sidearm_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
+        """Fetch and parse a Sidearm box score page for a specific player."""
+        try:
+            resp = requests.get(box_url, timeout=15)
+            resp.raise_for_status()
+            return self._find_player_in_sidearm(player_name, resp.text)
+        except Exception:
+            logger.debug("Failed to fetch Sidearm box score at %s", box_url)
+            return None
+
+    def _find_player_in_sidearm(self, player_name: str, html: str) -> Optional[dict]:
+        """Find a player's stats in a Sidearm-format box score page.
+
+        Sidearm puts player names in <th> elements within each row,
+        with stat values in <td> elements.
         """
         try:
             soup = BeautifulSoup(html, "html.parser")
+            player_last = player_name.split()[-1].lower()
 
-            # Find links to box scores (typically contain "/boxscore/" in href)
-            # D1Baseball uses format: /games/{game-slug}/boxscore
-            today = date.today()
-            yesterday = today - timedelta(days=1)
-            if yesterday_only:
-                date_needles = [
-                    yesterday.strftime("%m/%d"),
-                    yesterday.strftime("%b %d"),
-                ]
-            else:
-                date_needles = [
-                    today.strftime("%m/%d"),
-                    today.strftime("%b %d"),
-                    yesterday.strftime("%m/%d"),
-                    yesterday.strftime("%b %d"),
-                ]
+            tables = soup.select("table")
+            for table in tables:
+                # Get column headers from the first row's <th> elements
+                header_row = table.select_one("tr")
+                if not header_row:
+                    continue
+                col_headers = [th.get_text(strip=True).upper() for th in header_row.select("th")]
 
-            game_links = soup.select('a[href*="/boxscore"]')
+                # Skip tables that aren't batting or pitching stat tables
+                if "AB" not in col_headers and "IP" not in col_headers:
+                    continue
 
-            # Collect ALL matching box score links (handles doubleheaders)
-            candidate_urls = []
-            for link in game_links:
-                row = link.find_parent("tr") or link.find_parent("div")
-                if row:
-                    row_text = row.get_text()
-                    if any(needle in row_text for needle in date_needles):
-                        box_url = self.BASE_URL + link.get("href", "")
-                        if box_url not in candidate_urls:
-                            candidate_urls.append(box_url)
+                rows = table.select("tr")
+                for row in rows:
+                    # Player name is in a <th> within the row
+                    row_th = row.select("th")
+                    if not row_th:
+                        continue
+                    name_text = row_th[0].get_text(strip=True)
 
-            # Try each game — return the first where the player has stats
-            for box_url in candidate_urls:
-                result = self._parse_box_score(player_name, box_url)
-                if result:
-                    return result
+                    if player_last not in name_text.lower():
+                        continue
 
-            if candidate_urls:
-                logger.debug("Player %s not found in %d D1Baseball box scores for %s",
-                             player_name, len(candidate_urls), team)
-            else:
-                logger.debug("No game found today on D1Baseball for %s", team)
+                    cells = row.select("td")
+                    if not cells:
+                        continue
+
+                    # Build stat map: col_headers[1:] align with td cells
+                    # (col_headers[0] is "Player", rest are stat columns)
+                    stat_headers = col_headers[1:]  # skip "Player"
+                    # First td is typically Pos, rest are stats
+                    cell_texts = [c.get_text(strip=True) for c in cells]
+
+                    # Check if this is a batting or pitching table
+                    if "AB" in col_headers:
+                        return self._parse_sidearm_batting(stat_headers, cell_texts)
+                    elif "IP" in col_headers:
+                        return self._parse_sidearm_pitching(stat_headers, cell_texts)
+
             return None
-
         except Exception:
-            logger.exception("Error parsing D1Baseball schedule for %s", team)
+            logger.debug("Error parsing Sidearm box score for %s", player_name)
             return None
+
+    @staticmethod
+    def _parse_sidearm_batting(headers: list, values: list) -> Optional[dict]:
+        """Parse batting stats from Sidearm header/value alignment."""
+        stats = {}
+        for i, header in enumerate(headers):
+            if i < len(values):
+                stats[header] = values[i]
+
+        ab = int(stats.get("AB", 0) or 0)
+        h = int(stats.get("H", 0) or 0)
+        hr = int(stats.get("HR", 0) or 0)
+        rbi = int(stats.get("RBI", 0) or 0)
+        r = int(stats.get("R", 0) or 0)
+        sb = int(stats.get("SB", 0) or 0)
+        bb = int(stats.get("BB", 0) or 0)
+
+        if ab == 0 and bb == 0:
+            return None  # didn't actually play
+
+        parts = [f"{h}-{ab}"]
+        if hr:
+            parts.append(_fmt(hr, "HR"))
+        if rbi:
+            parts.append(_fmt(rbi, "RBI"))
+        if r:
+            parts.append(_fmt(r, "R"))
+        if sb:
+            parts.append(_fmt(sb, "SB"))
+        if bb:
+            parts.append(_fmt(bb, "BB"))
+
+        return {
+            "stats_summary": ", ".join(parts),
+            "hits": h,
+            "at_bats": ab,
+            "home_runs": hr,
+            "rbi": rbi,
+            "runs": r,
+            "stolen_bases": sb,
+            "walks": bb,
+            "_player_found": True,
+        }
+
+    @staticmethod
+    def _parse_sidearm_pitching(headers: list, values: list) -> Optional[dict]:
+        """Parse pitching stats from Sidearm header/value alignment."""
+        stats = {}
+        for i, header in enumerate(headers):
+            if i < len(values):
+                stats[header] = values[i]
+
+        ip_str = stats.get("IP", "0") or "0"
+        ip = float(ip_str) if str(ip_str).replace(".", "").isdigit() else 0.0
+        h = int(stats.get("H", 0) or 0)
+        er = int(stats.get("ER", 0) or 0)
+        k = int(stats.get("SO", 0) or stats.get("K", 0) or 0)
+        bb = int(stats.get("BB", 0) or 0)
+
+        parts = [f"{ip_str} IP"]
+        if h:
+            parts.append(f"{h} H")
+        parts.append(f"{er} ER")
+        parts.append(f"{k} K")
+        if bb:
+            parts.append(f"{bb} BB")
+
+        qs = ip >= 6.0 and er <= 3
+        return {
+            "stats_summary": ", ".join(parts),
+            "is_pitcher_line": True,
+            "ip": ip,
+            "earned_runs": er,
+            "strikeouts": k,
+            "walks_allowed": bb,
+            "hits_allowed": h,
+            "quality_start": qs,
+            "_player_found": True,
+        }
 
     def _parse_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
         """Fetch and parse a D1Baseball box score page for a specific player."""
@@ -1164,103 +1364,6 @@ class D1BaseballScraper(BaseSchoolScraper):
             logger.exception("Error parsing D1Baseball box score at %s", box_url)
             return None
 
-    def _extract_stats_from_row(self, cells: list, table) -> Optional[dict]:
-        """Extract stats from a box score row. Determines if batting or pitching."""
-        try:
-            # Detect if this is a batting or pitching table by headers
-            headers = [th.get_text(strip=True).upper() for th in table.select("th")]
-
-            if "AB" in headers or "H" in headers:
-                # Batting line
-                return self._parse_batting_row(cells, headers)
-            elif "IP" in headers or "ER" in headers:
-                # Pitching line
-                return self._parse_pitching_row(cells, headers)
-
-            return None
-
-        except Exception:
-            logger.exception("Error extracting stats from row")
-            return None
-
-    def _parse_batting_row(self, cells: list, headers: list) -> dict:
-        """Parse a batting stats row."""
-        stats = {}
-        cell_texts = [c.get_text(strip=True) for c in cells]
-
-        # Build a mapping from header to value
-        # Skip first column (player name), align with headers
-        for i, header in enumerate(headers):
-            if i < len(cell_texts):
-                stats[header] = cell_texts[i]
-
-        h = int(stats.get("H", 0) or 0)
-        ab = int(stats.get("AB", 0) or 0)
-        hr = int(stats.get("HR", 0) or 0)
-        rbi = int(stats.get("RBI", 0) or 0)
-        r = int(stats.get("R", 0) or 0)
-        sb = int(stats.get("SB", 0) or 0)
-
-        parts = [f"{h}-{ab}"]
-        if hr:
-            parts.append(_fmt(hr, "HR"))
-        if rbi:
-            parts.append(_fmt(rbi, "RBI"))
-        if r:
-            parts.append(_fmt(r, "R"))
-        if sb:
-            parts.append(_fmt(sb, "SB"))
-
-        return {
-            "stats_summary": ", ".join(parts),
-            "game_status": "Final",
-            "game_context": "",  # Would need to parse from page header
-            "hits": h,
-            "at_bats": ab,
-            "home_runs": hr,
-            "rbi": rbi,
-            "runs": r,
-            "stolen_bases": sb,
-        }
-
-    def _parse_pitching_row(self, cells: list, headers: list) -> dict:
-        """Parse a pitching stats row."""
-        stats = {}
-        cell_texts = [c.get_text(strip=True) for c in cells]
-
-        for i, header in enumerate(headers):
-            if i < len(cell_texts):
-                stats[header] = cell_texts[i]
-
-        ip_str = stats.get("IP", "0") or "0"
-        ip = float(ip_str) if ip_str.replace(".", "").isdigit() else 0.0
-        er = int(stats.get("ER", 0) or 0)
-        k = int(stats.get("K", stats.get("SO", 0)) or 0)
-        bb = int(stats.get("BB", 0) or 0)
-        ha = int(stats.get("H", 0) or 0)
-
-        parts = [f"{ip_str} IP"]
-        if ha:
-            parts.append(f"{ha} H")
-        parts.append(f"{er} ER")
-        parts.append(f"{k} K")
-        if bb:
-            parts.append(f"{bb} BB")
-
-        qs = ip >= 6.0 and er <= 3
-
-        return {
-            "stats_summary": ", ".join(parts),
-            "game_status": "Final",
-            "game_context": "",
-            "is_pitcher_line": True,
-            "ip": ip,
-            "earned_runs": er,
-            "strikeouts": k,
-            "walks_allowed": bb,
-            "hits_allowed": ha,
-            "quality_start": qs,
-        }
 
 
 class ESPNScraper(BaseSchoolScraper):
