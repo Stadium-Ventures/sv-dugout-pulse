@@ -198,10 +198,15 @@ def _supplement_yesterday(pulse: list):
         except Exception:
             pass
 
-    # Merge: add new entries for players not already present
-    existing_names = {p["player_name"] for p in existing}
+    # Merge: add new entries, and upgrade DNP entries with real stats
+    existing_by_name = {p["player_name"]: p for p in existing}
     for entry in new_entries:
-        if entry["player_name"] not in existing_names:
+        old = existing_by_name.get(entry["player_name"])
+        if old is None:
+            existing.append(entry)
+        elif "DNP" in old.get("stats_summary", "") and "DNP" not in entry.get("stats_summary", ""):
+            # Replace stale DNP with real stats
+            existing[:] = [p for p in existing if p["player_name"] != entry["player_name"]]
             existing.append(entry)
 
     envelope = {
@@ -232,26 +237,43 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         except Exception:
             pass
 
-    existing_names = {p["player_name"] for p in existing}
+    # Track players with confirmed stats vs DNP entries that should be re-checked
+    confirmed_names = {
+        p["player_name"] for p in existing
+        if "DNP" not in p.get("stats_summary", "")
+    }
+    existing_by_name = {p["player_name"]: p for p in existing}
     added = 0
+    updated = 0
 
     for player in all_players:
         name = player["player_name"]
-        if name in existing_names:
-            continue  # already have yesterday data for this player
+        if name in confirmed_names:
+            continue  # already have real stats for this player
 
         try:
             stats = fetcher.fetch_yesterday(player)
             if stats is None or stats.get("game_status") != "Final":
                 continue
+            # Skip if this is still a DNP result (no improvement over existing)
+            if "DNP" in stats.get("stats_summary", "") and name in existing_by_name:
+                continue
 
             stats["is_yesterday"] = True
             analysis = analyzer.analyze(player, stats)
             entry = build_pulse_entry(player, stats, analysis)
+
+            if name in existing_by_name:
+                # Replace the stale DNP entry with real stats
+                existing[:] = [p for p in existing if p["player_name"] != name]
+                updated += 1
+                logger.info("Yesterday pass: UPGRADED %s from DNP → %s", name, stats.get("stats_summary", "—"))
+            else:
+                added += 1
+                logger.info("Yesterday pass: %s | %s", name, stats.get("stats_summary", "—"))
+
             existing.append(entry)
-            existing_names.add(name)
-            added += 1
-            logger.info("Yesterday pass: %s | %s", name, stats.get("stats_summary", "—"))
+            confirmed_names.add(name)
         except Exception:
             logger.debug("Yesterday pass failed for %s — skipping", name)
             continue
@@ -267,7 +289,7 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
     os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
     with open(YESTERDAY_PULSE_PATH, "w") as f:
         json.dump(envelope, f, indent=2, ensure_ascii=False)
-    logger.info("Yesterday pulse: %d total entries (%d added this pass)", len(existing), added)
+    logger.info("Yesterday pulse: %d total entries (%d added, %d upgraded from DNP)", len(existing), added, updated)
 
 
 def run_live():
