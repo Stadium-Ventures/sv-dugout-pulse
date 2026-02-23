@@ -290,19 +290,23 @@ class ProStatsFetcher:
 
     # ----- internal helpers -----
 
+    # Search MLB, then AAA, AA, High-A, Single-A
+    _SPORT_IDS = [1, 11, 12, 13, 14]
+
     def _lookup_player(self, name: str) -> Optional[int]:
-        """Search MLB for a player ID by name, with caching."""
+        """Search across all pro levels for a player ID, with caching."""
         if name in self._player_cache:
             return self._player_cache[name]
 
         try:
-            results = statsapi.lookup_player(name)
-            if results:
-                player_id = results[0]["id"]
-                self._player_cache[name] = player_id
-                return player_id
+            for sport_id in self._SPORT_IDS:
+                results = statsapi.lookup_player(name, sportId=sport_id)
+                if results:
+                    player_id = results[0]["id"]
+                    self._player_cache[name] = player_id
+                    return player_id
         except Exception:
-            logger.exception("MLB player lookup failed for %s", name)
+            logger.exception("Player lookup failed for %s", name)
         return None
 
     def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
