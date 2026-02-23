@@ -322,6 +322,19 @@ class ProStatsFetcher:
                 candidates = schedule
 
             for game in candidates:
+                status = game.get("status", "")
+
+                # For pre-game / scheduled games, boxscore rosters aren't
+                # populated yet.  Return the game based on team match alone.
+                if status in ("Pre-Game", "Scheduled", "Warmup"):
+                    side = "home" if team_lower in game.get("home_name", "").lower() else "away"
+                    return {
+                        "game_id": game["game_id"],
+                        "boxscore": {},
+                        "schedule": game,
+                        "side": side,
+                    }
+
                 try:
                     boxscore = statsapi.boxscore_data(game["game_id"])
                 except Exception:

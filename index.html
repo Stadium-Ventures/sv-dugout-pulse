@@ -574,6 +574,7 @@ const WINDOW_GRADE_CLASS = {
 
 let allPlayers = [];
 let dataGeneratedAt = null;
+let yesterdaySourceDate = null;
 let autoRefreshTimer = null;
 let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all' };
 let searchQuery = '';
@@ -953,6 +954,7 @@ async function switchWindow(window) {
 
   // Toggle filter visibility
   toggleFiltersForWindow(window);
+  updateTimestamp();
 
   // Load data if not cached
   if (window !== 'today' && windowData[window] === null) {
@@ -963,6 +965,7 @@ async function switchWindow(window) {
         // yesterday_pulse.json uses the same envelope as current_pulse
         if (window === 'yesterday') {
           windowData[window] = raw.players || [];
+          yesterdaySourceDate = raw.source_date || null;
         } else {
           windowData[window] = raw;
         }
@@ -975,11 +978,28 @@ async function switchWindow(window) {
     }
   }
 
+  updateTimestamp();
   render();
 }
 
 function updateTimestamp() {
   const el = document.getElementById('updated');
+  // Yesterday tab: show source date instead of stale relative time
+  if (currentWindow === 'yesterday') {
+    if (yesterdaySourceDate) {
+      const d = new Date(yesterdaySourceDate + 'T12:00:00');
+      el.textContent = 'Results from ' + d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    } else {
+      el.textContent = '';
+    }
+    return;
+  }
+  // Window tabs (7d/30d/season): no timestamp needed
+  if (currentWindow !== 'today') {
+    el.textContent = '';
+    return;
+  }
+  // Today tab: show relative time
   if (!dataGeneratedAt) {
     el.textContent = '';
     return;
