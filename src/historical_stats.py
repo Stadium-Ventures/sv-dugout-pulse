@@ -923,10 +923,12 @@ class NCAASeasonStatsFetcher:
 
     # Stat endpoints to fetch.  Key = stat_id, value = list of fields to extract.
     HITTER_ENDPOINTS = {
-        200: {"fields": ["G", "AB", "H"], "rate": "BA", "rate_key": "avg_raw"},  # BA — widest coverage
+        200: {"fields": ["G", "AB", "H"], "rate": "BA", "rate_key": "avg_raw"},  # BA
         504: {"fields": ["BB", "HBP", "SF", "SH"], "rate": "PCT", "rate_key": "obp"},  # OBP
         321: {"fields": ["TB"], "rate": "SLG PCT", "rate_key": "slg"},  # SLG
         201: {"fields": ["HR"]},    # HR per game (has total HR)
+        488: {"fields": ["2B"]},    # Doubles total
+        490: {"fields": ["3B"]},    # Triples total
         339: {"fields": ["K"]},     # Toughest to K (has total K)
         487: {"fields": ["RBI"]},   # RBI total
         485: {"fields": ["R"]},     # Runs total
@@ -1122,10 +1124,13 @@ class NCAASeasonStatsFetcher:
             }
         h = stats.get("h", 0)
         hr = stats.get("hr", 0)
+        doubles = stats.get("2b", 0)
+        triples = stats.get("3b", 0)
         tb = stats.get("tb", 0)
-        # Estimate TB when not on SLG leaderboard: singles + 4*HR
+        # Calculate TB from XBH data when not on SLG leaderboard
         if tb == 0 and h > 0:
-            tb = (h - hr) + 4 * hr
+            singles = h - doubles - triples - hr
+            tb = singles + 2 * doubles + 3 * triples + 4 * hr
 
         return {
             "ab": stats.get("ab", 0),
@@ -1134,6 +1139,8 @@ class NCAASeasonStatsFetcher:
             "hbp": stats.get("hbp", 0),
             "sf": stats.get("sf", 0),
             "hr": hr,
+            "doubles": doubles,
+            "triples": triples,
             "tb": tb,
             "k": stats.get("k", 0),
             "rbi": stats.get("rbi", 0),
@@ -1150,6 +1157,8 @@ class NCAASeasonStatsFetcher:
         hbp = stats.get("hbp", 0)
         sf = stats.get("sf", 0)
         hr = stats.get("hr", 0)
+        doubles = stats.get("2b", 0)
+        triples = stats.get("3b", 0)
         tb = stats.get("tb", 0)
         pa = ab + bb + hbp + sf
 
@@ -1158,10 +1167,11 @@ class NCAASeasonStatsFetcher:
         avg = h / ab if ab > 0 else 0
         obp = stats.get("obp", (h + bb + hbp) / pa if pa > 0 else 0)
 
-        # If not on SLG leaderboard (tb=0, no slg key), estimate TB from
-        # known data: all non-HR hits assumed singles (minimum SLG).
+        # If not on SLG leaderboard, calculate TB from XBH data.
+        # With 2B/3B endpoints we now have exact TB when available.
         if tb == 0 and h > 0:
-            tb = (h - hr) + 4 * hr  # singles + 4 * HR
+            singles = h - doubles - triples - hr
+            tb = singles + 2 * doubles + 3 * triples + 4 * hr
         slg = stats.get("slg", tb / ab if ab > 0 else 0)
         ops = obp + slg
 
