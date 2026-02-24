@@ -67,21 +67,19 @@ WINDOW_PITCHER_SOLID_ERA = 3.50
 WINDOW_PITCHER_QUIET_ERA = 5.00
 
 # Minimum sample sizes (show "--" if below threshold)
-WINDOW_MIN_PA = {"7d": 1, "30d": 1, "season": 1}
-WINDOW_MIN_IP = {"7d": 0.1, "30d": 0.1, "season": 0.1}
+WINDOW_MIN_PA = {"7d": 1, "season": 1}
+WINDOW_MIN_IP = {"7d": 0.1, "season": 0.1}
 
 # ---------------------------------------------------------------------------
 # Output
 # ---------------------------------------------------------------------------
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "current_pulse.json")
 
-# Window stats output paths
+# Window stats output paths (7D = Pro only, Season = everyone)
 WINDOW_7D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_7d.json")
-WINDOW_30D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_30d.json")
 WINDOW_SEASON_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_season.json")
 YESTERDAY_PULSE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "yesterday_pulse.json")
-NCAA_BASELINES_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_baselines.json")
-NCAA_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_game_log.json")
+BBREF_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "bbref_cache.json")
 SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
 
 # ---------------------------------------------------------------------------

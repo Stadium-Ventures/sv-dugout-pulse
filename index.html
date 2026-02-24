@@ -508,7 +508,6 @@
   <button class="time-tab active" data-window="today">Today</button>
   <button class="time-tab" data-window="yesterday">Yesterday</button>
   <button class="time-tab" data-window="7d">7 Days</button>
-  <button class="time-tab" data-window="30d">30 Days</button>
   <button class="time-tab" data-window="season">Season</button>
 </div>
 
@@ -581,12 +580,11 @@ let searchQuery = '';
 
 // Time window state
 let currentWindow = 'today';
-const windowData = { today: null, yesterday: null, '7d': null, '30d': null, season: null };
+const windowData = { today: null, yesterday: null, '7d': null, season: null };
 const WINDOW_PATHS = {
   today: 'data/current_pulse.json',
   yesterday: 'data/yesterday_pulse.json',
   '7d': 'data/window_7d.json',
-  '30d': 'data/window_30d.json',
   season: 'data/window_season.json'
 };
 
@@ -1085,7 +1083,7 @@ document.getElementById('searchInput').addEventListener('input', e => {
 setInterval(updateTimestamp, 60000);
 
 // Swipe gestures + pull-to-refresh
-const TAB_ORDER = ['today', 'yesterday', '7d', '30d', 'season'];
+const TAB_ORDER = ['today', 'yesterday', '7d', 'season'];
 let touchStartX = 0, touchStartY = 0, touchTracking = false;
 
 document.addEventListener('touchstart', e => {
