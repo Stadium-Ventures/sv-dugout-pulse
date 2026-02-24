@@ -13,6 +13,7 @@ import logging
 import re
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
+from zoneinfo import ZoneInfo
 
 import requests
 import statsapi
@@ -290,6 +291,77 @@ class ProStatsFetcher:
             logger.exception("Error fetching pro stats for %s", name)
             return empty_stats()
 
+    def fetch_yesterday(self, player: dict) -> Optional[dict]:
+        """Fetch yesterday's Final stats for a Pro player.
+
+        Queries MLB/MiLB schedule for yesterday, finds the player's team's
+        game, and extracts boxscore stats if the game is Final.
+        """
+        team = player.get("team", "")
+        name = player.get("player_name", "")
+
+        if not team or team == "Unsigned":
+            return None
+
+        try:
+            player_id = self._lookup_player(name)
+            if player_id is None:
+                return None
+
+            yesterday = self._today - timedelta(days=1)
+            yesterday_str = yesterday.strftime("%m/%d/%Y")
+            team_lower = team.lower()
+
+            game = self._find_game_on_date(player_id, team_lower, yesterday_str)
+            if game is None:
+                return None
+
+            status = game["schedule"].get("status", "")
+            if status != "Final":
+                return None
+
+            result = self._extract_stats(player, player_id, game)
+            result["is_yesterday"] = True
+            result["game_date"] = yesterday.isoformat()
+            return result
+
+        except Exception:
+            logger.debug("Yesterday fetch failed for pro player %s", name)
+            return None
+
+    def _find_game_on_date(self, player_id: int, team_lower: str,
+                           date_str: str) -> Optional[dict]:
+        """Find a game on a specific date for a player's team."""
+        # Search MLB schedule first
+        try:
+            schedule = statsapi.schedule(date=date_str, sportId=1)
+            game = self._match_team_in_schedule(schedule, team_lower)
+            if game:
+                return game
+        except Exception:
+            pass
+
+        # Search MiLB if player has a known team
+        api_team_id = self._player_team_cache.get(player_id)
+        if api_team_id:
+            team_info = self._resolve_team(api_team_id)
+            if team_info["sport_id"] != 1:
+                try:
+                    schedule = statsapi.schedule(
+                        date=date_str,
+                        team=api_team_id,
+                        sportId=team_info["sport_id"],
+                    )
+                    game = self._match_team_in_schedule(
+                        schedule, team_info["name"].lower(),
+                    )
+                    if game:
+                        return game
+                except Exception:
+                    pass
+
+        return None
+
     # ----- internal helpers -----
 
     # Search MLB, then AAA, AA, High-A, Single-A
@@ -492,10 +564,8 @@ class ProStatsFetcher:
         try:
             # MLB API returns ISO format like "2026-04-01T23:05:00Z"
             dt = datetime.fromisoformat(game_datetime_str.replace("Z", "+00:00"))
-            # Convert to ET (UTC-4 or UTC-5 depending on DST, approximate with -4)
-            from datetime import timezone
-            et_offset = timezone(timedelta(hours=-4))
-            dt_et = dt.astimezone(et_offset)
+            # Convert to ET with proper DST handling (EST in winter, EDT in summer)
+            dt_et = dt.astimezone(ZoneInfo("America/New_York"))
             return dt_et.strftime("%-I:%M %p ET").replace(" 0", " ")
         except Exception:
             return ""
@@ -1857,8 +1927,7 @@ class ESPNScraper(BaseSchoolScraper):
             return ""
         try:
             dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
-            et_offset = timezone(timedelta(hours=-5))
-            dt_et = dt.astimezone(et_offset)
+            dt_et = dt.astimezone(ZoneInfo("America/New_York"))
             return dt_et.strftime("%-I:%M %p ET")
         except Exception:
             return ""
@@ -2121,9 +2190,10 @@ class StatsFetcher:
         """Fetch only yesterday's Final stats for a player.
 
         Returns the result dict or None if no yesterday game was found.
-        Pro players don't need this (MLB API returns date-specific data).
         """
         level = player.get("level", "")
         if level == "NCAA":
             return self.ncaa.fetch_yesterday(player)
+        elif level == "Pro":
+            return self.pro.fetch_yesterday(player)
         return None
