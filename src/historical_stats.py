@@ -995,6 +995,12 @@ class NCAASeasonStatsFetcher:
             len(self._hitter_cache), len(self._pitcher_cache),
         )
 
+    # Common fields that appear on most hitter leaderboard pages.
+    # Different leaderboards have different qualification thresholds, so the
+    # same player can show G=3/AB=8 on the BA board but G=6/AB=18 on OBP.
+    # We always want the most inclusive values (highest G).
+    _HITTER_COMMON_FIELDS = {"G", "AB", "H"}
+
     def _fetch_stat_pages(self, stat_id: int, meta: dict, is_pitcher: bool):
         """Fetch all pages for a single stat endpoint and merge into cache."""
         cache = self._pitcher_cache if is_pitcher else self._hitter_cache
@@ -1023,7 +1029,7 @@ class NCAASeasonStatsFetcher:
                 if key not in cache:
                     cache[key] = {"_name": name, "_team": team}
 
-                # Extract fields
+                # Extract configured fields
                 for field in meta.get("fields", []):
                     if field in entry:
                         cache[key][field.lower()] = self._parse_num(entry[field])
@@ -1033,6 +1039,17 @@ class NCAASeasonStatsFetcher:
                 rate_key = meta.get("rate_key")
                 if rate_field and rate_key and rate_field in entry:
                     cache[key][rate_key] = self._parse_float(entry[rate_field])
+
+                # For hitter endpoints: also grab G/AB/H if this leaderboard
+                # includes more games (higher G) than what's already cached.
+                # This prevents stale AB/H from a restrictive leaderboard.
+                if not is_pitcher and "G" in entry:
+                    entry_g = self._parse_num(entry["G"])
+                    cached_g = cache[key].get("g", 0)
+                    if entry_g > cached_g:
+                        for cf in self._HITTER_COMMON_FIELDS:
+                            if cf in entry:
+                                cache[key][cf.lower()] = self._parse_num(entry[cf])
 
             total_pages = data.get("pages", 1)
             if page >= total_pages:
@@ -1103,14 +1120,21 @@ class NCAASeasonStatsFetcher:
                 "bb": stats.get("bb", 0),
                 "k": stats.get("so", 0),
             }
+        h = stats.get("h", 0)
+        hr = stats.get("hr", 0)
+        tb = stats.get("tb", 0)
+        # Estimate TB when not on SLG leaderboard: singles + 4*HR
+        if tb == 0 and h > 0:
+            tb = (h - hr) + 4 * hr
+
         return {
             "ab": stats.get("ab", 0),
-            "h": stats.get("h", 0),
+            "h": h,
             "bb": stats.get("bb", 0),
             "hbp": stats.get("hbp", 0),
             "sf": stats.get("sf", 0),
-            "hr": stats.get("hr", 0),
-            "tb": stats.get("tb", 0),
+            "hr": hr,
+            "tb": tb,
             "k": stats.get("k", 0),
             "rbi": stats.get("rbi", 0),
             "r": stats.get("r", 0),
@@ -1129,8 +1153,15 @@ class NCAASeasonStatsFetcher:
         tb = stats.get("tb", 0)
         pa = ab + bb + hbp + sf
 
-        avg = stats.get("avg_raw", h / ab if ab > 0 else 0)
+        # Always calculate AVG from actual AB/H (don't trust rate from BA
+        # leaderboard which may use a filtered subset of games).
+        avg = h / ab if ab > 0 else 0
         obp = stats.get("obp", (h + bb + hbp) / pa if pa > 0 else 0)
+
+        # If not on SLG leaderboard (tb=0, no slg key), estimate TB from
+        # known data: all non-HR hits assumed singles (minimum SLG).
+        if tb == 0 and h > 0:
+            tb = (h - hr) + 4 * hr  # singles + 4 * HR
         slg = stats.get("slg", tb / ab if ab > 0 else 0)
         ops = obp + slg
 
