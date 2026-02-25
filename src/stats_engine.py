@@ -2192,11 +2192,28 @@ class NCAAStatsFetcher:
                     continue
 
                 if self._has_player_stats(result):
+                    # For Scheduled games missing game_time, save context and
+                    # keep trying so ESPN/NCAA.com can supply the start time
+                    if (result.get("game_status") == "Scheduled"
+                            and not result.get("game_time")
+                            and best_context is None):
+                        best_context = result
+                        logger.info(
+                            "%s found scheduled game for %s @ %s but no game_time — trying next for time",
+                            scraper.__class__.__name__, name, team,
+                        )
+                        continue
+
                     if best_context and not result.get("game_context"):
                         result["game_context"] = best_context.get("game_context", "")
                         result["game_status"] = best_context.get("game_status", result.get("game_status", "N/A"))
                         result.setdefault("game_date", best_context.get("game_date"))
                         result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
+                    # Merge game_time from best_context if this result lacks it
+                    if best_context and not result.get("game_time") and best_context.get("game_time"):
+                        result["game_time"] = best_context["game_time"]
+                        if "Game at" in best_context.get("stats_summary", ""):
+                            result["stats_summary"] = best_context["stats_summary"]
                     return result
 
                 if best_context is None:
