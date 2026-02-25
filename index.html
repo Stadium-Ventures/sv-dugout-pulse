@@ -726,10 +726,9 @@ function renderCard(p) {
     gameDateHtml = `<div class="game-date-label">${label}</div>`;
   }
 
-  // Game time display for scheduled games
-  const gameTimeHtml = isScheduled && p.game_time
-    ? `<div class="game-time">Game starts at <span class="time-value">${esc(p.game_time)}</span></div>`
-    : '';
+  // Game time display — omitted for scheduled games since stats_summary
+  // and game_context already show the time.
+  const gameTimeHtml = '';
 
   // Next game display when no game today
   const nextGameHtml = p.next_game && !isLive && !isScheduled && p.game_status !== 'Final'
