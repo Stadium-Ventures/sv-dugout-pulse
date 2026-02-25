@@ -648,6 +648,11 @@ class ProStatsFetcher:
         game_time = self._format_game_time(sched.get("game_datetime", ""))
         result["game_time"] = game_time
 
+        # MLB Gameday box score link
+        game_id = game.get("game_id", "")
+        if game_id:
+            result["box_score_url"] = f"https://www.mlb.com/gameday/{game_id}"
+
         # Populate game_date
         game_datetime = sched.get("game_datetime", "")
         result["game_date"] = game_datetime[:10] if game_datetime and len(game_datetime) >= 10 else self._today.isoformat()
@@ -1474,11 +1479,16 @@ class D1BaseballScraper(BaseSchoolScraper):
         else:
             result["game_context"] = f"{away} vs {home}"
             result["game_status"] = "Scheduled"
+            result["stats_summary"] = "Game today"
 
         if tile_info.get("is_yesterday"):
             result["is_yesterday"] = True
 
         result["game_date"] = tile_info.get("game_date")
+
+        box_url = tile_info.get("box_score_url", "")
+        if box_url:
+            result["box_score_url"] = box_url
 
         return result
 
@@ -1994,6 +2004,10 @@ class ESPNScraper(BaseSchoolScraper):
         if game_info.get("is_yesterday"):
             result["is_yesterday"] = True
 
+        game_id = game_info.get("id", "")
+        if game_id:
+            result["box_score_url"] = f"https://www.espn.com/college-baseball/game/_/gameId/{game_id}"
+
         return result
 
     @staticmethod
@@ -2185,6 +2199,17 @@ class NCAAStatsFetcher:
                     best_context = result
                     logger.info(
                         "%s found game for %s @ %s but no player stats — trying next scraper",
+                        scraper.__class__.__name__, name, team,
+                    )
+                elif not best_context.get("game_time") and result.get("game_time"):
+                    # Upgrade: this scraper has game_time that best_context lacks.
+                    # Carry over any fields best_context had that the new result is missing.
+                    result.setdefault("game_context", best_context.get("game_context", ""))
+                    result.setdefault("game_date", best_context.get("game_date"))
+                    result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
+                    best_context = result
+                    logger.info(
+                        "%s upgraded game_time for %s @ %s",
                         scraper.__class__.__name__, name, team,
                     )
             except Exception:

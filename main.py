@@ -54,6 +54,7 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "game_date": stats.get("game_date"),
         "is_yesterday": stats.get("is_yesterday", False),
         "next_game": stats.get("next_game"),
+        "box_score_url": stats.get("box_score_url"),
         "performance_grade": analysis["performance_grade"],
         "social_search_url": analysis["social_search_url"],
         "is_client": player.get("is_client", True),

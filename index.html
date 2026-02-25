@@ -51,6 +51,11 @@
     font-size: 0.85rem;
     margin-top: 0.25rem;
   }
+  .next-update {
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    margin-top: 0.2rem;
+  }
 
   /* ---- Filters ---- */
   .filters {
@@ -508,6 +513,7 @@
 <div class="header">
   <h1>SV Dugout Pulse</h1>
   <div class="subtitle" id="updated"></div>
+  <div class="next-update" id="nextUpdate"></div>
   <div class="auto-refresh-indicator" id="autoRefreshIndicator">
     <div class="auto-refresh-dot"></div>
     <span>Auto-refreshing</span>
@@ -695,6 +701,7 @@ function renderCard(p) {
       </div>
       <div class="card-actions">
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
+        ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">Box Score</a>` : ''}
       </div>
     </div>`;
 }
@@ -1008,6 +1015,51 @@ async function switchWindow(window) {
   render();
 }
 
+// Live workflow cron windows (UTC):
+//   00:00–06:45 UTC  (every 15 min)  = 8:00 PM–2:45 AM ET
+//   15:00–23:45 UTC  (every 15 min)  = 11:00 AM–7:45 PM ET
+// Gap: 06:45–15:00 UTC = 2:45 AM–11:00 AM ET (no live runs)
+function getNextUpdateTime() {
+  const now = new Date();
+  const h = now.getUTCHours(), m = now.getUTCMinutes();
+  const totalMins = h * 60 + m;
+  const GAP_START = 6 * 60 + 46;  // 06:46 UTC (after last run at 06:45)
+  const GAP_END   = 15 * 60;       // 15:00 UTC
+
+  let next;
+  if (totalMins >= GAP_START && totalMins < GAP_END) {
+    // In the gap — next run is 15:00 UTC today
+    next = new Date(now);
+    next.setUTCHours(15, 0, 0, 0);
+  } else {
+    // In an active window — next 15-min mark
+    const nextM = Math.ceil((m + 1) / 15) * 15;
+    next = new Date(now);
+    if (nextM >= 60) {
+      next.setUTCHours(h + 1, 0, 0, 0);
+    } else {
+      next.setUTCMinutes(nextM, 0, 0);
+    }
+    // If rounding pushed us into the gap, jump to 15:00 UTC
+    const nh = next.getUTCHours(), nm = next.getUTCMinutes();
+    const nextTotal = nh * 60 + nm;
+    if (nextTotal >= GAP_START && nextTotal < GAP_END) {
+      next.setUTCHours(15, 0, 0, 0);
+    }
+  }
+  return next;
+}
+
+function updateNextUpdate() {
+  const el = document.getElementById('nextUpdate');
+  if (!el) return;
+  const next = getNextUpdateTime();
+  const timeStr = next.toLocaleTimeString('en-US', {
+    hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York', timeZoneName: 'short'
+  });
+  el.textContent = 'Next update: ' + timeStr;
+}
+
 function updateTimestamp() {
   const el = document.getElementById('updated');
   // Yesterday tab: show source date instead of stale relative time
@@ -1183,6 +1235,10 @@ fetch('data/current_pulse.json?t=' + Date.now(), { cache: 'no-store' })
     document.getElementById('empty').textContent = 'Failed to load pulse data.';
     document.getElementById('empty').style.display = 'block';
   });
+
+// Show next update time and keep it current
+updateNextUpdate();
+setInterval(updateNextUpdate, 60000);
 </script>
 </body>
 </html>
