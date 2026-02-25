@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>SV Dugout Pulse</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -982,7 +985,7 @@ async function switchWindow(window) {
   // Load data if not cached
   if (window !== 'today' && windowData[window] === null) {
     try {
-      const resp = await fetch(WINDOW_PATHS[window]);
+      const resp = await fetch(WINDOW_PATHS[window] + '?t=' + Date.now(), { cache: 'no-store' });
       if (resp.ok) {
         const raw = await resp.json();
         // yesterday_pulse.json uses the same envelope as current_pulse
@@ -1048,7 +1051,7 @@ function manageAutoRefresh() {
     if (!autoRefreshTimer) {
       autoRefreshTimer = setInterval(async () => {
         try {
-          const resp = await fetch('data/current_pulse.json');
+          const resp = await fetch('data/current_pulse.json?t=' + Date.now(), { cache: 'no-store' });
           if (!resp.ok) return;
           const raw = await resp.json();
           if (Array.isArray(raw)) {
@@ -1162,7 +1165,7 @@ async function refreshData() {
 }
 
 // Load data — supports both envelope {generated_at, players} and legacy array
-fetch('data/current_pulse.json')
+fetch('data/current_pulse.json?t=' + Date.now(), { cache: 'no-store' })
   .then(r => r.json())
   .then(raw => {
     if (Array.isArray(raw)) {
