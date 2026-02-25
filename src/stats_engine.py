@@ -1431,7 +1431,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 # Status filtering
                 is_final = "status-final" in tile.get("class", [])
-                is_live = "status-in-progress" in tile.get("class", [])
+                is_live = "in-progress" in tile.get("class", [])
 
                 if yesterday_only and not is_final:
                     continue
