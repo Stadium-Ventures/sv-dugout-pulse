@@ -9,6 +9,7 @@ Two ecosystems:
 from __future__ import annotations
 
 import abc
+import base64
 import logging
 import re
 from datetime import date, datetime, timedelta, timezone
@@ -1347,7 +1348,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                         return context
                     continue
 
-                player_stats = self._parse_sidearm_box_score(player_name, box_url)
+                if "statbroadcast.com" in box_url or "statb.us" in box_url:
+                    player_stats = self._parse_statbroadcast_box_score(player_name, box_url)
+                else:
+                    player_stats = self._parse_sidearm_box_score(player_name, box_url)
                 if player_stats:
                     context.update(player_stats)
                     return context
@@ -1562,6 +1566,147 @@ class D1BaseballScraper(BaseSchoolScraper):
         except Exception:
             logger.debug("Pre-game lineup check failed for %s", box_url)
             return False
+
+    # ---- StatBroadcast box score parsing ----
+
+    def _parse_statbroadcast_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
+        """Fetch and parse a StatBroadcast live stats page for a specific player.
+
+        StatBroadcast is a JS app, but its webservice endpoint returns encoded HTML.
+        Protocol: GET /interface/webservice/stats?data=base64(params) → ROT13+base64 → HTML.
+        Player names are in LastName,FirstName format.
+        """
+        try:
+            import codecs as _codecs
+            m = re.search(r"[?&]id=(\d+)", box_url)
+            if not m:
+                # Handle statb.us short URLs by following redirect
+                r0 = requests.get(box_url, timeout=10, allow_redirects=True)
+                m = re.search(r"[?&]id=(\d+)", r0.url)
+                if not m:
+                    return None
+                box_url = r0.url
+            event_id = m.group(1)
+
+            # Step 1: get event metadata (xmlfile path contains groupid)
+            r1 = requests.get(
+                f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}",
+                headers={"Referer": box_url},
+                timeout=15,
+            )
+            r1.raise_for_status()
+            event_xml = base64.b64decode(
+                _codecs.encode(r1.text.strip(), "rot_13") + "=="
+            ).decode("utf-8", errors="replace")
+            xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
+            if not xmlfile_m:
+                return None
+            xml_file = xmlfile_m.group(1)
+
+            # Step 2: fetch box score HTML for home then visitor
+            for team_side in ("H", "V"):
+                data_str = (
+                    f"event={event_id}&xml={xml_file}"
+                    f"&xsl=baseball/sb.bsgame.views.box.xsl"
+                    f'&params={{"team":"{team_side}"}}'
+                    f"&sport=bsgame&filetime=-1&type=statmonitr&start=true"
+                )
+                encoded = base64.b64encode(data_str.encode()).decode()
+                r2 = requests.get(
+                    "https://stats.statbroadcast.com/interface/webservice/stats",
+                    params={"data": encoded},
+                    headers={"Referer": box_url, "X-Requested-With": "XMLHttpRequest"},
+                    timeout=15,
+                )
+                r2.raise_for_status()
+                html = base64.b64decode(
+                    _codecs.encode(r2.text.strip(), "rot_13") + "=="
+                ).decode("utf-8", errors="replace")
+                result = self._parse_statbroadcast_html(player_name, html)
+                if result:
+                    return result
+
+        except Exception:
+            logger.debug("StatBroadcast parse failed for %s @ %s", player_name, box_url)
+        return None
+
+    @staticmethod
+    def _parse_statbroadcast_html(player_name: str, html: str) -> Optional[dict]:
+        """Parse a player's stats from StatBroadcast box score HTML.
+
+        Player rows: [pos, jersey#, LastName,FirstName, stat1, stat2, ...]
+        Batting cols after name: AB, H, R, RBI, BB, K, 2B, 3B, HR
+        Pitching cols after name: (blank), IP, H, R, ER, BB, K, ...
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        player_last = player_name.split()[-1].lower()
+        player_first = player_name.split()[0].lower()[:3] if len(player_name.split()) > 1 else ""
+
+        for table in soup.select("table"):
+            header_row = table.select_one("tr")
+            if not header_row:
+                continue
+            headers = [th.get_text(strip=True).upper() for th in header_row.select("th, td")]
+            is_batting = "AB" in headers and "IP" not in headers
+            is_pitching = "IP" in headers
+            if not is_batting and not is_pitching:
+                continue
+
+            for row in table.select("tr")[1:]:
+                cells = [c.get_text(strip=True) for c in row.select("td")]
+                if len(cells) < 4:
+                    continue
+                name_cell = cells[2]  # "LastName,FirstName"
+                if player_last not in name_cell.lower():
+                    continue
+                if "," in name_cell and player_first:
+                    first_in_cell = name_cell.split(",", 1)[1].strip().lower()
+                    if not first_in_cell.startswith(player_first):
+                        continue
+
+                if is_batting:
+                    try:
+                        ab  = int(cells[3]) if cells[3].isdigit() else 0
+                        h   = int(cells[4]) if cells[4].isdigit() else 0
+                        r   = int(cells[5]) if cells[5].isdigit() else 0
+                        rbi = int(cells[6]) if cells[6].isdigit() else 0
+                        bb  = int(cells[7]) if cells[7].isdigit() else 0
+                        k   = int(cells[8]) if cells[8].isdigit() else 0
+                        dbl = int(cells[9])  if len(cells) > 9  and cells[9].isdigit()  else 0
+                        hr  = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
+                    except (ValueError, IndexError):
+                        continue
+                    parts = [f"{h}-{ab}"]
+                    if hr:  parts.append(_fmt(hr,  "HR"))
+                    if rbi: parts.append(_fmt(rbi, "RBI"))
+                    if r:   parts.append(_fmt(r,   "R"))
+                    if bb:  parts.append(_fmt(bb,  "BB"))
+                    if dbl: parts.append(_fmt(dbl, "2B"))
+                    return {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
+                            "walks": bb, "strikeouts": k, "home_runs": hr,
+                            "stats_summary": ", ".join(parts), "_player_found": True}
+
+                if is_pitching:
+                    try:
+                        ip_str = cells[3] if len(cells) > 3 else "0"
+                        parts_ip = ip_str.split(".")
+                        ip = int(parts_ip[0]) + (int(parts_ip[1]) / 3 if len(parts_ip) > 1 else 0)
+                        h  = int(cells[4]) if len(cells) > 4 and cells[4].isdigit() else 0
+                        er = int(cells[6]) if len(cells) > 6 and cells[6].isdigit() else 0
+                        bb = int(cells[7]) if len(cells) > 7 and cells[7].isdigit() else 0
+                        k  = int(cells[8]) if len(cells) > 8 and cells[8].isdigit() else 0
+                    except (ValueError, IndexError):
+                        continue
+                    parts = [f"{ip_str} IP"]
+                    if h:  parts.append(_fmt(h,  "H"))
+                    if er: parts.append(_fmt(er, "ER"))
+                    if k:  parts.append(_fmt(k,  "K"))
+                    if bb: parts.append(_fmt(bb, "BB"))
+                    return {"ip": ip, "hits_allowed": h, "earned_runs": er,
+                            "walks": bb, "strikeouts": k,
+                            "stats_summary": ", ".join(parts),
+                            "_player_found": True, "is_pitcher_line": True}
+        return None
 
     # ---- Sidearm box score parsing ----
 
