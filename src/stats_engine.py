@@ -1334,6 +1334,12 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if not box_url:
                     continue
 
+                # Skip sidearm parsing for Scheduled games — the sidearm
+                # "summary" page shows the latest completed game, not the
+                # upcoming one, which returns stale stats and wrong URLs.
+                if tile_info.get("status") == "Scheduled":
+                    continue
+
                 player_stats = self._parse_sidearm_box_score(player_name, box_url)
                 if player_stats:
                     context.update(player_stats)
@@ -1503,8 +1509,12 @@ class D1BaseballScraper(BaseSchoolScraper):
 
         result["game_date"] = tile_info.get("game_date")
 
+        # Only set box_score_url for Final/Live games.  For Scheduled games
+        # the sidearm link points to a "summary" page that shows the latest
+        # completed game (wrong game).  Leaving it blank lets the ESPN
+        # fallback supply a correct preview URL.
         box_url = tile_info.get("box_score_url", "")
-        if box_url:
+        if box_url and status != "Scheduled":
             result["box_score_url"] = box_url
 
         return result

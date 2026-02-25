@@ -278,13 +278,30 @@ def run_live():
             logger.exception("Failed to process %s — skipping", name)
             continue
 
-    # Write output — exclude yesterday's games from the Today tab
+    # Write output — convert yesterday-only entries to N/A for Today tab
     today_str = _today_et().isoformat()
-    today_pulse = [
-        p for p in pulse
-        if not p.get("is_yesterday")
-        and (not p.get("game_date") or p["game_date"] >= today_str)
-    ]
+    today_pulse = []
+    for p in pulse:
+        is_stale = p.get("is_yesterday") or (
+            p.get("game_date") and p["game_date"] < today_str
+        )
+        if is_stale:
+            # Player's only game was from a previous day — show as "No game
+            # today" on the Today tab but preserve next_game info.
+            na = dict(p)
+            na.update({
+                "stats_summary": "No game data",
+                "game_context": "",
+                "game_status": "N/A",
+                "game_time": None,
+                "game_date": None,
+                "is_yesterday": False,
+                "box_score_url": None,
+                "performance_grade": "— No Data",
+            })
+            today_pulse.append(na)
+        else:
+            today_pulse.append(p)
     write_output(today_pulse)
     _supplement_yesterday(pulse)
 
