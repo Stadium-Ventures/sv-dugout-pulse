@@ -1089,23 +1089,22 @@ function updateTimestamp() {
     el.textContent = '';
     return;
   }
-  // Today tab: show relative time
+  // Today tab: show absolute last update time
   if (!dataGeneratedAt) {
     el.textContent = '';
     return;
   }
-  const now = new Date();
   const gen = new Date(dataGeneratedAt);
+  const timeStr = gen.toLocaleTimeString('en-US', {
+    hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York', timeZoneName: 'short'
+  });
+  const now = new Date();
   const diffMin = Math.floor((now - gen) / 60000);
-  if (diffMin < 1) {
-    el.textContent = 'Updated just now';
-  } else if (diffMin < 60) {
-    el.textContent = `Updated ${diffMin}m ago`;
-  } else if (diffMin < 1440) {
-    el.textContent = `Updated ${Math.floor(diffMin / 60)}h ago`;
-  } else {
-    el.textContent = 'Updated ' + gen.toLocaleString();
-  }
+  const ago = diffMin < 1 ? 'just now'
+    : diffMin < 60 ? `${diffMin}m ago`
+    : diffMin < 1440 ? `${Math.floor(diffMin / 60)}h ago`
+    : '';
+  el.textContent = `Last update: ${timeStr}${ago ? ` (${ago})` : ''}`;
 }
 
 function manageAutoRefresh() {
