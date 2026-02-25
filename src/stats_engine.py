@@ -1634,9 +1634,13 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _parse_statbroadcast_html(player_name: str, html: str) -> Optional[dict]:
         """Parse a player's stats from StatBroadcast box score HTML.
 
-        Player rows: [pos, jersey#, LastName,FirstName, stat1, stat2, ...]
-        Batting cols after name: AB, H, R, RBI, BB, K, 2B, 3B, HR
-        Pitching cols after name: (blank), IP, H, R, ER, BB, K, ...
+        Full batting table cols:
+          POS(0), #(1), PLAYER(2), AB(3), R(4), H(5), RBI(6), 2B(7), 3B(8), HR(9), BB(10), K(11)
+        Full pitching table cols (no POS column):
+          #(0), Player(1), Dec(2), IP(3), H(4), R(5), ER(6), BB(7), K(8)
+
+        The page also contains a "TODAY" summary table (first header = "TODAY") which
+        has a different column layout and should be skipped.
         """
         soup = BeautifulSoup(html, "html.parser")
         player_last = player_name.split()[-1].lower()
@@ -1647,16 +1651,23 @@ class D1BaseballScraper(BaseSchoolScraper):
             if not header_row:
                 continue
             headers = [th.get_text(strip=True).upper() for th in header_row.select("th, td")]
+            # Skip the "TODAY" summary table — it has a different column layout
+            if headers and headers[0] == "TODAY":
+                continue
             is_batting = "AB" in headers and "IP" not in headers
             is_pitching = "IP" in headers
             if not is_batting and not is_pitching:
                 continue
 
+            # Batting: name at cells[2] (POS, #, PLAYER, ...)
+            # Pitching: name at cells[1] (no POS column: #, Player, ...)
+            name_idx = 2 if is_batting else 1
+
             for row in table.select("tr")[1:]:
                 cells = [c.get_text(strip=True) for c in row.select("td")]
-                if len(cells) < 4:
+                if len(cells) <= name_idx:
                     continue
-                name_cell = cells[2]  # "LastName,FirstName"
+                name_cell = cells[name_idx]  # "LastName,FirstName"
                 if player_last not in name_cell.lower():
                     continue
                 if "," in name_cell and player_first:
@@ -1666,14 +1677,14 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 if is_batting:
                     try:
-                        ab  = int(cells[3]) if cells[3].isdigit() else 0
-                        h   = int(cells[4]) if cells[4].isdigit() else 0
-                        r   = int(cells[5]) if cells[5].isdigit() else 0
-                        rbi = int(cells[6]) if cells[6].isdigit() else 0
-                        bb  = int(cells[7]) if cells[7].isdigit() else 0
-                        k   = int(cells[8]) if cells[8].isdigit() else 0
-                        dbl = int(cells[9])  if len(cells) > 9  and cells[9].isdigit()  else 0
-                        hr  = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
+                        ab  = int(cells[3])  if len(cells) > 3  and cells[3].isdigit()  else 0
+                        r   = int(cells[4])  if len(cells) > 4  and cells[4].isdigit()  else 0
+                        h   = int(cells[5])  if len(cells) > 5  and cells[5].isdigit()  else 0
+                        rbi = int(cells[6])  if len(cells) > 6  and cells[6].isdigit()  else 0
+                        dbl = int(cells[7])  if len(cells) > 7  and cells[7].isdigit()  else 0
+                        hr  = int(cells[9])  if len(cells) > 9  and cells[9].isdigit()  else 0
+                        bb  = int(cells[10]) if len(cells) > 10 and cells[10].isdigit() else 0
+                        k   = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
                     except (ValueError, IndexError):
                         continue
                     parts = [f"{h}-{ab}"]
