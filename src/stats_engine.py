@@ -2243,6 +2243,18 @@ class NCAAStatsFetcher:
 
         result = self._waterfall_fetch(player)
         if result:
+            # If no box_score_url yet (e.g. scheduled game from D1Baseball),
+            # try ESPN for a game preview URL
+            if not result.get("box_score_url"):
+                try:
+                    espn_games = self._espn._find_all_games(team)
+                    for g in espn_games:
+                        gid = g.get("id", "")
+                        if gid:
+                            result["box_score_url"] = f"https://www.espn.com/college-baseball/game/_/gameId/{gid}"
+                            break
+                except Exception:
+                    pass
             return result
 
         # No game today — try to find next game via ESPN
