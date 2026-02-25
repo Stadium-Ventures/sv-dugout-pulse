@@ -983,7 +983,7 @@ class NCAAComScraper(BaseSchoolScraper):
             if first_context is not None:
                 status = first_context.get("game_status", "")
                 if status == "Live":
-                    first_context["stats_summary"] = "In lineup — stats updating"
+                    first_context["stats_summary"] = "Game in progress — not in lineup"
                 elif status == "Final":
                     first_context["stats_summary"] = "DNP — game final"
                 return first_context
@@ -1356,7 +1356,10 @@ class D1BaseballScraper(BaseSchoolScraper):
             if first_context is not None:
                 status = first_context.get("game_status", "")
                 if status == "Live":
-                    first_context["stats_summary"] = "In lineup — stats updating"
+                    # Don't claim "in lineup" — we can't verify from D1Baseball
+                    # alone when the box score is on StatBroadcast (not Sidearm).
+                    # ESPN will provide the accurate lineup status downstream.
+                    first_context["stats_summary"] = "Game in progress"
                 elif status == "Final":
                     first_context["stats_summary"] = "DNP — game final"
                 return first_context
@@ -1832,7 +1835,7 @@ class ESPNScraper(BaseSchoolScraper):
             if first_context is not None:
                 status = first_context.get("game_status", "")
                 if status == "Live":
-                    first_context["stats_summary"] = "In lineup — stats updating"
+                    first_context["stats_summary"] = "Game in progress — not in lineup"
                 elif status == "Final":
                     first_context["stats_summary"] = "DNP — game final"
                 return first_context
@@ -2301,6 +2304,13 @@ class NCAAStatsFetcher:
                     if best_context.get("box_score_url"):
                         result["box_score_url"] = best_context["box_score_url"]
                     best_context = result
+                elif best_context is not None and not self._has_player_stats(result):
+                    # Allow a later scraper to supply a more specific lineup status
+                    # when D1Baseball returned a generic "Game in progress" placeholder.
+                    r_sum = result.get("stats_summary", "")
+                    if (r_sum and r_sum != "No game data"
+                            and best_context.get("stats_summary") == "Game in progress"):
+                        best_context["stats_summary"] = r_sum
                     logger.info(
                         "%s upgraded game_time for %s @ %s",
                         scraper.__class__.__name__, name, team,
