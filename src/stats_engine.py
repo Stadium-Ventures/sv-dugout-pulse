@@ -1227,10 +1227,6 @@ class NCAAComScraper(BaseSchoolScraper):
         if game_info.get("is_yesterday"):
             result["is_yesterday"] = True
 
-        game_id = game_info.get("game_id", "")
-        if game_id:
-            result["box_score_url"] = f"https://www.ncaa.com/game/baseball/d1/{game_id}"
-
         return result
 
     @staticmethod
@@ -2204,16 +2200,21 @@ class NCAAStatsFetcher:
                         )
                         continue
 
-                    if best_context and not result.get("game_context"):
-                        result["game_context"] = best_context.get("game_context", "")
-                        result["game_status"] = best_context.get("game_status", result.get("game_status", "N/A"))
+                    if best_context:
+                        if not result.get("game_context"):
+                            result["game_context"] = best_context.get("game_context", "")
+                            result["game_status"] = best_context.get("game_status", result.get("game_status", "N/A"))
                         result.setdefault("game_date", best_context.get("game_date"))
                         result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
-                    # Merge game_time from best_context if this result lacks it
-                    if best_context and not result.get("game_time") and best_context.get("game_time"):
-                        result["game_time"] = best_context["game_time"]
-                        if "Game at" in best_context.get("stats_summary", ""):
-                            result["stats_summary"] = best_context["stats_summary"]
+                        # Prefer D1Baseball's sidearm URL (school box score)
+                        # over ESPN/NCAA.com URLs
+                        if best_context.get("box_score_url") and not result.get("box_score_url"):
+                            result["box_score_url"] = best_context["box_score_url"]
+                        # Merge game_time from best_context if this result lacks it
+                        if not result.get("game_time") and best_context.get("game_time"):
+                            result["game_time"] = best_context["game_time"]
+                            if "Game at" in best_context.get("stats_summary", ""):
+                                result["stats_summary"] = best_context["stats_summary"]
                     return result
 
                 if best_context is None:
