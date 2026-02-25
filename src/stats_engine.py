@@ -1083,6 +1083,23 @@ class NCAAComScraper(BaseSchoolScraper):
             for ps in candidates:
                 pitcher = ps.get("pitcherStats")
                 batter = ps.get("batterStats")
+
+                # Two-way players may have both — prefer the one with actual stats
+                if pitcher and batter:
+                    p_ip = float(pitcher.get("inningsPitched", 0) or 0)
+                    b_ab = int(batter.get("atBats", 0) or 0)
+                    b_bb = int(batter.get("walks", 0) or 0)
+                    if p_ip > 0:
+                        result = self._parse_pitching(pitcher)
+                        result["_player_found"] = True
+                        return result
+                    if b_ab > 0 or b_bb > 0:
+                        result = self._parse_batting(batter)
+                        result["_player_found"] = True
+                        return result
+                    # Neither has stats yet — mark as found (in lineup)
+                    return {"_player_found": True}
+
                 if pitcher:
                     result = self._parse_pitching(pitcher)
                     result["_player_found"] = True
@@ -1325,7 +1342,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     # Try data-search attributes (e.g. "fsu florida state")
                     for team_div in tile.select(".team"):
                         search_str = team_div.get("data-search", "")
-                        if team_lower in search_str.lower():
+                        if _school_name_matches(team_lower, [search_str], exact=False):
                             matched = True
                             break
 
@@ -1653,7 +1670,7 @@ class ESPNScraper(BaseSchoolScraper):
         try:
             all_games = self._find_all_games(team, yesterday_only=yesterday_only)
             if not all_games:
-                logger.debug("No ESPN game found for %s (yesterday_only=%s)", team, yesterday_only)
+                logger.info("No ESPN game found for %s (yesterday_only=%s)", team, yesterday_only)
                 return None
 
             # Try each game — return the first where the player has stats

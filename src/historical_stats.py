@@ -66,8 +66,13 @@ class MLBHistoricalFetcher:
                 return None
 
             # Aggregate based on position
-            is_pitcher = position == "Pitcher"
-            if is_pitcher:
+            if position == "Pitcher":
+                return self._aggregate_pitcher_stats(game_log)
+            elif position == "Two-Way":
+                # Two-way players: try batting first, pitching as fallback
+                batter_result = self._aggregate_batter_stats(game_log)
+                if batter_result and batter_result.get("pa", 0) > 0:
+                    return batter_result
                 return self._aggregate_pitcher_stats(game_log)
             else:
                 return self._aggregate_batter_stats(game_log)
@@ -108,58 +113,47 @@ class MLBHistoricalFetcher:
 
         return None
 
+    # Spring Training runs roughly Feb 15 – March 31
+    _SPRING_TRAINING_START_MONTH = 2
+    _SPRING_TRAINING_END_MONTH = 3
+
     def _fetch_game_log(
         self, player_id: int, start_date: date, end_date: date
     ) -> list[dict]:
         """
         Fetch player's game-by-game stats for the date range.
-        Uses the stats API endpoint with gameLog type.
+
+        Uses the raw MLB Stats API which returns splits with date fields.
+        Includes Spring Training (gameType=S) when the date range overlaps
+        the Spring Training window.
         """
         try:
-            hitting_log = []
-            pitching_log = []
-
             sport_id = self._player_sport.get(player_id, 1)
+            season = end_date.year
 
-            try:
-                hitting_data = statsapi.player_stat_data(
-                    player_id,
-                    group="hitting",
-                    type="gameLog",
-                    sportId=sport_id,
-                )
-                if hitting_data and "stats" in hitting_data:
-                    for stat_group in hitting_data["stats"]:
-                        if stat_group.get("type", {}).get("displayName") == "gameLog":
-                            hitting_log = stat_group.get("splits", [])
-                            break
-            except Exception:
-                pass
+            # Determine which game types to query
+            game_types = ["R"]  # Regular season
+            if (start_date.month <= self._SPRING_TRAINING_END_MONTH
+                    or end_date.month <= self._SPRING_TRAINING_END_MONTH):
+                game_types.append("S")  # Spring Training
 
-            try:
-                pitching_data = statsapi.player_stat_data(
-                    player_id,
-                    group="pitching",
-                    type="gameLog",
-                    sportId=sport_id,
-                )
-                if pitching_data and "stats" in pitching_data:
-                    for stat_group in pitching_data["stats"]:
-                        if stat_group.get("type", {}).get("displayName") == "gameLog":
-                            pitching_log = stat_group.get("splits", [])
-                            break
-            except Exception:
-                pass
+            all_splits = []
+            for group in ("hitting", "pitching"):
+                for game_type in game_types:
+                    splits = self._fetch_raw_game_log(
+                        player_id, season, group, sport_id, game_type
+                    )
+                    all_splits.extend(splits)
 
             # Filter to date range
             games = []
-            for game in hitting_log + pitching_log:
-                game_date_str = game.get("date", "")
+            for split in all_splits:
+                game_date_str = split.get("date", "")
                 if game_date_str:
                     try:
                         game_date = datetime.strptime(game_date_str, "%Y-%m-%d").date()
                         if start_date <= game_date <= end_date:
-                            games.append(game)
+                            games.append(split)
                     except ValueError:
                         continue
 
@@ -167,6 +161,29 @@ class MLBHistoricalFetcher:
 
         except Exception:
             logger.exception("Error fetching game log for player %d", player_id)
+            return []
+
+    @staticmethod
+    def _fetch_raw_game_log(
+        player_id: int, season: int, group: str, sport_id: int, game_type: str
+    ) -> list[dict]:
+        """Fetch game log splits from the raw MLB Stats API."""
+        try:
+            url = (
+                f"https://statsapi.mlb.com/api/v1/people/{player_id}/stats"
+                f"?stats=gameLog&season={season}&group={group}"
+                f"&sportId={sport_id}&gameType={game_type}"
+            )
+            resp = requests.get(url, timeout=10)
+            if resp.status_code != 200:
+                return []
+            data = resp.json()
+            for stat_group in data.get("stats", []):
+                splits = stat_group.get("splits", [])
+                if splits:
+                    return splits
+            return []
+        except Exception:
             return []
 
     def _aggregate_batter_stats(self, games: list[dict]) -> dict:
@@ -283,6 +300,15 @@ class BBRefSeasonFetcher:
     SEARCH_URL = "https://www.baseball-reference.com/search/search.fcgi"
     PLAYER_URL = "https://www.baseball-reference.com/register/player.fcgi"
     REQUEST_DELAY = 3.0  # seconds between requests (be respectful)
+    _HEADERS = {
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
 
     def __init__(self, cache_path: str = BBREF_CACHE_PATH):
         self._cache_path = cache_path
@@ -330,7 +356,7 @@ class BBRefSeasonFetcher:
             self._rate_limit()
             resp = requests.get(
                 f"{self.PLAYER_URL}?id={bbref_id}",
-                headers={"User-Agent": "Mozilla/5.0 (SV Dugout Pulse)"},
+                headers=self._HEADERS,
                 timeout=15,
             )
             if resp.status_code != 200:
@@ -339,10 +365,16 @@ class BBRefSeasonFetcher:
 
             soup = BeautifulSoup(resp.text, "html.parser")
 
-            is_pitcher = position == "Pitcher"
-            if is_pitcher:
+            if position == "Two-Way":
+                # Two-way players: try batting first (primary), pitching as fallback
+                result = self._parse_batting_table(soup, player_name)
+                if result is None:
+                    result = self._parse_pitching_table(soup, player_name)
+                return result
+            elif position == "Pitcher":
                 return self._parse_pitching_table(soup, player_name)
-            return self._parse_batting_table(soup, player_name)
+            else:
+                return self._parse_batting_table(soup, player_name)
 
         except Exception:
             logger.exception("Error fetching BBRef stats for %s", player_name)
@@ -362,7 +394,7 @@ class BBRefSeasonFetcher:
             resp = requests.get(
                 self.SEARCH_URL,
                 params={"search": player_name},
-                headers={"User-Agent": "Mozilla/5.0 (SV Dugout Pulse)"},
+                headers=self._HEADERS,
                 timeout=15,
                 allow_redirects=True,
             )
@@ -436,7 +468,7 @@ class BBRefSeasonFetcher:
                 self._rate_limit()
                 resp = requests.get(
                     f"{self.PLAYER_URL}?id={cid}",
-                    headers={"User-Agent": "Mozilla/5.0 (SV Dugout Pulse)"},
+                    headers=self._HEADERS,
                     timeout=15,
                 )
                 if resp.status_code != 200:
