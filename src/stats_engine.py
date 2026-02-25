@@ -1437,6 +1437,16 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 status = "Final" if is_final else "Live" if is_live else "Scheduled"
 
+                # Extract game time from .status-wrapper h5
+                # For scheduled games this shows "1:00 PM", for final "FINAL"
+                game_time = ""
+                status_h5 = tile.select_one(".status-wrapper h5")
+                if status_h5 and status == "Scheduled":
+                    time_text = status_h5.get_text(strip=True)
+                    # Only use if it looks like a time (contains AM/PM)
+                    if re.search(r"\d+:\d+\s*(AM|PM)", time_text, re.IGNORECASE):
+                        game_time = time_text
+
                 results.append({
                     "home_name": home_name,
                     "road_name": road_name,
@@ -1447,6 +1457,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     "game_date": iso_date,
                     "box_score_url": box_url,
                     "tile_key": tile_key,
+                    "game_time": game_time,
                 })
 
         return results
@@ -1477,9 +1488,14 @@ class D1BaseballScraper(BaseSchoolScraper):
             result["game_context"] = f"{away} {a_s}, {home} {hs} | Live"
             result["game_status"] = "Live"
         else:
+            game_time = tile_info.get("game_time", "")
             result["game_context"] = f"{away} vs {home}"
             result["game_status"] = "Scheduled"
-            result["stats_summary"] = "Game today"
+            if game_time:
+                result["game_time"] = game_time
+                result["stats_summary"] = f"Game at {game_time}"
+            else:
+                result["stats_summary"] = "Game today"
 
         if tile_info.get("is_yesterday"):
             result["is_yesterday"] = True

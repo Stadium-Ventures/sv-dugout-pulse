@@ -713,7 +713,7 @@ function renderCard(p) {
       </div>
       <div class="card-actions">
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
-        ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">Box Score</a>` : ''}
+        ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${p.game_status === 'Scheduled' ? 'Preview' : 'Box Score'}</a>` : ''}
       </div>
     </div>`;
 }
