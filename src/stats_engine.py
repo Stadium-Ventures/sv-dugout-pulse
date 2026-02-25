@@ -26,6 +26,17 @@ logger = logging.getLogger(__name__)
 
 # ===== Shared helpers =====
 
+# Eastern Time zone — used for all "today" calculations so that games at
+# 8-11 PM ET aren't incorrectly attributed to the next day when running
+# on UTC-based servers (e.g. GitHub Actions at 1:30 AM UTC = 8:30 PM ET).
+_ET = ZoneInfo("US/Eastern")
+
+
+def _today_et() -> date:
+    """Return today's date in Eastern Time."""
+    return datetime.now(_ET).date()
+
+
 # School-name qualifiers that indicate a different school when they appear
 # as a suffix ("Florida State") or prefix ("North Florida") to a base name.
 _SUFFIX_QUALIFIERS = {
@@ -65,6 +76,39 @@ _ABBREV_MAP = {
 }
 
 
+# Team name aliases — map common alternate names to canonical forms.
+# Applied to the search term so "FIU" matches "Florida International", etc.
+_TEAM_ALIASES = {
+    "fiu": "florida international",
+    "ole miss": "mississippi",
+    "uconn": "connecticut",
+    "umass": "massachusetts",
+    "unlv": "nevada las vegas",
+    "utsa": "texas san antonio",
+    "utep": "texas el paso",
+    "ucf": "central florida",
+    "usf": "south florida",
+    "uab": "alabama birmingham",
+    "lsu": "louisiana state",
+    "tcu": "texas christian",
+    "smu": "southern methodist",
+    "byu": "brigham young",
+    "vcu": "virginia commonwealth",
+    "ecu": "east carolina",
+    "wku": "western kentucky",
+    "eku": "eastern kentucky",
+    "fau": "florida atlantic",
+    "fgcu": "florida gulf coast",
+    "njit": "new jersey institute of technology",
+    "unc": "north carolina",
+    "usc": "southern california",
+    "pitt": "pittsburgh",
+    "cal": "california",
+    "miami (oh)": "miami ohio",
+    "miami (fl)": "miami",
+}
+
+
 def _expand_abbreviations(name: str) -> str:
     """Expand common NCAA abbreviations so names can match.
 
@@ -83,6 +127,7 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
 
     Expands common NCAA abbreviations (e.g. "St." → "State") before matching
     so that roster names like "Florida State" match API names like "Florida St."
+    Also resolves team aliases (e.g. "FIU" → "Florida International").
 
     *exact* mode: equality only.
     *substring* mode: ``team_lower in name``, but rejects false positives where
@@ -92,10 +137,18 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
         - "florida" in "florida gators"  → True  (mascot, not qualifier)
         - "carolina" in "coastal carolina" → only if searching for "carolina"
     """
+    # Resolve aliases — e.g. "fiu" → "florida international"
+    team_lower = _TEAM_ALIASES.get(team_lower, team_lower)
+    # Also check if any candidate name is an alias
+    resolved_names = [_TEAM_ALIASES.get(n.lower(), n) for n in names]
+
     # Expand abbreviations on the search term once
     team_expanded = _expand_abbreviations(team_lower).lower()
 
-    for n in names:
+    # Check both original names and alias-resolved names
+    all_names = list(dict.fromkeys(names + resolved_names))  # deduplicated, order preserved
+
+    for n in all_names:
         n_lower = n.lower()
         if not n_lower:
             continue
@@ -245,7 +298,7 @@ class ProStatsFetcher:
         self._player_cache: dict[str, int] = {}
         self._team_info_cache: dict[int, dict] = {}  # team_id -> {name, sport_id, parent_id, parent_name}
         self._player_team_cache: dict[int, dict] = {}  # player_id -> team info
-        self._today = date.today()
+        self._today = _today_et()
         self._today_str = self._today.strftime("%m/%d/%Y")
 
     # ----- public API -----
@@ -884,7 +937,7 @@ class NCAAComScraper(BaseSchoolScraper):
     def __init__(self):
         self._scoreboard_cache: dict[str, dict] = {}
         self._boxscore_cache: dict[str, dict] = {}
-        self._today = date.today()
+        self._today = _today_et()
 
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
@@ -1249,7 +1302,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
     def __init__(self):
         self._scores_cache: dict[str, str] = {}  # date_str -> HTML content
-        self._today = date.today()
+        self._today = _today_et()
 
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
@@ -1325,6 +1378,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             if not html:
                 continue
 
+            # Convert YYYYMMDD to ISO date for game_date
+            iso_date = f"{date_str[:4]}-{date_str[4:6]}-{date_str[6:8]}"
+
             soup = BeautifulSoup(html, "html.parser")
             tiles = soup.select(".d1-score-tile")
 
@@ -1332,19 +1388,12 @@ class D1BaseballScraper(BaseSchoolScraper):
                 home_name = tile.get("data-home-name", "")
                 road_name = tile.get("data-road-name", "")
 
-                # Match team using data-home-name/data-road-name or data-search
-                matched = False
-                for name in (home_name, road_name):
-                    if _school_name_matches(team_lower, [name], exact=True):
-                        matched = True
-                        break
-                if not matched:
-                    # Try data-search attributes (e.g. "fsu florida state")
-                    for team_div in tile.select(".team"):
-                        search_str = team_div.get("data-search", "")
-                        if _school_name_matches(team_lower, [search_str], exact=False):
-                            matched = True
-                            break
+                # Match team: exact first, then substring with qualifier guards
+                names = [home_name, road_name]
+                matched = (
+                    _school_name_matches(team_lower, names, exact=True)
+                    or _school_name_matches(team_lower, names, exact=False)
+                )
 
                 if not matched:
                     continue
@@ -1383,6 +1432,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     "road_score": road_score,
                     "status": status,
                     "is_yesterday": is_yesterday,
+                    "game_date": iso_date,
                     "box_score_url": box_url,
                     "tile_key": tile_key,
                 })
@@ -1420,6 +1470,8 @@ class D1BaseballScraper(BaseSchoolScraper):
 
         if tile_info.get("is_yesterday"):
             result["is_yesterday"] = True
+
+        result["game_date"] = tile_info.get("game_date")
 
         return result
 
@@ -1664,7 +1716,7 @@ class ESPNScraper(BaseSchoolScraper):
     def __init__(self):
         self._scoreboard_cache: dict[str, dict] = {}  # date_str -> scoreboard JSON
         self._summary_cache: dict[str, dict] = {}  # game_id -> summary JSON
-        self._today = date.today()
+        self._today = _today_et()
 
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
         try:
@@ -2061,13 +2113,14 @@ class NCAAStatsFetcher:
         }
 
         # Default waterfall chain:
-        #   1. ESPN — fast JSON API, all D1, good for game status/scores/live
-        #   2. NCAA.com — JSON API with individual player box scores
-        #   3. D1Baseball, Sidearm, StatBroadcast, NCAA.org — additional fallbacks
+        #   1. D1Baseball — best school matching, links to live stats
+        #   2. ESPN — fast JSON API, all D1, good for game status/scores/live
+        #   3. NCAA.com — JSON API with individual player box scores
+        #   4. Sidearm, StatBroadcast, NCAA.org — additional fallbacks
         self._default_chain: list[BaseSchoolScraper] = [
+            self._d1baseball,
             self._espn,
             self._ncaa_com,
-            self._d1baseball,
             self._sidearm,
             self._statbroadcast,
             self._ncaa_org,

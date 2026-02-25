@@ -77,7 +77,12 @@ def _rotate_yesterday():
             return  # Same day — no rotation needed
 
         old_players = old.get("players", [])
-        finals = [p for p in old_players if p.get("game_status") == "Final"]
+        yesterday_str = old_dt.date().isoformat()
+        finals = [
+            p for p in old_players
+            if p.get("game_status") == "Final"
+            and p.get("game_date") == yesterday_str
+        ]
 
         if not finals:
             return
@@ -100,9 +105,12 @@ def _rotate_yesterday():
 
 def _supplement_yesterday(pulse: list):
     """Add is_yesterday Final entries from the current run to yesterday file."""
+    ET = timezone(timedelta(hours=-5))
+    yesterday_str = (datetime.now(ET).date() - timedelta(days=1)).isoformat()
     new_entries = [
         p for p in pulse
         if p.get("is_yesterday") and p.get("game_status") == "Final"
+        and p.get("game_date") == yesterday_str
     ]
     if not new_entries:
         return
@@ -127,7 +135,7 @@ def _supplement_yesterday(pulse: list):
 
     envelope = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "source_date": (date.today() - timedelta(days=1)).isoformat(),
+        "source_date": yesterday_str,
         "players": existing,
     }
     os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
@@ -138,12 +146,19 @@ def _supplement_yesterday(pulse: list):
 
 def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: PerformanceAnalyzer):
     """Dedicated yesterday-only fetch pass."""
+    ET = timezone(timedelta(hours=-5))
+    yesterday_str = (datetime.now(ET).date() - timedelta(days=1)).isoformat()
+
     existing = []
     if os.path.exists(YESTERDAY_PULSE_PATH):
         try:
             with open(YESTERDAY_PULSE_PATH) as f:
                 data = json.load(f)
-            existing = data.get("players", [])
+            # Filter existing entries to only actual yesterday games
+            existing = [
+                p for p in data.get("players", [])
+                if p.get("game_date") == yesterday_str
+            ]
         except Exception:
             pass
 
@@ -163,6 +178,8 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         try:
             stats = fetcher.fetch_yesterday(player)
             if stats is None or stats.get("game_status") != "Final":
+                continue
+            if stats.get("game_date") != yesterday_str:
                 continue
             if "DNP" in stats.get("stats_summary", "") and name in existing_by_name:
                 continue
@@ -188,7 +205,7 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
 
     envelope = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "source_date": (date.today() - timedelta(days=1)).isoformat(),
+        "source_date": yesterday_str,
         "players": existing,
     }
     os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
