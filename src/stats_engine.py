@@ -1227,6 +1227,10 @@ class NCAAComScraper(BaseSchoolScraper):
         if game_info.get("is_yesterday"):
             result["is_yesterday"] = True
 
+        game_id = game_info.get("game_id", "")
+        if game_id:
+            result["box_score_url"] = f"https://www.ncaa.com/game/baseball/d1/{game_id}"
+
         return result
 
     @staticmethod

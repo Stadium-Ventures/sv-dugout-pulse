@@ -189,6 +189,16 @@
     color: var(--text-dim);
     margin-bottom: 0.5rem;
   }
+  a.game-context {
+    text-decoration: none;
+    display: block;
+    transition: color 0.15s;
+    cursor: pointer;
+  }
+  a.game-context:hover {
+    color: var(--accent-blue);
+    text-decoration: underline;
+  }
 
   .game-date-label {
     font-size: 0.72rem;
@@ -691,7 +701,9 @@ function renderCard(p) {
       <div class="team-name">${esc(p.team)}</div>
       <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
       <div class="stats-line">${highlightStats(p.stats_summary)}</div>
-      ${p.game_context ? `<div class="game-context">${esc(p.game_context)}</div>` : ''}
+      ${p.game_context ? (p.box_score_url
+        ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
+        : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
       ${gameDateHtml}
       ${gameTimeHtml}
       ${nextGameHtml}
