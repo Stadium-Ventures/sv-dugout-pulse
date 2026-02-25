@@ -546,7 +546,7 @@ class ProStatsFetcher:
                 side = "home" if home_match else "away"
                 status = game.get("status", "")
                 boxscore = {}
-                if status not in ("Pre-Game", "Scheduled", "Warmup"):
+                if status not in ("Scheduled",):
                     try:
                         boxscore = statsapi.boxscore_data(game["game_id"])
                     except Exception:
@@ -1334,10 +1334,17 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if not box_url:
                     continue
 
-                # Skip sidearm parsing for Scheduled games — the sidearm
-                # "summary" page shows the latest completed game, not the
-                # upcoming one, which returns stale stats and wrong URLs.
+                # Skip sidearm stat parsing for Scheduled games — but check
+                # for pre-game starting lineups (posted ~30-60 min before
+                # first pitch).  The sidearm page may show stale data from
+                # the previous game, so we validate the matchup first.
                 if tile_info.get("status") == "Scheduled":
+                    if self._check_pregame_lineup(
+                        player_name, box_url,
+                        tile_info["home_name"], tile_info["road_name"],
+                    ):
+                        context["stats_summary"] = "In starting lineup"
+                        return context
                     continue
 
                 player_stats = self._parse_sidearm_box_score(player_name, box_url)
@@ -1518,6 +1525,40 @@ class D1BaseballScraper(BaseSchoolScraper):
             result["box_score_url"] = box_url
 
         return result
+
+    # ---- Pre-game lineup detection ----
+
+    def _check_pregame_lineup(
+        self, player_name: str, box_url: str, home_name: str, road_name: str,
+    ) -> bool:
+        """Check if a Scheduled game's sidearm page shows a pre-game lineup.
+
+        The sidearm "summary" URL can show either stale data (previous game)
+        or today's pre-game lineup.  We validate by checking that both team
+        names from the D1Baseball tile appear on the page.  If the matchup
+        matches, we look for the player's last name in table-row <th>
+        elements (where Sidearm puts player names).
+        """
+        try:
+            resp = requests.get(box_url, timeout=15)
+            resp.raise_for_status()
+            page_text = resp.text.lower()
+
+            # Matchup validation — both teams must appear on the page
+            if home_name.lower() not in page_text or road_name.lower() not in page_text:
+                return False
+
+            # Page shows today's game — check for player in lineup
+            soup = BeautifulSoup(resp.text, "html.parser")
+            player_last = player_name.split()[-1].lower()
+            for th in soup.select("table tr th"):
+                if player_last in th.get_text(strip=True).lower():
+                    return True
+
+            return False
+        except Exception:
+            logger.debug("Pre-game lineup check failed for %s", box_url)
+            return False
 
     # ---- Sidearm box score parsing ----
 
@@ -2300,6 +2341,17 @@ class NCAAStatsFetcher:
                             break
                 except Exception:
                     pass
+
+            # For yesterday-only results, also look up next game so the
+            # "No game today" row in the UI can show upcoming schedule.
+            if result.get("is_yesterday") and not result.get("next_game"):
+                try:
+                    next_game = self._espn.find_next_game(team)
+                    if next_game:
+                        result["next_game"] = next_game
+                except Exception:
+                    pass
+
             return result
 
         # No game today — try to find next game via ESPN
