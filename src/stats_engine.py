@@ -2274,9 +2274,9 @@ class NCAAStatsFetcher:
                             result["game_status"] = best_context.get("game_status", result.get("game_status", "N/A"))
                         result.setdefault("game_date", best_context.get("game_date"))
                         result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
-                        # Prefer D1Baseball's sidearm URL (school box score)
+                        # Prefer D1Baseball's URL (StatBroadcast / school box score)
                         # over ESPN/NCAA.com URLs
-                        if best_context.get("box_score_url") and not result.get("box_score_url"):
+                        if best_context.get("box_score_url"):
                             result["box_score_url"] = best_context["box_score_url"]
                         # Merge game_time from best_context if this result lacks it
                         if not result.get("game_time") and best_context.get("game_time"):
@@ -2297,6 +2297,9 @@ class NCAAStatsFetcher:
                     result.setdefault("game_context", best_context.get("game_context", ""))
                     result.setdefault("game_date", best_context.get("game_date"))
                     result.setdefault("is_yesterday", best_context.get("is_yesterday", False))
+                    # Preserve D1Baseball's URL (StatBroadcast) over ESPN's
+                    if best_context.get("box_score_url"):
+                        result["box_score_url"] = best_context["box_score_url"]
                     best_context = result
                     logger.info(
                         "%s upgraded game_time for %s @ %s",
