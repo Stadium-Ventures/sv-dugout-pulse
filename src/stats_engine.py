@@ -52,7 +52,7 @@ _SUFFIX_QUALIFIERS = {
     "southern", "northern", "eastern", "western", "international",
     "atlantic", "pacific", "gulf", "upstate", "baptist", "christian",
     "lutheran", "wesleyan", "methodist", "valley", "polytechnic",
-    "poly", "marymount", "of",
+    "poly", "marymount", "of", "commonwealth",
 }
 _PREFIX_QUALIFIERS = {
     "north", "south", "east", "west", "central", "se", "ne", "sw", "nw",
