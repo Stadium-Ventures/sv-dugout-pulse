@@ -182,6 +182,12 @@
     margin-bottom: 0.5rem;
   }
 
+  .game-date-label {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin-bottom: 0.25rem;
+  }
+
   .game-time {
     font-size: 0.75rem;
     color: var(--text-dim);
@@ -596,6 +602,11 @@ function gradeKey(g) {
 const STATUS_PRIORITY = { 'Live': 0, 'Final': 1, 'Scheduled': 2, 'N/A': 3 };
 function statusTier(s) { return STATUS_PRIORITY[s] ?? 3; }
 
+function hasRealStats(p) {
+  const s = p.stats_summary || '';
+  return p.game_status === 'Final' && !s.startsWith('DNP') && s !== 'No game scheduled' && s !== '';
+}
+
 function sortPlayers(players) {
   return players.slice().sort((a, b) => {
     // Clients before following
@@ -606,6 +617,10 @@ function sortPlayers(players) {
     const aSt = statusTier(a.game_status);
     const bSt = statusTier(b.game_status);
     if (aSt !== bSt) return aSt - bSt;
+    // Within Final: players with real stats before DNP
+    const aHas = hasRealStats(a) ? 0 : 1;
+    const bHas = hasRealStats(b) ? 0 : 1;
+    if (aHas !== bHas) return aHas - bHas;
     // Grade order
     const aG = GRADE_ORDER.indexOf(gradeKey(a.performance_grade));
     const bG = GRADE_ORDER.indexOf(gradeKey(b.performance_grade));
@@ -636,6 +651,14 @@ function renderCard(p) {
   const priClass = `badge-t${Math.min(pri, 4)}`;
   const isYesterday = p.is_yesterday === true;
 
+  // Game date display for yesterday entries
+  let gameDateHtml = '';
+  if (isYesterday && p.game_date) {
+    const d = new Date(p.game_date + 'T12:00:00');
+    const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    gameDateHtml = `<div class="game-date-label">${label}</div>`;
+  }
+
   // Game time display for scheduled games
   const gameTimeHtml = isScheduled && p.game_time
     ? `<div class="game-time">Game starts at <span class="time-value">${esc(p.game_time)}</span></div>`
@@ -660,6 +683,7 @@ function renderCard(p) {
       <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
       <div class="stats-line">${highlightStats(p.stats_summary)}</div>
       ${p.game_context ? `<div class="game-context">${esc(p.game_context)}</div>` : ''}
+      ${gameDateHtml}
       ${gameTimeHtml}
       ${nextGameHtml}
       <div class="card-tags">
@@ -895,7 +919,8 @@ function render() {
   } else if (currentWindow === 'yesterday') {
     noGameSection.style.display = 'none';
     const data = windowData.yesterday || [];
-    const filtered = sortPlayers(data.filter(matchesFilters));
+    // Only show players whose team actually played — exclude any stale or wrong-date entries
+    const filtered = sortPlayers(data.filter(p => p.game_status === 'Final' && matchesFilters(p)));
 
     if (filtered.length === 0) {
       grid.innerHTML = '';

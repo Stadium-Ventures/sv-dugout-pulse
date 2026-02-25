@@ -80,15 +80,22 @@ def _rotate_yesterday():
         if not old_gen:
             return
 
-        # Compare dates in ET (with 4 AM flip)
+        # Apply the same 4 AM ET game-day flip to the old file's timestamp so
+        # we compare game days (not calendar days) consistently.
         old_dt = datetime.fromisoformat(old_gen).astimezone(_ET)
+        old_game_day = (
+            (old_dt - timedelta(days=1)).date()
+            if old_dt.hour < _DAY_FLIP_HOUR
+            else old_dt.date()
+        )
         today = _today_et()
 
-        if old_dt.date() >= today:
-            return  # Same day — no rotation needed
+        if old_game_day >= today:
+            return  # Same or future game day — no rotation needed
 
         old_players = old.get("players", [])
-        yesterday_str = old_dt.date().isoformat()
+        # Yesterday's game day = today minus one game day
+        yesterday_str = (today - timedelta(days=1)).isoformat()
         finals = [
             p for p in old_players
             if p.get("game_status") == "Final"
@@ -100,7 +107,7 @@ def _rotate_yesterday():
 
         envelope = {
             "generated_at": old_gen,
-            "source_date": old_dt.date().isoformat(),
+            "source_date": yesterday_str,
             "players": finals,
         }
         os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
@@ -130,7 +137,12 @@ def _supplement_yesterday(pulse: list):
         try:
             with open(YESTERDAY_PULSE_PATH) as f:
                 data = json.load(f)
-            existing = data.get("players", [])
+            # Only keep entries that actually belong to yesterday — filter out
+            # stale entries from earlier game days that may have accumulated.
+            existing = [
+                p for p in data.get("players", [])
+                if p.get("game_date") == yesterday_str
+            ]
         except Exception:
             pass
 
@@ -209,9 +221,8 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
             logger.debug("Yesterday pass failed for %s — skipping", name)
             continue
 
-    if not existing:
-        return
-
+    # Always write — even an empty list clears stale wrong-date entries that
+    # _supplement_yesterday may have left behind.
     envelope = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_date": yesterday_str,
