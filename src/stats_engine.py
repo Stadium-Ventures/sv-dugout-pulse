@@ -115,6 +115,8 @@ _TEAM_ALIASES = {
     "cal": "california",
     "miami (oh)": "miami ohio",
     "miami (fl)": "miami",
+    "se louisiana": "southeastern louisiana",
+    "saint josephs": "saint joseph",
 }
 
 
