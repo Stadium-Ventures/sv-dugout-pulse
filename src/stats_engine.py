@@ -56,6 +56,7 @@ _SUFFIX_QUALIFIERS = {
 }
 _PREFIX_QUALIFIERS = {
     "north", "south", "east", "west", "central", "se", "ne", "sw", "nw",
+    "northern", "southern", "eastern", "western",
     "coastal", "fiu",
 }
 
