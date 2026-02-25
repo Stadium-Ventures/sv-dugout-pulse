@@ -107,7 +107,52 @@
     position: relative;
   }
   .card:hover { border-color: #3a3e4a; }
-  .card.live { border-left: 3px solid var(--live-green); }
+
+  /* ---- Grade-tinted card backgrounds ---- */
+  .card.grade-tint-milestone {
+    background: linear-gradient(135deg, rgba(168,85,247,0.08) 0%, var(--surface) 60%);
+    border-color: rgba(168,85,247,0.25);
+  }
+  .card.grade-tint-standout {
+    background: linear-gradient(135deg, rgba(239,68,68,0.07) 0%, var(--surface) 60%);
+    border-color: rgba(239,68,68,0.2);
+  }
+  .card.grade-tint-good {
+    background: linear-gradient(135deg, rgba(34,197,94,0.06) 0%, var(--surface) 60%);
+    border-color: rgba(34,197,94,0.18);
+  }
+  .card.grade-tint-flag {
+    background: linear-gradient(135deg, rgba(234,179,8,0.06) 0%, var(--surface) 60%);
+    border-color: rgba(234,179,8,0.18);
+  }
+
+  /* ---- Live card glow ---- */
+  .card.live { border-left: 3px solid var(--live-green); animation: live-glow 2.5s ease-in-out infinite; }
+  @keyframes live-glow {
+    0%, 100% { box-shadow: 0 0 4px rgba(34,197,94,0.15); }
+    50% { box-shadow: 0 0 12px rgba(34,197,94,0.3), 0 0 4px rgba(34,197,94,0.15); }
+  }
+
+  /* ---- Elevated stats for top performances ---- */
+  .stats-elevated {
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+  }
+
+  /* ---- De-emphasized tier badge ---- */
+  .badge-tier-dim {
+    font-size: 0.55rem;
+    opacity: 0.5;
+    background: rgba(107,114,128,0.12);
+    color: #9ca3af;
+  }
+
+  /* ---- Larger grade bar ---- */
+  .grade-bar {
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 0.35rem 0.7rem;
+  }
 
   .card-top {
     display: flex;
@@ -164,10 +209,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.3rem 0.6rem;
     border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 600;
     margin-bottom: 0.6rem;
   }
   .grade-milestone { background: rgba(168,85,247,0.15); color: #c084fc; }
@@ -667,8 +709,14 @@ function renderCard(p) {
   const isScheduled = p.game_status === 'Scheduled';
   const isClient = p.is_client !== false;
   const pri = p.tags.roster_priority || 4;
-  const priClass = `badge-t${Math.min(pri, 4)}`;
   const isYesterday = p.is_yesterday === true;
+
+  // Grade-tinted background class
+  const TINT_MAP = { 'Milestone':'grade-tint-milestone', 'Standout':'grade-tint-standout', 'Good':'grade-tint-good', 'Soft Flag':'grade-tint-flag' };
+  const tintClass = TINT_MAP[gk] || '';
+
+  // Elevated stats for top performances
+  const isElevated = gk === 'Milestone' || gk === 'Standout';
 
   // Game date display for yesterday entries
   let gameDateHtml = '';
@@ -689,18 +737,18 @@ function renderCard(p) {
     : '';
 
   return `
-    <div class="card${isLive ? ' live' : ''}">
+    <div class="card${isLive ? ' live' : ''}${tintClass ? ' ' + tintClass : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
         <span class="player-name">${esc(p.player_name)}</span>
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
-        <span class="badge ${priClass}">T${pri}</span>
+        <span class="badge badge-tier-dim">T${pri}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
       <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
-      <div class="stats-line">${highlightStats(p.stats_summary)}</div>
+      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${highlightStats(p.stats_summary)}</div>
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
         : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
