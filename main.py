@@ -13,6 +13,7 @@ import logging
 import os
 import sys
 from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts
 from src.config import (
@@ -27,6 +28,17 @@ from src.roster_manager import get_all_players
 from src.stats_engine import StatsFetcher
 
 logger = logging.getLogger("pulse")
+
+_ET = ZoneInfo("US/Eastern")
+_DAY_FLIP_HOUR = 4  # Day flips at 4 AM ET
+
+
+def _today_et() -> date:
+    """Return today's date in ET with a 4 AM day boundary."""
+    now = datetime.now(_ET)
+    if now.hour < _DAY_FLIP_HOUR:
+        return (now - timedelta(days=1)).date()
+    return now.date()
 
 
 def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
@@ -68,12 +80,11 @@ def _rotate_yesterday():
         if not old_gen:
             return
 
-        # Compare dates in ET
-        ET = timezone(timedelta(hours=-5))
-        old_dt = datetime.fromisoformat(old_gen).astimezone(ET)
-        now_et = datetime.now(ET)
+        # Compare dates in ET (with 4 AM flip)
+        old_dt = datetime.fromisoformat(old_gen).astimezone(_ET)
+        today = _today_et()
 
-        if old_dt.date() >= now_et.date():
+        if old_dt.date() >= today:
             return  # Same day — no rotation needed
 
         old_players = old.get("players", [])
@@ -105,8 +116,7 @@ def _rotate_yesterday():
 
 def _supplement_yesterday(pulse: list):
     """Add is_yesterday Final entries from the current run to yesterday file."""
-    ET = timezone(timedelta(hours=-5))
-    yesterday_str = (datetime.now(ET).date() - timedelta(days=1)).isoformat()
+    yesterday_str = (_today_et() - timedelta(days=1)).isoformat()
     new_entries = [
         p for p in pulse
         if p.get("is_yesterday") and p.get("game_status") == "Final"
@@ -146,8 +156,7 @@ def _supplement_yesterday(pulse: list):
 
 def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: PerformanceAnalyzer):
     """Dedicated yesterday-only fetch pass."""
-    ET = timezone(timedelta(hours=-5))
-    yesterday_str = (datetime.now(ET).date() - timedelta(days=1)).isoformat()
+    yesterday_str = (_today_et() - timedelta(days=1)).isoformat()
 
     existing = []
     if os.path.exists(YESTERDAY_PULSE_PATH):
@@ -258,8 +267,7 @@ def run_live():
             continue
 
     # Write output — exclude yesterday's games from the Today tab
-    ET = timezone(timedelta(hours=-5))
-    today_str = datetime.now(ET).date().isoformat()
+    today_str = _today_et().isoformat()
     today_pulse = [
         p for p in pulse
         if not p.get("is_yesterday")

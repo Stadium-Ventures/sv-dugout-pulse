@@ -31,10 +31,17 @@ logger = logging.getLogger(__name__)
 # on UTC-based servers (e.g. GitHub Actions at 1:30 AM UTC = 8:30 PM ET).
 _ET = ZoneInfo("US/Eastern")
 
+# The day flips at 4 AM ET so late-night West Coast finishes still show
+# on the correct calendar day.
+_DAY_FLIP_HOUR = 4
+
 
 def _today_et() -> date:
-    """Return today's date in Eastern Time."""
-    return datetime.now(_ET).date()
+    """Return today's date in Eastern Time, with a 4 AM ET day boundary."""
+    now = datetime.now(_ET)
+    if now.hour < _DAY_FLIP_HOUR:
+        return (now - timedelta(days=1)).date()
+    return now.date()
 
 
 # School-name qualifiers that indicate a different school when they appear
