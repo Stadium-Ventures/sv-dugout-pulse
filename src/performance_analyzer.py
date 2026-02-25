@@ -120,7 +120,12 @@ class PerformanceAnalyzer:
     def _build_social_url(player: dict) -> str:
         name = player.get("player_name", "")
         team = player.get("team", "")
-        # Use just the main team name keyword (e.g., "Yankees" not "New York Yankees")
-        team_keyword = team.split()[-1] if team else ""
+        level = player.get("level", "")
+        # Pro: use last word ("Yankees", "Reds") to avoid city clutter
+        # NCAA: use full school name ("Florida State", "South Carolina")
+        if level == "Pro":
+            team_keyword = team.split()[-1] if team else ""
+        else:
+            team_keyword = team
         query = f'"{name}" {team_keyword}'.strip()
         return f"https://x.com/search?q={quote(query)}&f=live"
