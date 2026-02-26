@@ -11,12 +11,24 @@ Keys include the game date, so stale entries auto-expire.
 import json
 import logging
 import os
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from typing import Optional
+from zoneinfo import ZoneInfo
 
 import requests
 
 from .config import SENT_ALERTS_PATH
+
+_ET = ZoneInfo("US/Eastern")
+_DAY_FLIP_HOUR = 4
+
+
+def _today_et() -> date:
+    """Return today's ET game-day date (flips at 4 AM ET, not midnight)."""
+    now = datetime.now(_ET)
+    if now.hour < _DAY_FLIP_HOUR:
+        return (now - timedelta(days=1)).date()
+    return now.date()
 
 logger = logging.getLogger(__name__)
 
@@ -45,8 +57,10 @@ def _load_sent_alerts():
     else:
         _sent_alerts = {}
 
-    # Prune entries older than yesterday (keeps late-night game alerts)
-    cutoff = (date.today() - timedelta(days=1)).isoformat()
+    # Prune entries older than yesterday in ET game-day terms.
+    # Must use ET (not UTC) so that entries from the previous calendar day
+    # are not wrongly pruned after midnight UTC (e.g. 9 PM ET = 2 AM UTC next day).
+    cutoff = (_today_et() - timedelta(days=1)).isoformat()
     before = len(_sent_alerts)
     _sent_alerts = {
         k: v for k, v in _sent_alerts.items()
