@@ -3,7 +3,7 @@ SV Dugout Pulse — Historical Stats Aggregator
 
 Fetches and aggregates player statistics for Season (and Pro 7D) windows.
 - Pro (MLB/MiLB): game logs via statsapi
-- NCAA Season: scraped from Baseball Reference player pages
+- NCAA Season: scraped from D1Baseball team stats pages
 """
 
 from __future__ import annotations
@@ -21,7 +21,6 @@ import statsapi
 from bs4 import BeautifulSoup
 
 from .config import (
-    BBREF_CACHE_PATH,
     WINDOW_7D_PATH,
     WINDOW_SEASON_PATH,
     WINDOW_MIN_IP,
@@ -284,22 +283,53 @@ class MLBHistoricalFetcher:
 
 
 # =============================================================================
-# Baseball Reference Season Stats (NCAA)
+# D1Baseball Season Stats (NCAA)
 # =============================================================================
 
+# Map roster team names → D1Baseball URL slugs
+D1B_SLUG = {
+    "Alabama": "alabama",
+    "Auburn": "auburn",
+    "Clemson": "clemson",
+    "Coastal Carolina": "coastcar",
+    "Dallas Baptist": "dallasbapt",
+    "Duke": "duke",
+    "FIU": "flinternat",
+    "Florida": "florida",
+    "Florida State": "floridast",
+    "Fordham": "fordham",
+    "Georgia Tech": "gatech",
+    "Mercer": "mercer",
+    "Michigan": "michigan",
+    "North Carolina": "unc",
+    "Ohio State": "ohiost",
+    "Rutgers": "rutgers",
+    "Sacramento State": "sacstate",
+    "SE Louisiana": "sela",
+    "Saint Josephs": "stjosephs",
+    "South Carolina": "scarolina",
+    "Southern Miss": "smiss",
+    "Texas": "texas",
+    "Tulane": "tulane",
+    "UCF": "ucf",
+    "USF": "sflorida",
+    "Vanderbilt": "vandy",
+    "Virginia": "virginia",
+    "Wake Forest": "wake",
+}
 
-class BBRefSeasonFetcher:
+
+class D1BaseballSeasonFetcher:
     """
-    Fetch complete season statistics for NCAA players from Baseball Reference.
+    Fetch season statistics for NCAA players from D1Baseball team stats pages.
 
-    Searches by player name, caches the BBRef player ID, and scrapes the
-    stats table for the current year.  Results are authoritative and include
-    2B, 3B, HR, SB, HBP, SF, etc.  Accepts 1-3 day data lag.
+    One HTTP request per team returns all players' batting + pitching stats.
+    Results are cached in memory per team so multiple players on the same
+    team don't cause repeat requests.
     """
 
-    SEARCH_URL = "https://www.baseball-reference.com/search/search.fcgi"
-    PLAYER_URL = "https://www.baseball-reference.com/register/player.fcgi"
-    REQUEST_DELAY = 3.0  # seconds between requests (be respectful)
+    STATS_URL = "https://d1baseball.com/team/{slug}/stats/"
+    REQUEST_DELAY = 3.0  # seconds between requests
     _HEADERS = {
         "User-Agent": (
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -310,250 +340,23 @@ class BBRefSeasonFetcher:
         "Accept-Language": "en-US,en;q=0.9",
     }
 
-    def __init__(self, cache_path: str = BBREF_CACHE_PATH):
-        self._cache_path = cache_path
-        self._id_cache: dict[str, str] = {}  # "Name|Team" -> bbref_id
+    def __init__(self):
+        # team_name -> {"batting": [row_dicts], "pitching": [row_dicts]}
+        self._team_cache: dict[str, dict] = {}
         self._last_request: float = 0
-        self._load_cache()
-
-    def _load_cache(self):
-        """Load cached BBRef player ID mappings from disk."""
-        if os.path.exists(self._cache_path):
-            try:
-                with open(self._cache_path) as f:
-                    self._id_cache = json.load(f)
-                logger.info("Loaded %d BBRef ID mappings", len(self._id_cache))
-            except Exception:
-                self._id_cache = {}
-
-    def _save_cache(self):
-        """Persist BBRef ID mappings to disk."""
-        os.makedirs(os.path.dirname(self._cache_path), exist_ok=True)
-        with open(self._cache_path, "w") as f:
-            json.dump(self._id_cache, f, indent=2)
 
     def _rate_limit(self):
-        """Ensure at least REQUEST_DELAY seconds between HTTP requests."""
         elapsed = time.time() - self._last_request
         if elapsed < self.REQUEST_DELAY:
             time.sleep(self.REQUEST_DELAY - elapsed)
         self._last_request = time.time()
 
     @staticmethod
-    def _player_key(name: str, team: str) -> str:
-        return f"{name}|{team}"
-
-    def get_season_stats(self, player_name: str, team: str, position: str) -> Optional[dict]:
-        """
-        Fetch current season stats for an NCAA player from BBRef.
-        Returns a formatted stats dict or None if not found.
-        """
-        bbref_id = self._find_player_id(player_name, team)
-        if bbref_id is None:
-            return None
-
-        try:
-            self._rate_limit()
-            resp = requests.get(
-                f"{self.PLAYER_URL}?id={bbref_id}",
-                headers=self._HEADERS,
-                timeout=15,
-            )
-            if resp.status_code != 200:
-                logger.warning("BBRef fetch failed for %s: %d", player_name, resp.status_code)
-                return None
-
-            soup = BeautifulSoup(resp.text, "html.parser")
-
-            if position == "Two-Way":
-                # Two-way players: try batting first (primary), pitching as fallback
-                result = self._parse_batting_table(soup, player_name)
-                if result is None:
-                    result = self._parse_pitching_table(soup, player_name)
-                return result
-            elif position == "Pitcher":
-                return self._parse_pitching_table(soup, player_name)
-            else:
-                return self._parse_batting_table(soup, player_name)
-
-        except Exception:
-            logger.exception("Error fetching BBRef stats for %s", player_name)
-            return None
-
-    def _find_player_id(self, player_name: str, team: str) -> Optional[str]:
-        """Find a player's BBRef ID by searching, with caching."""
-        key = self._player_key(player_name, team)
-        if key in self._id_cache:
-            cached = self._id_cache[key]
-            if cached == "NOT_FOUND":
-                return None
-            return cached
-
-        try:
-            self._rate_limit()
-            resp = requests.get(
-                self.SEARCH_URL,
-                params={"search": player_name},
-                headers=self._HEADERS,
-                timeout=15,
-                allow_redirects=True,
-            )
-
-            if resp.status_code != 200:
-                return None
-
-            # Direct redirect to player page = unique match
-            if "player.fcgi?id=" in resp.url:
-                bbref_id = resp.url.split("id=")[-1]
-                self._id_cache[key] = bbref_id
-                self._save_cache()
-                logger.info("BBRef: %s -> %s (direct match)", player_name, bbref_id)
-                return bbref_id
-
-            # Search results page — disambiguate by team and year
-            soup = BeautifulSoup(resp.text, "html.parser")
-            items = soup.find_all("div", class_="search-item-name")
-
-            current_year = str(date.today().year)
-            team_lower = team.lower().replace("\xa0", " ")
-
-            best_id = None
-            for item in items:
-                link = item.find("a")
-                if not link:
-                    continue
-                href = link.get("href", "")
-                text = item.text.strip()
-
-                # Check if year range includes current year
-                if current_year not in text:
-                    continue
-
-                # Extract ID from href
-                match = re.search(r"id=([^&]+)", href)
-                if match:
-                    candidate_id = match.group(1)
-                    # If only one result matches the year, use it
-                    if best_id is None:
-                        best_id = candidate_id
-                    else:
-                        # Multiple matches — need to check team on player page
-                        best_id = self._disambiguate_by_team(
-                            [best_id, candidate_id], team_lower, current_year
-                        )
-                        break
-
-            if best_id:
-                self._id_cache[key] = best_id
-                self._save_cache()
-                logger.info("BBRef: %s -> %s (search match)", player_name, best_id)
-                return best_id
-
-            # Cache negative result to avoid repeated searches
-            self._id_cache[key] = "NOT_FOUND"
-            self._save_cache()
-            logger.info("BBRef: %s not found", player_name)
-            return None
-
-        except Exception:
-            logger.exception("BBRef search failed for %s", player_name)
-            return None
-
-    def _disambiguate_by_team(
-        self, candidate_ids: list[str], team_lower: str, year: str
-    ) -> Optional[str]:
-        """Check player pages to find the one on the right team."""
-        for cid in candidate_ids:
-            try:
-                self._rate_limit()
-                resp = requests.get(
-                    f"{self.PLAYER_URL}?id={cid}",
-                    headers=self._HEADERS,
-                    timeout=15,
-                )
-                if resp.status_code != 200:
-                    continue
-                soup = BeautifulSoup(resp.text, "html.parser")
-                table = soup.find("table", id="standard_batting") or soup.find("table", id="standard_pitching")
-                if not table:
-                    continue
-                tbody = table.find("tbody")
-                if not tbody:
-                    continue
-                for row in tbody.find_all("tr"):
-                    cells = row.find_all(["td", "th"])
-                    if len(cells) < 4:
-                        continue
-                    row_year = cells[0].text.strip()
-                    row_team = cells[3].text.strip().replace("\xa0", " ").lower()
-                    if row_year == year and team_lower in row_team:
-                        return cid
-            except Exception:
-                continue
-        return candidate_ids[0] if candidate_ids else None
-
-    def _parse_batting_table(self, soup: BeautifulSoup, player_name: str) -> Optional[dict]:
-        """Extract current-year batting stats from BBRef player page."""
-        table = soup.find("table", id="standard_batting")
-        if not table:
-            return None
-
-        thead = table.find("thead")
-        if not thead:
-            return None
-        headers = [th.text.strip() for th in thead.find_all("th")]
-
-        current_year = str(date.today().year)
-        tbody = table.find("tbody")
-        if not tbody:
-            return None
-
-        # Find the row for the current year at NCAA level
-        for row in tbody.find_all("tr"):
-            cells = [td.text.strip() for td in row.find_all(["td", "th"])]
-            if len(cells) < len(headers):
-                continue
-            row_data = dict(zip(headers, cells))
-
-            if row_data.get("Year") != current_year:
-                continue
-            if row_data.get("Lev") != "NCAA":
-                continue
-
-            return self._build_batter_result(row_data, player_name)
-
-        return None
-
-    def _parse_pitching_table(self, soup: BeautifulSoup, player_name: str) -> Optional[dict]:
-        """Extract current-year pitching stats from BBRef player page."""
-        table = soup.find("table", id="standard_pitching")
-        if not table:
-            return None
-
-        thead = table.find("thead")
-        if not thead:
-            return None
-        headers = [th.text.strip() for th in thead.find_all("th")]
-
-        current_year = str(date.today().year)
-        tbody = table.find("tbody")
-        if not tbody:
-            return None
-
-        for row in tbody.find_all("tr"):
-            cells = [td.text.strip() for td in row.find_all(["td", "th"])]
-            if len(cells) < len(headers):
-                continue
-            row_data = dict(zip(headers, cells))
-
-            if row_data.get("Year") != current_year:
-                continue
-            if row_data.get("Lev") != "NCAA":
-                continue
-
-            return self._build_pitcher_result(row_data, player_name)
-
-        return None
+    def _normalize_last_name(name: str) -> str:
+        """Strip suffixes like Jr, Sr, II, III, IV and lowercase."""
+        name = name.strip().lower()
+        name = re.sub(r"[,\s]+(jr\.?|sr\.?|ii|iii|iv|v)$", "", name)
+        return name.strip()
 
     @staticmethod
     def _safe_int(val: str) -> int:
@@ -569,64 +372,182 @@ class BBRefSeasonFetcher:
         except (ValueError, TypeError):
             return 0.0
 
-    def _build_batter_result(self, row: dict, player_name: str) -> dict:
-        """Build stats dict from a BBRef batting table row."""
-        g = self._safe_int(row.get("G", "0"))
+    def get_season_stats(self, player_name: str, team: str, position: str) -> Optional[dict]:
+        """
+        Fetch current season stats for an NCAA player from D1Baseball.
+        Returns a formatted stats dict or None if not found.
+        """
+        team_data = self._get_team_data(team)
+        if team_data is None:
+            return None
+
+        if position == "Two-Way":
+            result = self._find_batter(player_name, team_data["batting"])
+            if result is None:
+                result = self._find_pitcher(player_name, team_data["pitching"])
+            return result
+        elif position == "Pitcher":
+            return self._find_pitcher(player_name, team_data["pitching"])
+        else:
+            return self._find_batter(player_name, team_data["batting"])
+
+    def _get_team_data(self, team: str) -> Optional[dict]:
+        """Fetch and cache parsed batting + pitching tables for a team."""
+        if team in self._team_cache:
+            return self._team_cache[team]
+
+        slug = D1B_SLUG.get(team)
+        if not slug:
+            logger.warning("D1B: no slug mapping for team '%s'", team)
+            return None
+
+        try:
+            self._rate_limit()
+            url = self.STATS_URL.format(slug=slug)
+            resp = requests.get(url, headers=self._HEADERS, timeout=15)
+            if resp.status_code != 200:
+                logger.warning("D1B: fetch failed for %s (%d)", team, resp.status_code)
+                return None
+
+            soup = BeautifulSoup(resp.text, "html.parser")
+            batting = self._parse_table(soup, "batting-stats")
+            pitching = self._parse_table(soup, "pitching-stats")
+
+            data = {"batting": batting, "pitching": pitching}
+            self._team_cache[team] = data
+            logger.info("D1B: fetched %s — %d batters, %d pitchers",
+                        team, len(batting), len(pitching))
+            return data
+
+        except Exception:
+            logger.exception("D1B: error fetching team page for %s", team)
+            return None
+
+    @staticmethod
+    def _parse_table(soup: BeautifulSoup, table_id: str) -> list[dict]:
+        """Parse a D1Baseball stats table into a list of row dicts."""
+        table = soup.find("table", id=table_id)
+        if not table:
+            return []
+
+        thead = table.find("thead")
+        if not thead:
+            return []
+        headers = [th.text.strip() for th in thead.find_all("th")]
+
+        tbody = table.find("tbody")
+        if not tbody:
+            return []
+
+        rows = []
+        for tr in tbody.find_all("tr"):
+            cells = [td.text.strip() for td in tr.find_all(["td", "th"])]
+            if len(cells) >= len(headers):
+                rows.append(dict(zip(headers, cells)))
+        return rows
+
+    def _match_player(self, player_name: str, rows: list[dict]) -> Optional[dict]:
+        """
+        Match a player by last name from the D1Baseball table rows.
+        If multiple matches, prefer the one whose first-name initial matches.
+        """
+        parts = player_name.strip().split()
+        if not parts:
+            return None
+
+        target_last = self._normalize_last_name(parts[-1])
+        target_first_initial = parts[0][0].lower() if parts[0] else ""
+
+        candidates = []
+        for row in rows:
+            d1b_name = row.get("Player", "")
+            if not d1b_name:
+                continue
+            d1b_parts = d1b_name.strip().split()
+            if not d1b_parts:
+                continue
+            d1b_last = self._normalize_last_name(d1b_parts[-1])
+            if d1b_last == target_last:
+                candidates.append((row, d1b_parts))
+
+        if not candidates:
+            return None
+        if len(candidates) == 1:
+            return candidates[0][0]
+
+        # Multiple matches — prefer first-name initial match
+        for row, d1b_parts in candidates:
+            if d1b_parts[0][0].lower() == target_first_initial:
+                return row
+
+        # Fallback to first match
+        return candidates[0][0]
+
+    def _find_batter(self, player_name: str, batting_rows: list[dict]) -> Optional[dict]:
+        """Find a player in batting rows and build the hitter stats dict."""
+        row = self._match_player(player_name, batting_rows)
+        if row is None:
+            logger.debug("D1B: batter not found — %s", player_name)
+            return None
+
+        gp = self._safe_int(row.get("GP", "0"))
         pa = self._safe_int(row.get("PA", "0"))
         ab = self._safe_int(row.get("AB", "0"))
         h = self._safe_int(row.get("H", "0"))
-        doubles = self._safe_int(row.get("2B", "0"))
-        triples = self._safe_int(row.get("3B", "0"))
         hr = self._safe_int(row.get("HR", "0"))
         rbi = self._safe_int(row.get("RBI", "0"))
         r = self._safe_int(row.get("R", "0"))
-        sb = self._safe_int(row.get("SB", "0"))
         bb = self._safe_int(row.get("BB", "0"))
-        k = self._safe_int(row.get("SO", "0"))
-        hbp = self._safe_int(row.get("HBP", "0"))
+        k = self._safe_int(row.get("K", "0"))
+        sb = self._safe_int(row.get("SB", "0"))
 
         avg = self._safe_float(row.get("BA", "0"))
         obp = self._safe_float(row.get("OBP", "0"))
         slg = self._safe_float(row.get("SLG", "0"))
         ops = self._safe_float(row.get("OPS", "0"))
 
-        logger.info("BBRef season: %s — %dG %dPA %dH %dHR .%03d/.%03d/.%03d",
-                     player_name, g, pa, h, hr,
+        logger.info("D1B season: %s — %dG %dPA %dH %dHR .%03d/.%03d/.%03d",
+                     player_name, gp, pa, h, hr,
                      int(avg * 1000), int(obp * 1000), int(slg * 1000))
 
         return {
-            "games_played": g,
+            "games_played": gp,
             "pa": pa, "ab": ab, "h": h, "hr": hr,
             "rbi": rbi, "r": r, "bb": bb, "k": k, "sb": sb,
             "avg": avg, "obp": obp, "slg": slg, "ops": ops,
             "is_pitcher": False,
         }
 
-    def _build_pitcher_result(self, row: dict, player_name: str) -> dict:
-        """Build stats dict from a BBRef pitching table row."""
-        g = self._safe_int(row.get("G", "0"))
+    def _find_pitcher(self, player_name: str, pitching_rows: list[dict]) -> Optional[dict]:
+        """Find a player in pitching rows and build the pitcher stats dict."""
+        row = self._match_player(player_name, pitching_rows)
+        if row is None:
+            logger.debug("D1B: pitcher not found — %s", player_name)
+            return None
+
+        app = self._safe_int(row.get("APP", "0"))
+        ip = self._safe_float(row.get("IP", "0"))
         ip_str = row.get("IP", "0")
-        ip = self._safe_float(ip_str)
-        er = self._safe_int(row.get("ER", "0"))
         h = self._safe_int(row.get("H", "0"))
+        er = self._safe_int(row.get("ER", "0"))
         bb = self._safe_int(row.get("BB", "0"))
-        k = self._safe_int(row.get("SO", "0"))
-        hr = self._safe_int(row.get("HR", "0"))
+        k = self._safe_int(row.get("K", "0"))
         w = self._safe_int(row.get("W", "0"))
         l = self._safe_int(row.get("L", "0"))
         sv = self._safe_int(row.get("SV", "0"))
 
         era = self._safe_float(row.get("ERA", "0"))
-        whip = self._safe_float(row.get("WHIP", "0"))
+        # WHIP not in D1B pitching table — calculate from (H + BB) / IP
+        whip = (h + bb) / ip if ip > 0 else 0.0
 
-        logger.info("BBRef season: %s — %dG %sIP %dK %.2f ERA",
-                     player_name, g, ip_str, k, era)
+        logger.info("D1B season: %s — %dAPP %sIP %dK %.2f ERA %.2f WHIP",
+                     player_name, app, ip_str, k, era, whip)
 
         return {
-            "games_played": g,
+            "games_played": app,
             "ip": ip,
             "ip_display": ip_str,
-            "h": h, "er": er, "bb": bb, "k": k, "hr": hr,
+            "h": h, "er": er, "bb": bb, "k": k, "hr": 0,
             "w": w, "l": l, "sv": sv,
             "era": era, "whip": whip,
             "is_pitcher": True,
@@ -643,12 +564,12 @@ class WindowStatsAggregator:
 
     Windows:
     - 7D: Pro players only (MLB game logs)
-    - Season: Pro (MLB game logs) + NCAA (Baseball Reference)
+    - Season: Pro (MLB game logs) + NCAA (D1Baseball)
     """
 
     def __init__(self):
         self.mlb_fetcher = MLBHistoricalFetcher()
-        self.bbref_fetcher = BBRefSeasonFetcher()
+        self.d1b_fetcher = D1BaseballSeasonFetcher()
         self._today = date.today()
         self._season_start = date(self._today.year, 2, 1)
         if self._today < self._season_start:
@@ -701,7 +622,7 @@ class WindowStatsAggregator:
         if level == "Pro":
             stats = self.mlb_fetcher.fetch_window(name, team, position, start_date, end_date)
         elif level == "NCAA" and window == "season":
-            stats = self.bbref_fetcher.get_season_stats(name, team, position)
+            stats = self.d1b_fetcher.get_season_stats(name, team, position)
         else:
             stats = None
 

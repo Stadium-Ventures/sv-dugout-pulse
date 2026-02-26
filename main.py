@@ -7,6 +7,8 @@ Usage:
     python main.py --historical   # Aggregate historical stats (7D Pro + Season)
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging
