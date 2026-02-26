@@ -89,6 +89,11 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
     if not game_date:
         return
 
+    # Skip DNP players (game was Final but player didn't appear)
+    summary = stats.get("stats_summary", "")
+    if "DNP" in summary or "No game data" in summary:
+        return
+
     game_date = _normalize_date(game_date)
     key = f"{player['player_name']}|{player['team']}"
     opponent = _extract_opponent(stats.get("game_context", ""), player["team"])
@@ -124,6 +129,14 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
             "k": int(stats.get("strikeouts", stats.get("k", 0))),
             "sb": int(stats.get("stolen_bases", stats.get("sb", 0))),
         }
+
+    # Skip if all stats are zero (likely DNP not caught above)
+    if is_pitcher:
+        if entry_stats.get("ip") in ("0", "0.0") and not any(entry_stats.get(k) for k in ("er", "k", "bb", "h")):
+            return
+    else:
+        if entry_stats.get("ab", 0) == 0 and not any(entry_stats.get(k) for k in ("bb", "r", "sb")):
+            return
 
     # Load existing log
     log = {}

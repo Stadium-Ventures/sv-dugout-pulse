@@ -915,12 +915,12 @@ function renderWindowCard(p) {
       </div>
       <div class="stat-row" style="grid-template-columns: repeat(2, 1fr); max-width: 40%;">
         <div class="stat-cell">
-          <span class="stat-label">K/9</span>
-          <span class="stat-value ${sp}">${stats.k_per_9 ?? '--'}</span>
+          <span class="stat-label">K%</span>
+          <span class="stat-value ${sp}">${stats.k_pct ?? '--'}</span>
         </div>
         <div class="stat-cell">
-          <span class="stat-label">BB/9</span>
-          <span class="stat-value ${sp}">${stats.bb_per_9 ?? '--'}</span>
+          <span class="stat-label">BB%</span>
+          <span class="stat-value ${sp}">${stats.bb_pct ?? '--'}</span>
         </div>
       </div>`;
   } else {

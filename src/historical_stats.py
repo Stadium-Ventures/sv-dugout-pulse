@@ -303,6 +303,9 @@ class MLBHistoricalFetcher:
         whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
         k_per_9 = (totals["k"] * 9) / ip if ip > 0 else 0
         bb_per_9 = (totals["bb"] * 9) / ip if ip > 0 else 0
+        bf = totals["outs"] + totals["h"] + totals["bb"]
+        k_pct = totals["k"] / bf if bf > 0 else 0
+        bb_pct = totals["bb"] / bf if bf > 0 else 0
 
         return {
             "games_played": len(games),
@@ -313,6 +316,7 @@ class MLBHistoricalFetcher:
             "w": totals["w"], "l": totals["l"], "sv": totals["sv"],
             "era": era, "whip": whip,
             "k_per_9": k_per_9, "bb_per_9": bb_per_9,
+            "k_pct": k_pct, "bb_pct": bb_pct,
             "is_pitcher": True,
         }
 
@@ -595,6 +599,10 @@ class D1BaseballSeasonFetcher:
         whip = (h + bb) / ip if ip > 0 else 0.0
         k_per_9 = (k * 9) / ip if ip > 0 else 0
         bb_per_9 = (bb * 9) / ip if ip > 0 else 0
+        outs = self._safe_int(str(int(ip))) * 3 + (self._safe_int(ip_str.split(".")[-1]) if "." in ip_str else 0)
+        bf = outs + h + bb
+        k_pct = k / bf if bf > 0 else 0
+        bb_pct = bb / bf if bf > 0 else 0
 
         logger.info("D1B season: %s — %dAPP %sIP %dK %.2f ERA %.2f WHIP",
                      player_name, app, ip_str, k, era, whip)
@@ -607,6 +615,7 @@ class D1BaseballSeasonFetcher:
             "w": w, "l": l, "sv": sv,
             "era": era, "whip": whip,
             "k_per_9": k_per_9, "bb_per_9": bb_per_9,
+            "k_pct": k_pct, "bb_pct": bb_pct,
             "is_pitcher": True,
         }
 
@@ -795,6 +804,9 @@ class NCAAGameLogAggregator:
         whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
         k_per_9 = (totals["k"] * 9) / ip if ip > 0 else 0
         bb_per_9 = (totals["bb"] * 9) / ip if ip > 0 else 0
+        bf = total_outs + totals["h"] + totals["bb"]
+        k_pct = totals["k"] / bf if bf > 0 else 0
+        bb_pct = totals["bb"] / bf if bf > 0 else 0
 
         stats = {
             "games_played": len(entries),
@@ -805,6 +817,7 @@ class NCAAGameLogAggregator:
             "w": 0, "l": 0, "sv": 0,
             "era": era, "whip": whip,
             "k_per_9": k_per_9, "bb_per_9": bb_per_9,
+            "k_pct": k_pct, "bb_pct": bb_pct,
             "is_pitcher": True,
         }
         return stats, game_entries
@@ -922,7 +935,7 @@ class WindowStatsAggregator:
         if position == "Pitcher":
             return {
                 "ip": 0, "k": 0, "bb": 0, "era": 0, "whip": 0,
-                "k_per_9": 0, "bb_per_9": 0,
+                "k_per_9": 0, "bb_per_9": 0, "k_pct": 0, "bb_pct": 0,
                 "is_pitcher": True, "games_played": 0,
             }
         return {
@@ -955,6 +968,8 @@ class WindowStatsAggregator:
                 "whip": f"{stats.get('whip', 0):.2f}" if not sparse else "--",
                 "k_per_9": f"{stats.get('k_per_9', 0):.1f}" if not sparse else "--",
                 "bb_per_9": f"{stats.get('bb_per_9', 0):.1f}" if not sparse else "--",
+                "k_pct": f"{stats.get('k_pct', 0) * 100:.1f}%" if not sparse else "--",
+                "bb_pct": f"{stats.get('bb_pct', 0) * 100:.1f}%" if not sparse else "--",
             }
         else:
             pa = stats.get("pa", 0)
