@@ -555,6 +555,19 @@
     opacity: 1;
   }
 
+  /* ---- Status section headers ---- */
+  .status-section-header {
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9ca3af;
+    padding: 0.75rem 0 0.25rem;
+    border-bottom: 1px solid rgba(156,163,175,0.2);
+    margin-bottom: 0.25rem;
+  }
+
   /* ---- Responsive ---- */
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
@@ -677,11 +690,7 @@ function hasRealStats(p) {
 
 function sortPlayers(players) {
   return players.slice().sort((a, b) => {
-    // Clients before following
-    const aClient = a.is_client !== false ? 0 : 1;
-    const bClient = b.is_client !== false ? 0 : 1;
-    if (aClient !== bClient) return aClient - bClient;
-    // Status tier: Live > Final > Scheduled > No Data
+    // Status tier: Live > Final > Scheduled
     const aSt = statusTier(a.game_status);
     const bSt = statusTier(b.game_status);
     if (aSt !== bSt) return aSt - bSt;
@@ -689,11 +698,11 @@ function sortPlayers(players) {
     const aHas = hasRealStats(a) ? 0 : 1;
     const bHas = hasRealStats(b) ? 0 : 1;
     if (aHas !== bHas) return aHas - bHas;
-    // Grade order
+    // Grade order (performance first)
     const aG = GRADE_ORDER.indexOf(gradeKey(a.performance_grade));
     const bG = GRADE_ORDER.indexOf(gradeKey(b.performance_grade));
     if (aG !== bG) return aG - bG;
-    // Roster priority
+    // Roster priority (tier)
     return (a.tags.roster_priority || 99) - (b.tags.roster_priority || 99);
   });
 }
@@ -968,7 +977,19 @@ function render() {
       noGameSection.style.display = 'none';
     } else {
       empty.style.display = 'none';
-      grid.innerHTML = sorted.map(renderCard).join('');
+      const groups = [
+        { key: 'Live', label: 'In Progress' },
+        { key: 'Final', label: 'Final' },
+        { key: 'Scheduled', label: 'Scheduled' },
+      ];
+      let html = '';
+      for (const g of groups) {
+        const section = sorted.filter(p => p.game_status === g.key);
+        if (section.length === 0) continue;
+        html += `<div class="status-section-header">${g.label}</div>`;
+        html += section.map(renderCard).join('');
+      }
+      grid.innerHTML = html;
     }
 
     // Render collapsed no-game section
