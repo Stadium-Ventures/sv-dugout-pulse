@@ -13,12 +13,15 @@ import logging
 import os
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
 from typing import Optional
 
 import requests
 import statsapi
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from .config import (
     NCAA_GAME_LOG_PATH,
@@ -30,6 +33,23 @@ from .config import (
 from .window_grader import grade_hitter_window, grade_pitcher_window
 
 logger = logging.getLogger(__name__)
+
+
+def _make_http_session() -> requests.Session:
+    """Create a shared HTTP session with connection pooling and retry logic."""
+    session = requests.Session()
+    retry = Retry(
+        total=3,
+        backoff_factor=0.5,
+        status_forcelist=[429, 500, 502, 503],
+    )
+    adapter = HTTPAdapter(pool_connections=10, pool_maxsize=20, max_retries=retry)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    return session
+
+
+_http = _make_http_session()
 
 
 # =============================================================================
@@ -61,7 +81,7 @@ class MLBHistoricalFetcher:
 
         try:
             # Get player's game log for the date range
-            game_log = self._fetch_game_log(player_id, start_date, end_date)
+            game_log = self._fetch_game_log(player_id, start_date, end_date, position)
             if not game_log:
                 logger.debug("No games found for %s in range", player_name)
                 return None, []
@@ -140,7 +160,7 @@ class MLBHistoricalFetcher:
                     ct = results[0].get("currentTeam", {})
                     if isinstance(ct, dict) and ct.get("id"):
                         try:
-                            resp = requests.get(
+                            resp = _http.get(
                                 f"https://statsapi.mlb.com/api/v1/teams/{ct['id']}",
                                 timeout=10,
                             )
@@ -162,7 +182,8 @@ class MLBHistoricalFetcher:
     _SPRING_TRAINING_END_MONTH = 3
 
     def _fetch_game_log(
-        self, player_id: int, start_date: date, end_date: date
+        self, player_id: int, start_date: date, end_date: date,
+        position: str = "",
     ) -> list[dict]:
         """
         Fetch player's game-by-game stats for the date range.
@@ -170,6 +191,9 @@ class MLBHistoricalFetcher:
         Uses the raw MLB Stats API which returns splits with date fields.
         Includes Spring Training (gameType=S) when the date range overlaps
         the Spring Training window.
+
+        When position is known, only fetches the relevant stat group
+        (hitting or pitching) to cut API calls roughly in half.
         """
         try:
             sport_id = self._player_sport.get(player_id, 1)
@@ -181,8 +205,16 @@ class MLBHistoricalFetcher:
                     or end_date.month <= self._SPRING_TRAINING_END_MONTH):
                 game_types.append("S")  # Spring Training
 
+            # Only fetch relevant stat groups based on position
+            if position == "Pitcher":
+                groups = ("pitching",)
+            elif position in ("Hitter", ""):
+                groups = ("hitting",)
+            else:  # Two-Way or unknown
+                groups = ("hitting", "pitching")
+
             all_splits = []
-            for group in ("hitting", "pitching"):
+            for group in groups:
                 for game_type in game_types:
                     splits = self._fetch_raw_game_log(
                         player_id, season, group, sport_id, game_type
@@ -218,7 +250,7 @@ class MLBHistoricalFetcher:
                 f"?stats=gameLog&season={season}&group={group}"
                 f"&sportId={sport_id}&gameType={game_type}"
             )
-            resp = requests.get(url, timeout=10)
+            resp = _http.get(url, timeout=10)
             if resp.status_code != 200:
                 return []
             data = resp.json()
@@ -459,7 +491,7 @@ class D1BaseballSeasonFetcher:
         try:
             self._rate_limit()
             url = self.STATS_URL.format(slug=slug)
-            resp = requests.get(url, headers=self._HEADERS, timeout=15)
+            resp = _http.get(url, headers=self._HEADERS, timeout=15)
             if resp.status_code != 200:
                 logger.warning("D1B: fetch failed for %s (%d)", team, resp.status_code)
                 return None
@@ -847,33 +879,41 @@ class WindowStatsAggregator:
 
     def run_all_windows(self, players: list[dict]) -> dict[str, list]:
         """
-        Aggregate stats for all players.
+        Aggregate stats for all players using concurrent fetching.
         Returns: {"7d": [...], "season": [...]}
         """
-        results = {"7d": [], "season": []}
+        start_7d = self._today - timedelta(days=7)
 
-        for player in players:
+        def _process_player(player):
             name = player.get("player_name", "")
-            team = player.get("team", "")
             level = player.get("level", "")
-            position = player.get("position", "") or player.get("tags", {}).get("position", "Hitter")
-
             logger.info("Processing windows for %s (%s)", name, level)
 
-            # --- 7D: everyone ---
-            start_7d = self._today - timedelta(days=7)
-            entry = self._build_window_entry(
+            entry_7d = self._build_window_entry(
                 player, "7d", start_7d, self._today
             )
-            if entry:
-                results["7d"].append(entry)
-
-            # --- Season: everyone ---
-            entry = self._build_window_entry(
+            entry_season = self._build_window_entry(
                 player, "season", self._season_start, self._today
             )
-            if entry:
-                results["season"].append(entry)
+            return entry_7d, entry_season
+
+        results = {"7d": [], "season": []}
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = {executor.submit(_process_player, p): p for p in players}
+            for future in as_completed(futures):
+                try:
+                    entry_7d, entry_season = future.result()
+                    if entry_7d:
+                        results["7d"].append(entry_7d)
+                    if entry_season:
+                        results["season"].append(entry_season)
+                except Exception:
+                    player = futures[future]
+                    logger.exception(
+                        "Failed to process windows for %s",
+                        player.get("player_name", "?"),
+                    )
 
         return results
 

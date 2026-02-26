@@ -19,10 +19,29 @@ from zoneinfo import ZoneInfo
 import requests
 import statsapi
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 from .config import ROSTER_URL
 
 logger = logging.getLogger(__name__)
+
+
+def _make_http_session() -> requests.Session:
+    """Create a shared HTTP session with connection pooling and retry logic."""
+    session = requests.Session()
+    retry = Retry(
+        total=3,
+        backoff_factor=0.5,
+        status_forcelist=[429, 500, 502, 503],
+    )
+    adapter = HTTPAdapter(pool_connections=10, pool_maxsize=20, max_retries=retry)
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+    return session
+
+
+_http = _make_http_session()
 
 
 # ===== Shared helpers =====
@@ -309,6 +328,7 @@ class ProStatsFetcher:
         self._player_cache: dict[str, int] = {}
         self._team_info_cache: dict[int, dict] = {}  # team_id -> {name, sport_id, parent_id, parent_name}
         self._player_team_cache: dict[int, dict] = {}  # player_id -> team info
+        self._next_game_cache: dict[str, Optional[dict]] = {}  # team_lower -> next game result
         self._today = _today_et()
         self._today_str = self._today.strftime("%m/%d/%Y")
 
@@ -460,7 +480,7 @@ class ProStatsFetcher:
         if team_id in self._team_info_cache:
             return self._team_info_cache[team_id]
         try:
-            resp = requests.get(
+            resp = _http.get(
                 f"https://statsapi.mlb.com/api/v1/teams/{team_id}",
                 timeout=10,
             )
@@ -569,9 +589,14 @@ class ProStatsFetcher:
         """Find the next scheduled game for a player's team.
 
         Searches MLB schedule by roster team name, then the player's actual
-        MiLB team schedule if available.
+        MiLB team schedule if available.  Results are cached by team name
+        so teammates share a single lookup.
         """
         team_lower = team.lower() if team else ""
+
+        # Check cache first — two players on the same team share one lookup
+        if team_lower and team_lower in self._next_game_cache:
+            return self._next_game_cache[team_lower]
 
         # Collect team names + sport IDs to search
         search_targets = []
@@ -610,7 +635,7 @@ class ProStatsFetcher:
                                 opponent = game.get("home_name", "")
                                 home_away = "@"
                             game_time = self._format_game_time(game.get("game_datetime", ""))
-                            return {
+                            result = {
                                 "date": future_date.strftime("%a %m/%d"),
                                 "date_full": future_date.isoformat(),
                                 "opponent": opponent,
@@ -618,6 +643,11 @@ class ProStatsFetcher:
                                 "time": game_time,
                                 "display": f"{home_away} {opponent} - {future_date.strftime('%a %m/%d')} {game_time}" if game_time else f"{home_away} {opponent} - {future_date.strftime('%a %m/%d')}",
                             }
+                            if team_lower:
+                                self._next_game_cache[team_lower] = result
+                            return result
+            if team_lower:
+                self._next_game_cache[team_lower] = None
             return None
         except Exception:
             logger.debug("Error finding next game for %s", team)
@@ -875,7 +905,7 @@ class SidearmScraper(BaseSchoolScraper):
 
         try:
             # Sidearm exposes a JSON schedule/stats feed at predictable paths
-            resp = requests.get(f"{base_url}?format=json", timeout=15)
+            resp = _http.get(f"{base_url}?format=json", timeout=15)
             resp.raise_for_status()
             data = resp.json()
             return self._find_player_in_feed(player_name, data)
@@ -907,7 +937,7 @@ class StatBroadcastScraper(BaseSchoolScraper):
             return None
 
         try:
-            resp = requests.get(url, timeout=15)
+            resp = _http.get(url, timeout=15)
             resp.raise_for_status()
             return self._parse_statbroadcast(player_name, resp.text)
         except Exception:
@@ -1006,7 +1036,7 @@ class NCAAComScraper(BaseSchoolScraper):
         """Fetch NCAA scoreboard for a date (YYYY/MM/DD). Caches per date."""
         if date_str not in self._scoreboard_cache:
             url = f"{self.SCOREBOARD_URL}/{date_str}"
-            resp = requests.get(url, timeout=15)
+            resp = _http.get(url, timeout=15)
             resp.raise_for_status()
             self._scoreboard_cache[date_str] = resp.json().get("games", [])
         return self._scoreboard_cache[date_str]
@@ -1110,7 +1140,7 @@ class NCAAComScraper(BaseSchoolScraper):
             logger.debug("Boxscore cache hit for game %s", gid)
             return self._boxscore_cache[gid]
         url = f"{self.BOXSCORE_URL}/{game_id}/boxscore"
-        resp = requests.get(url, timeout=15)
+        resp = _http.get(url, timeout=15)
         if resp.status_code != 200:
             return None
         data = resp.json()
@@ -1383,7 +1413,7 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _get_scores(self, date_str: str) -> str:
         """Fetch D1Baseball scores HTML for a date (YYYYMMDD). Caches per date."""
         if date_str not in self._scores_cache:
-            resp = requests.get(
+            resp = _http.get(
                 self.SCORES_URL,
                 params={"date": date_str},
                 headers={
@@ -1552,7 +1582,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         elements (where Sidearm puts player names).
         """
         try:
-            resp = requests.get(box_url, timeout=15)
+            resp = _http.get(box_url, timeout=15)
             resp.raise_for_status()
             page_text = resp.text.lower()
 
@@ -1586,7 +1616,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             m = re.search(r"[?&]id=(\d+)", box_url)
             if not m:
                 # Handle statb.us short URLs by following redirect
-                r0 = requests.get(box_url, timeout=10, allow_redirects=True)
+                r0 = _http.get(box_url, timeout=10, allow_redirects=True)
                 m = re.search(r"[?&]id=(\d+)", r0.url)
                 if not m:
                     return None
@@ -1594,7 +1624,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             event_id = m.group(1)
 
             # Step 1: get event metadata (xmlfile path contains groupid)
-            r1 = requests.get(
+            r1 = _http.get(
                 f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}",
                 headers={"Referer": box_url},
                 timeout=15,
@@ -1617,7 +1647,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     f"&sport=bsgame&filetime=-1&type=statmonitr&start=true"
                 )
                 encoded = base64.b64encode(data_str.encode()).decode()
-                r2 = requests.get(
+                r2 = _http.get(
                     "https://stats.statbroadcast.com/interface/webservice/stats",
                     params={"data": encoded},
                     headers={"Referer": box_url, "X-Requested-With": "XMLHttpRequest"},
@@ -1736,7 +1766,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         rare schools that serve pre-rendered HTML.
         """
         try:
-            resp = requests.get(box_url, timeout=15)
+            resp = _http.get(box_url, timeout=15)
             resp.raise_for_status()
             html = resp.text
 
@@ -1807,7 +1837,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 f"http://static.sidearmstats.com/schools/{folder}/{sport}/game.json"
                 "?detail=full"
             )
-            jresp = requests.get(json_url, timeout=15)
+            jresp = _http.get(json_url, timeout=15)
             jresp.raise_for_status()
             data = jresp.json()
 
@@ -2071,7 +2101,7 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _parse_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
         """Fetch and parse a D1Baseball box score page for a specific player."""
         try:
-            resp = requests.get(box_url, timeout=15)
+            resp = _http.get(box_url, timeout=15)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -2247,7 +2277,7 @@ class ESPNScraper(BaseSchoolScraper):
             date_str = self._today.strftime("%Y%m%d")
         if date_str not in self._scoreboard_cache:
             url = f"{self.SCOREBOARD_URL}?dates={date_str}&limit=200"
-            resp = requests.get(url, timeout=15)
+            resp = _http.get(url, timeout=15)
             resp.raise_for_status()
             self._scoreboard_cache[date_str] = resp.json()
         return self._scoreboard_cache[date_str]
@@ -2349,7 +2379,7 @@ class ESPNScraper(BaseSchoolScraper):
         if game_id in self._summary_cache:
             logger.debug("ESPN summary cache hit for game %s", game_id)
             return self._summary_cache[game_id]
-        resp = requests.get(
+        resp = _http.get(
             f"{self.SUMMARY_URL}?event={game_id}", timeout=15
         )
         resp.raise_for_status()

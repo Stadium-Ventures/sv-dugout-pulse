@@ -394,6 +394,57 @@
     font-size: 0.75rem;
   }
 
+  /* ---- Skeleton loading cards ---- */
+  .skeleton-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    overflow: hidden;
+  }
+  .skeleton-bar {
+    background: var(--border);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .skeleton-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .skeleton-name {
+    height: 1rem;
+    width: 60%;
+    margin-bottom: 0.5rem;
+  }
+  .skeleton-team {
+    height: 0.75rem;
+    width: 35%;
+    margin-bottom: 0.6rem;
+  }
+  .skeleton-stat {
+    height: 0.8rem;
+    width: 45%;
+    margin-bottom: 0.4rem;
+  }
+  .skeleton-stat-short {
+    height: 0.8rem;
+    width: 30%;
+    margin-bottom: 0.4rem;
+  }
+  .skeleton-stat-wide {
+    height: 0.8rem;
+    width: 70%;
+  }
+
   /* ---- Empty state ---- */
   .empty {
     text-align: center;
@@ -619,7 +670,18 @@
   /* ---- Responsive ---- */
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
-    .filters { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; padding: 0.75rem 0; }
+    .filters { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; padding: 0.75rem 0; position: relative; }
+    .filters::after {
+      content: '';
+      position: sticky;
+      right: 0;
+      top: 0;
+      flex-shrink: 0;
+      width: 2rem;
+      height: 100%;
+      background: linear-gradient(to right, transparent, var(--bg));
+      pointer-events: none;
+    }
     .filter-group { flex-shrink: 0; }
     body { padding: 0.5rem; }
     .header h1 { font-size: 1.4rem; }
@@ -1131,12 +1193,21 @@ function render() {
     // Only show players whose team actually played — exclude any stale or wrong-date entries
     const filtered = sortPlayers(data.filter(p => p.game_status === 'Final' && matchesFilters(p)));
 
-    if (filtered.length === 0) {
+    if (windowData.yesterday === null) {
+      empty.style.display = 'none';
+      grid.innerHTML = Array(6).fill(
+        `<div class="skeleton-card">
+          <div class="skeleton-bar skeleton-name"></div>
+          <div class="skeleton-bar skeleton-team"></div>
+          <div class="skeleton-bar skeleton-stat"></div>
+          <div class="skeleton-bar skeleton-stat-short"></div>
+          <div class="skeleton-bar skeleton-stat-wide"></div>
+        </div>`
+      ).join('');
+    } else if (filtered.length === 0) {
       grid.innerHTML = '';
       empty.style.display = 'block';
-      empty.textContent = windowData.yesterday === null
-        ? 'Loading...'
-        : 'No results from yesterday.';
+      empty.textContent = 'No results from yesterday.';
     } else {
       empty.style.display = 'none';
       grid.innerHTML = filtered.map(renderCard).join('');
@@ -1144,17 +1215,29 @@ function render() {
   } else {
     noGameSection.style.display = 'none';
     // Window view - use window card renderer
-    const data = windowData[currentWindow] || [];
-    const filtered = sortWindowPlayers(data.filter(matchesWindowFilters));
-    if (filtered.length === 0) {
-      grid.innerHTML = '';
-      empty.style.display = 'block';
-      empty.textContent = windowData[currentWindow] === null
-        ? 'Loading...'
-        : 'No players match the current filters.';
-    } else {
+    if (windowData[currentWindow] === null) {
+      // Show skeleton loading cards
       empty.style.display = 'none';
-      grid.innerHTML = filtered.map(renderWindowCard).join('');
+      grid.innerHTML = Array(6).fill(
+        `<div class="skeleton-card">
+          <div class="skeleton-bar skeleton-name"></div>
+          <div class="skeleton-bar skeleton-team"></div>
+          <div class="skeleton-bar skeleton-stat"></div>
+          <div class="skeleton-bar skeleton-stat-short"></div>
+          <div class="skeleton-bar skeleton-stat-wide"></div>
+        </div>`
+      ).join('');
+    } else {
+      const data = windowData[currentWindow] || [];
+      const filtered = sortWindowPlayers(data.filter(matchesWindowFilters));
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        empty.textContent = 'No players match the current filters.';
+      } else {
+        empty.style.display = 'none';
+        grid.innerHTML = filtered.map(renderWindowCard).join('');
+      }
     }
   }
 }
@@ -1216,20 +1299,20 @@ async function switchWindow(window) {
 
 // Live workflow cron windows (UTC):
 //   00:00–06:45 UTC  (every 15 min)  = 8:00 PM–2:45 AM ET
-//   15:00–23:45 UTC  (every 15 min)  = 11:00 AM–7:45 PM ET
-// Gap: 06:45–15:00 UTC = 2:45 AM–11:00 AM ET (no live runs)
+//   14:00–23:45 UTC  (every 15 min)  = 10:00 AM–7:45 PM ET
+// Gap: 06:45–14:00 UTC = 2:45 AM–10:00 AM ET (no live runs)
 function getNextUpdateTime() {
   const now = new Date();
   const h = now.getUTCHours(), m = now.getUTCMinutes();
   const totalMins = h * 60 + m;
   const GAP_START = 6 * 60 + 46;  // 06:46 UTC (after last run at 06:45)
-  const GAP_END   = 15 * 60;       // 15:00 UTC
+  const GAP_END   = 14 * 60;       // 14:00 UTC
 
   let next;
   if (totalMins >= GAP_START && totalMins < GAP_END) {
-    // In the gap — next run is 15:00 UTC today
+    // In the gap — next run is 14:00 UTC today
     next = new Date(now);
-    next.setUTCHours(15, 0, 0, 0);
+    next.setUTCHours(14, 0, 0, 0);
   } else {
     // In an active window — next 15-min mark
     const nextM = Math.ceil((m + 1) / 15) * 15;
@@ -1239,11 +1322,11 @@ function getNextUpdateTime() {
     } else {
       next.setUTCMinutes(nextM, 0, 0);
     }
-    // If rounding pushed us into the gap, jump to 15:00 UTC
+    // If rounding pushed us into the gap, jump to 14:00 UTC
     const nh = next.getUTCHours(), nm = next.getUTCMinutes();
     const nextTotal = nh * 60 + nm;
     if (nextTotal >= GAP_START && nextTotal < GAP_END) {
-      next.setUTCHours(15, 0, 0, 0);
+      next.setUTCHours(14, 0, 0, 0);
     }
   }
   return next;
@@ -1271,9 +1354,20 @@ function updateTimestamp() {
     }
     return;
   }
-  // Window tabs (7d/30d/season): no timestamp needed
+  // Window tabs (7d/season): show last_updated from window data
   if (currentWindow !== 'today') {
-    el.textContent = '';
+    const data = windowData[currentWindow];
+    if (Array.isArray(data) && data.length > 0 && data[0].last_updated) {
+      const d = new Date(data[0].last_updated);
+      const timeStr = d.toLocaleDateString('en-US', {
+        month: 'short', day: 'numeric', timeZone: 'America/New_York'
+      }) + ', ' + d.toLocaleTimeString('en-US', {
+        hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York', timeZoneName: 'short'
+      });
+      el.textContent = 'Updated ' + timeStr;
+    } else {
+      el.textContent = '';
+    }
     return;
   }
   // Today tab: show absolute last update time
@@ -1314,7 +1408,7 @@ function manageAutoRefresh() {
           updateTimestamp();
           render();
         } catch (e) { console.error('Auto-refresh failed:', e); }
-      }, 120000);
+      }, 300000);
     }
     indicator.classList.add('active');
   } else {

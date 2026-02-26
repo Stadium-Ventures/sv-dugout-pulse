@@ -5,8 +5,8 @@ on:
     # Historical aggregation - 6am ET daily (11:00 UTC)
     - cron: "0 11 * * *"
     # Live updates every 15 minutes during game hours
-    - cron: "*/15 15-23 * * *"  # 3pm-11:45pm UTC (11am-7:45pm ET)
-    - cron: "*/15 0-6 * * *"    # 12am-6:45am UTC (8pm-2:45am ET)
+    - cron: "*/15 14-23 * * *"  # 2pm-11:45pm UTC (10am-7:45pm ET)
+    - cron: "*/15 0-6 * * *"   # 12am-6:45am UTC (8pm-2:45am ET)
   workflow_dispatch:
     inputs:
       mode:
@@ -31,6 +31,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
 
       - name: Install dependencies
         run: pip install -r requirements.txt

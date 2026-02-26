@@ -15,6 +15,8 @@ import logging
 import os
 import re
 import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
@@ -36,6 +38,10 @@ logger = logging.getLogger("pulse")
 
 _ET = ZoneInfo("US/Eastern")
 _DAY_FLIP_HOUR = 4  # Day flips at 4 AM ET
+
+# Pending NCAA game log entries — batched and flushed at end of run
+_ncaa_log_pending: list[tuple] = []  # [(key, game_date, opponent, entry_stats), ...]
+_ncaa_log_lock = threading.Lock()
 
 
 def _today_et() -> date:
@@ -80,7 +86,7 @@ def _extract_opponent(game_context: str, player_team: str) -> str:
 
 
 def _append_to_ncaa_game_log(player: dict, stats: dict):
-    """Append a single NCAA game result to the persistent game log."""
+    """Queue a single NCAA game result for batched write."""
     if player.get("level") != "NCAA":
         return
     if stats.get("game_status") != "Final":
@@ -99,8 +105,6 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
     opponent = _extract_opponent(stats.get("game_context", ""), player["team"])
 
     # Determine if pitcher or hitter line.
-    # Use roster position as primary signal; only override to pitcher if the
-    # scraper explicitly flagged is_pitcher_line=True (not just ip present).
     roster_pos = player.get("position", "Hitter")
     is_pitcher = stats.get("is_pitcher_line", False)
     if roster_pos == "Hitter":
@@ -138,7 +142,17 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
         if entry_stats.get("ab", 0) == 0 and not any(entry_stats.get(k) for k in ("bb", "r", "sb")):
             return
 
-    # Load existing log
+    with _ncaa_log_lock:
+        _ncaa_log_pending.append((key, game_date, opponent, entry_stats))
+    logger.debug("NCAA game log: queued %s on %s", key, game_date)
+
+
+def _flush_ncaa_game_log():
+    """Flush all pending NCAA game log entries in a single read+write cycle."""
+    if not _ncaa_log_pending:
+        return
+
+    # Load existing log once
     log = {}
     if os.path.exists(NCAA_GAME_LOG_PATH):
         try:
@@ -147,28 +161,35 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
         except Exception:
             log = {}
 
-    entries = log.get(key, [])
+    added = 0
+    for key, game_date, opponent, entry_stats in _ncaa_log_pending:
+        entries = log.get(key, [])
 
-    # Normalize all existing dates and deduplicate
-    seen = set()
-    clean = []
-    for e in entries:
-        e["date"] = _normalize_date(e.get("date", ""))
-        if e["date"] not in seen:
-            seen.add(e["date"])
-            clean.append(e)
-    entries = clean
+        # Normalize existing dates and deduplicate
+        seen = set()
+        clean = []
+        for e in entries:
+            e["date"] = _normalize_date(e.get("date", ""))
+            if e["date"] not in seen:
+                seen.add(e["date"])
+                clean.append(e)
+        entries = clean
 
-    # Only append if we don't already have this date
-    if game_date not in seen:
-        entry = {"date": game_date, "opponent": opponent, "stats": entry_stats}
-        entries.append(entry)
+        # Only append if we don't already have this date
+        if game_date not in seen:
+            entries.append({"date": game_date, "opponent": opponent, "stats": entry_stats})
+            added += 1
         log[key] = entries
 
+    if added > 0:
         os.makedirs(os.path.dirname(NCAA_GAME_LOG_PATH), exist_ok=True)
         with open(NCAA_GAME_LOG_PATH, "w") as f:
             json.dump(log, f, indent=2, ensure_ascii=False)
-        logger.debug("NCAA game log: appended %s on %s", key, game_date)
+        logger.info("NCAA game log: flushed %d new entries (%d queued)", added, len(_ncaa_log_pending))
+    else:
+        logger.debug("NCAA game log: no new entries to flush (%d queued, all dupes)", len(_ncaa_log_pending))
+
+    _ncaa_log_pending.clear()
 
 
 def _build_profile_url(player: dict, stats: dict) -> str | None:
@@ -399,9 +420,9 @@ def run_live():
 
     fetcher = StatsFetcher()
     analyzer = PerformanceAnalyzer()
-    pulse = []
 
-    for player in all_players:
+    def _process_player(player):
+        """Process a single player — safe for concurrent execution."""
         name = player["player_name"]
         is_client = player.get("is_client", True)
         try:
@@ -409,10 +430,6 @@ def run_live():
             _append_to_ncaa_game_log(player, stats)
             analysis = analyzer.analyze(player, stats)
             entry = build_pulse_entry(player, stats, analysis)
-            pulse.append(entry)
-
-            if is_client:
-                check_and_send_alerts(player, stats)
 
             logger.info(
                 "%s%s | %s | %s",
@@ -421,9 +438,30 @@ def run_live():
                 stats.get("stats_summary", "—"),
                 analysis["performance_grade"],
             )
+            # Return entry + alert data (alerts sent serially after pool)
+            alert_data = (player, stats) if is_client else None
+            return entry, alert_data
         except Exception:
             logger.exception("Failed to process %s — skipping", name)
-            continue
+            return None, None
+
+    pulse = []
+    alert_queue = []
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {executor.submit(_process_player, p): p for p in all_players}
+        for future in as_completed(futures):
+            entry, alert_data = future.result()
+            if entry:
+                pulse.append(entry)
+            if alert_data:
+                alert_queue.append(alert_data)
+
+    # Send alerts serially to avoid Slack rate limits
+    for player, stats in alert_queue:
+        check_and_send_alerts(player, stats)
+
+    _flush_ncaa_game_log()
 
     # Write output — convert yesterday-only entries to N/A for Today tab
     today_str = _today_et().isoformat()
@@ -453,6 +491,7 @@ def run_live():
     _supplement_yesterday(pulse)
 
     _fetch_yesterday_pass(all_players, fetcher, analyzer)
+    _flush_ncaa_game_log()
 
 
 def run_mock():
