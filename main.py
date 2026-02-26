@@ -93,8 +93,16 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
     key = f"{player['player_name']}|{player['team']}"
     opponent = _extract_opponent(stats.get("game_context", ""), player["team"])
 
-    # Determine if pitcher or hitter line
-    is_pitcher = stats.get("is_pitcher_line", False) or "ip" in stats
+    # Determine if pitcher or hitter line.
+    # Use roster position as primary signal; only override to pitcher if the
+    # scraper explicitly flagged is_pitcher_line=True (not just ip present).
+    roster_pos = player.get("position", "Hitter")
+    is_pitcher = stats.get("is_pitcher_line", False)
+    if roster_pos == "Hitter":
+        is_pitcher = False
+    elif roster_pos == "Pitcher":
+        is_pitcher = True
+    # Two-Way: trust the scraper's is_pitcher_line flag
     if is_pitcher:
         entry_stats = {
             "ip": str(stats.get("ip", "0")),
