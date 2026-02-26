@@ -341,6 +341,7 @@ class ProStatsFetcher:
                 logger.debug("No game today for %s", name)
                 result = empty_stats()
                 result["next_game"] = next_game
+                result["mlb_player_id"] = player_id
                 if next_game:
                     result["stats_summary"] = f"Next: {next_game['display']}"
                 else:
@@ -349,6 +350,7 @@ class ProStatsFetcher:
 
             result = self._extract_stats(player, player_id, game)
             result["next_game"] = next_game
+            result["mlb_player_id"] = player_id
             return result
 
         except Exception:
@@ -387,6 +389,7 @@ class ProStatsFetcher:
             result = self._extract_stats(player, player_id, game)
             result["is_yesterday"] = True
             result["game_date"] = yesterday.isoformat()
+            result["mlb_player_id"] = player_id
             return result
 
         except Exception:

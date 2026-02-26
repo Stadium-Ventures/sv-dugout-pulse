@@ -13,6 +13,7 @@ import logging
 import os
 import sys
 from datetime import date, datetime, timedelta, timezone
+from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts
@@ -41,6 +42,20 @@ def _today_et() -> date:
     return now.date()
 
 
+def _build_profile_url(player: dict, stats: dict) -> str | None:
+    """Build a player profile URL — MLB.com for Pro, Baseball Cube search for NCAA."""
+    level = player.get("level", "")
+    name = player.get("player_name", "")
+    if level == "Pro":
+        mlb_id = stats.get("mlb_player_id")
+        if mlb_id:
+            return f"https://www.mlb.com/player/{mlb_id}"
+    elif level == "NCAA" and name:
+        q = quote(f'site:thebaseballcube.com "{name}"')
+        return f"https://www.google.com/search?q={q}&btnI="
+    return None
+
+
 def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     """Assemble a single player's output record."""
     return {
@@ -55,6 +70,7 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "is_yesterday": stats.get("is_yesterday", False),
         "next_game": stats.get("next_game"),
         "box_score_url": stats.get("box_score_url"),
+        "player_profile_url": _build_profile_url(player, stats),
         "performance_grade": analysis["performance_grade"],
         "social_search_url": analysis["social_search_url"],
         "is_client": player.get("is_client", True),

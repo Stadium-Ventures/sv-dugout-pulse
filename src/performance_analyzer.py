@@ -104,6 +104,10 @@ class PerformanceAnalyzer:
         if qs or k >= PITCHER_STANDOUT_KS or saves >= 1:
             return GRADE_STANDOUT
 
+        # Good: clean relief outing (under 3 IP, 0 ER)
+        if ip > 0 and ip < 3.0 and er == 0:
+            return GRADE_GOOD
+
         # Good: 3+ clean IP
         if ip >= 3.0 and er <= 1:
             return GRADE_GOOD
