@@ -21,6 +21,7 @@ import statsapi
 from bs4 import BeautifulSoup
 
 from .config import (
+    NCAA_GAME_LOG_PATH,
     WINDOW_7D_PATH,
     WINDOW_SEASON_PATH,
     WINDOW_MIN_IP,
@@ -47,38 +48,80 @@ class MLBHistoricalFetcher:
 
     def fetch_window(
         self, player_name: str, team: str, position: str, start_date: date, end_date: date
-    ) -> Optional[dict]:
+    ) -> tuple[Optional[dict], list]:
         """
         Fetch aggregated stats for a player over the given date range.
-        Returns None if player not found or no games in range.
+        Returns (stats_dict, game_entries_list) — stats_dict is None if
+        player not found or no games in range.
         """
         player_id = self._lookup_player(player_name)
         if player_id is None:
             logger.debug("MLB player not found: %s", player_name)
-            return None
+            return None, []
 
         try:
             # Get player's game log for the date range
             game_log = self._fetch_game_log(player_id, start_date, end_date)
             if not game_log:
                 logger.debug("No games found for %s in range", player_name)
-                return None
+                return None, []
+
+            # Build per-game entries for drill-down
+            game_entries = self._build_game_entries(game_log, position)
 
             # Aggregate based on position
             if position == "Pitcher":
-                return self._aggregate_pitcher_stats(game_log)
+                return self._aggregate_pitcher_stats(game_log), game_entries
             elif position == "Two-Way":
-                # Two-way players: try batting first, pitching as fallback
                 batter_result = self._aggregate_batter_stats(game_log)
                 if batter_result and batter_result.get("pa", 0) > 0:
-                    return batter_result
-                return self._aggregate_pitcher_stats(game_log)
+                    return batter_result, game_entries
+                return self._aggregate_pitcher_stats(game_log), game_entries
             else:
-                return self._aggregate_batter_stats(game_log)
+                return self._aggregate_batter_stats(game_log), game_entries
 
         except Exception:
             logger.exception("Error fetching window stats for %s", player_name)
-            return None
+            return None, []
+
+    def _build_game_entries(self, games: list[dict], position: str) -> list[dict]:
+        """Build per-game drill-down entries from MLB API splits."""
+        entries = []
+        for game in games:
+            stat = game.get("stat", {})
+            game_date = game.get("date", "")
+            opponent_info = game.get("opponent", {})
+            opp_name = ""
+            if isinstance(opponent_info, dict):
+                opp_team = opponent_info.get("team", {})
+                if isinstance(opp_team, dict):
+                    opp_name = opp_team.get("name", "")
+            is_home = game.get("isHome", False)
+            opp_str = f"vs {opp_name}" if is_home else f"@ {opp_name}" if opp_name else ""
+
+            # Determine pitcher vs hitter for this game
+            ip_str = str(stat.get("inningsPitched", ""))
+            if ip_str and ip_str != "0" and (position == "Pitcher" or position == "Two-Way"):
+                entry_stats = {
+                    "ip": ip_str,
+                    "er": int(stat.get("earnedRuns", 0)),
+                    "k": int(stat.get("strikeOuts", 0)),
+                    "bb": int(stat.get("baseOnBalls", 0)),
+                    "h": int(stat.get("hits", 0)),
+                }
+            else:
+                entry_stats = {
+                    "h": int(stat.get("hits", 0)),
+                    "ab": int(stat.get("atBats", 0)),
+                    "hr": int(stat.get("homeRuns", 0)),
+                    "rbi": int(stat.get("rbi", 0)),
+                    "r": int(stat.get("runs", 0)),
+                    "bb": int(stat.get("baseOnBalls", 0)),
+                    "k": int(stat.get("strikeOuts", 0)),
+                    "sb": int(stat.get("stolenBases", 0)),
+                }
+            entries.append({"date": game_date, "opponent": opp_str, "stats": entry_stats})
+        return entries
 
     def _lookup_player(self, name: str) -> Optional[int]:
         """Search MLB/MiLB for a player ID by name, with caching."""
@@ -555,6 +598,189 @@ class D1BaseballSeasonFetcher:
 
 
 # =============================================================================
+# NCAA Game Log Aggregator (7D from persisted per-game data)
+# =============================================================================
+
+
+class NCAAGameLogAggregator:
+    """Aggregate NCAA per-game stats from the persisted game log file."""
+
+    def __init__(self):
+        self._log: dict[str, list] = {}
+        if os.path.exists(NCAA_GAME_LOG_PATH):
+            try:
+                with open(NCAA_GAME_LOG_PATH) as f:
+                    self._log = json.load(f)
+            except Exception:
+                logger.warning("Failed to load NCAA game log")
+        # Normalize dates and deduplicate
+        for key, entries in self._log.items():
+            seen = set()
+            clean = []
+            for e in entries:
+                d = self._normalize_date(e.get("date", ""))
+                e["date"] = d
+                if d and d not in seen:
+                    seen.add(d)
+                    clean.append(e)
+            self._log[key] = clean
+
+    @staticmethod
+    def _normalize_date(d: str) -> str:
+        if "/" in d:
+            try:
+                return datetime.strptime(d, "%m/%d/%Y").strftime("%Y-%m-%d")
+            except ValueError:
+                return d
+        return d
+
+    @staticmethod
+    def _ip_to_outs(ip_val) -> int:
+        ip_str = str(ip_val)
+        try:
+            if "." in ip_str:
+                parts = ip_str.split(".")
+                return (int(parts[0]) * 3) + int(parts[1])
+            return int(float(ip_str)) * 3
+        except (ValueError, IndexError):
+            return 0
+
+    @staticmethod
+    def _outs_to_ip_display(outs: int) -> str:
+        innings = outs // 3
+        partial = outs % 3
+        return f"{innings}.{partial}" if partial else str(innings)
+
+    def _is_pitcher_entry(self, stats: dict) -> bool:
+        """Check if a game log entry is a pitcher line (has ip field)."""
+        return "ip" in stats and str(stats.get("ip", "0")) not in ("0", "0.0", "")
+
+    def get_window_stats(
+        self, player_name: str, team: str, position: str,
+        start_date: date, end_date: date,
+    ) -> tuple[Optional[dict], list]:
+        """
+        Aggregate game log stats for an NCAA player in the given date range.
+        Returns (stats_dict, game_entries_list).
+        """
+        key = f"{player_name}|{team}"
+        entries = self._log.get(key, [])
+
+        # Filter to date range
+        in_range = []
+        for e in entries:
+            try:
+                d = datetime.strptime(e["date"], "%Y-%m-%d").date()
+                if start_date <= d <= end_date:
+                    in_range.append(e)
+            except (ValueError, KeyError):
+                continue
+
+        if not in_range:
+            return None, []
+
+        # Determine pitcher vs hitter
+        # For Two-Way: check if entries have ip field
+        is_pitcher = position == "Pitcher"
+        if position == "Two-Way":
+            pitcher_entries = [e for e in in_range if self._is_pitcher_entry(e.get("stats", {}))]
+            is_pitcher = len(pitcher_entries) > len(in_range) - len(pitcher_entries)
+
+        if is_pitcher:
+            stats, game_entries = self._aggregate_pitcher(in_range)
+        else:
+            stats, game_entries = self._aggregate_hitter(in_range)
+
+        return stats, game_entries
+
+    def _aggregate_hitter(self, entries: list[dict]) -> tuple[dict, list]:
+        totals = {"h": 0, "ab": 0, "hr": 0, "rbi": 0, "r": 0, "bb": 0, "k": 0, "sb": 0}
+        game_entries = []
+
+        for e in entries:
+            s = e.get("stats", {})
+            totals["h"] += int(s.get("h", 0))
+            totals["ab"] += int(s.get("ab", 0))
+            totals["hr"] += int(s.get("hr", 0))
+            totals["rbi"] += int(s.get("rbi", 0))
+            totals["r"] += int(s.get("r", 0))
+            totals["bb"] += int(s.get("bb", 0))
+            totals["k"] += int(s.get("k", 0))
+            totals["sb"] += int(s.get("stolen_bases", s.get("sb", 0)))
+            game_entries.append({
+                "date": e["date"],
+                "opponent": e.get("opponent", ""),
+                "stats": {
+                    "h": int(s.get("h", 0)), "ab": int(s.get("ab", 0)),
+                    "hr": int(s.get("hr", 0)), "rbi": int(s.get("rbi", 0)),
+                    "r": int(s.get("r", 0)), "bb": int(s.get("bb", 0)),
+                    "k": int(s.get("k", 0)), "sb": int(s.get("stolen_bases", s.get("sb", 0))),
+                },
+            })
+
+        hbp = 0
+        sf = 0
+        pa = totals["ab"] + totals["bb"] + hbp + sf
+        avg = totals["h"] / totals["ab"] if totals["ab"] > 0 else 0
+        obp = (totals["h"] + totals["bb"] + hbp) / pa if pa > 0 else 0
+        # SLG: we don't have doubles/triples in compact entries, estimate singles
+        singles = totals["h"] - totals["hr"]  # no 2B/3B tracked
+        tb = singles + (4 * totals["hr"])
+        slg = tb / totals["ab"] if totals["ab"] > 0 else 0
+        ops = obp + slg
+
+        stats = {
+            "games_played": len(entries),
+            "pa": pa, "ab": totals["ab"], "h": totals["h"],
+            "hr": totals["hr"], "rbi": totals["rbi"], "r": totals["r"],
+            "bb": totals["bb"], "k": totals["k"], "sb": totals["sb"],
+            "avg": avg, "obp": obp, "slg": slg, "ops": ops,
+            "is_pitcher": False,
+        }
+        return stats, game_entries
+
+    def _aggregate_pitcher(self, entries: list[dict]) -> tuple[dict, list]:
+        total_outs = 0
+        totals = {"er": 0, "k": 0, "bb": 0, "h": 0}
+        game_entries = []
+
+        for e in entries:
+            s = e.get("stats", {})
+            total_outs += self._ip_to_outs(s.get("ip", "0"))
+            totals["er"] += int(s.get("er", s.get("earned_runs", 0)))
+            totals["k"] += int(s.get("k", s.get("strikeouts", 0)))
+            totals["bb"] += int(s.get("bb", s.get("walks_allowed", 0)))
+            totals["h"] += int(s.get("h", s.get("hits_allowed", 0)))
+            game_entries.append({
+                "date": e["date"],
+                "opponent": e.get("opponent", ""),
+                "stats": {
+                    "ip": str(s.get("ip", "0")),
+                    "er": int(s.get("er", s.get("earned_runs", 0))),
+                    "k": int(s.get("k", s.get("strikeouts", 0))),
+                    "bb": int(s.get("bb", s.get("walks_allowed", 0))),
+                    "h": int(s.get("h", s.get("hits_allowed", 0))),
+                },
+            })
+
+        ip = total_outs / 3
+        era = (totals["er"] * 9) / ip if ip > 0 else 0
+        whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
+
+        stats = {
+            "games_played": len(entries),
+            "ip": ip,
+            "ip_display": self._outs_to_ip_display(total_outs),
+            "h": totals["h"], "er": totals["er"], "bb": totals["bb"],
+            "k": totals["k"], "hr": 0,
+            "w": 0, "l": 0, "sv": 0,
+            "era": era, "whip": whip,
+            "is_pitcher": True,
+        }
+        return stats, game_entries
+
+
+# =============================================================================
 # Window Stats Aggregator
 # =============================================================================
 
@@ -563,13 +789,14 @@ class WindowStatsAggregator:
     """Orchestrate historical stats for all players across windows.
 
     Windows:
-    - 7D: Pro players only (MLB game logs)
+    - 7D: Pro (MLB game logs) + NCAA (persisted game log)
     - Season: Pro (MLB game logs) + NCAA (D1Baseball)
     """
 
     def __init__(self):
         self.mlb_fetcher = MLBHistoricalFetcher()
         self.d1b_fetcher = D1BaseballSeasonFetcher()
+        self.ncaa_log = NCAAGameLogAggregator()
         self._today = date.today()
         self._season_start = date(self._today.year, 2, 1)
         if self._today < self._season_start:
@@ -590,14 +817,13 @@ class WindowStatsAggregator:
 
             logger.info("Processing windows for %s (%s)", name, level)
 
-            # --- 7D: Pro only ---
-            if level == "Pro":
-                start_7d = self._today - timedelta(days=7)
-                entry = self._build_window_entry(
-                    player, "7d", start_7d, self._today
-                )
-                if entry:
-                    results["7d"].append(entry)
+            # --- 7D: everyone ---
+            start_7d = self._today - timedelta(days=7)
+            entry = self._build_window_entry(
+                player, "7d", start_7d, self._today
+            )
+            if entry:
+                results["7d"].append(entry)
 
             # --- Season: everyone ---
             entry = self._build_window_entry(
@@ -619,8 +845,15 @@ class WindowStatsAggregator:
         is_client = player.get("is_client", True)
 
         # Fetch stats based on level and window
+        game_log_entries = []
         if level == "Pro":
-            stats = self.mlb_fetcher.fetch_window(name, team, position, start_date, end_date)
+            stats, game_log_entries = self.mlb_fetcher.fetch_window(
+                name, team, position, start_date, end_date
+            )
+        elif level == "NCAA" and window == "7d":
+            stats, game_log_entries = self.ncaa_log.get_window_stats(
+                name, team, position, start_date, end_date
+            )
         elif level == "NCAA" and window == "season":
             stats = self.d1b_fetcher.get_season_stats(name, team, position)
         else:
@@ -632,7 +865,7 @@ class WindowStatsAggregator:
         formatted = self._format_stats(stats, window, position)
         grade = self._calculate_grade(stats, window, position)
 
-        return {
+        result = {
             "player_name": name,
             "team": team,
             "level": level,
@@ -648,6 +881,12 @@ class WindowStatsAggregator:
             "games_played": stats.get("games_played", 0),
             "last_updated": datetime.utcnow().isoformat() + "Z",
         }
+
+        # Include game log for 7D window drill-down
+        if window == "7d" and game_log_entries:
+            result["game_log"] = game_log_entries
+
+        return result
 
     def _empty_stats(self, position: str) -> dict:
         if position == "Pitcher":

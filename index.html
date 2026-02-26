@@ -499,6 +499,54 @@
     margin-top: 0.5rem;
   }
 
+  /* ---- Game Log Drill-Down ---- */
+  .game-log-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    padding: 0.5rem 0 0.3rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    font-weight: 600;
+    user-select: none;
+  }
+  .game-log-toggle:hover { color: var(--text); }
+  .game-log-chevron {
+    transition: transform 0.2s;
+    font-size: 0.65rem;
+  }
+  .game-log-toggle.open .game-log-chevron { transform: rotate(90deg); }
+  .game-log-entries {
+    display: none;
+    padding: 0.25rem 0 0;
+  }
+  .game-log-entries.open { display: block; }
+  .game-log-row {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+    font-size: 0.75rem;
+    border-bottom: 1px solid rgba(42,46,58,0.4);
+  }
+  .game-log-row:last-child { border-bottom: none; }
+  .game-log-date {
+    color: var(--text-dim);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .game-log-opp {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+  }
+  .game-log-stats {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
   /* ---- Search bar ---- */
   .search-wrap {
     max-width: 400px;
@@ -907,6 +955,39 @@ function renderWindowCard(p) {
       </div>`;
   }
 
+  // Game log drill-down (7D only)
+  let gameLogHtml = '';
+  if (p.game_log && p.game_log.length > 0) {
+    const logId = 'gl-' + p.player_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+    const rows = p.game_log.map(g => {
+      const d = new Date(g.date + 'T12:00:00');
+      const dateStr = `${d.getMonth()+1}/${d.getDate()}`;
+      const s = g.stats || {};
+      let statLine;
+      if ('ip' in s && !('ab' in s)) {
+        // Pitcher line
+        statLine = `${s.ip} IP, ${s.er} ER, ${s.k} K, ${s.bb} BB`;
+      } else {
+        // Hitter line
+        const parts = [`${s.h}-${s.ab}`];
+        if (s.hr > 0) parts.push(`${s.hr} HR`);
+        if (s.rbi > 0) parts.push(`${s.rbi} RBI`);
+        if (s.r > 0) parts.push(`${s.r} R`);
+        statLine = parts.join(', ');
+      }
+      const oppStr = g.opponent ? `<span class="game-log-opp">${esc(g.opponent)}</span> ` : '';
+      return `<div class="game-log-row"><span class="game-log-date">${dateStr}</span><span class="game-log-stats">${oppStr}${esc(statLine)}</span></div>`;
+    }).join('');
+    gameLogHtml = `
+      <div class="game-log-toggle" id="glt-${logId}" onclick="toggleGameLog('${logId}')">
+        <span class="game-log-chevron">&#x25B6;</span>
+        Game log (${p.game_log.length})
+      </div>
+      <div class="game-log-entries" id="gle-${logId}">
+        ${rows}
+      </div>`;
+  }
+
   return `
     <div class="window-card">
       <div class="card-top">
@@ -918,6 +999,7 @@ function renderWindowCard(p) {
       <div class="team-name">${esc(p.team)}</div>
       <div class="window-grade ${gc}">${esc(p.window_grade || '— No Data')}</div>
       ${statsHtml}
+      ${gameLogHtml}
     </div>`;
 }
 
@@ -1221,6 +1303,13 @@ function toggleNoGame() {
   const list = document.getElementById('noGameList');
   header.classList.toggle('open');
   list.classList.toggle('open');
+}
+
+function toggleGameLog(id) {
+  const toggle = document.getElementById('glt-' + id);
+  const entries = document.getElementById('gle-' + id);
+  if (toggle) toggle.classList.toggle('open');
+  if (entries) entries.classList.toggle('open');
 }
 
 // Filter buttons

@@ -4,7 +4,7 @@ SV Dugout Pulse — Main Orchestrator
 Usage:
     python main.py                # Live mode (fetches roster + today's stats)
     python main.py --mock         # Load test data only (no API calls)
-    python main.py --historical   # Aggregate historical stats (7D Pro + Season)
+    python main.py --historical   # Aggregate historical stats (7D Pro+NCAA + Season)
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import sys
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
@@ -20,6 +21,7 @@ from zoneinfo import ZoneInfo
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts
 from src.config import (
+    NCAA_GAME_LOG_PATH,
     OUTPUT_PATH,
     WINDOW_7D_PATH,
     WINDOW_SEASON_PATH,
@@ -42,6 +44,108 @@ def _today_et() -> date:
     if now.hour < _DAY_FLIP_HOUR:
         return (now - timedelta(days=1)).date()
     return now.date()
+
+
+def _normalize_date(d: str) -> str:
+    """Normalize MM/DD/YYYY → YYYY-MM-DD; pass through ISO dates unchanged."""
+    if "/" in d:
+        try:
+            return datetime.strptime(d, "%m/%d/%Y").strftime("%Y-%m-%d")
+        except ValueError:
+            return d
+    return d
+
+
+def _extract_opponent(game_context: str, player_team: str) -> str:
+    """Extract opponent from game context like 'Texas 5, Arkansas 3 | Final'."""
+    if not game_context:
+        return ""
+    # Strip status suffix (e.g. " | Final", " | Top 5th")
+    score_part = game_context.split("|")[0].strip()
+    # Try to find teams: "TeamA N, TeamB N" or "TeamA N @ TeamB N"
+    # Match patterns like "Texas 5, Arkansas 3" or "Texas 5 @ Arkansas 3"
+    m = re.match(r"^(.+?)\s+\d+\s*[,@]\s*(.+?)\s+\d+", score_part)
+    if m:
+        team_a, team_b = m.group(1).strip(), m.group(2).strip()
+        # The opponent is whichever team isn't ours
+        if player_team.lower() in team_a.lower():
+            return f"vs {team_b}"
+        elif player_team.lower() in team_b.lower():
+            return f"vs {team_a}"
+        # Fallback: partial match
+        if team_a.lower() in player_team.lower():
+            return f"vs {team_b}"
+        return f"vs {team_a}"
+    return ""
+
+
+def _append_to_ncaa_game_log(player: dict, stats: dict):
+    """Append a single NCAA game result to the persistent game log."""
+    if player.get("level") != "NCAA":
+        return
+    if stats.get("game_status") != "Final":
+        return
+    game_date = stats.get("game_date")
+    if not game_date:
+        return
+
+    game_date = _normalize_date(game_date)
+    key = f"{player['player_name']}|{player['team']}"
+    opponent = _extract_opponent(stats.get("game_context", ""), player["team"])
+
+    # Determine if pitcher or hitter line
+    is_pitcher = stats.get("is_pitcher_line", False) or "ip" in stats
+    if is_pitcher:
+        entry_stats = {
+            "ip": str(stats.get("ip", "0")),
+            "er": int(stats.get("earned_runs", stats.get("er", 0))),
+            "k": int(stats.get("strikeouts", stats.get("k", 0))),
+            "bb": int(stats.get("walks_allowed", stats.get("bb", 0))),
+            "h": int(stats.get("hits_allowed", stats.get("h", 0))),
+        }
+    else:
+        entry_stats = {
+            "h": int(stats.get("hits", stats.get("h", 0))),
+            "ab": int(stats.get("at_bats", stats.get("ab", 0))),
+            "hr": int(stats.get("home_runs", stats.get("hr", 0))),
+            "rbi": int(stats.get("rbi", 0)),
+            "r": int(stats.get("runs", stats.get("r", 0))),
+            "bb": int(stats.get("walks", stats.get("bb", 0))),
+            "k": int(stats.get("strikeouts", stats.get("k", 0))),
+            "sb": int(stats.get("stolen_bases", stats.get("sb", 0))),
+        }
+
+    # Load existing log
+    log = {}
+    if os.path.exists(NCAA_GAME_LOG_PATH):
+        try:
+            with open(NCAA_GAME_LOG_PATH) as f:
+                log = json.load(f)
+        except Exception:
+            log = {}
+
+    entries = log.get(key, [])
+
+    # Normalize all existing dates and deduplicate
+    seen = set()
+    clean = []
+    for e in entries:
+        e["date"] = _normalize_date(e.get("date", ""))
+        if e["date"] not in seen:
+            seen.add(e["date"])
+            clean.append(e)
+    entries = clean
+
+    # Only append if we don't already have this date
+    if game_date not in seen:
+        entry = {"date": game_date, "opponent": opponent, "stats": entry_stats}
+        entries.append(entry)
+        log[key] = entries
+
+        os.makedirs(os.path.dirname(NCAA_GAME_LOG_PATH), exist_ok=True)
+        with open(NCAA_GAME_LOG_PATH, "w") as f:
+            json.dump(log, f, indent=2, ensure_ascii=False)
+        logger.debug("NCAA game log: appended %s on %s", key, game_date)
 
 
 def _build_profile_url(player: dict, stats: dict) -> str | None:
@@ -224,6 +328,7 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
             if "DNP" in stats.get("stats_summary", "") and name in existing_by_name:
                 continue
 
+            _append_to_ncaa_game_log(player, stats)
             stats["is_yesterday"] = True
             analysis = analyzer.analyze(player, stats)
             entry = build_pulse_entry(player, stats, analysis)
@@ -278,6 +383,7 @@ def run_live():
         is_client = player.get("is_client", True)
         try:
             stats = fetcher.fetch(player)
+            _append_to_ncaa_game_log(player, stats)
             analysis = analyzer.analyze(player, stats)
             entry = build_pulse_entry(player, stats, analysis)
             pulse.append(entry)
@@ -360,7 +466,7 @@ def write_output(pulse: list[dict]):
 
 
 def run_historical():
-    """Aggregate historical stats: 7D (Pro only) + Season (everyone via BBRef/statsapi)."""
+    """Aggregate historical stats: 7D (Pro + NCAA) + Season (everyone)."""
     logger.info("Starting historical stats aggregation")
 
     all_players = get_all_players()
