@@ -912,6 +912,16 @@ function renderWindowCard(p) {
           <span class="stat-label">WHIP</span>
           <span class="stat-value ${sp}">${stats.whip ?? '--'}</span>
         </div>
+      </div>
+      <div class="stat-row" style="grid-template-columns: repeat(2, 1fr); max-width: 40%;">
+        <div class="stat-cell">
+          <span class="stat-label">K/9</span>
+          <span class="stat-value ${sp}">${stats.k_per_9 ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">BB/9</span>
+          <span class="stat-value ${sp}">${stats.bb_per_9 ?? '--'}</span>
+        </div>
       </div>`;
   } else {
     const isSparse = stats.pa === '--';
@@ -952,6 +962,16 @@ function renderWindowCard(p) {
           <span class="stat-label">OPS</span>
           <span class="stat-value ${sp} ${isSparse ? '' : rateColor(stats.ops, [.900, .750, .550])}">${stats.ops ?? '--'}</span>
         </div>
+      </div>
+      <div class="stat-row" style="grid-template-columns: repeat(2, 1fr); max-width: 40%;">
+        <div class="stat-cell">
+          <span class="stat-label">K%</span>
+          <span class="stat-value ${sp}">${stats.k_pct ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">BB%</span>
+          <span class="stat-value ${sp}">${stats.bb_pct ?? '--'}</span>
+        </div>
       </div>`;
   }
 
@@ -988,10 +1008,18 @@ function renderWindowCard(p) {
       </div>`;
   }
 
+  // Build profile URL for window cards
+  let profileUrl = null;
+  if (p.level === 'NCAA' && p.player_name) {
+    profileUrl = 'https://www.google.com/search?q=' + encodeURIComponent('site:thebaseballcube.com "' + p.player_name + '"') + '&btnI=';
+  }
+
   return `
     <div class="window-card">
       <div class="card-top">
-        <span class="player-name">${esc(p.player_name)}</span>
+        ${profileUrl
+          ? `<a class="player-name" href="${esc(profileUrl, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
+          : `<span class="player-name">${esc(p.player_name)}</span>`}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>

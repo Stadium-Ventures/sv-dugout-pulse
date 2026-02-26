@@ -121,6 +121,8 @@ class MLBHistoricalFetcher:
                     "sb": int(stat.get("stolenBases", 0)),
                 }
             entries.append({"date": game_date, "opponent": opp_str, "stats": entry_stats})
+        # Sort most recent first
+        entries.sort(key=lambda g: g["date"], reverse=True)
         return entries
 
     def _lookup_player(self, name: str) -> Optional[int]:
@@ -262,6 +264,8 @@ class MLBHistoricalFetcher:
         tb = singles + (2 * totals["doubles"]) + (3 * totals["triples"]) + (4 * totals["hr"])
         slg = tb / totals["ab"] if totals["ab"] > 0 else 0
         ops = obp + slg
+        k_pct = totals["k"] / totals["pa"] if totals["pa"] > 0 else 0
+        bb_pct = totals["bb"] / totals["pa"] if totals["pa"] > 0 else 0
 
         return {
             "games_played": len(games),
@@ -269,6 +273,7 @@ class MLBHistoricalFetcher:
             "hr": totals["hr"], "rbi": totals["rbi"], "r": totals["r"],
             "bb": totals["bb"], "k": totals["k"], "sb": totals["sb"],
             "avg": avg, "obp": obp, "slg": slg, "ops": ops,
+            "k_pct": k_pct, "bb_pct": bb_pct,
             "is_pitcher": False,
         }
 
@@ -296,6 +301,8 @@ class MLBHistoricalFetcher:
         ip = totals["outs"] / 3
         era = (totals["er"] * 9) / ip if ip > 0 else 0
         whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
+        k_per_9 = (totals["k"] * 9) / ip if ip > 0 else 0
+        bb_per_9 = (totals["bb"] * 9) / ip if ip > 0 else 0
 
         return {
             "games_played": len(games),
@@ -305,6 +312,7 @@ class MLBHistoricalFetcher:
             "k": totals["k"], "hr": totals["hr"],
             "w": totals["w"], "l": totals["l"], "sv": totals["sv"],
             "era": era, "whip": whip,
+            "k_per_9": k_per_9, "bb_per_9": bb_per_9,
             "is_pitcher": True,
         }
 
@@ -548,6 +556,8 @@ class D1BaseballSeasonFetcher:
         obp = self._safe_float(row.get("OBP", "0"))
         slg = self._safe_float(row.get("SLG", "0"))
         ops = self._safe_float(row.get("OPS", "0"))
+        k_pct = k / pa if pa > 0 else 0
+        bb_pct = bb / pa if pa > 0 else 0
 
         logger.info("D1B season: %s — %dG %dPA %dH %dHR .%03d/.%03d/.%03d",
                      player_name, gp, pa, h, hr,
@@ -558,6 +568,7 @@ class D1BaseballSeasonFetcher:
             "pa": pa, "ab": ab, "h": h, "hr": hr,
             "rbi": rbi, "r": r, "bb": bb, "k": k, "sb": sb,
             "avg": avg, "obp": obp, "slg": slg, "ops": ops,
+            "k_pct": k_pct, "bb_pct": bb_pct,
             "is_pitcher": False,
         }
 
@@ -582,6 +593,8 @@ class D1BaseballSeasonFetcher:
         era = self._safe_float(row.get("ERA", "0"))
         # WHIP not in D1B pitching table — calculate from (H + BB) / IP
         whip = (h + bb) / ip if ip > 0 else 0.0
+        k_per_9 = (k * 9) / ip if ip > 0 else 0
+        bb_per_9 = (bb * 9) / ip if ip > 0 else 0
 
         logger.info("D1B season: %s — %dAPP %sIP %dK %.2f ERA %.2f WHIP",
                      player_name, app, ip_str, k, era, whip)
@@ -593,6 +606,7 @@ class D1BaseballSeasonFetcher:
             "h": h, "er": er, "bb": bb, "k": k, "hr": 0,
             "w": w, "l": l, "sv": sv,
             "era": era, "whip": whip,
+            "k_per_9": k_per_9, "bb_per_9": bb_per_9,
             "is_pitcher": True,
         }
 
@@ -694,7 +708,10 @@ class NCAAGameLogAggregator:
         return stats, game_entries
 
     def _aggregate_hitter(self, entries: list[dict]) -> tuple[dict, list]:
-        totals = {"h": 0, "ab": 0, "hr": 0, "rbi": 0, "r": 0, "bb": 0, "k": 0, "sb": 0}
+        totals = {
+            "h": 0, "ab": 0, "hr": 0, "2b": 0, "3b": 0,
+            "rbi": 0, "r": 0, "bb": 0, "k": 0, "sb": 0,
+        }
         game_entries = []
 
         for e in entries:
@@ -702,6 +719,8 @@ class NCAAGameLogAggregator:
             totals["h"] += int(s.get("h", 0))
             totals["ab"] += int(s.get("ab", 0))
             totals["hr"] += int(s.get("hr", 0))
+            totals["2b"] += int(s.get("2b", s.get("doubles", 0)))
+            totals["3b"] += int(s.get("3b", s.get("triples", 0)))
             totals["rbi"] += int(s.get("rbi", 0))
             totals["r"] += int(s.get("r", 0))
             totals["bb"] += int(s.get("bb", 0))
@@ -718,16 +737,20 @@ class NCAAGameLogAggregator:
                 },
             })
 
+        # Sort game entries most recent first
+        game_entries.sort(key=lambda g: g["date"], reverse=True)
+
         hbp = 0
         sf = 0
         pa = totals["ab"] + totals["bb"] + hbp + sf
         avg = totals["h"] / totals["ab"] if totals["ab"] > 0 else 0
         obp = (totals["h"] + totals["bb"] + hbp) / pa if pa > 0 else 0
-        # SLG: we don't have doubles/triples in compact entries, estimate singles
-        singles = totals["h"] - totals["hr"]  # no 2B/3B tracked
-        tb = singles + (4 * totals["hr"])
+        singles = totals["h"] - totals["2b"] - totals["3b"] - totals["hr"]
+        tb = singles + (2 * totals["2b"]) + (3 * totals["3b"]) + (4 * totals["hr"])
         slg = tb / totals["ab"] if totals["ab"] > 0 else 0
         ops = obp + slg
+        k_pct = totals["k"] / pa if pa > 0 else 0
+        bb_pct = totals["bb"] / pa if pa > 0 else 0
 
         stats = {
             "games_played": len(entries),
@@ -735,6 +758,7 @@ class NCAAGameLogAggregator:
             "hr": totals["hr"], "rbi": totals["rbi"], "r": totals["r"],
             "bb": totals["bb"], "k": totals["k"], "sb": totals["sb"],
             "avg": avg, "obp": obp, "slg": slg, "ops": ops,
+            "k_pct": k_pct, "bb_pct": bb_pct,
             "is_pitcher": False,
         }
         return stats, game_entries
@@ -763,9 +787,14 @@ class NCAAGameLogAggregator:
                 },
             })
 
+        # Sort game entries most recent first
+        game_entries.sort(key=lambda g: g["date"], reverse=True)
+
         ip = total_outs / 3
         era = (totals["er"] * 9) / ip if ip > 0 else 0
         whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
+        k_per_9 = (totals["k"] * 9) / ip if ip > 0 else 0
+        bb_per_9 = (totals["bb"] * 9) / ip if ip > 0 else 0
 
         stats = {
             "games_played": len(entries),
@@ -775,6 +804,7 @@ class NCAAGameLogAggregator:
             "k": totals["k"], "hr": 0,
             "w": 0, "l": 0, "sv": 0,
             "era": era, "whip": whip,
+            "k_per_9": k_per_9, "bb_per_9": bb_per_9,
             "is_pitcher": True,
         }
         return stats, game_entries
@@ -892,11 +922,13 @@ class WindowStatsAggregator:
         if position == "Pitcher":
             return {
                 "ip": 0, "k": 0, "bb": 0, "era": 0, "whip": 0,
+                "k_per_9": 0, "bb_per_9": 0,
                 "is_pitcher": True, "games_played": 0,
             }
         return {
             "pa": 0, "ab": 0, "h": 0, "hr": 0,
             "avg": 0, "obp": 0, "slg": 0, "ops": 0,
+            "k_pct": 0, "bb_pct": 0,
             "is_pitcher": False, "games_played": 0,
         }
 
@@ -921,6 +953,8 @@ class WindowStatsAggregator:
                 "bb": stats.get("bb", 0) if not sparse else "--",
                 "era": f"{stats.get('era', 0):.2f}" if not sparse else "--",
                 "whip": f"{stats.get('whip', 0):.2f}" if not sparse else "--",
+                "k_per_9": f"{stats.get('k_per_9', 0):.1f}" if not sparse else "--",
+                "bb_per_9": f"{stats.get('bb_per_9', 0):.1f}" if not sparse else "--",
             }
         else:
             pa = stats.get("pa", 0)
@@ -939,6 +973,8 @@ class WindowStatsAggregator:
                 "obp": self._fmt_rate(stats.get("obp", 0)) if not sparse else "--",
                 "slg": self._fmt_rate(stats.get("slg", 0)) if not sparse else "--",
                 "ops": self._fmt_rate(stats.get("ops", 0)) if not sparse else "--",
+                "k_pct": f"{stats.get('k_pct', 0) * 100:.1f}%" if not sparse else "--",
+                "bb_pct": f"{stats.get('bb_pct', 0) * 100:.1f}%" if not sparse else "--",
             }
 
     def _calculate_grade(self, stats: dict, window: str, position: str) -> str:

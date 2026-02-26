@@ -116,6 +116,8 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
             "h": int(stats.get("hits", stats.get("h", 0))),
             "ab": int(stats.get("at_bats", stats.get("ab", 0))),
             "hr": int(stats.get("home_runs", stats.get("hr", 0))),
+            "2b": int(stats.get("doubles", stats.get("2b", 0))),
+            "3b": int(stats.get("triples", stats.get("3b", 0))),
             "rbi": int(stats.get("rbi", 0)),
             "r": int(stats.get("runs", stats.get("r", 0))),
             "bb": int(stats.get("walks", stats.get("bb", 0))),
