@@ -1727,16 +1727,31 @@ class D1BaseballScraper(BaseSchoolScraper):
     # ---- Sidearm box score parsing ----
 
     def _parse_sidearm_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
-        """Fetch and parse a Sidearm box score page for a specific player."""
+        """Fetch and parse a Sidearm box score page for a specific player.
+
+        Sidearm pages are JavaScript-rendered so the HTML itself never contains
+        the stats tables.  We instead use the static JSON API
+        (static.sidearmstats.com) which returns full box score data.  The
+        old HTML table parser is kept as a last-ditch fallback for any
+        rare schools that serve pre-rendered HTML.
+        """
         try:
             resp = requests.get(box_url, timeout=15)
             resp.raise_for_status()
-            result = self._find_player_in_sidearm(player_name, resp.text)
+            html = resp.text
+
+            # Primary path: Sidearm static JSON API (works for all JS-rendered sites)
+            result = self._parse_sidearm_stats_json(player_name, html, box_url)
+            if result:
+                return result
+
+            # Fallback: legacy HTML table parsing (rarely succeeds on modern Sidearm)
+            result = self._find_player_in_sidearm(player_name, html)
 
             # Supplement HR count from scoring summary if the batting table
             # didn't have an HR column (many Sidearm layouts omit it)
             if result and not result.get("is_pitcher_line") and result.get("home_runs", 0) == 0:
-                hr = self._count_hrs_from_summary(player_name, resp.text)
+                hr = self._count_hrs_from_summary(player_name, html)
                 if hr > 0:
                     result["home_runs"] = hr
                     # Rebuild stats_summary with HR included
@@ -1755,6 +1770,148 @@ class D1BaseballScraper(BaseSchoolScraper):
             return result
         except Exception:
             logger.debug("Failed to fetch Sidearm box score at %s", box_url)
+            return None
+
+    def _parse_sidearm_stats_json(
+        self, player_name: str, html: str, box_url: str
+    ) -> Optional[dict]:
+        """Fetch player stats from the Sidearm static JSON API.
+
+        Sidearm's Angular app loads stats from:
+          http://static.sidearmstats.com/schools/{folder}/{sport}/game.json?detail=full
+
+        The ``folder`` (e.g. ``"pacific"``) is embedded in the page HTML as
+        ``window.livestats_foldername``.  The sport is extracted from the
+        box_score_url path (e.g. ``/sidearmstats/baseball/summary``).
+        """
+        try:
+            import re as _re
+
+            # Extract folder name from the JS variable injected into every Sidearm page
+            m = _re.search(
+                r'window\.livestats_foldername\s*=\s*["\']([^"\']+)["\']', html
+            )
+            if not m:
+                logger.debug("livestats_foldername not found in Sidearm HTML for %s", box_url)
+                return None
+            folder = m.group(1)
+
+            # Extract sport from the URL path (e.g. /sidearmstats/baseball/summary)
+            m2 = _re.search(r"/sidearmstats/([^/?#]+)/", box_url)
+            if not m2:
+                logger.debug("Cannot extract sport from Sidearm box URL %s", box_url)
+                return None
+            sport = m2.group(1)
+
+            json_url = (
+                f"http://static.sidearmstats.com/schools/{folder}/{sport}/game.json"
+                "?detail=full"
+            )
+            jresp = requests.get(json_url, timeout=15)
+            jresp.raise_for_status()
+            data = jresp.json()
+
+            stats = data.get("Stats", {})
+            player_last = player_name.split()[-1].lower()
+
+            for team_key in ("HomeTeam", "VisitingTeam"):
+                team_stats = stats.get(team_key, {})
+                pg = team_stats.get("PlayerGroups", {})
+
+                # Batting
+                batting = pg.get("Batting", {})
+                for v in batting.get("Values", []):
+                    if player_last in v.get("Name", "").lower():
+                        return self._parse_sidearm_batting_json(v)
+
+                # Pitching
+                pitching = pg.get("Pitching", {})
+                for v in pitching.get("Values", []):
+                    if player_last in v.get("Name", "").lower():
+                        return self._parse_sidearm_pitching_json(v)
+
+            logger.debug("Player %s not found in Sidearm stats JSON for %s", player_name, box_url)
+            return None
+        except Exception:
+            logger.debug("Sidearm stats JSON fetch failed for %s @ %s", player_name, box_url)
+            return None
+
+    @staticmethod
+    def _parse_sidearm_batting_json(v: dict) -> Optional[dict]:
+        """Parse batting stats from a Sidearm game.json PlayerGroups Batting Value."""
+        try:
+            ab  = int(v.get("AtBats", 0) or 0)
+            h   = int(v.get("Hits", 0) or 0)
+            r   = int(v.get("Runs", 0) or 0)
+            rbi = int(v.get("RunsBattedIn", 0) or 0)
+            hr  = int(v.get("HomeRuns", 0) or 0)
+            bb  = int(v.get("Walks", 0) or 0)
+            k   = int(v.get("Strikeouts", 0) or 0)
+            sb  = int(v.get("StolenBases", 0) or 0)
+
+            if ab == 0 and bb == 0:
+                return None  # didn't actually play
+
+            parts = [f"{h}-{ab}"]
+            if hr:
+                parts.append(_fmt(hr, "HR"))
+            if rbi:
+                parts.append(_fmt(rbi, "RBI"))
+            if r:
+                parts.append(_fmt(r, "R"))
+            if sb:
+                parts.append(_fmt(sb, "SB"))
+            if bb:
+                parts.append(_fmt(bb, "BB"))
+            if k:
+                parts.append(_fmt(k, "K"))
+
+            return {
+                "stats_summary": ", ".join(parts),
+                "hits": h,
+                "at_bats": ab,
+                "home_runs": hr,
+                "rbi": rbi,
+                "runs": r,
+                "stolen_bases": sb,
+                "walks": bb,
+                "_player_found": True,
+            }
+        except Exception:
+            return None
+
+    @staticmethod
+    def _parse_sidearm_pitching_json(v: dict) -> Optional[dict]:
+        """Parse pitching stats from a Sidearm game.json PlayerGroups Pitching Value."""
+        try:
+            ip_str = str(v.get("InningsPitched", "0") or "0")
+            ip = float(ip_str) if ip_str.replace(".", "").isdigit() else 0.0
+            h  = int(v.get("HitsAllowed", 0) or 0)
+            er = int(v.get("EarnedRuns", 0) or 0)
+            k  = int(v.get("Strikeouts", 0) or 0)
+            bb = int(v.get("WalksAllowed", 0) or 0)
+
+            parts = [f"{ip_str} IP"]
+            if h:
+                parts.append(f"{h} H")
+            parts.append(f"{er} ER")
+            parts.append(f"{k} K")
+            if bb:
+                parts.append(f"{bb} BB")
+
+            qs = ip >= 6.0 and er <= 3
+            return {
+                "stats_summary": ", ".join(parts),
+                "is_pitcher_line": True,
+                "ip": ip,
+                "earned_runs": er,
+                "strikeouts": k,
+                "walks_allowed": bb,
+                "hits_allowed": h,
+                "quality_start": qs,
+                "_player_found": True,
+            }
+        except Exception:
             return None
 
     @staticmethod
