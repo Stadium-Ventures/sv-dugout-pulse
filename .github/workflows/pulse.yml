@@ -78,7 +78,7 @@ jobs:
           git diff --staged --quiet || git commit -m "Update pulse data [bot]"
           # If another run pushed first, rebase may conflict on data JSONs.
           # Abort and skip — the next scheduled run will push fresh data.
-          if ! git pull --rebase origin main; then
+          if ! git pull --rebase --autostash origin main; then
             echo "Rebase conflict (concurrent run) — skipping push, next run will update"
             git rebase --abort 2>/dev/null || true
             exit 0

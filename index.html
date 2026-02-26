@@ -6,6 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<meta name="color-scheme" content="dark">
 <title>SV Dugout Pulse</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -105,6 +106,7 @@
     padding: 1rem 1.1rem;
     transition: border-color 0.15s;
     position: relative;
+    contain: layout style paint;
   }
   .card:hover { border-color: #3a3e4a; }
 
@@ -493,6 +495,7 @@
     border-radius: 12px;
     padding: 1rem 1.1rem;
     transition: border-color 0.15s;
+    contain: layout style paint;
   }
   .window-card:hover { border-color: #3a3e4a; }
 
@@ -701,16 +704,16 @@
     <span>Auto-refreshing</span>
   </div>
 </div>
-<div class="time-tabs">
-  <button class="time-tab active" data-window="today">Today</button>
-  <button class="time-tab" data-window="yesterday">Yesterday</button>
-  <button class="time-tab" data-window="7d">7 Days</button>
-  <button class="time-tab" data-window="season">Season</button>
+<div class="time-tabs" role="tablist" aria-label="Time window">
+  <button class="time-tab active" data-window="today" role="tab" aria-selected="true">Today</button>
+  <button class="time-tab" data-window="yesterday" role="tab" aria-selected="false">Yesterday</button>
+  <button class="time-tab" data-window="7d" role="tab" aria-selected="false">7 Days</button>
+  <button class="time-tab" data-window="season" role="tab" aria-selected="false">Season</button>
 </div>
 
-<div class="search-wrap">
-  <span class="search-icon">&#x1F50D;</span>
-  <input type="text" class="search-input" id="searchInput" placeholder="Search players..." autocomplete="off">
+<div class="search-wrap" role="search">
+  <span class="search-icon" aria-hidden="true">&#x1F50D;</span>
+  <input type="text" class="search-input" id="searchInput" placeholder="Search players..." autocomplete="off" aria-label="Search players">
 </div>
 
 <div class="filters">
@@ -747,8 +750,8 @@
 
 <div class="grid" id="grid"></div>
 <div class="no-game-section" id="noGameSection" style="display:none;">
-  <div class="no-game-header" id="noGameHeader" onclick="toggleNoGame()">
-    <span class="no-game-chevron">&#x25B6;</span>
+  <div class="no-game-header" id="noGameHeader" onclick="toggleNoGame()" role="button" aria-expanded="false">
+    <span class="no-game-chevron" aria-hidden="true">&#x25B6;</span>
     <span id="noGameLabel">No game today</span>
   </div>
   <div class="no-game-list" id="noGameList"></div>
@@ -1061,8 +1064,8 @@ function renderWindowCard(p) {
       return `<div class="game-log-row"><span class="game-log-date">${dateStr}</span><span class="game-log-stats">${oppStr}${esc(statLine)}</span></div>`;
     }).join('');
     gameLogHtml = `
-      <div class="game-log-toggle" id="glt-${logId}" onclick="toggleGameLog('${logId}')">
-        <span class="game-log-chevron">&#x25B6;</span>
+      <div class="game-log-toggle" id="glt-${logId}" onclick="toggleGameLog('${logId}')" role="button" aria-expanded="false">
+        <span class="game-log-chevron" aria-hidden="true">&#x25B6;</span>
         Game log (${p.game_log.length})
       </div>
       <div class="game-log-entries" id="gle-${logId}">
@@ -1263,8 +1266,13 @@ async function switchWindow(window) {
   if (window === currentWindow) return;
 
   // Update active tab
-  document.querySelectorAll('.time-tab').forEach(t => t.classList.remove('active'));
-  document.querySelector(`[data-window="${window}"]`).classList.add('active');
+  document.querySelectorAll('.time-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
+  const activeTab = document.querySelector(`[data-window="${window}"]`);
+  activeTab.classList.add('active');
+  activeTab.setAttribute('aria-selected', 'true');
   currentWindow = window;
 
   // Toggle filter visibility
@@ -1425,12 +1433,16 @@ function toggleNoGame() {
   const list = document.getElementById('noGameList');
   header.classList.toggle('open');
   list.classList.toggle('open');
+  header.setAttribute('aria-expanded', header.classList.contains('open'));
 }
 
 function toggleGameLog(id) {
   const toggle = document.getElementById('glt-' + id);
   const entries = document.getElementById('gle-' + id);
-  if (toggle) toggle.classList.toggle('open');
+  if (toggle) {
+    toggle.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', toggle.classList.contains('open'));
+  }
   if (entries) entries.classList.toggle('open');
 }
 
@@ -1452,10 +1464,14 @@ document.querySelectorAll('.time-tab').forEach(tab => {
   tab.addEventListener('click', () => switchWindow(tab.dataset.window));
 });
 
-// Search input
+// Search input (debounced to avoid re-rendering on every keystroke)
+let _searchTimer = null;
 document.getElementById('searchInput').addEventListener('input', e => {
-  searchQuery = e.target.value.toLowerCase().trim();
-  render();
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    render();
+  }, 150);
 });
 
 // Relative timestamp refresh
