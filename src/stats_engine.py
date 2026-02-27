@@ -1757,6 +1757,11 @@ class D1BaseballScraper(BaseSchoolScraper):
                         k   = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
                     except (ValueError, IndexError):
                         continue
+                    # Skip rows with no plate appearances — pitchers often appear
+                    # in the batting table with 0 AB/BB before they bat (or never bat).
+                    # Continuing lets the loop reach the pitching table instead.
+                    if ab == 0 and bb == 0:
+                        continue
                     parts = [f"{h}-{ab}"]
                     if hr:  parts.append(_fmt(hr,  "HR"))
                     if rbi: parts.append(_fmt(rbi, "RBI"))
