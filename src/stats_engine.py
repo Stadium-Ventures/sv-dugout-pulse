@@ -1424,6 +1424,17 @@ class D1BaseballScraper(BaseSchoolScraper):
                     player_stats = self._parse_sidearm_box_score(player_name, box_url)
                 if player_stats:
                     context.update(player_stats)
+                    # StatBroadcast's inning is more current than the D1Baseball
+                    # tile (which can lag by a half-inning or more).  Override
+                    # game_context with the inning we read directly from the box
+                    # score HTML so the two sources stay in sync.
+                    sb_inning = context.pop("_sb_inning_label", None)
+                    if sb_inning and context.get("game_status") == "Live":
+                        away = tile_info["road_name"]
+                        home = tile_info["home_name"]
+                        a_s = tile_info["road_score"]
+                        hs = tile_info["home_score"]
+                        context["game_context"] = f"{away} {a_s}, {home} {hs} | {sb_inning}"
                     return context
 
             # Player not found in any game — return game context
@@ -1700,6 +1711,9 @@ class D1BaseballScraper(BaseSchoolScraper):
                 ).decode("utf-8", errors="replace")
                 result = self._parse_statbroadcast_html(player_name, html)
                 if result:
+                    inning_label = self._extract_sb_inning_from_html(html)
+                    if inning_label:
+                        result["_sb_inning_label"] = inning_label
                     return result
 
         except Exception:
@@ -1799,6 +1813,24 @@ class D1BaseballScraper(BaseSchoolScraper):
                             "stats_summary": ", ".join(parts),
                             "_player_found": True, "is_pitcher_line": True}
         return None
+
+    @staticmethod
+    def _extract_sb_inning_from_html(html: str) -> Optional[str]:
+        """Scan StatBroadcast box score HTML for a current inning label.
+
+        The XSL-rendered HTML often contains text like 'Top 6', 'Bottom 4',
+        'Middle 3', etc. in headers, status elements, or the linescore.
+        Returns a normalised label (e.g. 'Top 6') or None if not found.
+        """
+        m = re.search(r"\b(Top|Bottom|Bot|Mid(?:dle)?|End)\s+(\d+)", html, re.IGNORECASE)
+        if not m:
+            return None
+        half_map = {
+            "top": "Top", "bottom": "Bottom", "bot": "Bottom",
+            "mid": "Middle", "middle": "Middle", "end": "End",
+        }
+        half = half_map.get(m.group(1).lower(), m.group(1).capitalize())
+        return f"{half} {m.group(2)}"
 
     # ---- Sidearm box score parsing ----
 
