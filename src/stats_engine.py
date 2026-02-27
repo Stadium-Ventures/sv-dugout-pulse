@@ -1528,15 +1528,18 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 status = "Final" if is_final else "Live" if is_live else "Scheduled"
 
-                # Extract game time from .status-wrapper h5
-                # For scheduled games this shows "1:00 PM", for final "FINAL"
+                # Extract game time / inning from .status-wrapper h5
+                # Scheduled: "1:00 PM" | Live: "Top 3", "Bottom 7" | Final: "FINAL"
                 game_time = ""
+                inning_label = ""
                 status_h5 = tile.select_one(".status-wrapper h5")
-                if status_h5 and status == "Scheduled":
-                    time_text = status_h5.get_text(strip=True)
-                    # Only use if it looks like a time (contains AM/PM)
-                    if re.search(r"\d+:\d+\s*(AM|PM)", time_text, re.IGNORECASE):
-                        game_time = time_text
+                if status_h5:
+                    h5_text = status_h5.get_text(strip=True)
+                    if status == "Scheduled" and re.search(r"\d+:\d+\s*(AM|PM)", h5_text, re.IGNORECASE):
+                        game_time = h5_text
+                    elif status == "Live":
+                        # D1Baseball shows "Top 3", "Bottom 7", "Middle 5", etc.
+                        inning_label = h5_text
 
                 results.append({
                     "home_name": home_name,
@@ -1549,6 +1552,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     "box_score_url": box_url,
                     "tile_key": tile_key,
                     "game_time": game_time,
+                    "inning_label": inning_label,
                 })
 
         return results
@@ -1576,7 +1580,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             result["game_context"] = f"{away} {a_s}, {home} {hs} | Final"
             result["game_status"] = "Final"
         elif status == "Live":
-            result["game_context"] = f"{away} {a_s}, {home} {hs} | Live"
+            inning = tile_info.get("inning_label", "")
+            live_label = inning if inning else "Live"
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | {live_label}"
             result["game_status"] = "Live"
         else:
             game_time = tile_info.get("game_time", "")
