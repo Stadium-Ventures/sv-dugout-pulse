@@ -128,7 +128,11 @@
     border-color: rgba(234,179,8,0.18);
   }
 
-  /* ---- Live card glow ---- */
+  /* ---- Level accent (left border) ---- */
+  .card.level-pro, .window-card.level-pro { border-left: 3px solid var(--accent-blue); }
+  .card.level-ncaa, .window-card.level-ncaa { border-left: 3px solid var(--accent-orange); }
+
+  /* ---- Live card glow (overrides level border) ---- */
   .card.live { border-left: 3px solid var(--live-green); animation: live-glow 2.5s ease-in-out infinite; }
   @keyframes live-glow {
     0%, 100% { box-shadow: 0 0 4px rgba(34,197,94,0.15); }
@@ -865,7 +869,7 @@ function renderCard(p) {
     : '';
 
   return `
-    <div class="card${isLive ? ' live' : ''}${tintClass ? ' ' + tintClass : ''}">
+    <div class="card${isLive ? ' live' : ''} level-${p.level === 'Pro' ? 'pro' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
         ${p.player_profile_url
@@ -1080,7 +1084,7 @@ function renderWindowCard(p) {
   }
 
   return `
-    <div class="window-card">
+    <div class="window-card level-${p.level === 'Pro' ? 'pro' : 'ncaa'}">
       <div class="card-top">
         ${profileUrl
           ? `<a class="player-name" href="${esc(profileUrl, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
