@@ -67,14 +67,15 @@ class MLBHistoricalFetcher:
         self._player_sport: dict[int, int] = {}   # player_id -> sport_id
 
     def fetch_window(
-        self, player_name: str, team: str, position: str, start_date: date, end_date: date
+        self, player_name: str, team: str, position: str, start_date: date, end_date: date,
+        mlb_id: Optional[int] = None,
     ) -> tuple[Optional[dict], list]:
         """
         Fetch aggregated stats for a player over the given date range.
         Returns (stats_dict, game_entries_list) — stats_dict is None if
         player not found or no games in range.
         """
-        player_id = self._lookup_player(player_name)
+        player_id = self._resolve_player_id(player_name, mlb_id)
         if player_id is None:
             logger.debug("MLB player not found: %s", player_name)
             return None, []
@@ -144,6 +145,35 @@ class MLBHistoricalFetcher:
         # Sort most recent first
         entries.sort(key=lambda g: g["date"], reverse=True)
         return entries
+
+    def _resolve_player_id(self, name: str, mlb_id: Optional[int] = None) -> Optional[int]:
+        """Resolve a player's MLB API ID.
+
+        Uses the roster-provided mlb_id directly when available, falling
+        back to the name-based search for players without one.
+        """
+        if mlb_id:
+            self._player_cache[name] = mlb_id
+            # Resolve sport level for the player so _fetch_game_log uses
+            # the correct sportId
+            if mlb_id not in self._player_sport:
+                try:
+                    data = statsapi.lookup_player(str(mlb_id))
+                    if data:
+                        ct = data[0].get("currentTeam", {})
+                        if isinstance(ct, dict) and ct.get("id"):
+                            resp = _http.get(
+                                f"https://statsapi.mlb.com/api/v1/teams/{ct['id']}",
+                                timeout=10,
+                            )
+                            t = resp.json()["teams"][0]
+                            self._player_sport[mlb_id] = t.get("sport", {}).get("id", 1)
+                        else:
+                            self._player_sport[mlb_id] = 1
+                except Exception:
+                    self._player_sport[mlb_id] = 1
+            return mlb_id
+        return self._lookup_player(name)
 
     def _lookup_player(self, name: str) -> Optional[int]:
         """Search MLB/MiLB for a player ID by name, with caching."""
@@ -928,10 +958,11 @@ class WindowStatsAggregator:
         is_client = player.get("is_client", True)
 
         # Fetch stats based on level and window
+        mlb_id = player.get("mlb_id")
         game_log_entries = []
         if level == "Pro":
             stats, game_log_entries = self.mlb_fetcher.fetch_window(
-                name, team, position, start_date, end_date
+                name, team, position, start_date, end_date, mlb_id=mlb_id
             )
         elif level == "NCAA" and window == "7d":
             stats, game_log_entries = self.ncaa_log.get_window_stats(

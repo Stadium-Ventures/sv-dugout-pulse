@@ -27,6 +27,7 @@ RECRUITS_URL = os.environ.get(
 # ---------------------------------------------------------------------------
 COLUMN_MAP = {
     "Player Name": "player_name",
+    "MLB_ID": "mlb_id",
     "Org": "team",
     "Level": "level",
     "Position": "position",

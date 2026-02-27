@@ -62,6 +62,13 @@ def normalize_player(raw: dict) -> dict:
     except (ValueError, TypeError):
         player["roster_priority"] = 99
 
+    # Coerce mlb_id to int or None (blank for NCAA/HS players)
+    raw_id = player.get("mlb_id", "")
+    try:
+        player["mlb_id"] = int(raw_id) if raw_id else None
+    except (ValueError, TypeError):
+        player["mlb_id"] = None
+
     return player
 
 

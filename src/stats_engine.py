@@ -347,7 +347,8 @@ class ProStatsFetcher:
             return empty_stats()
 
         try:
-            player_id = self._lookup_player(name)
+            mlb_id = player.get("mlb_id")
+            player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
                 logger.info("Player not found in MLB lookup: %s", name)
                 return empty_stats()
@@ -390,7 +391,8 @@ class ProStatsFetcher:
             return None
 
         try:
-            player_id = self._lookup_player(name)
+            mlb_id = player.get("mlb_id")
+            player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
                 return None
 
@@ -453,6 +455,30 @@ class ProStatsFetcher:
 
     # Search MLB, then AAA, AA, High-A, Single-A
     _SPORT_IDS = [1, 11, 12, 13, 14]
+
+    def _resolve_player_id(self, name: str, mlb_id: Optional[int] = None) -> Optional[int]:
+        """Resolve a player's MLB API ID.
+
+        Uses the roster-provided mlb_id directly when available (skips the
+        name search entirely).  Falls back to _lookup_player() for players
+        without an ID in the sheet.
+        """
+        if mlb_id:
+            # Cache by name so downstream code that only has the name still hits cache
+            self._player_cache[name] = mlb_id
+            # Eagerly resolve current team so schedule lookups work
+            if mlb_id not in self._player_team_cache:
+                try:
+                    data = statsapi.lookup_player(str(mlb_id))
+                    if data:
+                        ct = data[0].get("currentTeam", {})
+                        if isinstance(ct, dict) and ct.get("id"):
+                            self._resolve_team(ct["id"])
+                            self._player_team_cache[mlb_id] = ct["id"]
+                except Exception:
+                    logger.debug("Team resolve failed for mlb_id %d", mlb_id)
+            return mlb_id
+        return self._lookup_player(name)
 
     def _lookup_player(self, name: str) -> Optional[int]:
         """Search across all pro levels for a player ID, with caching."""
