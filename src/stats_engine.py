@@ -1025,17 +1025,26 @@ class NCAAComScraper(BaseSchoolScraper):
             # (handles doubleheaders where player appears in only one game)
             first_context = None
             for game_info in all_games:
+                # Build context FIRST — even if boxscore fails we know a game exists
+                result = self._build_context(game_info)
+                if first_context is None:
+                    first_context = result
+
+                # Pre-game: boxscore won't exist yet — skip the fetch
+                if game_info.get("state") == "pre":
+                    continue
+
                 game_id = game_info["game_id"]
-                box = self._get_boxscore(game_id)
+                try:
+                    box = self._get_boxscore(game_id)
+                except Exception:
+                    logger.debug("Boxscore fetch failed for game %s", game_id)
+                    continue
                 if not box:
                     continue
 
                 is_home = game_info["team_side"] == "home"
                 player_stats = self._find_player(player_name, is_home, box)
-
-                result = self._build_context(game_info)
-                if first_context is None:
-                    first_context = result
 
                 if player_stats:
                     result.update(player_stats)
@@ -2191,13 +2200,18 @@ class ESPNScraper(BaseSchoolScraper):
             # (handles doubleheaders where player appears in only one game)
             first_context = None
             for game_info in all_games:
-                summary = self._get_summary(game_info["id"])
-                if not summary:
-                    continue
-
+                # Build context FIRST — even if summary fails we know a game exists
                 result = self._extract_game_context(game_info)
                 if first_context is None:
                     first_context = result
+
+                try:
+                    summary = self._get_summary(game_info["id"])
+                except Exception:
+                    logger.debug("ESPN summary fetch failed for game %s", game_info["id"])
+                    continue
+                if not summary:
+                    continue
 
                 player_stats = self._find_player(player_name, summary)
                 if player_stats:
