@@ -2757,6 +2757,72 @@ class NCAAStatsFetcher:
 
         return best_context  # may be None
 
+    def _find_todays_pregame(self, name: str, team: str) -> Optional[dict]:
+        """Check NCAA.com for a pre-game scheduled for today.
+
+        Called when the waterfall already returned a yesterday result (or
+        nothing) so we don't accidentally swallow yesterday's completed stats.
+        Looks only at today's scoreboard entries with state=='pre'.
+        Uses the same two-pass (exact then substring) strategy as other scrapers.
+        """
+        try:
+            today_str = _today_et().strftime("%Y/%m/%d")
+            games = self._ncaa_com._get_scoreboard(today_str)
+            team_lower = team.lower()
+            for exact in (True, False):
+                for g in games:
+                    game = g.get("game", {})
+                    if game.get("gameState") != "pre":
+                        continue
+                    for side in ("home", "away"):
+                        side_info = game.get(side, {})
+                        names_dict = side_info.get("names", {})
+                        seo = names_dict.get("seo", "").replace("-", " ")
+                        cand_names = [
+                            names_dict.get("short", ""),
+                            names_dict.get("full", ""),
+                            seo,
+                        ]
+                        if not _school_name_matches(team_lower, cand_names, exact=exact):
+                            continue
+                        opp_side = "away" if side == "home" else "home"
+                        opp_name = game.get(opp_side, {}).get("names", {}).get("short", "?")
+                        home_name = game.get("home", {}).get("names", {}).get("short", "?")
+                        away_name = game.get("away", {}).get("names", {}).get("short", "?")
+                        game_info = {
+                            "game_id": game.get("gameID"),
+                            "team_side": side,
+                            "opponent": opp_name,
+                            "home_name": home_name,
+                            "away_name": away_name,
+                            "home_score": "0",
+                            "away_score": "0",
+                            "state": "pre",
+                            "is_yesterday": False,
+                            "start_time": game.get("startTime", ""),
+                            "start_date": game.get("startDate", ""),
+                        }
+                        today_game = self._ncaa_com._build_context(game_info)
+                        # Attach ESPN box score URL if available
+                        try:
+                            for eg in self._espn._find_all_games(team):
+                                gid = eg.get("id", "")
+                                if gid:
+                                    today_game["box_score_url"] = (
+                                        f"https://www.espn.com/college-baseball/game/_/gameId/{gid}"
+                                    )
+                                    break
+                        except Exception:
+                            pass
+                        logger.info(
+                            "Pre-game found for %s @ %s: %s vs %s",
+                            name, team, away_name, home_name,
+                        )
+                        return today_game
+        except Exception:
+            logger.debug("_find_todays_pregame failed for %s @ %s", name, team)
+        return None
+
     def fetch(self, player: dict) -> dict:
         """
         Attempt to fetch stats for an NCAA player using a waterfall approach.
@@ -2786,20 +2852,30 @@ class NCAAStatsFetcher:
                 except Exception:
                     pass
 
-            # For yesterday-only results, also look up next game so the
-            # "No game today" row in the UI can show upcoming schedule.
-            if result.get("is_yesterday") and not result.get("next_game"):
-                try:
-                    next_game = self._espn.find_next_game(team)
-                    if next_game:
-                        result["next_game"] = next_game
-                except Exception:
-                    pass
+            # For yesterday-only results, check if there's a pre-game TODAY
+            # before falling back to next-game lookup.  The waterfall stops
+            # early when D1Baseball finds yesterday's stats, so NCAA.com
+            # (which covers all D1 scheduled games) is never reached.
+            if result.get("is_yesterday"):
+                today_game = self._find_todays_pregame(name, team)
+                if today_game:
+                    return today_game
+                if not result.get("next_game"):
+                    try:
+                        next_game = self._espn.find_next_game(team)
+                        if next_game:
+                            result["next_game"] = next_game
+                    except Exception:
+                        pass
 
             return result
 
-        # No game today — try to find next game via ESPN
-        logger.info("No NCAA game found for %s @ %s — checking next game", name, team)
+        # No game today via waterfall — check NCAA.com for a pre-game first,
+        # then fall back to next-game lookup.
+        logger.info("No NCAA game found for %s @ %s — checking today + next game", name, team)
+        today_game = self._find_todays_pregame(name, team)
+        if today_game:
+            return today_game
         result = empty_stats()
         try:
             next_game = self._espn.find_next_game(team)
