@@ -1849,7 +1849,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             html = resp.text
 
             # Primary path: Sidearm static JSON API (works for all JS-rendered sites)
-            result = self._parse_sidearm_stats_json(player_name, html, box_url)
+            # Pass the final URL (after redirects) so legacy boxscore.aspx links
+            # can still have their sport extracted from the redirected URL path.
+            result = self._parse_sidearm_stats_json(player_name, html, box_url, final_url=resp.url)
             if result:
                 return result
 
@@ -1881,7 +1883,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             return None
 
     def _parse_sidearm_stats_json(
-        self, player_name: str, html: str, box_url: str
+        self, player_name: str, html: str, box_url: str, final_url: str = ""
     ) -> Optional[dict]:
         """Fetch player stats from the Sidearm static JSON API.
 
@@ -1904,12 +1906,23 @@ class D1BaseballScraper(BaseSchoolScraper):
                 return None
             folder = m.group(1)
 
-            # Extract sport from the URL path (e.g. /sidearmstats/baseball/summary)
-            m2 = _re.search(r"/sidearmstats/([^/?#]+)/", box_url)
-            if not m2:
-                logger.debug("Cannot extract sport from Sidearm box URL %s", box_url)
-                return None
-            sport = m2.group(1)
+            # Extract sport from the URL path. Sidearm uses several URL formats:
+            #   Modern Angular: /sidearmstats/baseball/summary
+            #   New style:      /sports/baseball/stats/...
+            #   Legacy ASP.NET: boxscore.aspx?id=XXXX  (no sport in URL — may
+            #                   redirect to new-style URL, captured in final_url)
+            # Fall back to "baseball" since this dashboard only monitors baseball.
+            sport = None
+            for candidate in (box_url, final_url):
+                m2 = (
+                    _re.search(r"/sidearmstats/([^/?#]+)/", candidate)
+                    or _re.search(r"/sports/([^/?#]+)/stats/", candidate)
+                )
+                if m2:
+                    sport = m2.group(1)
+                    break
+            if not sport:
+                sport = "baseball"
 
             json_url = (
                 f"http://static.sidearmstats.com/schools/{folder}/{sport}/game.json"

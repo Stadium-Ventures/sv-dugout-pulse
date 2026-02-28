@@ -511,6 +511,7 @@
     margin-top: 0.75rem;
   }
   .stat-row.pitcher-row { grid-template-columns: repeat(5, 1fr); }
+  .stat-row.hitter-row  { grid-template-columns: repeat(5, 1fr); }
 
   .stat-cell {
     display: flex;
@@ -996,7 +997,7 @@ function renderWindowCard(p) {
     const isSparse = stats.pa === '--';
     const sp = isSparse ? 'sparse' : '';
     statsHtml = `
-      <div class="stat-row">
+      <div class="stat-row hitter-row">
         <div class="stat-cell">
           <span class="stat-label">PA</span>
           <span class="stat-value ${sp}">${stats.pa ?? '--'}</span>
@@ -1012,6 +1013,10 @@ function renderWindowCard(p) {
         <div class="stat-cell">
           <span class="stat-label">RBI</span>
           <span class="stat-value ${sp}">${stats.rbi ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">SB</span>
+          <span class="stat-value ${sp}">${stats.sb ?? '--'}</span>
         </div>
       </div>
       <div class="stat-row">
@@ -1062,6 +1067,7 @@ function renderWindowCard(p) {
         if (s.hr > 0) parts.push(`${s.hr} HR`);
         if (s.rbi > 0) parts.push(`${s.rbi} RBI`);
         if (s.r > 0) parts.push(`${s.r} R`);
+        if (s.sb > 0) parts.push(`${s.sb} SB`);
         statLine = parts.join(', ');
       }
       const oppStr = g.opponent ? `<span class="game-log-opp">${esc(g.opponent)}</span> ` : '';
