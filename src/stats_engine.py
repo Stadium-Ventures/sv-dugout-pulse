@@ -73,6 +73,9 @@ _SUFFIX_QUALIFIERS = {
     "atlantic", "pacific", "gulf", "upstate", "baptist", "christian",
     "lutheran", "wesleyan", "methodist", "valley", "polytechnic",
     "poly", "marymount", "of", "commonwealth",
+    # City qualifiers — prevents "alabama" matching "Alabama Birmingham" (UAB),
+    # "illinois" matching "Illinois Chicago" (UIC), etc.
+    "birmingham", "chicago", "omaha", "huntsville",
 }
 _PREFIX_QUALIFIERS = {
     "north", "south", "east", "west", "central", "se", "ne", "sw", "nw",
@@ -1409,7 +1412,13 @@ class D1BaseballScraper(BaseSchoolScraper):
                 # for pre-game starting lineups (posted ~30-60 min before
                 # first pitch).  The sidearm page may show stale data from
                 # the previous game, so we validate the matchup first.
-                if tile_info.get("status") == "Scheduled":
+                tile_status = tile_info.get("status")
+
+                if tile_status == "Cancelled":
+                    # Skip cancelled games entirely — treat as no game found.
+                    continue
+
+                if tile_status == "Scheduled":
                     if self._check_pregame_lineup(
                         player_name, box_url,
                         tile_info["home_name"], tile_info["road_name"],
@@ -1417,6 +1426,16 @@ class D1BaseballScraper(BaseSchoolScraper):
                         context["stats_summary"] = "In starting lineup"
                         return context
                     continue
+
+                # For Live/Final box scores: if this tile is from yesterday but
+                # we already saved a today-game context, skip yesterday's stats
+                # and fall through to return today's context.
+                if tile_info.get("is_yesterday") and first_context and not first_context.get("is_yesterday"):
+                    logger.debug(
+                        "D1Baseball: skipping yesterday stats for %s — today's game context already found",
+                        player_name,
+                    )
+                    break
 
                 if "statbroadcast.com" in box_url or "statb.us" in box_url:
                     player_stats = self._parse_statbroadcast_box_score(player_name, box_url)
@@ -1541,16 +1560,19 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 # Extract game time / inning from .status-wrapper h5
                 # Scheduled: "1:00 PM" | Live: "Top 3", "Bottom 7" | Final: "FINAL"
+                # Cancelled: "CANCELLED" | Postponed: "POSTPONED"
                 game_time = ""
                 inning_label = ""
                 status_h5 = tile.select_one(".status-wrapper h5")
                 if status_h5:
-                    h5_text = status_h5.get_text(strip=True)
-                    if status == "Scheduled" and re.search(r"\d+:\d+\s*(AM|PM)", h5_text, re.IGNORECASE):
-                        game_time = h5_text
+                    h5_text = status_h5.get_text(strip=True).upper()
+                    if h5_text in ("CANCELLED", "POSTPONED"):
+                        status = "Cancelled"
+                    elif status == "Scheduled" and re.search(r"\d+:\d+\s*(AM|PM)", h5_text, re.IGNORECASE):
+                        game_time = status_h5.get_text(strip=True)
                     elif status == "Live":
                         # D1Baseball shows "Top 3", "Bottom 7", "Middle 5", etc.
-                        inning_label = h5_text
+                        inning_label = status_h5.get_text(strip=True)
 
                 results.append({
                     "home_name": home_name,
@@ -1595,6 +1617,10 @@ class D1BaseballScraper(BaseSchoolScraper):
             live_label = inning if inning else "Live"
             result["game_context"] = f"{away} {a_s}, {home} {hs} | {live_label}"
             result["game_status"] = "Live"
+        elif status == "Cancelled":
+            result["game_context"] = f"{away} vs {home} | Cancelled"
+            result["game_status"] = "Cancelled"
+            result["stats_summary"] = "Game cancelled"
         else:
             game_time = tile_info.get("game_time", "")
             result["game_context"] = f"{away} vs {home}"
@@ -2771,13 +2797,15 @@ class NCAAStatsFetcher:
         return best_context  # may be None
 
     def _find_todays_pregame(self, name: str, team: str) -> Optional[dict]:
-        """Check NCAA.com for a pre-game scheduled for today.
+        """Check for a game scheduled/live for today.
 
         Called when the waterfall already returned a yesterday result (or
         nothing) so we don't accidentally swallow yesterday's completed stats.
-        Looks only at today's scoreboard entries with state=='pre'.
+        Tries NCAA.com first (pre + live states), then falls back to
+        D1Baseball scheduled/live tiles if NCAA.com is unavailable.
         Uses the same two-pass (exact then substring) strategy as other scrapers.
         """
+        # --- NCAA.com pass ---
         try:
             today_str = _today_et().strftime("%Y/%m/%d")
             games = self._ncaa_com._get_scoreboard(today_str)
@@ -2785,7 +2813,8 @@ class NCAAStatsFetcher:
             for exact in (True, False):
                 for g in games:
                     game = g.get("game", {})
-                    if game.get("gameState") != "pre":
+                    game_state = game.get("gameState", "")
+                    if game_state not in ("pre", "live"):
                         continue
                     for side in ("home", "away"):
                         side_info = game.get(side, {})
@@ -2810,7 +2839,7 @@ class NCAAStatsFetcher:
                             "away_name": away_name,
                             "home_score": "0",
                             "away_score": "0",
-                            "state": "pre",
+                            "state": game_state,
                             "is_yesterday": False,
                             "start_time": game.get("startTime", ""),
                             "start_date": game.get("startDate", ""),
@@ -2833,7 +2862,36 @@ class NCAAStatsFetcher:
                         )
                         return today_game
         except Exception:
-            logger.debug("_find_todays_pregame failed for %s @ %s", name, team)
+            logger.debug("NCAA.com _find_todays_pregame failed for %s @ %s — trying D1Baseball fallback", name, team)
+
+        # --- D1Baseball fallback (used when NCAA.com is unavailable) ---
+        try:
+            tiles = self._d1baseball._find_all_game_tiles(team, yesterday_only=False)
+            for tile_info in tiles:
+                if tile_info.get("is_yesterday"):
+                    continue
+                if tile_info.get("status") == "Cancelled":
+                    continue
+                today_game = self._d1baseball._build_tile_context(tile_info)
+                # Attach ESPN box score URL if available
+                try:
+                    for eg in self._espn._find_all_games(team):
+                        gid = eg.get("id", "")
+                        if gid:
+                            today_game["box_score_url"] = (
+                                f"https://www.espn.com/college-baseball/game/_/gameId/{gid}"
+                            )
+                            break
+                except Exception:
+                    pass
+                logger.info(
+                    "D1Baseball fallback pre-game found for %s @ %s",
+                    name, team,
+                )
+                return today_game
+        except Exception:
+            logger.debug("D1Baseball _find_todays_pregame fallback failed for %s @ %s", name, team)
+
         return None
 
     def fetch(self, player: dict) -> dict:
