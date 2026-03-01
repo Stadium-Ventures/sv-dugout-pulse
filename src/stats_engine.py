@@ -2948,6 +2948,7 @@ class NCAAStatsFetcher:
         """
         name = player.get("player_name", "")
         team = player.get("team", "")
+        position = player.get("position", "")
 
         result = self._waterfall_fetch(player)
         if result:
@@ -2979,6 +2980,16 @@ class NCAAStatsFetcher:
                             result["next_game"] = next_game
                     except Exception:
                         pass
+
+            # Normalize live "not in lineup" to "not yet pitching" for pitchers.
+            # Covers: D1Baseball generic placeholder, ESPN/Sidearm fallbacks.
+            if (result.get("game_status") == "Live"
+                    and position == "Pitcher"
+                    and result.get("stats_summary") in (
+                        "Game in progress",
+                        "Game in progress — not in lineup",
+                    )):
+                result["stats_summary"] = "Game in progress — not yet pitching"
 
             return result
 
