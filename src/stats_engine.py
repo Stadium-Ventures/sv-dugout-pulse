@@ -831,6 +831,8 @@ class ProStatsFetcher:
         h = int(entry.get("h", 0))
         ab = int(entry.get("ab", 0))
         hr = int(entry.get("hr", 0))
+        tpl = int(entry.get("t", 0))
+        dbl = int(entry.get("d", 0))
         rbi = int(entry.get("rbi", 0))
         r = int(entry.get("r", 0))
         sb = int(entry.get("sb", 0))
@@ -839,6 +841,8 @@ class ProStatsFetcher:
         parts = [f"{h}-{ab}"]
         if hr:
             parts.append(_fmt(hr, "HR"))
+        if tpl:
+            parts.append(_fmt(tpl, "3B"))
         if rbi:
             parts.append(_fmt(rbi, "RBI"))
         if r:
@@ -847,6 +851,8 @@ class ProStatsFetcher:
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if dbl:
+            parts.append(_fmt(dbl, "2B"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -1863,6 +1869,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                         h   = int(cells[5])  if len(cells) > 5  and cells[5].isdigit()  else 0
                         rbi = int(cells[6])  if len(cells) > 6  and cells[6].isdigit()  else 0
                         dbl = int(cells[7])  if len(cells) > 7  and cells[7].isdigit()  else 0
+                        tpl = int(cells[8])  if len(cells) > 8  and cells[8].isdigit()  else 0
                         hr  = int(cells[9])  if len(cells) > 9  and cells[9].isdigit()  else 0
                         bb  = int(cells[10]) if len(cells) > 10 and cells[10].isdigit() else 0
                         k   = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
@@ -1882,6 +1889,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                                 "stats_summary": "In lineup", "_player_found": True}
                     parts = [f"{h}-{ab}"]
                     if hr:  parts.append(_fmt(hr,  "HR"))
+                    if tpl: parts.append(_fmt(tpl, "3B"))
                     if rbi: parts.append(_fmt(rbi, "RBI"))
                     if r:   parts.append(_fmt(r,   "R"))
                     if bb:  parts.append(_fmt(bb,  "BB"))
