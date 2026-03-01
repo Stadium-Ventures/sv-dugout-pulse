@@ -1457,22 +1457,31 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 if "statbroadcast.com" in box_url or "statb.us" in box_url:
                     player_stats = self._parse_statbroadcast_box_score(player_name, box_url)
-                else:
-                    player_stats = self._parse_sidearm_box_score(player_name, box_url)
-                if player_stats:
-                    context.update(player_stats)
-                    # StatBroadcast's inning is more current than the D1Baseball
-                    # tile (which can lag by a half-inning or more).  Override
-                    # game_context with the inning we read directly from the box
-                    # score HTML so the two sources stay in sync.
-                    sb_inning = context.pop("_sb_inning_label", None)
-                    if sb_inning and context.get("game_status") == "Live":
+                    if player_stats is not None:
+                        # StatBroadcast is the authoritative source for game state —
+                        # correct the D1Baseball tile's potentially lagging status.
+                        sb_status = player_stats.pop("_sb_game_status", None)
+                        sb_inning = player_stats.pop("_sb_inning_label", None)
                         away = tile_info["road_name"]
                         home = tile_info["home_name"]
                         a_s = tile_info["road_score"]
                         hs = tile_info["home_score"]
-                        context["game_context"] = f"{away} {a_s}, {home} {hs} | {sb_inning}"
-                    return context
+                        if sb_status == "Final":
+                            context["game_status"] = "Final"
+                            context["game_context"] = f"{away} {a_s}, {home} {hs} | Final"
+                        elif sb_inning and context.get("game_status") == "Live":
+                            context["game_context"] = f"{away} {a_s}, {home} {hs} | {sb_inning}"
+                        if player_stats:
+                            # Player was found — merge stats and return
+                            context.update(player_stats)
+                            return context
+                        # Player not found (DNP) — game state corrected above,
+                        # fall through to the DNP path below.
+                else:
+                    player_stats = self._parse_sidearm_box_score(player_name, box_url)
+                    if player_stats:
+                        context.update(player_stats)
+                        return context
 
             # Player not found in any game — return game context
             if first_context is not None:
@@ -1712,6 +1721,11 @@ class D1BaseballScraper(BaseSchoolScraper):
         StatBroadcast is a JS app, but its webservice endpoint returns encoded HTML.
         Protocol: GET /interface/webservice/stats?data=base64(params) → ROT13+base64 → HTML.
         Player names are in LastName,FirstName format.
+
+        Returns a dict in all cases where the page was successfully fetched:
+          - Player found: full stats dict with ``_sb_game_status`` (and ``_sb_inning_label`` if live)
+          - Player not found (DNP): ``{"_sb_game_status": "Final"|"Live", "_sb_inning_label": ...}``
+        Returns None only if the page could not be fetched/decoded at all.
         """
         try:
             import codecs as _codecs
@@ -1741,6 +1755,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             xml_file = xmlfile_m.group(1)
 
             # Step 2: fetch box score HTML for home then visitor
+            sb_game_status: Optional[str] = None  # "Final" or "Live"
+            sb_inning_label: Optional[str] = None  # e.g. "Top 6" when Live
+
             for team_side in ("H", "V"):
                 data_str = (
                     f"event={event_id}&xml={xml_file}"
@@ -1759,12 +1776,32 @@ class D1BaseballScraper(BaseSchoolScraper):
                 html = base64.b64decode(
                     _codecs.encode(r2.text.strip(), "rot_13") + "=="
                 ).decode("utf-8", errors="replace")
+
+                # Extract game state from the first side we successfully fetch.
+                # Do this before the player search so we always capture it.
+                if sb_game_status is None:
+                    state = self._extract_sb_game_state(html)
+                    if state == "Final":
+                        sb_game_status = "Final"
+                    elif state:
+                        sb_game_status = "Live"
+                        sb_inning_label = state
+
                 result = self._parse_statbroadcast_html(player_name, html)
                 if result:
-                    inning_label = self._extract_sb_inning_from_html(html)
-                    if inning_label:
-                        result["_sb_inning_label"] = inning_label
+                    result["_sb_game_status"] = sb_game_status or "Live"
+                    if sb_inning_label:
+                        result["_sb_inning_label"] = sb_inning_label
                     return result
+
+            # Player not found — return game state so the caller can correct the
+            # D1Baseball tile's potentially lagging status.
+            if sb_game_status is not None:
+                ctx: dict = {"_sb_game_status": sb_game_status}
+                if sb_inning_label:
+                    ctx["_sb_inning_label"] = sb_inning_label
+                return ctx
+            return None
 
         except Exception:
             logger.debug("StatBroadcast parse failed for %s @ %s", player_name, box_url)
@@ -1872,13 +1909,16 @@ class D1BaseballScraper(BaseSchoolScraper):
         return None
 
     @staticmethod
-    def _extract_sb_inning_from_html(html: str) -> Optional[str]:
-        """Scan StatBroadcast box score HTML for a current inning label.
+    def _extract_sb_game_state(html: str) -> Optional[str]:
+        """Scan StatBroadcast box score HTML for game state.
 
-        The XSL-rendered HTML often contains text like 'Top 6', 'Bottom 4',
-        'Middle 3', etc. in headers, status elements, or the linescore.
-        Returns a normalised label (e.g. 'Top 6') or None if not found.
+        Returns 'Final' if the game is over, a normalised inning label
+        (e.g. 'Top 6') if live, or None if the state can't be determined.
+        'Final' is checked first so a completed game is never misread as
+        still being in its last inning.
         """
+        if re.search(r"\bFinal\b", html, re.IGNORECASE):
+            return "Final"
         m = re.search(r"\b(Top|Bottom|Bot|Mid(?:dle)?|End)\s+(\d+)", html, re.IGNORECASE)
         if not m:
             return None
