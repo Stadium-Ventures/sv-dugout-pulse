@@ -1603,7 +1603,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 status_h5 = tile.select_one(".status-wrapper h5")
                 if status_h5:
                     h5_text = status_h5.get_text(strip=True).upper()
-                    if h5_text in ("CANCELLED", "POSTPONED"):
+                    if h5_text in ("CANCELLED", "CANCELED", "POSTPONED"):
                         status = "Cancelled"
                     elif status == "Scheduled" and re.search(r"\d+:\d+\s*(AM|PM)", h5_text, re.IGNORECASE):
                         game_time = status_h5.get_text(strip=True)
