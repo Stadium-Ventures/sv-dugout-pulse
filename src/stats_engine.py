@@ -1827,11 +1827,18 @@ class D1BaseballScraper(BaseSchoolScraper):
                         k   = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
                     except (ValueError, IndexError):
                         continue
-                    # Skip rows with no plate appearances — pitchers often appear
-                    # in the batting table with 0 AB/BB before they bat (or never bat).
-                    # Continuing lets the loop reach the pitching table instead.
+                    # If no plate appearances yet, check position to decide what to do.
+                    # Pitchers appear in the batting table with 0 AB/BB — skip them
+                    # so the loop can find their pitching line instead.
+                    # Position players with 0 AB/BB are simply in the lineup but
+                    # haven't batted yet — return them as found.
                     if ab == 0 and bb == 0:
-                        continue
+                        pos = cells[0].lower() if cells else ""
+                        if pos in ("p", "sp", "rp"):
+                            continue  # pitcher — look for pitching line
+                        return {"at_bats": 0, "hits": 0, "runs": 0, "rbi": 0,
+                                "walks": 0, "strikeouts": 0, "home_runs": 0,
+                                "stats_summary": "In lineup", "_player_found": True}
                     parts = [f"{h}-{ab}"]
                     if hr:  parts.append(_fmt(hr,  "HR"))
                     if rbi: parts.append(_fmt(rbi, "RBI"))
