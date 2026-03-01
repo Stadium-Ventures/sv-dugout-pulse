@@ -76,9 +76,12 @@ class PerformanceAnalyzer:
         ab = stats.get("at_bats", 0)
         hr = stats.get("home_runs", 0)
         rbi = stats.get("rbi", 0)
+        walks = stats.get("walks", 0)
+        on_base = hits + walks
 
-        # Standout: HR, 3+ hits, or high-leverage RBI (3+)
-        if hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3:
+        # Standout: HR, 3+ hits, high-leverage RBI (3+),
+        # elite plate discipline (3+ BB), or dominant OBP day (4+ times on base)
+        if hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3 or walks >= 3 or on_base >= 4:
             return GRADE_STANDOUT
 
         # Good: 2+ hits, any RBI, run scored
