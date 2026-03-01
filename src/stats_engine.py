@@ -16,13 +16,16 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Optional
 from zoneinfo import ZoneInfo
 
+import json
+import os
+
 import requests
 import statsapi
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from .config import ROSTER_URL
+from .config import ROSTER_URL, SCHOOL_LOOKUP_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +45,21 @@ def _make_http_session() -> requests.Session:
 
 
 _http = _make_http_session()
+
+
+# ===== School lookup table =====
+# Maps roster team name -> { espn_id, d1baseball } for exact matching.
+# Falls back to _school_name_matches() for teams not in the table.
+def _load_school_lookup() -> dict:
+    try:
+        with open(SCHOOL_LOOKUP_PATH) as f:
+            data = json.load(f)
+        return {k: v for k, v in data.items() if not k.startswith("_")}
+    except Exception:
+        logger.warning("Could not load school_lookup.json — falling back to fuzzy matching")
+        return {}
+
+_SCHOOL_LOOKUP: dict = _load_school_lookup()
 
 
 # ===== Shared helpers =====
@@ -1498,6 +1516,9 @@ class D1BaseballScraper(BaseSchoolScraper):
         yesterday_str = (self._today - timedelta(days=1)).strftime("%Y%m%d")
         team_lower = team.lower()
 
+        # Resolve canonical D1Baseball name from lookup table if available
+        d1_name = _SCHOOL_LOOKUP.get(team, {}).get("d1baseball", "")
+
         if yesterday_only:
             dates_to_check = [(yesterday_str, True)]
         else:
@@ -1521,12 +1542,15 @@ class D1BaseballScraper(BaseSchoolScraper):
                 home_name = tile.get("data-home-name", "")
                 road_name = tile.get("data-road-name", "")
 
-                # Match team: exact first, then substring with qualifier guards
+                # Match team: lookup table exact match first, then fuzzy fallback
                 names = [home_name, road_name]
-                matched = (
-                    _school_name_matches(team_lower, names, exact=True)
-                    or _school_name_matches(team_lower, names, exact=False)
-                )
+                if d1_name:
+                    matched = d1_name in names
+                else:
+                    matched = (
+                        _school_name_matches(team_lower, names, exact=True)
+                        or _school_name_matches(team_lower, names, exact=False)
+                    )
 
                 if not matched:
                     continue
@@ -2417,6 +2441,9 @@ class ESPNScraper(BaseSchoolScraper):
         yesterday_str = (self._today - timedelta(days=1)).strftime("%Y%m%d")
         team_lower = team.lower()
 
+        # Resolve ESPN team ID from lookup table if available
+        espn_id = _SCHOOL_LOOKUP.get(team, {}).get("espn_id", "")
+
         if yesterday_only:
             dates_to_check = (yesterday_str,)
         else:
@@ -2429,36 +2456,43 @@ class ESPNScraper(BaseSchoolScraper):
         for sb_date in dates_to_check:
             scoreboard = self._get_scoreboard(sb_date)
             is_yesterday = (sb_date == yesterday_str)
-            # Two passes: exact match first, then substring fallback.
-            for exact in (True, False):
-                for event in scoreboard.get("events", []):
-                    for comp in event.get("competitions", []):
-                        status_desc = comp.get("status", {}).get("type", {}).get("description", "")
 
-                        if yesterday_only:
-                            # Only accept Final games
-                            if "Final" not in status_desc:
-                                continue
-                        elif is_yesterday:
-                            # Normal mode: for yesterday's games, include In Progress and Final
-                            if "Progress" not in status_desc and "Final" not in status_desc:
-                                continue
+            for event in scoreboard.get("events", []):
+                for comp in event.get("competitions", []):
+                    status_desc = comp.get("status", {}).get("type", {}).get("description", "")
 
-                        for competitor in comp.get("competitors", []):
-                            team_info = competitor.get("team", {})
+                    if yesterday_only:
+                        if "Final" not in status_desc:
+                            continue
+                    elif is_yesterday:
+                        if "Progress" not in status_desc and "Final" not in status_desc:
+                            continue
+
+                    for competitor in comp.get("competitors", []):
+                        team_info = competitor.get("team", {})
+                        if espn_id:
+                            # Exact ID match — no fuzzy logic needed
+                            matched = team_info.get("id", "") == espn_id
+                        else:
+                            # Fallback: fuzzy name match (two passes)
                             names = [
                                 team_info.get("displayName", ""),
                                 team_info.get("shortDisplayName", ""),
                                 team_info.get("location", ""),
                                 team_info.get("name", ""),
                             ]
-                            if self._team_matches(team_lower, names, exact):
-                                info = self._build_game_info(event, comp)
-                                info["is_yesterday"] = is_yesterday
-                                game_id = info.get("id", "")
-                                if game_id not in seen_ids:
-                                    seen_ids.add(game_id)
-                                    results.append(info)
+                            matched = (
+                                self._team_matches(team_lower, names, exact=True)
+                                or self._team_matches(team_lower, names, exact=False)
+                            )
+
+                        if matched:
+                            info = self._build_game_info(event, comp)
+                            info["is_yesterday"] = is_yesterday
+                            game_id = info.get("id", "")
+                            if game_id not in seen_ids:
+                                seen_ids.add(game_id)
+                                results.append(info)
         return results
 
     def _find_game(self, team: str, yesterday_only: bool = False) -> Optional[dict]:
