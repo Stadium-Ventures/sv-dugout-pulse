@@ -741,7 +741,7 @@
     <button class="filter-btn active" data-value="all">All</button>
     <button class="filter-btn" data-value="Live">Live</button>
     <button class="filter-btn" data-value="Final">Final</button>
-    <button class="filter-btn" data-value="Cancelled">Cancelled</button>
+    <button class="filter-btn" data-value="Cancelled">Postponed</button>
   </div>
   <div class="filter-group" data-filter="grade">
     <button class="filter-btn active" data-value="all">All</button>
@@ -1181,7 +1181,7 @@ function render() {
         { key: 'Live', label: 'In Progress' },
         { key: 'Final', label: 'Final' },
         { key: 'Scheduled', label: 'Scheduled' },
-        { key: 'Cancelled', label: 'Cancelled' },
+        { key: 'Cancelled', label: 'Postponed' },
       ];
       let html = '';
       for (const g of groups) {

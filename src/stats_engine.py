@@ -755,6 +755,10 @@ class ProStatsFetcher:
             result["game_context"] = f"{away} vs {home} | {game_time}" if game_time else f"{away} vs {home}"
             result["game_status"] = "Scheduled"
             result["stats_summary"] = f"Game at {game_time}" if game_time else "Game today"
+        elif status in ("Postponed", "Cancelled", "Canceled", "Suspended"):
+            result["game_context"] = f"{away} vs {home} | Postponed"
+            result["game_status"] = "Cancelled"
+            result["stats_summary"] = "Game cancelled"
         else:
             result["game_context"] = f"{away} vs {home} | {status}"
             result["game_status"] = status
