@@ -2823,15 +2823,14 @@ class NCAAStatsFetcher:
                         continue
 
                     # Never let a Scheduled result from a later scraper (e.g. ESPN)
-                    # downgrade an already-Live/Final best_context found by D1Baseball.
+                    # downgrade an already-Live/Final/Cancelled best_context found by D1Baseball.
                     if (result.get("game_status") == "Scheduled"
                             and best_context is not None
-                            and best_context.get("game_status") in ("Live", "Final")):
-                        # Grab game_time if best_context is missing it
+                            and best_context.get("game_status") in ("Live", "Final", "Cancelled")):
+                        # Grab game_time if best_context is missing it, but never
+                        # overwrite stats_summary — it may already be "DNP — game final".
                         if result.get("game_time") and not best_context.get("game_time"):
                             best_context["game_time"] = result["game_time"]
-                            if result.get("stats_summary", "").startswith("Game at"):
-                                best_context["stats_summary"] = result["stats_summary"]
                         logger.info(
                             "%s returned Scheduled for %s @ %s — ignoring (best_context is %s)",
                             scraper.__class__.__name__, name, team,
