@@ -741,6 +741,7 @@
     <button class="filter-btn active" data-value="all">All</button>
     <button class="filter-btn" data-value="Live">Live</button>
     <button class="filter-btn" data-value="Final">Final</button>
+    <button class="filter-btn" data-value="Cancelled">Cancelled</button>
   </div>
   <div class="filter-group" data-filter="grade">
     <button class="filter-btn active" data-value="all">All</button>
@@ -798,8 +799,16 @@ function gradeKey(g) {
   return 'No Data';
 }
 
-const STATUS_PRIORITY = { 'Live': 0, 'Final': 1, 'Scheduled': 2, 'N/A': 3 };
-function statusTier(s) { return STATUS_PRIORITY[s] ?? 3; }
+const STATUS_PRIORITY = { 'Live': 0, 'Final': 1, 'Scheduled': 2, 'Cancelled': 3, 'N/A': 4 };
+function statusTier(s) { return STATUS_PRIORITY[s] ?? 4; }
+
+// Sub-sort within Live: 0=has stats, 1=in game no stats yet, 2=not confirmed in game
+function liveSubTier(p) {
+  const s = p.stats_summary || '';
+  if (s === 'Game in progress — not in lineup' || s === 'Game in progress') return 2;
+  if (s === 'In lineup' || s === 'In starting lineup' || s === 'Game in progress — not yet pitching') return 1;
+  return 0;
+}
 
 function hasRealStats(p) {
   const s = p.stats_summary || '';
@@ -808,10 +817,16 @@ function hasRealStats(p) {
 
 function sortPlayers(players) {
   return players.slice().sort((a, b) => {
-    // Status tier: Live > Final > Scheduled
+    // Status tier: Live > Final > Scheduled > Cancelled > N/A
     const aSt = statusTier(a.game_status);
     const bSt = statusTier(b.game_status);
     if (aSt !== bSt) return aSt - bSt;
+    // Within Live: stats > in lineup/not yet pitching > not in game, then tier
+    if (a.game_status === 'Live') {
+      const aLive = liveSubTier(a);
+      const bLive = liveSubTier(b);
+      if (aLive !== bLive) return aLive - bLive;
+    }
     // Within Final: players with real stats before DNP
     const aHas = hasRealStats(a) ? 0 : 1;
     const bHas = hasRealStats(b) ? 0 : 1;
@@ -1166,6 +1181,7 @@ function render() {
         { key: 'Live', label: 'In Progress' },
         { key: 'Final', label: 'Final' },
         { key: 'Scheduled', label: 'Scheduled' },
+        { key: 'Cancelled', label: 'Cancelled' },
       ];
       let html = '';
       for (const g of groups) {

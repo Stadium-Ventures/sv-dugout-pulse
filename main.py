@@ -486,12 +486,12 @@ def run_live():
             })
             today_pulse.append(na)
         elif p.get("game_status") == "Cancelled":
-            # Game was cancelled — show in "No game today" section with a note.
+            # Game was cancelled — show in its own Cancelled section.
             na = dict(p)
             na.update({
                 "stats_summary": "Game cancelled",
                 "game_context": "",
-                "game_status": "N/A",
+                "game_status": "Cancelled",
                 "game_time": None,
                 "is_yesterday": False,
                 "box_score_url": None,
