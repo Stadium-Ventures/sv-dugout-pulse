@@ -2826,6 +2826,19 @@ class NCAAStatsFetcher:
                         )
                         continue
 
+                    # Don't let a yesterday result override a today game context.
+                    # e.g. ESPN finds yesterday's Final game (with real stats) and
+                    # best_context is today's Cancelled/Scheduled game from D1Baseball.
+                    if (result.get("is_yesterday")
+                            and best_context is not None
+                            and not best_context.get("is_yesterday")):
+                        logger.info(
+                            "%s returned yesterday result for %s @ %s — ignoring (best_context is today's %s)",
+                            scraper.__class__.__name__, name, team,
+                            best_context.get("game_status"),
+                        )
+                        continue
+
                     # Never let a Scheduled result from a later scraper (e.g. ESPN)
                     # downgrade an already-Live/Final/Cancelled best_context found by D1Baseball.
                     if (result.get("game_status") == "Scheduled"
