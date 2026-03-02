@@ -2075,6 +2075,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             r   = int(v.get("Runs", 0) or 0)
             rbi = int(v.get("RunsBattedIn", 0) or 0)
             hr  = int(v.get("HomeRuns", 0) or 0)
+            tpl = int(v.get("Triples", 0) or 0)
+            dbl = int(v.get("Doubles", 0) or 0)
             bb  = int(v.get("Walks", 0) or 0)
             k   = int(v.get("Strikeouts", 0) or 0)
             sb  = int(v.get("StolenBases", 0) or 0)
@@ -2085,6 +2087,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             parts = [f"{h}-{ab}"]
             if hr:
                 parts.append(_fmt(hr, "HR"))
+            if tpl:
+                parts.append(_fmt(tpl, "3B"))
             if rbi:
                 parts.append(_fmt(rbi, "RBI"))
             if r:
@@ -2095,6 +2099,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                 parts.append(_fmt(bb, "BB"))
             if k:
                 parts.append(_fmt(k, "K"))
+            if dbl:
+                parts.append(_fmt(dbl, "2B"))
 
             return {
                 "stats_summary": ", ".join(parts),
@@ -2227,13 +2233,15 @@ class D1BaseballScraper(BaseSchoolScraper):
             if i < len(values):
                 stats[header] = values[i]
 
-        ab = int(stats.get("AB", 0) or 0)
-        h = int(stats.get("H", 0) or 0)
-        hr = int(stats.get("HR", 0) or 0)
+        ab  = int(stats.get("AB", 0) or 0)
+        h   = int(stats.get("H", 0) or 0)
+        hr  = int(stats.get("HR", 0) or 0)
+        tpl = int(stats.get("3B", 0) or 0)
+        dbl = int(stats.get("2B", 0) or 0)
         rbi = int(stats.get("RBI", 0) or 0)
-        r = int(stats.get("R", 0) or 0)
-        sb = int(stats.get("SB", 0) or 0)
-        bb = int(stats.get("BB", 0) or 0)
+        r   = int(stats.get("R", 0) or 0)
+        sb  = int(stats.get("SB", 0) or 0)
+        bb  = int(stats.get("BB", 0) or 0)
 
         if ab == 0 and bb == 0:
             return None  # didn't actually play
@@ -2241,6 +2249,8 @@ class D1BaseballScraper(BaseSchoolScraper):
         parts = [f"{h}-{ab}"]
         if hr:
             parts.append(_fmt(hr, "HR"))
+        if tpl:
+            parts.append(_fmt(tpl, "3B"))
         if rbi:
             parts.append(_fmt(rbi, "RBI"))
         if r:
@@ -2249,6 +2259,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if dbl:
+            parts.append(_fmt(dbl, "2B"))
 
         return {
             "stats_summary": ", ".join(parts),
