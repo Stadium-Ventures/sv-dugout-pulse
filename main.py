@@ -16,6 +16,7 @@ import os
 import re
 import sys
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
@@ -263,26 +264,32 @@ def _rotate_yesterday():
         old_players = old.get("players", [])
         # Yesterday's game day = today minus one game day
         yesterday_str = (today - timedelta(days=1)).isoformat()
-        finals = [
+        candidates = [
             p for p in old_players
-            if p.get("game_status") == "Final"
-            and p.get("game_date") == yesterday_str
+            if p.get("game_date") == yesterday_str
+            and p.get("game_status") in ("Final", "Live")
         ]
 
-        if not finals:
+        if not candidates:
             return
+
+        # Mark formerly-Live entries so the yesterday pass re-fetches them
+        for p in candidates:
+            if p.get("game_status") == "Live":
+                p["_needs_refresh"] = True
 
         envelope = {
             "generated_at": old_gen,
             "source_date": yesterday_str,
-            "players": finals,
+            "players": candidates,
         }
         os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
         with open(YESTERDAY_PULSE_PATH, "w") as f:
             json.dump(envelope, f, indent=2, ensure_ascii=False)
+        live_count = sum(1 for p in candidates if p.get("_needs_refresh"))
         logger.info(
-            "Rotated %d Final entries to yesterday_pulse.json (from %s)",
-            len(finals), old_dt.date(),
+            "Rotated %d entries to yesterday_pulse.json (%d Final, %d Live needing refresh, from %s)",
+            len(candidates), len(candidates) - live_count, live_count, old_dt.date(),
         )
     except Exception:
         logger.warning("Failed to rotate yesterday pulse data")
@@ -322,6 +329,10 @@ def _supplement_yesterday(pulse: list):
             existing[:] = [p for p in existing if p["player_name"] != entry["player_name"]]
             existing.append(entry)
 
+    # Strip internal flags before writing
+    for p in existing:
+        p.pop("_needs_refresh", None)
+
     envelope = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "source_date": yesterday_str,
@@ -353,41 +364,65 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
     confirmed_names = {
         p["player_name"] for p in existing
         if "DNP" not in p.get("stats_summary", "")
+        and not p.get("_needs_refresh")
     }
     existing_by_name = {p["player_name"]: p for p in existing}
-    added = 0
-    updated = 0
 
-    for player in all_players:
+    # Filter to players that need fetching
+    to_fetch = [p for p in all_players if p["player_name"] not in confirmed_names]
+
+    def _fetch_one(player):
+        """Fetch + analyze a single player for yesterday — thread-safe."""
         name = player["player_name"]
-        if name in confirmed_names:
-            continue
-
         try:
-            stats = fetcher.fetch_yesterday(player)
+            stats = None
+            for attempt in range(2):
+                try:
+                    stats = fetcher.fetch_yesterday(player)
+                    break
+                except Exception:
+                    if attempt == 0:
+                        time.sleep(1)
+                    else:
+                        raise
             if stats is None or stats.get("game_status") != "Final":
-                continue
+                return None
             if stats.get("game_date") != yesterday_str:
-                continue
+                return None
             if "DNP" in stats.get("stats_summary", "") and name in existing_by_name:
-                continue
+                return None
 
             _append_to_ncaa_game_log(player, stats)
             stats["is_yesterday"] = True
             analysis = analyzer.analyze(player, stats)
-            entry = build_pulse_entry(player, stats, analysis)
-
-            if name in existing_by_name:
-                existing[:] = [p for p in existing if p["player_name"] != name]
-                updated += 1
-            else:
-                added += 1
-
-            existing.append(entry)
-            confirmed_names.add(name)
+            return build_pulse_entry(player, stats, analysis)
         except Exception:
-            logger.debug("Yesterday pass failed for %s — skipping", name)
-            continue
+            logger.debug("Yesterday pass failed for %s after retry — skipping", name)
+            return None
+
+    # Fan out fetches concurrently, then merge results sequentially
+    results = []
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        futures = {executor.submit(_fetch_one, p): p for p in to_fetch}
+        for future in as_completed(futures):
+            entry = future.result()
+            if entry:
+                results.append(entry)
+
+    added = 0
+    updated = 0
+    for entry in results:
+        name = entry["player_name"]
+        if name in existing_by_name:
+            existing[:] = [p for p in existing if p["player_name"] != name]
+            updated += 1
+        else:
+            added += 1
+        existing.append(entry)
+
+    # Strip internal _needs_refresh flag before writing output
+    for p in existing:
+        p.pop("_needs_refresh", None)
 
     # Always write — even an empty list clears stale wrong-date entries that
     # _supplement_yesterday may have left behind.
@@ -448,7 +483,7 @@ def run_live():
     pulse = []
     alert_queue = []
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=8) as executor:
         futures = {executor.submit(_process_player, p): p for p in all_players}
         for future in as_completed(futures):
             entry, alert_data = future.result()
@@ -543,6 +578,8 @@ def write_output(pulse: list[dict]):
 def run_historical():
     """Aggregate historical stats: 7D (Pro + NCAA) + Season (everyone)."""
     logger.info("Starting historical stats aggregation")
+
+    _rotate_yesterday()
 
     all_players = get_all_players()
     if not all_players:

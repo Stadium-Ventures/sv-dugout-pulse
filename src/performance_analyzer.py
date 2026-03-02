@@ -76,21 +76,22 @@ class PerformanceAnalyzer:
         ab = stats.get("at_bats", 0)
         hr = stats.get("home_runs", 0)
         rbi = stats.get("rbi", 0)
-        walks = stats.get("walks", 0)
-        on_base = hits + walks
+        bb = stats.get("walks", 0)
+        k = stats.get("strikeouts", 0)
+        tob = hits + bb  # times on base (approx, no HBP available)
+        pa = ab + bb      # plate appearances (approx)
 
         # Standout: HR, 3+ hits, high-leverage RBI (3+),
         # elite plate discipline (3+ BB), or dominant OBP day (4+ times on base)
-        if hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3 or walks >= 3 or on_base >= 4:
+        if hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3 or bb >= 3 or tob >= 4:
             return GRADE_STANDOUT
 
-        # Good: 2+ hits, any RBI, run scored
-        if hits >= HITTER_GOOD_HITS or rbi >= 1 or stats.get("runs", 0) >= 1:
+        # Good: 2+ hits, productive on-base day (2+ TOB in 3+ PA), or 2+ RBI
+        if hits >= HITTER_GOOD_HITS or (tob >= 2 and pa >= 3) or rbi >= 2:
             return GRADE_GOOD
 
-        # Soft flag: extended hitless streak
-        # (This requires season-level data; for now flag 0-for-4+)
-        if ab >= 4 and hits == 0:
+        # Soft flag: hitless in 4+ AB, or 3+ strikeouts
+        if (ab >= 4 and hits == 0) or (k >= 3 and pa >= 3):
             return GRADE_SOFT_FLAG
 
         # Routine: everything else
@@ -100,23 +101,39 @@ class PerformanceAnalyzer:
         ip = stats.get("ip", 0.0)
         er = stats.get("earned_runs", 0)
         k = stats.get("strikeouts", 0)
+        bb = stats.get("walks_allowed", stats.get("bb", 0))
         saves = stats.get("saves", 0)
         qs = stats.get("quality_start", False)
 
-        # Standout: QS, 5+ Ks, or save
-        if qs or k >= PITCHER_STANDOUT_KS or saves >= 1:
+        k_bb = k - bb
+        bb_per_ip = bb / ip if ip > 0 else 0
+
+        # Hard cap: 5+ ER is always a bad day
+        if er >= 5:
+            return GRADE_SOFT_FLAG
+
+        # Save is always Standout
+        if saves >= 1:
             return GRADE_STANDOUT
 
-        # Good: clean relief outing (under 3 IP, 0 ER)
-        if ip > 0 and ip < 3.0 and er == 0:
+        # Standout: QS with decent command, or dominant K-BB with low ER
+        if (qs and k_bb >= 2) or (k_bb >= 5 and bb_per_ip <= 1.0 and er <= 2):
+            return GRADE_STANDOUT
+
+        # Good: strong K-BB (3+ net) with controlled walks
+        if k_bb >= 3 and bb_per_ip <= 1.0:
             return GRADE_GOOD
 
-        # Good: 3+ clean IP
-        if ip >= 3.0 and er <= 1:
+        # Good: clean outing with controlled walks
+        if ip > 0 and er == 0 and bb_per_ip <= 1.0:
             return GRADE_GOOD
 
-        # Soft flag: rough short outing (3+ ER in under 4 IP)
-        if ip < 4.0 and er >= 3:
+        # Good: 3+ solid IP with controlled walks
+        if ip >= 3.0 and er <= 1 and bb_per_ip <= 1.0:
+            return GRADE_GOOD
+
+        # Soft flag: negative K-BB (more walks than Ks), or rough short outing
+        if (k_bb < 0 and ip >= 2.0) or (ip < 4.0 and er >= 3):
             return GRADE_SOFT_FLAG
 
         return GRADE_ROUTINE

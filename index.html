@@ -346,6 +346,20 @@
   /* ---- Yesterday badge ---- */
   .badge-yesterday { background: rgba(245,158,11,0.2); color: var(--accent-orange); }
 
+  /* ---- Stale data banner ---- */
+  .stale-banner {
+    display: none;
+    max-width: 1200px;
+    margin: 0.75rem auto 0;
+    padding: 0.5rem 0.85rem;
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 8px;
+    color: var(--accent-orange);
+    font-size: 0.82rem;
+    text-align: center;
+  }
+
   /* ---- Collapsed no-game section ---- */
   .no-game-section {
     max-width: 1200px;
@@ -709,6 +723,7 @@
     <span>Auto-refreshing</span>
   </div>
 </div>
+<div class="stale-banner" id="staleBanner"></div>
 <div class="time-tabs" role="tablist" aria-label="Time window">
   <button class="time-tab active" data-window="today" role="tab" aria-selected="true">Today</button>
   <button class="time-tab" data-window="yesterday" role="tab" aria-selected="false">Yesterday</button>
@@ -787,6 +802,8 @@ let searchQuery = '';
 // Time window state
 let currentWindow = 'today';
 const windowData = { today: null, yesterday: null, '7d': null, season: null };
+const _windowFetchFailed = { today: false, yesterday: false, '7d': false, season: false };
+const _scrollPositions = { today: 0, yesterday: 0, '7d': 0, season: 0 };
 const WINDOW_PATHS = {
   today: 'data/current_pulse.json',
   yesterday: 'data/yesterday_pulse.json',
@@ -1236,7 +1253,13 @@ function render() {
     } else if (filtered.length === 0) {
       grid.innerHTML = '';
       empty.style.display = 'block';
-      empty.textContent = 'No results from yesterday.';
+      if (_windowFetchFailed.yesterday) {
+        empty.textContent = 'Couldn\u2019t load yesterday data \u2014 check your connection and pull to refresh.';
+      } else if (data.length > 0) {
+        empty.textContent = 'No matches \u2014 try clearing your filters.';
+      } else {
+        empty.textContent = 'No games yesterday.';
+      }
     } else {
       empty.style.display = 'none';
       grid.innerHTML = filtered.map(renderCard).join('');
@@ -1262,7 +1285,13 @@ function render() {
       if (filtered.length === 0) {
         grid.innerHTML = '';
         empty.style.display = 'block';
-        empty.textContent = 'No players match the current filters.';
+        if (_windowFetchFailed[currentWindow]) {
+          empty.textContent = 'Couldn\u2019t load data \u2014 check your connection and pull to refresh.';
+        } else if (data.length > 0) {
+          empty.textContent = 'No matches \u2014 try clearing your filters.';
+        } else {
+          empty.textContent = 'No data available for this window.';
+        }
       } else {
         empty.style.display = 'none';
         grid.innerHTML = filtered.map(renderWindowCard).join('');
@@ -1291,6 +1320,9 @@ function toggleFiltersForWindow(window) {
 async function switchWindow(window) {
   if (window === currentWindow) return;
 
+  // Save scroll position for current tab
+  _scrollPositions[currentWindow] = globalThis.scrollY || 0;
+
   // Update active tab
   document.querySelectorAll('.time-tab').forEach(t => {
     t.classList.remove('active');
@@ -1307,6 +1339,7 @@ async function switchWindow(window) {
 
   // Load data if not cached
   if (window !== 'today' && windowData[window] === null) {
+    _windowFetchFailed[window] = false;
     try {
       const resp = await fetch(WINDOW_PATHS[window] + '?t=' + Date.now(), { cache: 'no-store' });
       if (resp.ok) {
@@ -1320,15 +1353,20 @@ async function switchWindow(window) {
         }
       } else {
         windowData[window] = [];
+        _windowFetchFailed[window] = true;
       }
     } catch (e) {
       console.error('Failed to load window data:', e);
       windowData[window] = [];
+      _windowFetchFailed[window] = true;
     }
   }
 
   updateTimestamp();
   render();
+
+  // Restore scroll position for the new tab
+  requestAnimationFrame(() => globalThis.scrollTo(0, _scrollPositions[window] || 0));
 }
 
 // Live workflow cron windows (UTC):
@@ -1376,8 +1414,37 @@ function updateNextUpdate() {
   el.textContent = 'Next update: ' + timeStr;
 }
 
+function _getExpectedYesterday() {
+  // Mirror the backend 4 AM ET day-flip: before 4 AM ET, "today" is still the prior calendar day
+  const now = new Date();
+  const et = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  if (et.getHours() < 4) et.setDate(et.getDate() - 1);
+  const yesterday = new Date(et);
+  yesterday.setDate(yesterday.getDate() - 1);
+  return yesterday.toISOString().slice(0, 10);
+}
+
+function updateStaleBanner() {
+  const banner = document.getElementById('staleBanner');
+  if (!banner) return;
+  if (currentWindow !== 'yesterday' || !yesterdaySourceDate) {
+    banner.style.display = 'none';
+    return;
+  }
+  const expected = _getExpectedYesterday();
+  if (yesterdaySourceDate !== expected) {
+    banner.textContent = 'Yesterday data may be outdated — results are from ' +
+      new Date(yesterdaySourceDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) +
+      ', not the most recent game day.';
+    banner.style.display = 'block';
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
 function updateTimestamp() {
   const el = document.getElementById('updated');
+  updateStaleBanner();
   // Yesterday tab: show source date instead of stale relative time
   if (currentWindow === 'yesterday') {
     if (yesterdaySourceDate) {
@@ -1422,16 +1489,23 @@ function updateTimestamp() {
   el.textContent = `Last update: ${timeStr}${ago ? ` (${ago})` : ''}`;
 }
 
+function _isGameHours() {
+  // Mirror the cron schedule: active 14:00-06:45 UTC (10 AM-2:45 AM ET)
+  const now = new Date();
+  const total = now.getUTCHours() * 60 + now.getUTCMinutes();
+  const GAP_START = 6 * 60 + 46;  // 06:46 UTC
+  const GAP_END   = 14 * 60;       // 14:00 UTC
+  return total < GAP_START || total >= GAP_END;
+}
+
 function manageAutoRefresh() {
-  const hasLive = allPlayers.some(p => p.game_status === 'Live');
   const indicator = document.getElementById('autoRefreshIndicator');
-  if (hasLive && currentWindow === 'today') {
+  const shouldRefresh = currentWindow === 'today' && _isGameHours();
+  if (shouldRefresh) {
     if (!autoRefreshTimer) {
       autoRefreshTimer = setInterval(async () => {
-        try {
-          const resp = await fetch('data/current_pulse.json?t=' + Date.now(), { cache: 'no-store' });
-          if (!resp.ok) return;
-          const raw = await resp.json();
+        const raw = await _fetchWithRetry('data/current_pulse.json?t=' + Date.now());
+        if (raw) {
           if (Array.isArray(raw)) {
             allPlayers = raw;
             dataGeneratedAt = null;
@@ -1441,7 +1515,10 @@ function manageAutoRefresh() {
           }
           updateTimestamp();
           render();
-        } catch (e) { console.error('Auto-refresh failed:', e); }
+          indicator.querySelector('span').textContent = 'Auto-refreshing';
+        } else {
+          indicator.querySelector('span').textContent = 'Update failed — retrying';
+        }
       }, 300000);
     }
     indicator.classList.add('active');
@@ -1497,7 +1574,7 @@ document.getElementById('searchInput').addEventListener('input', e => {
   _searchTimer = setTimeout(() => {
     searchQuery = e.target.value.toLowerCase().trim();
     render();
-  }, 150);
+  }, 350);
 });
 
 // Relative timestamp refresh
@@ -1535,32 +1612,49 @@ document.addEventListener('touchend', e => {
   }
 }, { passive: true });
 
+async function _fetchWithRetry(url, retries = 1, delayMs = 3000) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const resp = await fetch(url, { cache: 'no-store' });
+      if (resp.ok) return await resp.json();
+    } catch (e) { /* retry */ }
+    if (i < retries) await new Promise(r => setTimeout(r, delayMs));
+  }
+  return null;
+}
+
 async function refreshData() {
   const indicator = document.getElementById('pullRefresh');
   indicator.classList.add('active');
-  try {
-    const path = WINDOW_PATHS[currentWindow];
-    const resp = await fetch(path + '?t=' + Date.now());
-    if (!resp.ok) return;
-    const raw = await resp.json();
+  indicator.textContent = 'Refreshing...';
+  indicator.style.color = '';
+  const path = WINDOW_PATHS[currentWindow];
+  const raw = await _fetchWithRetry(path + '?t=' + Date.now());
+  if (raw) {
     if (currentWindow === 'today') {
       allPlayers = Array.isArray(raw) ? raw : (raw.players || []);
       dataGeneratedAt = Array.isArray(raw) ? null : (raw.generated_at || null);
       updateTimestamp();
     } else if (currentWindow === 'yesterday') {
       windowData.yesterday = raw.players || [];
+      yesterdaySourceDate = raw.source_date || null;
+      updateTimestamp();
     } else {
       windowData[currentWindow] = raw;
     }
     render();
-  } catch (e) { console.error('Refresh failed:', e); }
-  finally { setTimeout(() => indicator.classList.remove('active'), 500); }
+    setTimeout(() => indicator.classList.remove('active'), 500);
+  } else {
+    indicator.textContent = 'Refresh failed — check connection';
+    indicator.style.color = '#ef4444';
+    setTimeout(() => { indicator.classList.remove('active'); indicator.textContent = 'Refreshing...'; indicator.style.color = ''; }, 3000);
+  }
 }
 
 // Load data — supports both envelope {generated_at, players} and legacy array
-fetch('data/current_pulse.json?t=' + Date.now(), { cache: 'no-store' })
-  .then(r => r.json())
-  .then(raw => {
+(async () => {
+  const raw = await _fetchWithRetry('data/current_pulse.json?t=' + Date.now(), 2, 3000);
+  if (raw) {
     if (Array.isArray(raw)) {
       allPlayers = raw;
       dataGeneratedAt = null;
@@ -1570,12 +1664,12 @@ fetch('data/current_pulse.json?t=' + Date.now(), { cache: 'no-store' })
     }
     updateTimestamp();
     render();
-  })
-  .catch(() => {
+  } else {
     document.getElementById('grid').innerHTML = '';
-    document.getElementById('empty').textContent = 'Failed to load pulse data.';
+    document.getElementById('empty').textContent = 'Failed to load pulse data — check your connection and refresh.';
     document.getElementById('empty').style.display = 'block';
-  });
+  }
+})();
 
 // Show next update time and keep it current
 updateNextUpdate();

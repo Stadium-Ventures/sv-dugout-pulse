@@ -83,6 +83,7 @@ YESTERDAY_PULSE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ye
 NCAA_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_game_log.json")
 SCHOOL_LOOKUP_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "school_lookup.json")
 SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
+ROSTER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "roster_cache.json")
 
 # ---------------------------------------------------------------------------
 # Logging

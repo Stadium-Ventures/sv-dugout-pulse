@@ -46,6 +46,12 @@ def _make_http_session() -> requests.Session:
 
 _http = _make_http_session()
 
+# Per-scraper timeouts — tuned to each source's typical response latency
+_TIMEOUT_ESPN = 10        # Fast JSON API
+_TIMEOUT_NCAA_COM = 12    # Moderate JSON API
+_TIMEOUT_D1BASEBALL = 20  # HTML scraping, slower servers
+_TIMEOUT_DEFAULT = 15     # Sidearm, StatBroadcast, etc.
+
 
 # ===== School lookup table =====
 # Maps roster team name -> { espn_id, d1baseball } for exact matching.
@@ -1102,7 +1108,7 @@ class NCAAComScraper(BaseSchoolScraper):
         """Fetch NCAA scoreboard for a date (YYYY/MM/DD). Caches per date."""
         if date_str not in self._scoreboard_cache:
             url = f"{self.SCOREBOARD_URL}/{date_str}"
-            resp = _http.get(url, timeout=15)
+            resp = _http.get(url, timeout=_TIMEOUT_NCAA_COM)
             resp.raise_for_status()
             self._scoreboard_cache[date_str] = resp.json().get("games", [])
         return self._scoreboard_cache[date_str]
@@ -1206,7 +1212,7 @@ class NCAAComScraper(BaseSchoolScraper):
             logger.debug("Boxscore cache hit for game %s", gid)
             return self._boxscore_cache[gid]
         url = f"{self.BOXSCORE_URL}/{game_id}/boxscore"
-        resp = _http.get(url, timeout=15)
+        resp = _http.get(url, timeout=_TIMEOUT_NCAA_COM)
         if resp.status_code != 200:
             return None
         data = resp.json()
@@ -1522,7 +1528,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     "Referer": "https://d1baseball.com/scores/",
                     "X-Requested-With": "XMLHttpRequest",
                 },
-                timeout=15,
+                timeout=_TIMEOUT_D1BASEBALL,
             )
             resp.raise_for_status()
             data = resp.json()
@@ -1703,7 +1709,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         elements (where Sidearm puts player names).
         """
         try:
-            resp = _http.get(box_url, timeout=15)
+            resp = _http.get(box_url, timeout=_TIMEOUT_D1BASEBALL)
             resp.raise_for_status()
             page_text = resp.text.lower()
 
@@ -1953,7 +1959,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         rare schools that serve pre-rendered HTML.
         """
         try:
-            resp = _http.get(box_url, timeout=15)
+            resp = _http.get(box_url, timeout=_TIMEOUT_D1BASEBALL)
             resp.raise_for_status()
             html = resp.text
 
@@ -2037,7 +2043,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 f"http://static.sidearmstats.com/schools/{folder}/{sport}/game.json"
                 "?detail=full"
             )
-            jresp = _http.get(json_url, timeout=15)
+            jresp = _http.get(json_url, timeout=_TIMEOUT_D1BASEBALL)
             jresp.raise_for_status()
             data = jresp.json()
 
@@ -2313,7 +2319,7 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _parse_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
         """Fetch and parse a D1Baseball box score page for a specific player."""
         try:
-            resp = _http.get(box_url, timeout=15)
+            resp = _http.get(box_url, timeout=_TIMEOUT_D1BASEBALL)
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "html.parser")
 
@@ -2494,7 +2500,7 @@ class ESPNScraper(BaseSchoolScraper):
             date_str = self._today.strftime("%Y%m%d")
         if date_str not in self._scoreboard_cache:
             url = f"{self.SCOREBOARD_URL}?dates={date_str}&limit=200"
-            resp = _http.get(url, timeout=15)
+            resp = _http.get(url, timeout=_TIMEOUT_ESPN)
             resp.raise_for_status()
             self._scoreboard_cache[date_str] = resp.json()
         return self._scoreboard_cache[date_str]
@@ -2607,7 +2613,7 @@ class ESPNScraper(BaseSchoolScraper):
             logger.debug("ESPN summary cache hit for game %s", game_id)
             return self._summary_cache[game_id]
         resp = _http.get(
-            f"{self.SUMMARY_URL}?event={game_id}", timeout=15
+            f"{self.SUMMARY_URL}?event={game_id}", timeout=_TIMEOUT_ESPN
         )
         resp.raise_for_status()
         data = resp.json()

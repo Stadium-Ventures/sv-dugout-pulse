@@ -7,12 +7,15 @@ filters to Pro/NCAA levels, and normalizes column names.
 
 import csv
 import io
+import json
 import logging
+import os
+from datetime import datetime, timezone
 from typing import Optional
 
 import requests
 
-from .config import COLUMN_MAP, INCLUDED_LEVELS, RECRUITS_URL, ROSTER_URL
+from .config import COLUMN_MAP, INCLUDED_LEVELS, RECRUITS_URL, ROSTER_CACHE_PATH, ROSTER_URL
 
 logger = logging.getLogger(__name__)
 
@@ -120,10 +123,59 @@ def get_recruits(url: Optional[str] = None) -> list[dict]:
         return []
 
 
+_ROSTER_CACHE_MAX_AGE_H = 24
+
+
+def _save_roster_cache(players: list[dict]):
+    """Persist roster to disk so we can fall back if Sheets is unreachable."""
+    try:
+        os.makedirs(os.path.dirname(ROSTER_CACHE_PATH), exist_ok=True)
+        payload = {
+            "cached_at": datetime.now(timezone.utc).isoformat(),
+            "players": players,
+        }
+        with open(ROSTER_CACHE_PATH, "w") as f:
+            json.dump(payload, f, indent=2, ensure_ascii=False)
+        logger.debug("Saved roster cache (%d players)", len(players))
+    except Exception:
+        logger.debug("Failed to save roster cache — non-fatal")
+
+
+def _load_roster_cache() -> list[dict] | None:
+    """Load cached roster if it exists and is < 24 h old."""
+    if not os.path.exists(ROSTER_CACHE_PATH):
+        return None
+    try:
+        with open(ROSTER_CACHE_PATH) as f:
+            data = json.load(f)
+        cached_at = datetime.fromisoformat(data["cached_at"])
+        age_h = (datetime.now(timezone.utc) - cached_at).total_seconds() / 3600
+        if age_h > _ROSTER_CACHE_MAX_AGE_H:
+            logger.warning("Roster cache is %.1f h old — too stale to use", age_h)
+            return None
+        players = data.get("players", [])
+        logger.info("Loaded roster cache (%d players, %.1f h old)", len(players), age_h)
+        return players
+    except Exception:
+        logger.debug("Failed to load roster cache")
+        return None
+
+
 def get_all_players() -> list[dict]:
     """
     Fetch both clients and recruits, combined.
+    Falls back to cached roster if Google Sheets is unreachable.
     """
-    clients = get_active_roster()
-    recruits = get_recruits()
-    return clients + recruits
+    try:
+        clients = get_active_roster()
+        recruits = get_recruits()
+        players = clients + recruits
+        _save_roster_cache(players)
+        return players
+    except Exception:
+        logger.warning("Roster fetch failed — trying cached roster")
+        cached = _load_roster_cache()
+        if cached:
+            return cached
+        logger.error("No roster available (fetch failed, no usable cache)")
+        return []
