@@ -109,10 +109,9 @@ def _already_sent(game_date: str, player_name: str, alert_type: str,
 
 
 def _mark_sent(game_date: str, player_name: str, alert_type: str, value=True):
-    """Mark an alert as sent and persist to disk."""
+    """Mark an alert as sent (in-memory). Call save_sent_alerts() to persist."""
     key = _alert_key(game_date, player_name, alert_type)
     _sent_alerts[key] = value
-    _save_sent_alerts()
 
 
 # ---------------------------------------------------------------------------
@@ -176,7 +175,10 @@ def check_and_send_alerts(player: dict, stats: dict):
 
     # --- Alert: Home Run (any player, any tier) ---
     # Value-aware: re-alerts if HR count increases (e.g. 1→2)
-    hr = stats.get("home_runs", 0)
+    try:
+        hr = int(stats.get("home_runs", 0))
+    except (ValueError, TypeError):
+        hr = 0
     if hr > 0 and not _already_sent(game_date, name, "hr", current_value=hr):
         hr_text = f"{hr} HRs" if hr > 1 else "a HR"
         send_slack_message(
@@ -187,7 +189,10 @@ def check_and_send_alerts(player: dict, stats: dict):
 
     # --- Alert: Pitcher enters game (any pitcher, any tier) ---
     is_pitching = stats.get("is_pitcher_line", False) or position == "Pitcher"
-    ip = stats.get("ip", 0.0)
+    try:
+        ip = float(stats.get("ip", 0.0))
+    except (ValueError, TypeError):
+        ip = 0.0
 
     if is_pitching and ip > 0 and not _already_sent(game_date, name, "entered"):
         send_slack_message(
@@ -197,7 +202,10 @@ def check_and_send_alerts(player: dict, stats: dict):
         _mark_sent(game_date, name, "entered")
 
     # --- Alert: Pitcher 5+ strikeouts (any pitcher, any tier) ---
-    strikeouts = stats.get("strikeouts", 0)
+    try:
+        strikeouts = int(stats.get("strikeouts", 0))
+    except (ValueError, TypeError):
+        strikeouts = 0
     if is_pitching and strikeouts >= 5 and not _already_sent(game_date, name, "5k"):
         send_slack_message(
             f"🎯 *{name}* ({tier_label}) has {strikeouts} K's!\n"
@@ -207,8 +215,14 @@ def check_and_send_alerts(player: dict, stats: dict):
 
     # --- Alert: T1/T2 hitter reaches base 3+ times ---
     if tier <= 2 and position in ("Hitter", "Two-Way") and not stats.get("is_pitcher_line"):
-        hits = stats.get("hits", 0)
-        walks = stats.get("walks", 0)
+        try:
+            hits = int(stats.get("hits", 0))
+        except (ValueError, TypeError):
+            hits = 0
+        try:
+            walks = int(stats.get("walks", 0))
+        except (ValueError, TypeError):
+            walks = 0
         times_on_base = hits + walks
 
         if times_on_base >= 3 or hits >= 3:
@@ -219,6 +233,11 @@ def check_and_send_alerts(player: dict, stats: dict):
                     f"_{team}_ — {stats.get('stats_summary', '')} — {game_context}"
                 )
                 _mark_sent(game_date, name, "3ob")
+
+
+def save_sent_alerts():
+    """Persist alert state to disk. Call once after all alerts are processed."""
+    _save_sent_alerts()
 
 
 def reset_sent_alerts():

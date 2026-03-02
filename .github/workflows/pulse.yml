@@ -63,6 +63,8 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           set -eo pipefail
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then echo "⚠️ SLACK_WEBHOOK_URL not set — alerts will be skipped"; fi
+          if [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
           python -c "import src.config; import src.roster_manager; import src.stats_engine; import src.performance_analyzer; import src.alerts; print('All imports OK')"
           python main.py 2>&1 | tee /dev/stderr
 

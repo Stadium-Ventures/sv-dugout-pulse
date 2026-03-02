@@ -53,6 +53,29 @@ _http = _make_http_session()
 
 
 # =============================================================================
+# Shared utilities
+# =============================================================================
+
+def ip_to_outs(ip_val) -> int:
+    """Convert innings pitched (e.g. '6.1') to total outs (e.g. 19)."""
+    ip_str = str(ip_val)
+    try:
+        if "." in ip_str:
+            parts = ip_str.split(".")
+            return (int(parts[0]) * 3) + int(parts[1])
+        return int(float(ip_str)) * 3
+    except (ValueError, IndexError):
+        return 0
+
+
+def outs_to_ip_display(outs: int) -> str:
+    """Convert total outs back to IP display format (e.g. 19 -> '6.1')."""
+    innings = outs // 3
+    partial = outs % 3
+    return f"{innings}.{partial}" if partial else str(innings)
+
+
+# =============================================================================
 # MLB Historical Stats (Pro 7D + Season)
 # =============================================================================
 
@@ -382,21 +405,8 @@ class MLBHistoricalFetcher:
             "is_pitcher": True,
         }
 
-    @staticmethod
-    def _ip_to_outs(ip_str: str) -> int:
-        try:
-            if "." in ip_str:
-                parts = ip_str.split(".")
-                return (int(parts[0]) * 3) + int(parts[1])
-            return int(float(ip_str)) * 3
-        except (ValueError, IndexError):
-            return 0
-
-    @staticmethod
-    def _outs_to_ip_display(outs: int) -> str:
-        innings = outs // 3
-        partial = outs % 3
-        return f"{innings}.{partial}" if partial else str(innings)
+    _ip_to_outs = staticmethod(ip_to_outs)
+    _outs_to_ip_display = staticmethod(outs_to_ip_display)
 
 
 # =============================================================================
@@ -697,7 +707,14 @@ class NCAAGameLogAggregator:
                 with open(NCAA_GAME_LOG_PATH) as f:
                     self._log = json.load(f)
             except Exception:
-                logger.warning("Failed to load NCAA game log")
+                logger.error("NCAA game log is corrupted — backing up and starting fresh")
+                try:
+                    backup = NCAA_GAME_LOG_PATH + ".corrupt"
+                    import shutil
+                    shutil.copy2(NCAA_GAME_LOG_PATH, backup)
+                    logger.error("Corrupted log backed up to %s", backup)
+                except Exception:
+                    pass
         # Normalize dates and deduplicate
         for key, entries in self._log.items():
             seen = set()
@@ -719,22 +736,8 @@ class NCAAGameLogAggregator:
                 return d
         return d
 
-    @staticmethod
-    def _ip_to_outs(ip_val) -> int:
-        ip_str = str(ip_val)
-        try:
-            if "." in ip_str:
-                parts = ip_str.split(".")
-                return (int(parts[0]) * 3) + int(parts[1])
-            return int(float(ip_str)) * 3
-        except (ValueError, IndexError):
-            return 0
-
-    @staticmethod
-    def _outs_to_ip_display(outs: int) -> str:
-        innings = outs // 3
-        partial = outs % 3
-        return f"{innings}.{partial}" if partial else str(innings)
+    _ip_to_outs = staticmethod(ip_to_outs)
+    _outs_to_ip_display = staticmethod(outs_to_ip_display)
 
     def _is_pitcher_entry(self, stats: dict) -> bool:
         """Check if a game log entry is a pitcher line (has ip field)."""

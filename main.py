@@ -23,7 +23,7 @@ from datetime import date, datetime, timedelta, timezone
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
-from src.alerts import check_and_send_alerts, reset_sent_alerts
+from src.alerts import check_and_send_alerts, reset_sent_alerts, save_sent_alerts
 from src.config import (
     NCAA_GAME_LOG_PATH,
     OUTPUT_PATH,
@@ -174,27 +174,32 @@ def _flush_ncaa_game_log():
             with open(NCAA_GAME_LOG_PATH) as f:
                 log = json.load(f)
         except Exception:
+            logger.error("NCAA game log corrupted during flush — starting fresh for this batch")
             log = {}
 
-    added = 0
-    for key, game_date, opponent, entry_stats in _ncaa_log_pending:
-        entries = log.get(key, [])
-
-        # Normalize existing dates and deduplicate
-        seen = set()
+    # Pre-build seen sets for ALL keys at once (avoids re-reading during iteration)
+    seen_by_key: dict[str, set] = {}
+    for key, entries in log.items():
         clean = []
+        seen = set()
         for e in entries:
             e["date"] = _normalize_date(e.get("date", ""))
             if e["date"] not in seen:
                 seen.add(e["date"])
                 clean.append(e)
-        entries = clean
+        log[key] = clean
+        seen_by_key[key] = seen
+
+    added = 0
+    for key, game_date, opponent, entry_stats in _ncaa_log_pending:
+        seen = seen_by_key.get(key, set())
 
         # Only append if we don't already have this date
         if game_date not in seen:
-            entries.append({"date": game_date, "opponent": opponent, "stats": entry_stats})
+            log.setdefault(key, []).append({"date": game_date, "opponent": opponent, "stats": entry_stats})
+            seen.add(game_date)
+            seen_by_key[key] = seen
             added += 1
-        log[key] = entries
 
     if added > 0:
         _atomic_json_write(NCAA_GAME_LOG_PATH, log, indent=2, ensure_ascii=False)
@@ -495,6 +500,11 @@ def run_live():
     """Full pipeline: fetch roster + recruits -> fetch stats -> grade -> alert -> write JSON."""
     logger.info("Starting live pulse run")
 
+    # Warn early if Slack webhook is missing (alerts will be silently skipped)
+    from src.alerts import SLACK_WEBHOOK_URL
+    if not SLACK_WEBHOOK_URL or "YOUR_WEBHOOK" in SLACK_WEBHOOK_URL:
+        logger.warning("SLACK_WEBHOOK_URL not configured — alerts will be skipped this run")
+
     _rotate_yesterday()
     reset_sent_alerts()
 
@@ -550,6 +560,7 @@ def run_live():
     # Send alerts serially to avoid Slack rate limits
     for player, stats in alert_queue:
         check_and_send_alerts(player, stats)
+    save_sent_alerts()  # Persist all alert state in one write
 
     _flush_ncaa_game_log()
 
