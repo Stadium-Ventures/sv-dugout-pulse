@@ -346,6 +346,9 @@
   /* ---- Yesterday badge ---- */
   .badge-yesterday { background: rgba(245,158,11,0.2); color: var(--accent-orange); }
 
+  /* ---- Doubleheader game number badge ---- */
+  .badge-gm { background: var(--accent-blue); color: #fff; }
+
   /* ---- Stale data banner ---- */
   .stale-banner {
     display: none;
@@ -909,6 +912,7 @@ function renderCard(p) {
           ? `<a class="player-name" href="${esc(p.player_profile_url, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
           : `<span class="player-name">${esc(p.player_name)}</span>`}
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
+        ${p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
         <span class="badge badge-tier-dim">T${pri}</span>
@@ -1084,7 +1088,7 @@ function renderWindowCard(p) {
   // Game log drill-down (7D only)
   let gameLogHtml = '';
   if (p.game_log && p.game_log.length > 0) {
-    const logId = 'gl-' + p.player_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+    const logId = 'gl-' + p.player_name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '') + (p.game_number ? `-gm${p.game_number}` : '');
     const rows = p.game_log.map(g => {
       const d = new Date(g.date + 'T12:00:00');
       const dateStr = `${d.getMonth()+1}/${d.getDate()}`;

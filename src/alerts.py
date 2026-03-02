@@ -85,19 +85,23 @@ def _save_sent_alerts():
 # Dedup helpers
 # ---------------------------------------------------------------------------
 
-def _alert_key(game_date: str, player_name: str, alert_type: str) -> str:
-    """Key format: 'YYYY-MM-DD|PlayerName:type' — date prefix enables auto-pruning."""
-    return f"{game_date}|{player_name}:{alert_type}"
+def _alert_key(game_date: str, player_name: str, alert_type: str,
+               game_number: int = 0) -> str:
+    """Key format: 'YYYY-MM-DD|PlayerName:type[:gmN]' — date prefix enables auto-pruning."""
+    base = f"{game_date}|{player_name}:{alert_type}"
+    if game_number:
+        base += f":gm{game_number}"
+    return base
 
 
 def _already_sent(game_date: str, player_name: str, alert_type: str,
-                  current_value=None) -> bool:
+                  current_value=None, game_number: int = 0) -> bool:
     """Check if this alert was already sent (persists across runs).
 
     For value-aware alerts (like HR count), re-triggers if current_value
     exceeds the previously alerted value.
     """
-    key = _alert_key(game_date, player_name, alert_type)
+    key = _alert_key(game_date, player_name, alert_type, game_number)
     if key not in _sent_alerts:
         return False
     # Value-aware check: re-alert if the stat increased (e.g. 2nd HR)
@@ -108,9 +112,10 @@ def _already_sent(game_date: str, player_name: str, alert_type: str,
     return True
 
 
-def _mark_sent(game_date: str, player_name: str, alert_type: str, value=True):
+def _mark_sent(game_date: str, player_name: str, alert_type: str,
+               value=True, game_number: int = 0):
     """Mark an alert as sent (in-memory). Call save_sent_alerts() to persist."""
-    key = _alert_key(game_date, player_name, alert_type)
+    key = _alert_key(game_date, player_name, alert_type, game_number)
     _sent_alerts[key] = value
 
 
@@ -166,12 +171,14 @@ def check_and_send_alerts(player: dict, stats: dict):
     game_context = stats.get("game_context", "")
     game_status = stats.get("game_status", "N/A")
     game_date = stats.get("game_date") or date.today().isoformat()
+    game_number = stats.get("game_number") or 0
 
     # Skip if no game data
     if game_status == "N/A":
         return
 
     tier_label = f"T{tier}" if tier <= 4 else "T?"
+    gm_label = f" (Gm {game_number})" if game_number else ""
 
     # --- Alert: Home Run (any player, any tier) ---
     # Value-aware: re-alerts if HR count increases (e.g. 1→2)
@@ -179,13 +186,13 @@ def check_and_send_alerts(player: dict, stats: dict):
         hr = int(stats.get("home_runs", 0))
     except (ValueError, TypeError):
         hr = 0
-    if hr > 0 and not _already_sent(game_date, name, "hr", current_value=hr):
+    if hr > 0 and not _already_sent(game_date, name, "hr", current_value=hr, game_number=game_number):
         hr_text = f"{hr} HRs" if hr > 1 else "a HR"
         send_slack_message(
-            f"⚾ *{name}* ({tier_label}) just hit {hr_text}!\n"
+            f"⚾ *{name}* ({tier_label}) just hit {hr_text}{gm_label}!\n"
             f"_{team}_ — {game_context}"
         )
-        _mark_sent(game_date, name, "hr", value=hr)
+        _mark_sent(game_date, name, "hr", value=hr, game_number=game_number)
 
     # --- Alert: Pitcher enters game (any pitcher, any tier) ---
     is_pitching = stats.get("is_pitcher_line", False) or position == "Pitcher"
@@ -194,24 +201,24 @@ def check_and_send_alerts(player: dict, stats: dict):
     except (ValueError, TypeError):
         ip = 0.0
 
-    if is_pitching and ip > 0 and not _already_sent(game_date, name, "entered"):
+    if is_pitching and ip > 0 and not _already_sent(game_date, name, "entered", game_number=game_number):
         send_slack_message(
-            f"🔥 *{name}* ({tier_label}) is pitching!\n"
+            f"🔥 *{name}* ({tier_label}) is pitching{gm_label}!\n"
             f"_{team}_ — {game_context}"
         )
-        _mark_sent(game_date, name, "entered")
+        _mark_sent(game_date, name, "entered", game_number=game_number)
 
     # --- Alert: Pitcher 5+ strikeouts (any pitcher, any tier) ---
     try:
         strikeouts = int(stats.get("strikeouts", 0))
     except (ValueError, TypeError):
         strikeouts = 0
-    if is_pitching and strikeouts >= 5 and not _already_sent(game_date, name, "5k"):
+    if is_pitching and strikeouts >= 5 and not _already_sent(game_date, name, "5k", game_number=game_number):
         send_slack_message(
-            f"🎯 *{name}* ({tier_label}) has {strikeouts} K's!\n"
+            f"🎯 *{name}* ({tier_label}) has {strikeouts} K's{gm_label}!\n"
             f"_{team}_ — {game_context}"
         )
-        _mark_sent(game_date, name, "5k")
+        _mark_sent(game_date, name, "5k", game_number=game_number)
 
     # --- Alert: T1/T2 hitter reaches base 3+ times ---
     if tier <= 2 and position in ("Hitter", "Two-Way") and not stats.get("is_pitcher_line"):
@@ -226,13 +233,13 @@ def check_and_send_alerts(player: dict, stats: dict):
         times_on_base = hits + walks
 
         if times_on_base >= 3 or hits >= 3:
-            if not _already_sent(game_date, name, "3ob"):
+            if not _already_sent(game_date, name, "3ob", game_number=game_number):
                 send_slack_message(
                     f"💪 *{name}* ({tier_label}) has reached base "
-                    f"{times_on_base if times_on_base >= 3 else hits}+ times!\n"
+                    f"{times_on_base if times_on_base >= 3 else hits}+ times{gm_label}!\n"
                     f"_{team}_ — {stats.get('stats_summary', '')} — {game_context}"
                 )
-                _mark_sent(game_date, name, "3ob")
+                _mark_sent(game_date, name, "3ob", game_number=game_number)
 
 
 def save_sent_alerts():

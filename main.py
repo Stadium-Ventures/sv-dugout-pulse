@@ -177,15 +177,17 @@ def _flush_ncaa_game_log():
             logger.error("NCAA game log corrupted during flush — starting fresh for this batch")
             log = {}
 
-    # Pre-build seen sets for ALL keys at once (avoids re-reading during iteration)
+    # Pre-build seen sets for ALL keys at once (avoids re-reading during iteration).
+    # Uses date|opponent composite key so both games of a doubleheader are logged.
     seen_by_key: dict[str, set] = {}
     for key, entries in log.items():
         clean = []
         seen = set()
         for e in entries:
             e["date"] = _normalize_date(e.get("date", ""))
-            if e["date"] not in seen:
-                seen.add(e["date"])
+            dedup = f"{e['date']}|{e.get('opponent', '')}"
+            if dedup not in seen:
+                seen.add(dedup)
                 clean.append(e)
         log[key] = clean
         seen_by_key[key] = seen
@@ -194,10 +196,11 @@ def _flush_ncaa_game_log():
     for key, game_date, opponent, entry_stats in _ncaa_log_pending:
         seen = seen_by_key.get(key, set())
 
-        # Only append if we don't already have this date
-        if game_date not in seen:
+        # Only append if we don't already have this date|opponent combo
+        dedup = f"{game_date}|{opponent}"
+        if dedup not in seen:
             log.setdefault(key, []).append({"date": game_date, "opponent": opponent, "stats": entry_stats})
-            seen.add(game_date)
+            seen.add(dedup)
             seen_by_key[key] = seen
             added += 1
 
@@ -271,7 +274,7 @@ def _sanitize_stats(stats: dict) -> dict:
 
 def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     """Assemble a single player's output record."""
-    return {
+    entry = {
         "player_name": player["player_name"],
         "team": player["team"],
         "level": player["level"],
@@ -293,6 +296,10 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
             "roster_priority": player.get("roster_priority", 99),
         },
     }
+    gn = stats.get("game_number")
+    if gn:
+        entry["game_number"] = gn
+    return entry
 
 
 def _rotate_yesterday():
@@ -380,14 +387,21 @@ def _supplement_yesterday(pulse: list):
         except Exception:
             pass
 
-    existing_by_name = {p["player_name"]: p for p in existing}
+    # Dedup key: (player_name, game_number) so doubleheader games don't collide
+    def _dedup_key(p):
+        return (p["player_name"], p.get("game_number") or 0)
+
+    existing_by_key = {_dedup_key(p): p for p in existing}
     for entry in new_entries:
-        old = existing_by_name.get(entry["player_name"])
+        key = _dedup_key(entry)
+        old = existing_by_key.get(key)
         if old is None:
             existing.append(entry)
+            existing_by_key[key] = entry
         elif "DNP" in old.get("stats_summary", "") and "DNP" not in entry.get("stats_summary", ""):
-            existing[:] = [p for p in existing if p["player_name"] != entry["player_name"]]
+            existing[:] = [p for p in existing if _dedup_key(p) != key]
             existing.append(entry)
+            existing_by_key[key] = entry
 
     # Strip internal flags before writing
     for p in existing:
@@ -419,12 +433,17 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         except Exception:
             pass
 
-    confirmed_names = {
-        p["player_name"] for p in existing
+    # Dedup key: (player_name, game_number) so doubleheader games don't collide
+    def _dedup_key(p):
+        return (p["player_name"], p.get("game_number") or 0)
+
+    confirmed_keys = {
+        _dedup_key(p) for p in existing
         if "DNP" not in p.get("stats_summary", "")
         and not p.get("_needs_refresh")
     }
-    existing_by_name = {p["player_name"]: p for p in existing}
+    confirmed_names = {k[0] for k in confirmed_keys}
+    existing_by_key = {_dedup_key(p): p for p in existing}
 
     # Filter to players that need fetching
     to_fetch = [p for p in all_players if p["player_name"] not in confirmed_names]
@@ -450,7 +469,7 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
                 return None
             if stats.get("game_date") != yesterday_str:
                 return None
-            if "DNP" in stats.get("stats_summary", "") and name in existing_by_name:
+            if "DNP" in stats.get("stats_summary", "") and name in {k[0] for k in existing_by_key}:
                 return None
 
             _append_to_ncaa_game_log(player, stats)
@@ -473,13 +492,14 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
     added = 0
     updated = 0
     for entry in results:
-        name = entry["player_name"]
-        if name in existing_by_name:
-            existing[:] = [p for p in existing if p["player_name"] != name]
+        key = _dedup_key(entry)
+        if key in existing_by_key:
+            existing[:] = [p for p in existing if _dedup_key(p) != key]
             updated += 1
         else:
             added += 1
         existing.append(entry)
+        existing_by_key[key] = entry
 
     # Strip internal _needs_refresh flag before writing output
     for p in existing:
@@ -521,29 +541,39 @@ def run_live():
     analyzer = PerformanceAnalyzer()
 
     def _process_player(player):
-        """Process a single player — safe for concurrent execution."""
+        """Process a single player — safe for concurrent execution.
+
+        Returns (entries_list, alert_data_list) to support doubleheaders.
+        """
         name = player["player_name"]
         is_client = player.get("is_client", True)
         try:
-            stats = fetcher.fetch(player)
-            stats = _sanitize_stats(stats)
-            _append_to_ncaa_game_log(player, stats)
-            analysis = analyzer.analyze(player, stats)
-            entry = build_pulse_entry(player, stats, analysis)
+            all_stats = fetcher.fetch_all(player)
+            entries = []
+            alert_data_list = []
+            for stats in all_stats:
+                stats = _sanitize_stats(stats)
+                _append_to_ncaa_game_log(player, stats)
+                analysis = analyzer.analyze(player, stats)
+                entry = build_pulse_entry(player, stats, analysis)
 
-            logger.info(
-                "%s%s | %s | %s",
-                name,
-                "" if is_client else " [following]",
-                stats.get("stats_summary", "—"),
-                analysis["performance_grade"],
-            )
-            # Return entry + alert data (alerts sent serially after pool)
-            alert_data = (player, stats) if is_client else None
-            return entry, alert_data
+                gn_label = f" Gm {stats.get('game_number', '')}" if stats.get("game_number") else ""
+                logger.info(
+                    "%s%s%s | %s | %s",
+                    name,
+                    "" if is_client else " [following]",
+                    gn_label,
+                    stats.get("stats_summary", "—"),
+                    analysis["performance_grade"],
+                )
+                entries.append(entry)
+                if is_client:
+                    alert_data_list.append((player, stats))
+
+            return entries, alert_data_list
         except Exception:
             logger.exception("Failed to process %s — skipping", name)
-            return None, None
+            return [], []
 
     pulse = []
     alert_queue = []
@@ -551,11 +581,11 @@ def run_live():
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = {executor.submit(_process_player, p): p for p in all_players}
         for future in as_completed(futures):
-            entry, alert_data = future.result()
-            if entry:
-                pulse.append(entry)
-            if alert_data:
-                alert_queue.append(alert_data)
+            entries, alert_data_list = future.result()
+            if entries:
+                pulse.extend(entries)
+            if alert_data_list:
+                alert_queue.extend(alert_data_list)
 
     # Send alerts serially to avoid Slack rate limits
     for player, stats in alert_queue:
