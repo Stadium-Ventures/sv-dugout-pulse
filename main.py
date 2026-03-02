@@ -15,6 +15,7 @@ import logging
 import os
 import re
 import sys
+import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -51,6 +52,19 @@ def _today_et() -> date:
     if now.hour < _DAY_FLIP_HOUR:
         return (now - timedelta(days=1)).date()
     return now.date()
+
+
+def _atomic_json_write(path: str, data, **kwargs):
+    """Write JSON to *path* atomically via temp file + rename."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(data, f, **kwargs)
+        os.replace(tmp, path)
+    except BaseException:
+        os.unlink(tmp)
+        raise
 
 
 def _normalize_date(d: str) -> str:
@@ -183,9 +197,7 @@ def _flush_ncaa_game_log():
         log[key] = entries
 
     if added > 0:
-        os.makedirs(os.path.dirname(NCAA_GAME_LOG_PATH), exist_ok=True)
-        with open(NCAA_GAME_LOG_PATH, "w") as f:
-            json.dump(log, f, indent=2, ensure_ascii=False)
+        _atomic_json_write(NCAA_GAME_LOG_PATH, log, indent=2, ensure_ascii=False)
         logger.info("NCAA game log: flushed %d new entries (%d queued)", added, len(_ncaa_log_pending))
     else:
         logger.debug("NCAA game log: no new entries to flush (%d queued, all dupes)", len(_ncaa_log_pending))
@@ -205,6 +217,51 @@ def _build_profile_url(player: dict, stats: dict) -> str | None:
         q = quote(f'site:thebaseballcube.com "{name}"')
         return f"https://www.google.com/search?q={q}&btnI="
     return None
+
+
+def _sanitize_stats(stats: dict) -> dict:
+    """Clamp impossible stat values to prevent garbage data from reaching output."""
+    # Non-negative integer fields
+    for key in ("hits", "at_bats", "home_runs", "rbi", "runs", "walks",
+                "strikeouts", "doubles", "triples", "stolen_bases",
+                "earned_runs", "walks_allowed", "hits_allowed", "saves"):
+        val = stats.get(key)
+        if val is not None:
+            try:
+                val = int(val)
+            except (ValueError, TypeError):
+                val = 0
+            if val < 0:
+                logger.warning("Negative %s=%d — clamping to 0", key, val)
+                val = 0
+            stats[key] = val
+
+    # IP: non-negative, max 27 per game
+    ip = stats.get("ip")
+    if ip is not None:
+        try:
+            ip = float(ip)
+        except (ValueError, TypeError):
+            ip = 0.0
+        if ip < 0:
+            ip = 0.0
+        elif ip > 27.0:
+            logger.warning("IP=%s exceeds single-game max — clamping to 27", ip)
+            ip = 27.0
+        stats["ip"] = ip
+
+    # Relational: hits <= at_bats, hr <= hits
+    ab = stats.get("at_bats", 0)
+    h = stats.get("hits", 0)
+    hr = stats.get("home_runs", 0)
+    if ab > 0 and h > ab:
+        logger.warning("hits(%d) > at_bats(%d) — clamping hits", h, ab)
+        stats["hits"] = ab
+    if h > 0 and hr > h:
+        logger.warning("home_runs(%d) > hits(%d) — clamping HR", hr, h)
+        stats["home_runs"] = stats.get("hits", h)
+
+    return stats
 
 
 def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
@@ -283,9 +340,7 @@ def _rotate_yesterday():
             "source_date": yesterday_str,
             "players": candidates,
         }
-        os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
-        with open(YESTERDAY_PULSE_PATH, "w") as f:
-            json.dump(envelope, f, indent=2, ensure_ascii=False)
+        _atomic_json_write(YESTERDAY_PULSE_PATH, envelope, indent=2, ensure_ascii=False)
         live_count = sum(1 for p in candidates if p.get("_needs_refresh"))
         logger.info(
             "Rotated %d entries to yesterday_pulse.json (%d Final, %d Live needing refresh, from %s)",
@@ -338,9 +393,7 @@ def _supplement_yesterday(pulse: list):
         "source_date": yesterday_str,
         "players": existing,
     }
-    os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
-    with open(YESTERDAY_PULSE_PATH, "w") as f:
-        json.dump(envelope, f, indent=2, ensure_ascii=False)
+    _atomic_json_write(YESTERDAY_PULSE_PATH, envelope, indent=2, ensure_ascii=False)
     logger.info("Yesterday pulse: %d total entries", len(existing))
 
 
@@ -385,7 +438,10 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
                         time.sleep(1)
                     else:
                         raise
-            if stats is None or stats.get("game_status") != "Final":
+            if stats is None:
+                return None
+            stats = _sanitize_stats(stats)
+            if stats.get("game_status") != "Final":
                 return None
             if stats.get("game_date") != yesterday_str:
                 return None
@@ -431,9 +487,7 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         "source_date": yesterday_str,
         "players": existing,
     }
-    os.makedirs(os.path.dirname(YESTERDAY_PULSE_PATH), exist_ok=True)
-    with open(YESTERDAY_PULSE_PATH, "w") as f:
-        json.dump(envelope, f, indent=2, ensure_ascii=False)
+    _atomic_json_write(YESTERDAY_PULSE_PATH, envelope, indent=2, ensure_ascii=False)
     logger.info("Yesterday pulse: %d total entries (%d added, %d upgraded)", len(existing), added, updated)
 
 
@@ -462,6 +516,7 @@ def run_live():
         is_client = player.get("is_client", True)
         try:
             stats = fetcher.fetch(player)
+            stats = _sanitize_stats(stats)
             _append_to_ncaa_game_log(player, stats)
             analysis = analyzer.analyze(player, stats)
             entry = build_pulse_entry(player, stats, analysis)
@@ -565,13 +620,11 @@ def run_mock():
 
 def write_output(pulse: list[dict]):
     """Write the pulse list to data/current_pulse.json with generated_at envelope."""
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     envelope = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "players": pulse,
     }
-    with open(OUTPUT_PATH, "w") as f:
-        json.dump(envelope, f, indent=2, ensure_ascii=False)
+    _atomic_json_write(OUTPUT_PATH, envelope, indent=2, ensure_ascii=False)
     logger.info("Wrote %d entries to %s", len(pulse), OUTPUT_PATH)
 
 

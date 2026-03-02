@@ -1,5 +1,9 @@
 name: SV Dugout Pulse
 
+concurrency:
+  group: pulse-data
+  cancel-in-progress: false  # let running job finish; queue the next one
+
 on:
   schedule:
     # Historical aggregation - 6am ET daily (11:00 UTC)

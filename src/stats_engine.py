@@ -359,6 +359,15 @@ class ProStatsFetcher:
         self._today = _today_et()
         self._today_str = self._today.strftime("%m/%d/%Y")
 
+    def _refresh_today(self):
+        """Re-check today's date so long-running pipelines don't go stale."""
+        current = _today_et()
+        if current != self._today:
+            logger.info("Day flipped: %s -> %s — refreshing", self._today, current)
+            self._today = current
+            self._today_str = current.strftime("%m/%d/%Y")
+            self._games_cache.clear()
+
     # ----- public API -----
 
     def fetch(self, player: dict) -> dict:
@@ -366,6 +375,7 @@ class ProStatsFetcher:
         Given a normalized player dict, attempt to find today's game
         and return a stats dict. Also fetches next game info.
         """
+        self._refresh_today()
         team = player.get("team", "")
         name = player.get("player_name", "")
 
@@ -411,6 +421,7 @@ class ProStatsFetcher:
         Queries MLB/MiLB schedule for yesterday, finds the player's team's
         game, and extracts boxscore stats if the game is Final.
         """
+        self._refresh_today()
         team = player.get("team", "")
         name = player.get("player_name", "")
 
@@ -451,7 +462,7 @@ class ProStatsFetcher:
         # Search MLB schedule first
         try:
             schedule = statsapi.schedule(date=date_str, sportId=1)
-            game = self._match_team_in_schedule(schedule, team_lower)
+            game = self._match_team_in_schedule(schedule, team_lower, player_id)
             if game:
                 return game
         except Exception:
@@ -469,7 +480,7 @@ class ProStatsFetcher:
                         sportId=team_info["sport_id"],
                     )
                     game = self._match_team_in_schedule(
-                        schedule, team_info["name"].lower(),
+                        schedule, team_info["name"].lower(), player_id,
                     )
                     if game:
                         return game
@@ -582,7 +593,7 @@ class ProStatsFetcher:
         try:
             # --- 1. Search MLB schedule by roster team name ---
             mlb_schedule = self._get_schedule(sport_id=1)
-            game = self._match_team_in_schedule(mlb_schedule, team_lower)
+            game = self._match_team_in_schedule(mlb_schedule, team_lower, player_id)
             if game:
                 return game
 
@@ -596,7 +607,7 @@ class ProStatsFetcher:
                         team_id=api_team_id,
                     )
                     game = self._match_team_in_schedule(
-                        milb_schedule, team_info["name"].lower(),
+                        milb_schedule, team_info["name"].lower(), player_id,
                     )
                     if game:
                         return game
@@ -605,7 +616,7 @@ class ProStatsFetcher:
                     if team_info["parent_id"]:
                         parent_info = self._resolve_team(team_info["parent_id"])
                         game = self._match_team_in_schedule(
-                            mlb_schedule, parent_info["name"].lower(),
+                            mlb_schedule, parent_info["name"].lower(), player_id,
                         )
                         if game:
                             return game
@@ -614,10 +625,19 @@ class ProStatsFetcher:
             logger.exception("Error searching today's games for player %d", player_id)
         return None
 
-    def _match_team_in_schedule(self, schedule: list, team_lower: str) -> Optional[dict]:
-        """Find the first game in *schedule* matching *team_lower*."""
+    def _match_team_in_schedule(
+        self, schedule: list, team_lower: str, player_id: Optional[int] = None,
+    ) -> Optional[dict]:
+        """Find the best game in *schedule* matching *team_lower*.
+
+        For doubleheaders, checks all matching games and returns the one where
+        the player appears in the boxscore.  Falls back to the first match if
+        boxscores aren't available yet (Scheduled games) or player_id is None.
+        """
         if not team_lower:
             return None
+
+        matches = []
         for game in schedule:
             home_match = team_lower in game.get("home_name", "").lower()
             away_match = team_lower in game.get("away_name", "").lower()
@@ -630,13 +650,33 @@ class ProStatsFetcher:
                         boxscore = statsapi.boxscore_data(game["game_id"])
                     except Exception:
                         logger.debug("Boxscore fetch failed for game %s", game["game_id"])
-                return {
+                matches.append({
                     "game_id": game["game_id"],
                     "boxscore": boxscore,
                     "schedule": game,
                     "side": side,
-                }
-        return None
+                })
+
+        if not matches:
+            return None
+
+        # Single game or no player_id to check — return first match
+        if len(matches) == 1 or player_id is None:
+            return matches[0]
+
+        # Doubleheader: prefer the game where the player appears in the boxscore
+        for match in matches:
+            box = match["boxscore"]
+            if not box:
+                continue
+            for key in (f"{match['side']}Batters", f"{match['side']}Pitchers"):
+                for entry in box.get(key, []):
+                    if isinstance(entry, dict) and entry.get("personId") == player_id:
+                        return match
+
+        # Player not found in any boxscore — return the latest game
+        # (Game 2 is more likely to be in progress / upcoming)
+        return matches[-1]
 
     def _find_next_game(self, player_id: int, team: str) -> Optional[dict]:
         """Find the next scheduled game for a player's team.
@@ -1051,7 +1091,15 @@ class NCAAComScraper(BaseSchoolScraper):
         self._boxscore_cache: dict[str, dict] = {}
         self._today = _today_et()
 
+    def _refresh_today(self):
+        current = _today_et()
+        if current != self._today:
+            self._today = current
+            self._scoreboard_cache.clear()
+            self._boxscore_cache.clear()
+
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        self._refresh_today()
         try:
             all_games = self._find_all_games(team, yesterday_only=yesterday_only)
             if not all_games:
@@ -1425,7 +1473,14 @@ class D1BaseballScraper(BaseSchoolScraper):
         self._scores_cache: dict[str, str] = {}  # date_str -> HTML content
         self._today = _today_et()
 
+    def _refresh_today(self):
+        current = _today_et()
+        if current != self._today:
+            self._today = current
+            self._scores_cache.clear()
+
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        self._refresh_today()
         try:
             tiles = self._find_all_game_tiles(team, yesterday_only=yesterday_only)
             if not tiles:
@@ -2372,7 +2427,15 @@ class ESPNScraper(BaseSchoolScraper):
         self._summary_cache: dict[str, dict] = {}  # game_id -> summary JSON
         self._today = _today_et()
 
+    def _refresh_today(self):
+        current = _today_et()
+        if current != self._today:
+            self._today = current
+            self._scoreboard_cache.clear()
+            self._summary_cache.clear()
+
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+        self._refresh_today()
         try:
             all_games = self._find_all_games(team, yesterday_only=yesterday_only)
             if not all_games:

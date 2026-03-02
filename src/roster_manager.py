@@ -10,6 +10,7 @@ import io
 import json
 import logging
 import os
+import tempfile
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -129,13 +130,20 @@ _ROSTER_CACHE_MAX_AGE_H = 24
 def _save_roster_cache(players: list[dict]):
     """Persist roster to disk so we can fall back if Sheets is unreachable."""
     try:
-        os.makedirs(os.path.dirname(ROSTER_CACHE_PATH), exist_ok=True)
+        dir_path = os.path.dirname(ROSTER_CACHE_PATH)
+        os.makedirs(dir_path, exist_ok=True)
         payload = {
             "cached_at": datetime.now(timezone.utc).isoformat(),
             "players": players,
         }
-        with open(ROSTER_CACHE_PATH, "w") as f:
-            json.dump(payload, f, indent=2, ensure_ascii=False)
+        fd, tmp = tempfile.mkstemp(dir=dir_path, suffix=".tmp")
+        try:
+            with os.fdopen(fd, "w") as f:
+                json.dump(payload, f, indent=2, ensure_ascii=False)
+            os.replace(tmp, ROSTER_CACHE_PATH)
+        except BaseException:
+            os.unlink(tmp)
+            raise
         logger.debug("Saved roster cache (%d players)", len(players))
     except Exception:
         logger.debug("Failed to save roster cache — non-fatal")
