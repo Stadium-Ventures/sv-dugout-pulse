@@ -1699,7 +1699,7 @@ async function fetchHeartbeat() {
       if (name) heartbeatData.set(name, {
         status: (p.status || 'gray').toLowerCase(),
         loveScore: p.loveScore ?? p.love_score ?? null,
-        daysSinceContact: p.daysSinceContact ?? p.days_since_contact ?? null
+        daysSinceContact: p.daysSinceLeadContact ?? p.daysSinceContact ?? p.days_since_contact ?? null
       });
     }
   } catch (e) {
