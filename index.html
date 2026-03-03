@@ -212,6 +212,19 @@
   .badge-following { background: rgba(107,114,128,0.2); color: #9ca3af; }
   .badge-client { background: rgba(34,197,94,0.15); color: #86efac; }
 
+  /* ---- Heartbeat status heart ---- */
+  .heartbeat-link { text-decoration: none; flex-shrink: 0; }
+  .heartbeat-icon {
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .heartbeat-icon:hover { transform: scale(1.2); }
+  .heartbeat-red    { color: #ef4444; }
+  .heartbeat-yellow { color: #eab308; }
+  .heartbeat-green  { color: #22c55e; }
+  .heartbeat-gray   { color: #6b7280; }
+
   .team-name {
     color: var(--text-dim);
     font-size: 0.8rem;
@@ -801,6 +814,7 @@ let yesterdaySourceDate = null;
 let autoRefreshTimer = null;
 let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all' };
 let searchQuery = '';
+let heartbeatData = new Map();
 
 // Time window state
 let currentWindow = 'today';
@@ -871,6 +885,22 @@ function matchesFilters(p) {
   return true;
 }
 
+function heartbeatHtml(playerName, isClient) {
+  if (!isClient) return '';
+  const key = playerName.toLowerCase();
+  const hb = heartbeatData.get(key);
+  const status = hb ? hb.status : 'gray';
+  const colorClass = 'heartbeat-' + status;
+  let title;
+  if (hb) {
+    title = 'Love Score: ' + hb.loveScore;
+    if (hb.daysSinceContact != null) title += ' \u2014 Last contact: ' + hb.daysSinceContact + ' day' + (hb.daysSinceContact !== 1 ? 's' : '') + ' ago';
+  } else {
+    title = 'No Heartbeat data';
+  }
+  return `<a class="heartbeat-link" href="https://sv-heartbeat.vercel.app/" target="_blank" rel="noopener" title="${esc(title, true)}"><span class="heartbeat-icon ${colorClass}">\u2665</span></a>`;
+}
+
 function renderCard(p) {
   const gk = gradeKey(p.performance_grade);
   const gc = GRADE_CLASS[gk] || 'grade-nodata';
@@ -911,6 +941,7 @@ function renderCard(p) {
         ${p.player_profile_url
           ? `<a class="player-name" href="${esc(p.player_profile_url, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
           : `<span class="player-name">${esc(p.player_name)}</span>`}
+        ${heartbeatHtml(p.player_name, isClient)}
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         ${p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
@@ -1131,6 +1162,7 @@ function renderWindowCard(p) {
         ${profileUrl
           ? `<a class="player-name" href="${esc(profileUrl, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
           : `<span class="player-name">${esc(p.player_name)}</span>`}
+        ${heartbeatHtml(p.player_name, isClient)}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
@@ -1655,9 +1687,33 @@ async function refreshData() {
   }
 }
 
+// Fetch Heartbeat summary (fire-and-forget, graceful degradation)
+async function fetchHeartbeat() {
+  try {
+    const resp = await fetch('https://sv-heartbeat.vercel.app/api/heartbeat/summary');
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const entries = Array.isArray(data) ? data : (data.players || data.summary || []);
+    for (const p of entries) {
+      const name = (p.name || p.player_name || '').toLowerCase();
+      if (name) heartbeatData.set(name, {
+        status: (p.status || 'gray').toLowerCase(),
+        loveScore: p.loveScore ?? p.love_score ?? null,
+        daysSinceContact: p.daysSinceContact ?? p.days_since_contact ?? null
+      });
+    }
+  } catch (e) {
+    // Heartbeat unavailable — hearts won't render, that's fine
+  }
+}
+
 // Load data — supports both envelope {generated_at, players} and legacy array
 (async () => {
-  const raw = await _fetchWithRetry('data/current_pulse.json?t=' + Date.now(), 2, 3000);
+  // Fetch pulse data and heartbeat in parallel
+  const [raw] = await Promise.all([
+    _fetchWithRetry('data/current_pulse.json?t=' + Date.now(), 2, 3000),
+    fetchHeartbeat()
+  ]);
   if (raw) {
     if (Array.isArray(raw)) {
       allPlayers = raw;
