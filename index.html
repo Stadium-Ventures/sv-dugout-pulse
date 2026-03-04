@@ -220,10 +220,14 @@
     transition: transform 0.15s;
   }
   .heartbeat-icon:hover { transform: scale(1.2); }
-  .heartbeat-red    { color: #ef4444; }
+  .heartbeat-red    { color: #ef4444; animation: heart-pulse 2s ease-in-out infinite; }
   .heartbeat-yellow { color: #eab308; }
   .heartbeat-green  { color: #22c55e; }
   .heartbeat-gray   { color: #6b7280; }
+  @keyframes heart-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+  }
 
   .team-name {
     color: var(--text-dim);
@@ -774,6 +778,12 @@
     <button class="filter-btn" data-value="Final">Final</button>
     <button class="filter-btn" data-value="Cancelled">Postponed</button>
   </div>
+  <div class="filter-group" data-filter="heartbeat">
+    <button class="filter-btn active" data-value="all">&#x2665; All</button>
+    <button class="filter-btn" data-value="red" style="color:#ef4444">&#x2665;</button>
+    <button class="filter-btn" data-value="yellow" style="color:#eab308">&#x2665;</button>
+    <button class="filter-btn" data-value="green" style="color:#22c55e">&#x2665;</button>
+  </div>
   <div class="filter-group" data-filter="grade">
     <button class="filter-btn active" data-value="all">All</button>
     <button class="filter-btn" data-value="Milestone">&#x1f48e;</button>
@@ -812,7 +822,7 @@ let allPlayers = [];
 let dataGeneratedAt = null;
 let yesterdaySourceDate = null;
 let autoRefreshTimer = null;
-let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all' };
+let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all', heartbeat:'all' };
 let searchQuery = '';
 let heartbeatData = new Map();
 
@@ -882,6 +892,11 @@ function matchesFilters(p) {
   if (filters.position !== 'all' && p.tags.position !== filters.position) return false;
   if (filters.status !== 'all' && p.game_status !== filters.status) return false;
   if (filters.grade !== 'all' && !p.performance_grade.includes(filters.grade)) return false;
+  if (filters.heartbeat !== 'all') {
+    if (p.is_client === false) return false;
+    const hb = heartbeatData.get(p.player_name.toLowerCase());
+    if ((hb ? hb.status : 'gray') !== filters.heartbeat) return false;
+  }
   return true;
 }
 
@@ -1180,6 +1195,11 @@ function matchesWindowFilters(p) {
   if (filters.roster === 'following' && p.is_client !== false) return false;
   if (filters.level !== 'all' && p.level !== filters.level) return false;
   if (filters.position !== 'all' && p.tags?.position !== filters.position) return false;
+  if (filters.heartbeat !== 'all') {
+    if (p.is_client === false) return false;
+    const hb = heartbeatData.get(p.player_name.toLowerCase());
+    if ((hb ? hb.status : 'gray') !== filters.heartbeat) return false;
+  }
   return true;
 }
 
@@ -1258,8 +1278,10 @@ function render() {
       });
       document.getElementById('noGameList').innerHTML = sortedNoGame.map(p => {
         const nextText = p.next_game ? p.next_game.display : 'No game scheduled';
+        const isClient = p.is_client !== false;
         return `<div class="no-game-row">
           <span class="no-game-name">${esc(p.player_name)}</span>
+          ${heartbeatHtml(p.player_name, isClient)}
           <span class="no-game-team">${esc(p.team)}</span>
           <span class="no-game-next">${esc(nextText)}</span>
         </div>`;
@@ -1540,7 +1562,10 @@ function manageAutoRefresh() {
   if (shouldRefresh) {
     if (!autoRefreshTimer) {
       autoRefreshTimer = setInterval(async () => {
-        const raw = await _fetchWithRetry('data/current_pulse.json?t=' + Date.now());
+        const [raw] = await Promise.all([
+          _fetchWithRetry('data/current_pulse.json?t=' + Date.now()),
+          fetchHeartbeat()
+        ]);
         if (raw) {
           if (Array.isArray(raw)) {
             allPlayers = raw;
@@ -1665,7 +1690,10 @@ async function refreshData() {
   indicator.textContent = 'Refreshing...';
   indicator.style.color = '';
   const path = WINDOW_PATHS[currentWindow];
-  const raw = await _fetchWithRetry(path + '?t=' + Date.now());
+  const [raw] = await Promise.all([
+    _fetchWithRetry(path + '?t=' + Date.now()),
+    fetchHeartbeat()
+  ]);
   if (raw) {
     if (currentWindow === 'today') {
       allPlayers = Array.isArray(raw) ? raw : (raw.players || []);
