@@ -442,52 +442,64 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         if "DNP" not in p.get("stats_summary", "")
         and not p.get("_needs_refresh")
     }
-    confirmed_names = {k[0] for k in confirmed_keys}
     existing_by_key = {_dedup_key(p): p for p in existing}
 
-    # Filter to players that need fetching
-    to_fetch = [p for p in all_players if p["player_name"] not in confirmed_names]
+    # Players with a confirmed single-game entry (game_number=0) are fully done.
+    # Players with game_number > 0 may be missing another game from a
+    # doubleheader, so they must be re-fetched.
+    fully_confirmed_names = {
+        k[0] for k in confirmed_keys if k[1] == 0
+    }
+    to_fetch = [p for p in all_players if p["player_name"] not in fully_confirmed_names]
 
     def _fetch_one(player):
-        """Fetch + analyze a single player for yesterday — thread-safe."""
+        """Fetch + analyze a single player for yesterday — thread-safe.
+
+        Returns a list of pulse entries (supports doubleheaders).
+        """
         name = player["player_name"]
         try:
-            stats = None
+            all_stats = None
             for attempt in range(2):
                 try:
-                    stats = fetcher.fetch_yesterday(player)
+                    all_stats = fetcher.fetch_all_yesterday(player)
                     break
                 except Exception:
                     if attempt == 0:
                         time.sleep(1)
                     else:
                         raise
-            if stats is None:
-                return None
-            stats = _sanitize_stats(stats)
-            if stats.get("game_status") != "Final":
-                return None
-            if stats.get("game_date") != yesterday_str:
-                return None
-            if "DNP" in stats.get("stats_summary", "") and name in {k[0] for k in existing_by_key}:
-                return None
+            if not all_stats:
+                return []
 
-            _append_to_ncaa_game_log(player, stats)
-            stats["is_yesterday"] = True
-            analysis = analyzer.analyze(player, stats)
-            return build_pulse_entry(player, stats, analysis)
+            entries = []
+            for stats in all_stats:
+                stats = _sanitize_stats(stats)
+                if stats.get("game_status") != "Final":
+                    continue
+                if stats.get("game_date") != yesterday_str:
+                    continue
+                if "DNP" in stats.get("stats_summary", "") and name in {k[0] for k in existing_by_key}:
+                    continue
+
+                _append_to_ncaa_game_log(player, stats)
+                stats["is_yesterday"] = True
+                analysis = analyzer.analyze(player, stats)
+                entries.append(build_pulse_entry(player, stats, analysis))
+
+            return entries
         except Exception:
             logger.debug("Yesterday pass failed for %s after retry — skipping", name)
-            return None
+            return []
 
     # Fan out fetches concurrently, then merge results sequentially
     results = []
     with ThreadPoolExecutor(max_workers=6) as executor:
         futures = {executor.submit(_fetch_one, p): p for p in to_fetch}
         for future in as_completed(futures):
-            entry = future.result()
-            if entry:
-                results.append(entry)
+            entries = future.result()
+            if entries:
+                results.extend(entries)
 
     added = 0
     updated = 0

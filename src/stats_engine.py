@@ -322,6 +322,9 @@ def empty_stats() -> dict:
         "rbi": 0,
         "runs": 0,
         "stolen_bases": 0,
+        "doubles": 0,
+        "triples": 0,
+        "hit_by_pitch": 0,
         "ip": 0.0,
         "earned_runs": 0,
         "strikeouts": 0,
@@ -451,14 +454,24 @@ class ProStatsFetcher:
                     result["stats_summary"] = "No game scheduled"
                 return [result]
 
+            # Check ALL team games (not just player games) to detect
+            # doubleheaders even when the player only appears in one game.
+            all_team_games = self._find_all_todays_games_team_only(team, player_id)
+            is_doubleheader = len(all_team_games) > 1
+
+            # Build game_id → position map for correct numbering
+            team_game_ids = [g["game_id"] for g in all_team_games]
+
             results = []
-            is_doubleheader = len(games) > 1
-            for idx, game in enumerate(games, start=1):
+            for game in games:
                 result = self._extract_stats(player, player_id, game)
                 result["next_game"] = next_game
                 result["mlb_player_id"] = player_id
                 if is_doubleheader:
-                    result["game_number"] = idx
+                    try:
+                        result["game_number"] = team_game_ids.index(game["game_id"]) + 1
+                    except ValueError:
+                        result["game_number"] = len(results) + 1
                 results.append(result)
 
             return results
@@ -508,6 +521,75 @@ class ProStatsFetcher:
             logger.debug("Yesterday fetch failed for pro player %s", name)
             return None
 
+    def fetch_all_yesterday(self, player: dict) -> list[dict]:
+        """Fetch yesterday's Final stats from ALL games (supports doubleheaders).
+
+        Returns a list of stats dicts.  For non-doubleheader days this behaves
+        like ``[fetch_yesterday()]``.  When the team played a doubleheader,
+        each result gets a ``game_number`` field (1, 2, ...).
+
+        Also detects the Game-2-only case: if the team played 2 games but
+        the player only appeared in 1, the result still gets a ``game_number``
+        based on the game's position in the team's full schedule.
+        """
+        self._refresh_today()
+        team = player.get("team", "")
+        name = player.get("player_name", "")
+
+        if not team or team == "Unsigned":
+            return []
+
+        try:
+            mlb_id = player.get("mlb_id")
+            player_id = self._resolve_player_id(name, mlb_id)
+            if player_id is None:
+                return []
+
+            yesterday = self._today - timedelta(days=1)
+            yesterday_str = yesterday.strftime("%m/%d/%Y")
+            team_lower = team.lower()
+
+            # Get all games the player appeared in yesterday
+            player_games = self._find_all_games_on_date(
+                team_lower, yesterday_str, player_id=player_id,
+            )
+            if not player_games:
+                return []
+
+            # Get ALL team games yesterday (no player filter) for numbering
+            all_team_games = self._find_all_games_on_date(
+                team_lower, yesterday_str, player_id=None,
+            )
+            is_doubleheader = len(all_team_games) > 1
+
+            # Build a game_id → position map for numbering
+            team_game_ids = [g["game_id"] for g in all_team_games]
+
+            results = []
+            for game in player_games:
+                status = game["schedule"].get("status", "")
+                if status != "Final":
+                    continue
+
+                result = self._extract_stats(player, player_id, game)
+                result["is_yesterday"] = True
+                result["game_date"] = yesterday.isoformat()
+                result["mlb_player_id"] = player_id
+
+                if is_doubleheader:
+                    try:
+                        result["game_number"] = team_game_ids.index(game["game_id"]) + 1
+                    except ValueError:
+                        result["game_number"] = len(results) + 1
+
+                results.append(result)
+
+            return results
+
+        except Exception:
+            logger.debug("Yesterday-all fetch failed for pro player %s", name)
+            return []
+
     def _find_game_on_date(self, player_id: int, team_lower: str,
                            date_str: str) -> Optional[dict]:
         """Find a game on a specific date for a player's team."""
@@ -540,6 +622,66 @@ class ProStatsFetcher:
                     pass
 
         return None
+
+    def _find_all_games_on_date(
+        self, team_lower: str, date_str: str,
+        player_id: Optional[int] = None,
+    ) -> list[dict]:
+        """Find ALL games on *date_str* for *team_lower* (supports doubleheaders).
+
+        Mirrors ``_find_all_todays_games()`` but queries an arbitrary date via
+        ``statsapi.schedule(date=...)``.  Uses ``_match_all_in_schedule()`` to
+        collect every game instead of picking one.  Same MLB→MiLB→parent
+        fallback chain.
+
+        When *player_id* is ``None``, returns all team games regardless of
+        whether the player appears in the boxscore (useful for counting total
+        team games to detect doubleheaders).
+        """
+        try:
+            # --- 1. Search MLB schedule ---
+            try:
+                mlb_schedule = statsapi.schedule(date=date_str, sportId=1)
+            except Exception:
+                mlb_schedule = []
+            games = self._match_all_in_schedule(mlb_schedule, team_lower, player_id)
+            if games:
+                return games
+
+            # --- 2. Search player's actual MiLB team schedule ---
+            if player_id:
+                api_team_id = self._player_team_cache.get(player_id)
+                if api_team_id:
+                    team_info = self._resolve_team(api_team_id)
+                    if team_info["sport_id"] != 1:
+                        try:
+                            milb_schedule = statsapi.schedule(
+                                date=date_str,
+                                team=api_team_id,
+                                sportId=team_info["sport_id"],
+                            )
+                        except Exception:
+                            milb_schedule = []
+                        games = self._match_all_in_schedule(
+                            milb_schedule, team_info["name"].lower(), player_id,
+                        )
+                        if games:
+                            return games
+
+                        # --- 3. Fallback: parent MLB team ---
+                        if team_info["parent_id"]:
+                            parent_info = self._resolve_team(team_info["parent_id"])
+                            games = self._match_all_in_schedule(
+                                mlb_schedule, parent_info["name"].lower(), player_id,
+                            )
+                            if games:
+                                return games
+
+        except Exception:
+            logger.exception(
+                "Error searching all games on %s for team %s", date_str, team_lower,
+            )
+        return []
 
     # ----- internal helpers -----
 
@@ -718,6 +860,48 @@ class ProStatsFetcher:
 
         except Exception:
             logger.exception("Error searching all today's games for player %d", player_id)
+        return []
+
+    def _find_all_todays_games_team_only(
+        self, team: str, player_id: Optional[int] = None,
+    ) -> list[dict]:
+        """Find ALL of the team's games today, ignoring player boxscore presence.
+
+        Uses ``player_id=None`` in ``_match_all_in_schedule`` so every team
+        game is returned.  Schedule data is already cached by
+        ``_get_schedule()``, so this is essentially free.
+
+        When *player_id* is provided and no MLB games match, falls back to
+        the player's MiLB team schedule (same pattern as
+        ``_find_all_todays_games``).
+        """
+        team_lower = team.lower() if team else ""
+        if not team_lower:
+            return []
+        try:
+            # --- 1. MLB schedule ---
+            mlb_schedule = self._get_schedule(sport_id=1)
+            games = self._match_all_in_schedule(mlb_schedule, team_lower, None)
+            if games:
+                return games
+
+            # --- 2. MiLB schedule (if player_id known) ---
+            if player_id:
+                api_team_id = self._player_team_cache.get(player_id)
+                if api_team_id:
+                    team_info = self._resolve_team(api_team_id)
+                    if team_info["sport_id"] != 1:
+                        milb_schedule = self._get_schedule(
+                            sport_id=team_info["sport_id"],
+                            team_id=api_team_id,
+                        )
+                        games = self._match_all_in_schedule(
+                            milb_schedule, team_info["name"].lower(), None,
+                        )
+                        if games:
+                            return games
+        except Exception:
+            pass
         return []
 
     def _match_team_in_schedule(
@@ -1037,6 +1221,7 @@ class ProStatsFetcher:
         r = int(entry.get("r", 0))
         sb = int(entry.get("sb", 0))
         bb = int(entry.get("bb", 0))
+        hbp = int(entry.get("hbp", 0))
 
         parts = [f"{h}-{ab}"]
         if hr:
@@ -1051,6 +1236,8 @@ class ProStatsFetcher:
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if hbp:
+            parts.append(_fmt(hbp, "HBP"))
         if dbl:
             parts.append(_fmt(dbl, "2B"))
 
@@ -1062,7 +1249,10 @@ class ProStatsFetcher:
             "rbi": rbi,
             "runs": r,
             "stolen_bases": sb,
+            "doubles": dbl,
+            "triples": tpl,
             "walks": bb,
+            "hit_by_pitch": hbp,
         }
 
     @staticmethod
@@ -3153,40 +3343,83 @@ class NCAAStatsFetcher:
 
         return best_context  # may be None
 
-    def _waterfall_fetch_all(self, player: dict) -> list[dict]:
+    def _waterfall_fetch_all(self, player: dict, yesterday_only: bool = False) -> list[dict]:
         """Collect stats from ALL games when 2+ games exist (doubleheader).
 
         Tries D1Baseball → ESPN → NCAA.com in waterfall order. For each
         scraper, collects results from every game where the player has stats.
-        Returns [] if < 2 results found (caller falls back to single-game fetch()).
+        Returns [] if < 2 games detected (caller falls back to single-game fetch()).
+
+        When *yesterday_only* is True, only yesterday's Final games are
+        collected and the ``is_yesterday`` filter is flipped (skip today,
+        keep yesterday).
+
+        Each result carries a ``_game_position`` field (0-based) indicating
+        its position among ALL team games, used by the caller for correct
+        ``game_number`` assignment.
         """
         name = player.get("player_name", "")
         team = player.get("team", "")
 
-        # Detect doubleheader via ESPN game discovery
+        # --- Detection gate: confirm 2+ team games exist ---
+        # Primary: ESPN
         try:
-            espn_games = self._espn._find_all_games(team)
+            espn_games = self._espn._find_all_games(team, yesterday_only=yesterday_only)
         except Exception:
             espn_games = []
 
+        # Fallback detector: D1Baseball (if ESPN found < 2)
+        d1_tiles = []
         if len(espn_games) < 2:
-            return []  # Not a doubleheader; caller uses single fetch()
+            try:
+                d1_tiles = self._d1baseball._find_all_game_tiles(
+                    team, yesterday_only=yesterday_only,
+                )
+                # Filter to valid tiles
+                valid_tiles = [
+                    t for t in d1_tiles
+                    if t.get("status") not in ("Cancelled",)
+                    and (
+                        t.get("status") == "Final"
+                        if yesterday_only
+                        else not t.get("is_yesterday")
+                    )
+                ]
+                if len(valid_tiles) < 2:
+                    return []  # Not a doubleheader
+                logger.info(
+                    "D1Baseball fallback detected doubleheader for %s @ %s (%d tiles)",
+                    name, team, len(valid_tiles),
+                )
+            except Exception:
+                return []  # Neither ESPN nor D1Baseball found 2+ games
 
+        total_games_detected = max(len(espn_games), len(d1_tiles))
         logger.info(
-            "Doubleheader detected for %s @ %s (%d games) — trying multi-game fetch",
-            name, team, len(espn_games),
+            "Doubleheader detected for %s @ %s (%d games, yesterday_only=%s) — trying multi-game fetch",
+            name, team, total_games_detected, yesterday_only,
         )
+
+        # Helper: should this game/tile be skipped?
+        def _skip(is_yesterday_flag: bool) -> bool:
+            if yesterday_only:
+                return not is_yesterday_flag  # skip non-yesterday
+            return is_yesterday_flag  # skip yesterday
 
         # --- D1Baseball: iterate all game tiles ---
         try:
-            tiles = self._d1baseball._find_all_game_tiles(team)
+            tiles = d1_tiles or self._d1baseball._find_all_game_tiles(
+                team, yesterday_only=yesterday_only,
+            )
             if tiles and len(tiles) >= 2:
                 results = []
-                for tile_info in tiles:
+                for tile_idx, tile_info in enumerate(tiles):
                     tile_status = tile_info.get("status")
                     if tile_status in ("Cancelled",):
                         continue
-                    if tile_info.get("is_yesterday"):
+                    if _skip(tile_info.get("is_yesterday", False)):
+                        continue
+                    if yesterday_only and tile_status != "Final":
                         continue
 
                     context = self._d1baseball._build_tile_context(tile_info)
@@ -3201,14 +3434,16 @@ class NCAAStatsFetcher:
                             player_stats.pop("_sb_game_status", None)
                             player_stats.pop("_sb_inning_label", None)
                             context.update(player_stats)
+                            context["_game_position"] = tile_idx
                             results.append(context)
                     else:
                         player_stats = self._d1baseball._parse_sidearm_box_score(name, box_url)
                         if player_stats:
                             context.update(player_stats)
+                            context["_game_position"] = tile_idx
                             results.append(context)
 
-                if len(results) >= 2:
+                if results:
                     return results
         except Exception:
             logger.debug("D1Baseball doubleheader fetch failed for %s @ %s", name, team)
@@ -3216,8 +3451,10 @@ class NCAAStatsFetcher:
         # --- ESPN: iterate all games ---
         try:
             results = []
-            for game_info in espn_games:
-                if game_info.get("is_yesterday"):
+            for espn_idx, game_info in enumerate(espn_games):
+                if _skip(game_info.get("is_yesterday", False)):
+                    continue
+                if yesterday_only and game_info.get("status") != "Final":
                     continue
                 result = self._espn._extract_game_context(game_info)
                 try:
@@ -3230,21 +3467,29 @@ class NCAAStatsFetcher:
                 if player_stats:
                     player_stats["_player_found"] = True
                     result.update(player_stats)
+                    result["_game_position"] = espn_idx
                     results.append(result)
 
-            if len(results) >= 2:
+            if results:
                 return results
         except Exception:
             logger.debug("ESPN doubleheader fetch failed for %s @ %s", name, team)
 
         # --- NCAA.com: iterate all games ---
         try:
-            ncaa_games = self._ncaa_com._find_all_games(team)
+            ncaa_games = self._ncaa_com._find_all_games(
+                team, yesterday_only=yesterday_only,
+            )
             if ncaa_games and len(ncaa_games) >= 2:
                 results = []
-                for game_info in ncaa_games:
-                    if game_info.get("is_yesterday"):
+                for ncaa_idx, game_info in enumerate(ncaa_games):
+                    if _skip(game_info.get("is_yesterday", False)):
                         continue
+                    if yesterday_only and game_info.get("state") not in ("final",):
+                        # NCAA.com uses lowercase state values
+                        status_raw = game_info.get("status", "")
+                        if status_raw != "Final":
+                            continue
                     if game_info.get("state") == "pre":
                         continue
                     result = self._ncaa_com._build_context(game_info)
@@ -3259,14 +3504,15 @@ class NCAAStatsFetcher:
                     player_stats = self._ncaa_com._find_player(name, is_home, box)
                     if player_stats:
                         result.update(player_stats)
+                        result["_game_position"] = ncaa_idx
                         results.append(result)
 
-                if len(results) >= 2:
+                if results:
                     return results
         except Exception:
             logger.debug("NCAA.com doubleheader fetch failed for %s @ %s", name, team)
 
-        return []  # < 2 results; caller falls back to single-game fetch()
+        return []  # No results; caller falls back to single-game fetch()
 
     def _find_todays_pregame(self, name: str, team: str) -> Optional[dict]:
         """Check for a game scheduled/live for today.
@@ -3453,17 +3699,38 @@ class NCAAStatsFetcher:
     def fetch_all(self, player: dict) -> list[dict]:
         """Fetch stats from ALL of today's games (supports doubleheaders).
 
-        Tries _waterfall_fetch_all() first. If it returns 2+ results, numbers
-        them and returns the list. Otherwise falls back to [self.fetch(player)].
+        Tries _waterfall_fetch_all() first. If it returns results, numbers
+        them using ``_game_position`` (if present) and returns the list.
+        Otherwise falls back to [self.fetch(player)].
         """
         results = self._waterfall_fetch_all(player)
         if results:
-            for idx, r in enumerate(results, start=1):
-                r["game_number"] = idx
+            for r in results:
+                pos = r.pop("_game_position", None)
+                r["game_number"] = (pos + 1) if pos is not None else 1
             return results
 
         # Not a doubleheader or couldn't find 2+ games — single fetch fallback
         return [self.fetch(player)]
+
+    def fetch_all_yesterday(self, player: dict) -> list[dict]:
+        """Fetch yesterday's Final stats from ALL games (supports doubleheaders).
+
+        Calls ``_waterfall_fetch_all(player, yesterday_only=True)``. Numbers
+        results using ``_game_position``. Falls back to
+        ``[self.fetch_yesterday(player)]`` if empty.
+        """
+        results = self._waterfall_fetch_all(player, yesterday_only=True)
+        if results:
+            for r in results:
+                pos = r.pop("_game_position", None)
+                r["game_number"] = (pos + 1) if pos is not None else 1
+                r["is_yesterday"] = True
+            return results
+
+        # Fallback to single-game fetch
+        single = self.fetch_yesterday(player)
+        return [single] if single else []
 
 
 # =========================================================================
@@ -3512,3 +3779,16 @@ class StatsFetcher:
         elif level == "Pro":
             return self.pro.fetch_yesterday(player)
         return None
+
+    def fetch_all_yesterday(self, player: dict) -> list[dict]:
+        """Fetch yesterday's Final stats from ALL games (supports doubleheaders).
+
+        Returns a list of stats dicts. Falls back to ``[fetch_yesterday()]``
+        if the multi-game path returns nothing.
+        """
+        level = player.get("level", "")
+        if level == "Pro":
+            return self.pro.fetch_all_yesterday(player)
+        elif level == "NCAA":
+            return self.ncaa.fetch_all_yesterday(player)
+        return []

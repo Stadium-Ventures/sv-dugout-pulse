@@ -187,9 +187,14 @@ def check_and_send_alerts(player: dict, stats: dict):
     except (ValueError, TypeError):
         hr = 0
     if hr > 0 and not _already_sent(game_date, name, "hr", current_value=hr, game_number=game_number):
-        hr_text = f"{hr} HRs" if hr > 1 else "a HR"
+        if hr >= 2:
+            emoji = "💣"
+            hr_text = f"MULTI-HR GAME — {hr} HRs"
+        else:
+            emoji = "⚾"
+            hr_text = "a HR"
         send_slack_message(
-            f"⚾ *{name}* ({tier_label}) just hit {hr_text}{gm_label}!\n"
+            f"{emoji} *{name}* ({tier_label}) just hit {hr_text}{gm_label}!\n"
             f"_{team}_ — {game_context}"
         )
         _mark_sent(game_date, name, "hr", value=hr, game_number=game_number)

@@ -78,16 +78,29 @@ class PerformanceAnalyzer:
         rbi = stats.get("rbi", 0)
         bb = stats.get("walks", 0)
         k = stats.get("strikeouts", 0)
-        tob = hits + bb  # times on base (approx, no HBP available)
-        pa = ab + bb      # plate appearances (approx)
+        sb = stats.get("stolen_bases", 0)
+        doubles = stats.get("doubles", 0)
+        triples = stats.get("triples", 0)
+        hbp = stats.get("hit_by_pitch", 0)
+        xbh = doubles + triples + hr  # extra-base hits
+        tob = hits + bb + hbp  # times on base
+        pa = ab + bb + hbp     # plate appearances
 
         # Standout: HR, 3+ hits, high-leverage RBI (3+),
-        # elite plate discipline (3+ BB), or dominant OBP day (4+ times on base)
-        if hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3 or bb >= 3 or tob >= 4:
+        # elite plate discipline (3+ BB), dominant OBP day (4+ TOB),
+        # or 2+ stolen bases
+        if (hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3
+                or bb >= 3 or tob >= 4 or sb >= 2):
             return GRADE_STANDOUT
 
-        # Good: 2+ hits, productive on-base day (2+ TOB in 3+ PA), or 2+ RBI
-        if hits >= HITTER_GOOD_HITS or (tob >= 2 and pa >= 3) or rbi >= 2:
+        # Good: 2+ hits, productive on-base day (2+ TOB in 3+ PA), 2+ RBI,
+        # stolen base, or extra-base hit (2B/3B)
+        if (hits >= HITTER_GOOD_HITS or (tob >= 2 and pa >= 3)
+                or rbi >= 2 or sb >= 1 or xbh >= 1):
+            return GRADE_GOOD
+
+        # Good start: reached base early in the game (1-for-1, walk in first PA, etc.)
+        if pa <= 2 and tob >= 1:
             return GRADE_GOOD
 
         # Soft flag: hitless in 4+ AB, or 3+ strikeouts
