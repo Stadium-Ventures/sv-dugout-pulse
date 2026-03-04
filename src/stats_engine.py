@@ -18,6 +18,7 @@ from zoneinfo import ZoneInfo
 
 import json
 import os
+import time as _time
 
 import requests
 import statsapi
@@ -36,7 +37,7 @@ def _make_http_session() -> requests.Session:
     retry = Retry(
         total=3,
         backoff_factor=0.5,
-        status_forcelist=[429, 500, 502, 503],
+        status_forcelist=[408, 429, 500, 502, 503, 504],
     )
     adapter = HTTPAdapter(pool_connections=10, pool_maxsize=20, max_retries=retry)
     session.mount("http://", adapter)
@@ -412,6 +413,7 @@ class ProStatsFetcher:
             result = self._extract_stats(player, player_id, game)
             result["next_game"] = next_game
             result["mlb_player_id"] = player_id
+            result["data_source"] = "MLB Stats API"
             return result
 
         except Exception:
@@ -467,6 +469,7 @@ class ProStatsFetcher:
                 result = self._extract_stats(player, player_id, game)
                 result["next_game"] = next_game
                 result["mlb_player_id"] = player_id
+                result["data_source"] = "MLB Stats API"
                 if is_doubleheader:
                     try:
                         result["game_number"] = team_game_ids.index(game["game_id"]) + 1
@@ -515,6 +518,7 @@ class ProStatsFetcher:
             result["is_yesterday"] = True
             result["game_date"] = yesterday.isoformat()
             result["mlb_player_id"] = player_id
+            result["data_source"] = "MLB Stats API"
             return result
 
         except Exception:
@@ -925,10 +929,15 @@ class ProStatsFetcher:
                 status = game.get("status", "")
                 boxscore = {}
                 if status not in ("Scheduled",):
-                    try:
-                        boxscore = statsapi.boxscore_data(game["game_id"])
-                    except Exception:
-                        logger.debug("Boxscore fetch failed for game %s", game["game_id"])
+                    for _box_attempt in range(2):
+                        try:
+                            boxscore = statsapi.boxscore_data(game["game_id"])
+                            break
+                        except Exception:
+                            if _box_attempt == 0:
+                                _time.sleep(1)
+                            else:
+                                logger.debug("Boxscore fetch failed for game %s after retry", game["game_id"])
                 matches.append({
                     "game_id": game["game_id"],
                     "boxscore": boxscore,
@@ -977,10 +986,15 @@ class ProStatsFetcher:
                 status = game.get("status", "")
                 boxscore = {}
                 if status not in ("Scheduled",):
-                    try:
-                        boxscore = statsapi.boxscore_data(game["game_id"])
-                    except Exception:
-                        logger.debug("Boxscore fetch failed for game %s", game["game_id"])
+                    for _box_attempt in range(2):
+                        try:
+                            boxscore = statsapi.boxscore_data(game["game_id"])
+                            break
+                        except Exception:
+                            if _box_attempt == 0:
+                                _time.sleep(1)
+                            else:
+                                logger.debug("Boxscore fetch failed for game %s after retry", game["game_id"])
                 matches.append({
                     "game_id": game["game_id"],
                     "boxscore": boxscore,
@@ -1317,6 +1331,21 @@ class ProStatsFetcher:
 # =========================================================================
 # NCAA — Fault-Tolerant Framework
 # =========================================================================
+
+
+_SCRAPER_SOURCE_LABELS = {
+    "D1BaseballScraper": "D1Baseball",
+    "ESPNScraper": "ESPN",
+    "NCAAComScraper": "NCAA",
+    "NCAAOrgScraper": "NCAA",
+    "StatBroadcastScraper": "StatBroadcast",
+    "SidearmScraper": "Sidearm",
+}
+
+
+def _scraper_source_label(scraper) -> str:
+    """Return a human-readable data source label for a scraper instance."""
+    return _SCRAPER_SOURCE_LABELS.get(scraper.__class__.__name__, scraper.__class__.__name__)
 
 
 class BaseSchoolScraper(abc.ABC):
@@ -3361,10 +3390,12 @@ class NCAAStatsFetcher:
                             result["game_time"] = best_context["game_time"]
                             if "Game at" in best_context.get("stats_summary", ""):
                                 result["stats_summary"] = best_context["stats_summary"]
+                    result["data_source"] = _scraper_source_label(scraper)
                     return result
 
                 if best_context is None:
                     best_context = result
+                    best_context["data_source"] = _scraper_source_label(scraper)
                     logger.info(
                         "%s found game for %s @ %s but no player stats — trying next scraper",
                         scraper.__class__.__name__, name, team,

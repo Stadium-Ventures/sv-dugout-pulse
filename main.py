@@ -289,6 +289,7 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "player_profile_url": _build_profile_url(player, stats),
         "performance_grade": analysis["performance_grade"],
         "social_search_url": analysis["social_search_url"],
+        "data_source": stats.get("data_source", ""),
         "is_client": player.get("is_client", True),
         "tags": {
             "draft_class": player.get("draft_class", ""),
@@ -560,7 +561,18 @@ def run_live():
         name = player["player_name"]
         is_client = player.get("is_client", True)
         try:
-            all_stats = fetcher.fetch_all(player)
+            all_stats = None
+            for attempt in range(2):
+                try:
+                    all_stats = fetcher.fetch_all(player)
+                    break
+                except Exception:
+                    if attempt == 0:
+                        time.sleep(1)
+                    else:
+                        raise
+            if not all_stats:
+                return [], []
             entries = []
             alert_data_list = []
             for stats in all_stats:

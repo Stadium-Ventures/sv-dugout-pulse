@@ -88,6 +88,18 @@
   }
   .filter-btn:hover { color: var(--text); background: var(--surface-hover); }
   .filter-btn.active { background: var(--border); color: var(--text); font-weight: 600; }
+  .clear-filters-btn {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .clear-filters-btn:hover { color: var(--text); border-color: var(--text-dim); }
 
   /* ---- Grid ---- */
   .grid {
@@ -104,9 +116,14 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 1rem 1.1rem;
-    transition: border-color 0.15s;
+    transition: border-color 0.15s, opacity 0.25s ease, transform 0.25s ease;
     position: relative;
     contain: layout style paint;
+    animation: cardFadeIn 0.25s ease;
+  }
+  @keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .card:hover { border-color: #3a3e4a; }
 
@@ -677,6 +694,14 @@
     pointer-events: none;
   }
 
+  /* ---- Data source label ---- */
+  .data-source {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    opacity: 0.6;
+    margin-top: 0.15rem;
+  }
+
   /* ---- XBH highlights in stats line ---- */
   .stat-highlight-hr {
     color: #fbbf24;
@@ -685,6 +710,22 @@
   .stat-highlight-xbh {
     color: #a78bfa;
     font-weight: 700;
+  }
+  .stat-highlight-rbi {
+    color: #f97316;
+    font-weight: 700;
+  }
+  .stat-highlight-sb {
+    color: #06b6d4;
+    font-weight: 700;
+  }
+  .stat-highlight-bb {
+    color: #34d399;
+    font-weight: 600;
+  }
+  .stat-highlight-k {
+    color: #ef4444;
+    font-weight: 600;
   }
 
   /* ---- Pull-to-refresh ---- */
@@ -800,6 +841,7 @@
     <button class="filter-btn" data-value="Off Day" title="Off Day: Hitless in 4+ AB, 3+ Ks, or rough pitching">&#x1f6a9;</button>
     <button class="filter-btn" data-value="Scheduled" title="Scheduled: Game hasn't started yet">&#x1f552;</button>
   </div>
+  <button class="clear-filters-btn" id="clearFiltersBtn" title="Reset all filters" style="display:none;">Clear filters</button>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -977,6 +1019,7 @@ function renderCard(p) {
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
         : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
+      ${p.data_source ? `<div class="data-source">via ${esc(p.data_source)}</div>` : ''}
       ${gameDateHtml}
       ${gameTimeHtml}
       ${nextGameHtml}
@@ -1004,6 +1047,10 @@ function highlightStats(summary) {
   s = s.replace(/\b(\d+\s)?(HR)\b/g, '<span class="stat-highlight-hr">$&</span>');
   s = s.replace(/\b(\d+\s)?(3B)\b/g, '<span class="stat-highlight-xbh">$&</span>');
   s = s.replace(/\b(\d+\s)?(2B)\b/g, '<span class="stat-highlight-xbh">$&</span>');
+  s = s.replace(/\b(\d+\s)?(RBI)\b/g, '<span class="stat-highlight-rbi">$&</span>');
+  s = s.replace(/\b(\d+\s)?(SB)\b/g, '<span class="stat-highlight-sb">$&</span>');
+  s = s.replace(/\b(\d+\s)?(BB)\b/g, '<span class="stat-highlight-bb">$&</span>');
+  s = s.replace(/\b(\d+\s)?(K)\b/g, '<span class="stat-highlight-k">$&</span>');
   return s;
 }
 
@@ -1364,6 +1411,31 @@ function render() {
       }
     }
   }
+  updateGradeFilterCounts();
+}
+
+function updateGradeFilterCounts() {
+  // Only show counts for today/yesterday views
+  if (currentWindow !== 'today' && currentWindow !== 'yesterday') return;
+  const players = currentWindow === 'today' ? allPlayers : (windowData.yesterday || []);
+  // Count grades across all players (ignoring other filters for distribution view)
+  const counts = {};
+  const gradeValues = ['Milestone', 'Standout', 'Good', 'Routine', 'Off Day', 'Scheduled'];
+  gradeValues.forEach(g => counts[g] = 0);
+  for (const p of players) {
+    const gk = gradeKey(p.performance_grade || '');
+    if (counts[gk] !== undefined) counts[gk]++;
+  }
+  const gradeGroup = document.querySelector('[data-filter="grade"]');
+  if (!gradeGroup) return;
+  const gradeEmojis = { 'Milestone': '\u{1f48e}', 'Standout': '\u{1f525}', 'Good': '\u2705', 'Routine': '\u{1f610}', 'Off Day': '\u{1f6a9}', 'Scheduled': '\u{1f552}' };
+  gradeGroup.querySelectorAll('.filter-btn').forEach(btn => {
+    const val = btn.dataset.value;
+    if (val === 'all') return;
+    const count = counts[val] || 0;
+    const emoji = gradeEmojis[val] || '';
+    btn.textContent = count > 0 ? `${emoji} ${count}` : emoji;
+  });
 }
 
 function toggleFiltersForWindow(window) {
@@ -1626,9 +1698,29 @@ document.querySelectorAll('.filter-group').forEach(group => {
       group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       filters[key] = btn.dataset.value;
+      updateClearFiltersBtn();
       render();
     });
   });
+});
+
+function updateClearFiltersBtn() {
+  const btn = document.getElementById('clearFiltersBtn');
+  const hasActive = Object.values(filters).some(v => v !== 'all') || searchQuery;
+  btn.style.display = hasActive ? 'inline-block' : 'none';
+}
+
+document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+  for (const key of Object.keys(filters)) filters[key] = 'all';
+  document.querySelectorAll('.filter-group').forEach(group => {
+    group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const allBtn = group.querySelector('[data-value="all"]');
+    if (allBtn) allBtn.classList.add('active');
+  });
+  document.getElementById('searchInput').value = '';
+  searchQuery = '';
+  updateClearFiltersBtn();
+  render();
 });
 
 // Time window tabs
@@ -1642,12 +1734,13 @@ document.getElementById('searchInput').addEventListener('input', e => {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(() => {
     searchQuery = e.target.value.toLowerCase().trim();
+    updateClearFiltersBtn();
     render();
   }, 350);
 });
 
 // Relative timestamp refresh
-setInterval(updateTimestamp, 60000);
+setInterval(updateTimestamp, 10000);
 
 // Swipe gestures + pull-to-refresh
 const TAB_ORDER = ['today', 'yesterday', '7d', 'season'];
