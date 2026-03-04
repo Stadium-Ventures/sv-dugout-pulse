@@ -1190,11 +1190,11 @@ class ProStatsFetcher:
         if not found_in_box and result["stats_summary"] == "No game data":
             if result["game_status"] == "Live":
                 if position == "Pitcher":
-                    result["stats_summary"] = "Game in progress — not yet pitching"
+                    result["stats_summary"] = "In game — hasn't pitched yet"
                 else:
                     result["stats_summary"] = "Game in progress — not in lineup"
             elif result["game_status"] == "Final":
-                result["stats_summary"] = "DNP — game final"
+                result["stats_summary"] = "Did Not Play"
 
         return result
 
@@ -1222,6 +1222,7 @@ class ProStatsFetcher:
         sb = int(entry.get("sb", 0))
         bb = int(entry.get("bb", 0))
         hbp = int(entry.get("hbp", 0))
+        k = int(entry.get("k", entry.get("so", 0)))
 
         parts = [f"{h}-{ab}"]
         if hr:
@@ -1236,6 +1237,8 @@ class ProStatsFetcher:
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if k:
+            parts.append(_fmt(k, "K"))
         if hbp:
             parts.append(_fmt(hbp, "HBP"))
         if dbl:
@@ -1253,6 +1256,7 @@ class ProStatsFetcher:
             "triples": tpl,
             "walks": bb,
             "hit_by_pitch": hbp,
+            "strikeouts": k,
         }
 
     @staticmethod
@@ -1485,7 +1489,7 @@ class NCAAComScraper(BaseSchoolScraper):
                 if status == "Live":
                     first_context["stats_summary"] = "Game in progress — not in lineup"
                 elif status == "Final":
-                    first_context["stats_summary"] = "DNP — game final"
+                    first_context["stats_summary"] = "Did Not Play"
                 return first_context
 
             return None
@@ -1627,7 +1631,7 @@ class NCAAComScraper(BaseSchoolScraper):
                 break
 
         for tb in box.get("teamBoxscore", []):
-            if target_team_id and str(tb.get("teamId")) != str(target_team_id):
+            if target_team_id is not None and str(tb.get("teamId")) != str(target_team_id):
                 continue
 
             # Collect all last-name matches for disambiguation
@@ -1871,7 +1875,9 @@ class D1BaseballScraper(BaseSchoolScraper):
                     break
 
                 if "statbroadcast.com" in box_url or "statb.us" in box_url:
-                    player_stats = self._parse_statbroadcast_box_score(player_name, box_url)
+                    player_stats = self._parse_statbroadcast_box_score(
+                        player_name, box_url, is_home=tile_info.get("is_home"),
+                    )
                     if player_stats is not None:
                         # StatBroadcast is the authoritative source for game state —
                         # correct the D1Baseball tile's potentially lagging status.
@@ -1893,7 +1899,9 @@ class D1BaseballScraper(BaseSchoolScraper):
                         # Player not found (DNP) — game state corrected above,
                         # fall through to the DNP path below.
                 else:
-                    player_stats = self._parse_sidearm_box_score(player_name, box_url)
+                    player_stats = self._parse_sidearm_box_score(
+                        player_name, box_url, is_home=tile_info.get("is_home"),
+                    )
                     if player_stats:
                         context.update(player_stats)
                         return context
@@ -1907,7 +1915,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     # ESPN will provide the accurate lineup status downstream.
                     first_context["stats_summary"] = "Game in progress"
                 elif status == "Final":
-                    first_context["stats_summary"] = "DNP — game final"
+                    first_context["stats_summary"] = "Did Not Play"
                 return first_context
 
             return None
@@ -1970,11 +1978,17 @@ class D1BaseballScraper(BaseSchoolScraper):
                 names = [home_name, road_name]
                 if d1_name:
                     matched = d1_name in names
+                    is_home = (d1_name == home_name) if matched else None
                 else:
                     matched = (
                         _school_name_matches(team_lower, names, exact=True)
                         or _school_name_matches(team_lower, names, exact=False)
                     )
+                    # Determine which side matched
+                    is_home = _school_name_matches(team_lower, [home_name], exact=True) or (
+                        not _school_name_matches(team_lower, [road_name], exact=True)
+                        and _school_name_matches(team_lower, [home_name], exact=False)
+                    ) if matched else None
 
                 if not matched:
                     continue
@@ -2029,6 +2043,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     "road_score": road_score,
                     "status": status,
                     "is_yesterday": is_yesterday,
+                    "is_home": is_home,
                     "game_date": iso_date,
                     "box_score_url": box_url,
                     "tile_key": tile_key,
@@ -2130,12 +2145,18 @@ class D1BaseballScraper(BaseSchoolScraper):
 
     # ---- StatBroadcast box score parsing ----
 
-    def _parse_statbroadcast_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
+    def _parse_statbroadcast_box_score(
+        self, player_name: str, box_url: str, is_home: Optional[bool] = None
+    ) -> Optional[dict]:
         """Fetch and parse a StatBroadcast live stats page for a specific player.
 
         StatBroadcast is a JS app, but its webservice endpoint returns encoded HTML.
         Protocol: GET /interface/webservice/stats?data=base64(params) → ROT13+base64 → HTML.
         Player names are in LastName,FirstName format.
+
+        *is_home* constrains the search to the player's own team side ("H" or "V"),
+        preventing cross-team last-name collisions (e.g. C. Johnson on the
+        opposing team being returned for Zack Johnson).
 
         Returns a dict in all cases where the page was successfully fetched:
           - Player found: full stats dict with ``_sb_game_status`` (and ``_sb_inning_label`` if live)
@@ -2169,11 +2190,19 @@ class D1BaseballScraper(BaseSchoolScraper):
                 return None
             xml_file = xmlfile_m.group(1)
 
-            # Step 2: fetch box score HTML for home then visitor
+            # Step 2: fetch box score HTML for the player's team (or both if unknown)
             sb_game_status: Optional[str] = None  # "Final" or "Live"
             sb_inning_label: Optional[str] = None  # e.g. "Top 6" when Live
 
-            for team_side in ("H", "V"):
+            # Only search the player's own team to avoid cross-team name collisions
+            if is_home is True:
+                sides_to_check = ("H",)
+            elif is_home is False:
+                sides_to_check = ("V",)
+            else:
+                sides_to_check = ("H", "V")
+
+            for team_side in sides_to_check:
                 data_str = (
                     f"event={event_id}&xml={xml_file}"
                     f"&xsl=baseball/sb.bsgame.views.box.xsl"
@@ -2298,6 +2327,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if rbi: parts.append(_fmt(rbi, "RBI"))
                     if r:   parts.append(_fmt(r,   "R"))
                     if bb:  parts.append(_fmt(bb,  "BB"))
+                    if k:   parts.append(_fmt(k,   "K"))
                     if dbl: parts.append(_fmt(dbl, "2B"))
                     return {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
                             "walks": bb, "strikeouts": k, "home_runs": hr,
@@ -2348,7 +2378,9 @@ class D1BaseballScraper(BaseSchoolScraper):
 
     # ---- Sidearm box score parsing ----
 
-    def _parse_sidearm_box_score(self, player_name: str, box_url: str) -> Optional[dict]:
+    def _parse_sidearm_box_score(
+        self, player_name: str, box_url: str, is_home: Optional[bool] = None
+    ) -> Optional[dict]:
         """Fetch and parse a Sidearm box score page for a specific player.
 
         Sidearm pages are JavaScript-rendered so the HTML itself never contains
@@ -2356,6 +2388,9 @@ class D1BaseballScraper(BaseSchoolScraper):
         (static.sidearmstats.com) which returns full box score data.  The
         old HTML table parser is kept as a last-ditch fallback for any
         rare schools that serve pre-rendered HTML.
+
+        *is_home* constrains the search to the player's own team to avoid
+        cross-team name collisions.
         """
         try:
             resp = _http.get(box_url, timeout=_TIMEOUT_D1BASEBALL)
@@ -2365,7 +2400,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             # Primary path: Sidearm static JSON API (works for all JS-rendered sites)
             # Pass the final URL (after redirects) so legacy boxscore.aspx links
             # can still have their sport extracted from the redirected URL path.
-            result = self._parse_sidearm_stats_json(player_name, html, box_url, final_url=resp.url)
+            result = self._parse_sidearm_stats_json(
+                player_name, html, box_url, final_url=resp.url, is_home=is_home,
+            )
             if result:
                 return result
 
@@ -2389,6 +2426,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                         parts.append(_fmt(result["stolen_bases"], "SB"))
                     if result.get("walks", 0):
                         parts.append(_fmt(result["walks"], "BB"))
+                    if result.get("strikeouts", 0):
+                        parts.append(_fmt(result["strikeouts"], "K"))
                     result["stats_summary"] = ", ".join(parts)
 
             return result
@@ -2397,7 +2436,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             return None
 
     def _parse_sidearm_stats_json(
-        self, player_name: str, html: str, box_url: str, final_url: str = ""
+        self, player_name: str, html: str, box_url: str, final_url: str = "",
+        is_home: Optional[bool] = None,
     ) -> Optional[dict]:
         """Fetch player stats from the Sidearm static JSON API.
 
@@ -2407,6 +2447,8 @@ class D1BaseballScraper(BaseSchoolScraper):
         The ``folder`` (e.g. ``"pacific"``) is embedded in the page HTML as
         ``window.livestats_foldername``.  The sport is extracted from the
         box_score_url path (e.g. ``/sidearmstats/baseball/summary``).
+
+        *is_home* constrains the search to the player's own team.
         """
         try:
             import re as _re
@@ -2449,7 +2491,15 @@ class D1BaseballScraper(BaseSchoolScraper):
             stats = data.get("Stats", {})
             player_last = player_name.split()[-1].lower()
 
-            for team_key in ("HomeTeam", "VisitingTeam"):
+            # Only search the player's own team to avoid cross-team name collisions
+            if is_home is True:
+                team_keys = ("HomeTeam",)
+            elif is_home is False:
+                team_keys = ("VisitingTeam",)
+            else:
+                team_keys = ("HomeTeam", "VisitingTeam")
+
+            for team_key in team_keys:
                 team_stats = stats.get(team_key, {})
                 pg = team_stats.get("PlayerGroups", {})
 
@@ -2647,6 +2697,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         r   = int(stats.get("R", 0) or 0)
         sb  = int(stats.get("SB", 0) or 0)
         bb  = int(stats.get("BB", 0) or 0)
+        k   = int(stats.get("K", stats.get("SO", 0)) or 0)
 
         if ab == 0 and bb == 0:
             return None  # didn't actually play
@@ -2664,6 +2715,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if k:
+            parts.append(_fmt(k, "K"))
         if dbl:
             parts.append(_fmt(dbl, "2B"))
 
@@ -2676,6 +2729,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             "runs": r,
             "stolen_bases": sb,
             "walks": bb,
+            "strikeouts": k,
             "_player_found": True,
         }
 
@@ -2815,7 +2869,7 @@ class ESPNScraper(BaseSchoolScraper):
                 if status == "Live":
                     first_context["stats_summary"] = "Game in progress — not in lineup"
                 elif status == "Final":
-                    first_context["stats_summary"] = "DNP — game final"
+                    first_context["stats_summary"] = "Did Not Play"
                 return first_context
 
             return None
@@ -3117,6 +3171,7 @@ class ESPNScraper(BaseSchoolScraper):
         r = int(sm.get("R", 0) or 0)
         sb = int(sm.get("SB", 0) or 0)
         bb = int(sm.get("BB", 0) or 0)
+        k = int(sm.get("K", sm.get("SO", 0)) or 0)
 
         parts = [f"{h}-{ab}"]
         if hr:
@@ -3129,6 +3184,8 @@ class ESPNScraper(BaseSchoolScraper):
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if k:
+            parts.append(_fmt(k, "K"))
 
         return {
             "stats_summary": ", ".join(parts),
@@ -3139,6 +3196,7 @@ class ESPNScraper(BaseSchoolScraper):
             "runs": r,
             "stolen_bases": sb,
             "walks": bb,
+            "strikeouts": k,
         }
 
     @staticmethod
@@ -3278,7 +3336,7 @@ class NCAAStatsFetcher:
                             and best_context is not None
                             and best_context.get("game_status") in ("Live", "Final", "Cancelled")):
                         # Grab game_time if best_context is missing it, but never
-                        # overwrite stats_summary — it may already be "DNP — game final".
+                        # overwrite stats_summary — it may already be "Did Not Play".
                         if result.get("game_time") and not best_context.get("game_time"):
                             best_context["game_time"] = result["game_time"]
                         logger.info(
@@ -3666,7 +3724,7 @@ class NCAAStatsFetcher:
                         "Game in progress",
                         "Game in progress — not in lineup",
                     )):
-                result["stats_summary"] = "Game in progress — not yet pitching"
+                result["stats_summary"] = "In game — hasn't pitched yet"
 
             return result
 

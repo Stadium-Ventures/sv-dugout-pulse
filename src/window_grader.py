@@ -19,7 +19,7 @@ from .config import (
 # Grade labels with emojis
 GRADE_HOT = "🔥 Hot"
 GRADE_SOLID = "✅ Solid"
-GRADE_QUIET = "😐 Quiet"
+GRADE_QUIET = "😐 Steady"
 GRADE_COLD = "🥶 Cold"
 GRADE_INSUFFICIENT = "— Insufficient"
 
@@ -74,7 +74,7 @@ def get_grade_class(grade: str) -> str:
         return "grade-hot"
     elif "Solid" in grade or "✅" in grade:
         return "grade-solid"
-    elif "Quiet" in grade or "😐" in grade:
+    elif "Steady" in grade or "😐" in grade:
         return "grade-quiet"
     elif "Cold" in grade or "🥶" in grade:
         return "grade-cold"

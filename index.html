@@ -250,6 +250,13 @@
   .grade-scheduled { background: rgba(59,130,246,0.15); color: #93c5fd; }
   .grade-nodata { background: rgba(63,63,70,0.2); color: #71717a; }
 
+  .grade-reason {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+    font-style: italic;
+  }
+
   .stats-line {
     font-size: 1.1rem;
     font-weight: 600;
@@ -786,12 +793,12 @@
   </div>
   <div class="filter-group" data-filter="grade">
     <button class="filter-btn active" data-value="all">All</button>
-    <button class="filter-btn" data-value="Milestone">&#x1f48e;</button>
-    <button class="filter-btn" data-value="Standout">&#x1f525;</button>
-    <button class="filter-btn" data-value="Good">&#x2705;</button>
-    <button class="filter-btn" data-value="Routine">&#x1f610;</button>
-    <button class="filter-btn" data-value="Soft Flag">&#x1f6a9;</button>
-    <button class="filter-btn" data-value="Scheduled">&#x1f552;</button>
+    <button class="filter-btn" data-value="Milestone" title="Milestone: Debut or historic achievement">&#x1f48e;</button>
+    <button class="filter-btn" data-value="Standout" title="Standout: HR, 3+ hits, 3+ RBI, or dominant pitching">&#x1f525;</button>
+    <button class="filter-btn" data-value="Good" title="Good: 2+ hits, XBH, steal, or clean pitching outing">&#x2705;</button>
+    <button class="filter-btn" data-value="Routine" title="Routine: Normal game — nothing stood out">&#x1f610;</button>
+    <button class="filter-btn" data-value="Off Day" title="Off Day: Hitless in 4+ AB, 3+ Ks, or rough pitching">&#x1f6a9;</button>
+    <button class="filter-btn" data-value="Scheduled" title="Scheduled: Game hasn't started yet">&#x1f552;</button>
   </div>
 </div>
 
@@ -806,15 +813,15 @@
 <div class="empty" id="empty" style="display:none;">No players match the current filters.</div>
 
 <script>
-const GRADE_ORDER = ['Milestone','Standout','Good','Routine','Soft Flag','Scheduled','No Data'];
+const GRADE_ORDER = ['Milestone','Standout','Good','Routine','Off Day','Scheduled','No Data'];
 const GRADE_CLASS = {
   'Milestone':'grade-milestone','Standout':'grade-standout','Good':'grade-good',
-  'Routine':'grade-routine','Soft Flag':'grade-flag','Scheduled':'grade-scheduled','No Data':'grade-nodata'
+  'Routine':'grade-routine','Off Day':'grade-flag','Scheduled':'grade-scheduled','No Data':'grade-nodata'
 };
 
 // Window grade classes
 const WINDOW_GRADE_CLASS = {
-  'Hot':'grade-hot','Solid':'grade-solid','Quiet':'grade-quiet',
+  'Hot':'grade-hot','Solid':'grade-solid','Steady':'grade-quiet',
   'Cold':'grade-cold','Insufficient':'grade-insufficient'
 };
 
@@ -856,7 +863,7 @@ function liveSubTier(p) {
 
 function hasRealStats(p) {
   const s = p.stats_summary || '';
-  return p.game_status === 'Final' && !s.startsWith('DNP') && s !== 'No game scheduled' && s !== '';
+  return p.game_status === 'Final' && !s.startsWith('Did Not Play') && s !== 'No game scheduled' && s !== '';
 }
 
 function sortPlayers(players) {
@@ -926,7 +933,7 @@ function renderCard(p) {
   const isYesterday = p.is_yesterday === true;
 
   // Grade-tinted background class
-  const TINT_MAP = { 'Milestone':'grade-tint-milestone', 'Standout':'grade-tint-standout', 'Good':'grade-tint-good', 'Soft Flag':'grade-tint-flag' };
+  const TINT_MAP = { 'Milestone':'grade-tint-milestone', 'Standout':'grade-tint-standout', 'Good':'grade-tint-good', 'Off Day':'grade-tint-flag' };
   const tintClass = TINT_MAP[gk] || '';
 
   // Elevated stats for top performances
@@ -965,6 +972,7 @@ function renderCard(p) {
       </div>
       <div class="team-name">${esc(p.team)}</div>
       <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
+      ${p.grade_reason ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
       <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${highlightStats(p.stats_summary)}</div>
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
@@ -1001,7 +1009,7 @@ function highlightStats(summary) {
 
 function windowGradeKey(g) {
   if (!g) return 'Insufficient';
-  for (const k of ['Hot','Solid','Quiet','Cold','Insufficient']) {
+  for (const k of ['Hot','Solid','Steady','Cold','Insufficient']) {
     if (g.includes(k)) return k;
   }
   return 'Insufficient';
@@ -1210,7 +1218,7 @@ function sortWindowPlayers(players) {
     const bClient = b.is_client !== false ? 0 : 1;
     if (aClient !== bClient) return aClient - bClient;
     // Grade order (Hot > Solid > Quiet > Cold > Insufficient)
-    const gradeOrder = ['Hot','Solid','Quiet','Cold','Insufficient'];
+    const gradeOrder = ['Hot','Solid','Steady','Cold','Insufficient'];
     const aG = gradeOrder.indexOf(windowGradeKey(a.window_grade));
     const bG = gradeOrder.indexOf(windowGradeKey(b.window_grade));
     if (aG !== bG) return aG - bG;

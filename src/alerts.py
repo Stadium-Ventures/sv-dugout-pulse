@@ -244,7 +244,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     if is_pitching and stats.get("quality_start"):
         if not _already_sent(game_date, name, "qs", game_number=game_number):
             if send_slack_message(
-                f"⭐ *{name}* ({tier_label}) has a quality start{gm_label}!\n"
+                f"⭐ *{name}* ({tier_label}) — strong outing (6+ IP, 3 or fewer runs){gm_label}!\n"
                 f"_{team}_ — {summary} — {game_context}"
             ):
                 _mark_sent(game_date, name, "qs", game_number=game_number)
