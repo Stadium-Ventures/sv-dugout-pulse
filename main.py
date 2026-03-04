@@ -580,7 +580,7 @@ def run_live():
                 )
                 entries.append(entry)
                 if is_client:
-                    alert_data_list.append((player, stats))
+                    alert_data_list.append((player, stats, analysis["performance_grade"]))
 
             return entries, alert_data_list
         except Exception:
@@ -600,8 +600,8 @@ def run_live():
                 alert_queue.extend(alert_data_list)
 
     # Send alerts serially to avoid Slack rate limits
-    for player, stats in alert_queue:
-        check_and_send_alerts(player, stats)
+    for player, stats, grade in alert_queue:
+        check_and_send_alerts(player, stats, grade=grade)
     save_sent_alerts()  # Persist all alert state in one write
 
     _flush_ncaa_game_log()

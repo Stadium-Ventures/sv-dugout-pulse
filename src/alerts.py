@@ -155,14 +155,18 @@ def send_slack_message(text: str, blocks: Optional[list] = None) -> bool:
 # Alert logic
 # ---------------------------------------------------------------------------
 
-def check_and_send_alerts(player: dict, stats: dict):
+def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     """
     Check if the player's stats trigger any alert conditions.
     Sends Slack notifications for:
     - Any player hits a home run (re-alerts on additional HRs)
     - Any pitcher enters the game
-    - Any pitcher gets 5+ Ks
-    - T1/T2 hitter reaches base 3+ times
+    - Pitcher strikeouts (value-aware: re-alerts at 5, 8, 10+)
+    - Pitcher quality start (6+ IP, 3 or fewer ER)
+    - Any hitter reaches base 3+ times
+    - Standout game summary when game goes Final
+
+    Only marks alerts as sent when Slack delivery succeeds.
     """
     name = player.get("player_name", "Unknown")
     team = player.get("team", "")
@@ -172,6 +176,7 @@ def check_and_send_alerts(player: dict, stats: dict):
     game_status = stats.get("game_status", "N/A")
     game_date = stats.get("game_date") or date.today().isoformat()
     game_number = stats.get("game_number") or 0
+    summary = stats.get("stats_summary", "")
 
     # Skip if no game data
     if game_status == "N/A":
@@ -193,11 +198,11 @@ def check_and_send_alerts(player: dict, stats: dict):
         else:
             emoji = "⚾"
             hr_text = "a HR"
-        send_slack_message(
+        if send_slack_message(
             f"{emoji} *{name}* ({tier_label}) just hit {hr_text}{gm_label}!\n"
-            f"_{team}_ — {game_context}"
-        )
-        _mark_sent(game_date, name, "hr", value=hr, game_number=game_number)
+            f"_{team}_ — {summary} — {game_context}"
+        ):
+            _mark_sent(game_date, name, "hr", value=hr, game_number=game_number)
 
     # --- Alert: Pitcher enters game (any pitcher, any tier) ---
     is_pitching = stats.get("is_pitcher_line", False) or position == "Pitcher"
@@ -207,26 +212,45 @@ def check_and_send_alerts(player: dict, stats: dict):
         ip = 0.0
 
     if is_pitching and ip > 0 and not _already_sent(game_date, name, "entered", game_number=game_number):
-        send_slack_message(
+        if send_slack_message(
             f"🔥 *{name}* ({tier_label}) is pitching{gm_label}!\n"
-            f"_{team}_ — {game_context}"
-        )
-        _mark_sent(game_date, name, "entered", game_number=game_number)
+            f"_{team}_ — {summary} — {game_context}"
+        ):
+            _mark_sent(game_date, name, "entered", game_number=game_number)
 
-    # --- Alert: Pitcher 5+ strikeouts (any pitcher, any tier) ---
+    # --- Alert: Pitcher strikeouts (value-aware: re-alerts at 5, 8, 10) ---
     try:
         strikeouts = int(stats.get("strikeouts", 0))
     except (ValueError, TypeError):
         strikeouts = 0
-    if is_pitching and strikeouts >= 5 and not _already_sent(game_date, name, "5k", game_number=game_number):
-        send_slack_message(
-            f"🎯 *{name}* ({tier_label}) has {strikeouts} K's{gm_label}!\n"
-            f"_{team}_ — {game_context}"
-        )
-        _mark_sent(game_date, name, "5k", game_number=game_number)
+    if is_pitching and strikeouts >= 5:
+        if not _already_sent(game_date, name, "ks", current_value=strikeouts, game_number=game_number):
+            if strikeouts >= 10:
+                k_emoji = "🔥🎯"
+                k_label = f"{strikeouts} K's — DOUBLE DIGITS"
+            elif strikeouts >= 8:
+                k_emoji = "💪🎯"
+                k_label = f"{strikeouts} K's — dominant"
+            else:
+                k_emoji = "🎯"
+                k_label = f"{strikeouts} K's"
+            if send_slack_message(
+                f"{k_emoji} *{name}* ({tier_label}) has {k_label}{gm_label}!\n"
+                f"_{team}_ — {summary} — {game_context}"
+            ):
+                _mark_sent(game_date, name, "ks", value=strikeouts, game_number=game_number)
 
-    # --- Alert: T1/T2 hitter reaches base 3+ times ---
-    if tier <= 2 and position in ("Hitter", "Two-Way") and not stats.get("is_pitcher_line"):
+    # --- Alert: Pitcher quality start (6+ IP, ≤3 ER) ---
+    if is_pitching and stats.get("quality_start"):
+        if not _already_sent(game_date, name, "qs", game_number=game_number):
+            if send_slack_message(
+                f"⭐ *{name}* ({tier_label}) has a quality start{gm_label}!\n"
+                f"_{team}_ — {summary} — {game_context}"
+            ):
+                _mark_sent(game_date, name, "qs", game_number=game_number)
+
+    # --- Alert: Hitter reaches base 3+ times (all tiers) ---
+    if position in ("Hitter", "Two-Way") and not stats.get("is_pitcher_line"):
         try:
             hits = int(stats.get("hits", 0))
         except (ValueError, TypeError):
@@ -235,16 +259,30 @@ def check_and_send_alerts(player: dict, stats: dict):
             walks = int(stats.get("walks", 0))
         except (ValueError, TypeError):
             walks = 0
-        times_on_base = hits + walks
+        try:
+            hbp = int(stats.get("hit_by_pitch", 0))
+        except (ValueError, TypeError):
+            hbp = 0
+        times_on_base = hits + walks + hbp
 
         if times_on_base >= 3 or hits >= 3:
             if not _already_sent(game_date, name, "3ob", game_number=game_number):
-                send_slack_message(
+                tob_count = max(times_on_base, hits)
+                if send_slack_message(
                     f"💪 *{name}* ({tier_label}) has reached base "
-                    f"{times_on_base if times_on_base >= 3 else hits}+ times{gm_label}!\n"
-                    f"_{team}_ — {stats.get('stats_summary', '')} — {game_context}"
-                )
-                _mark_sent(game_date, name, "3ob", game_number=game_number)
+                    f"{tob_count}+ times{gm_label}!\n"
+                    f"_{team}_ — {summary} — {game_context}"
+                ):
+                    _mark_sent(game_date, name, "3ob", game_number=game_number)
+
+    # --- Alert: Standout game summary (when game goes Final) ---
+    if game_status == "Final" and "Standout" in grade:
+        if not _already_sent(game_date, name, "standout_recap", game_number=game_number):
+            if send_slack_message(
+                f"🌟 *{name}* ({tier_label}) — Standout performance{gm_label}!\n"
+                f"_{team}_ — {summary} — {game_context}"
+            ):
+                _mark_sent(game_date, name, "standout_recap", game_number=game_number)
 
 
 def save_sent_alerts():
