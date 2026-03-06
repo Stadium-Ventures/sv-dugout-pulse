@@ -30,6 +30,50 @@ from .config import ROSTER_URL, SCHOOL_LOOKUP_PATH
 
 logger = logging.getLogger(__name__)
 
+# Cache: hostname -> sidearm folder name, so we only probe the static API once per host
+_sidearm_folder_cache: dict[str, str] = {}
+
+
+def _sidearm_folder_from_url(box_url: str, sport: str = "baseball") -> Optional[str]:
+    """Derive the Sidearm stats folder name from the box_score_url hostname.
+
+    The folder (e.g. "bucknell") is always a prefix of the first domain label
+    (e.g. "bucknellbison" from "bucknellbison.com").  We try shortening the
+    label one character at a time and validate each candidate by checking
+    whether the static.sidearmstats.com API returns a Stats object.
+
+    Results are cached so each host is probed at most once per process.
+    """
+    try:
+        from urllib.parse import urlparse as _urlparse
+        hostname = _urlparse(box_url).hostname or ""
+        if not hostname:
+            return None
+
+        if hostname in _sidearm_folder_cache:
+            return _sidearm_folder_cache[hostname] or None
+
+        label = hostname.split(".")[0]  # e.g. "bucknellbison"
+        import requests as _requests
+        for length in range(len(label), 3, -1):
+            candidate = label[:length]
+            url = (
+                f"http://static.sidearmstats.com/schools/{candidate}"
+                f"/{sport}/game.json?detail=full"
+            )
+            try:
+                r = _requests.get(url, timeout=8, headers={"User-Agent": "Mozilla/5.0"})
+                if r.status_code == 200 and r.json().get("Stats"):
+                    _sidearm_folder_cache[hostname] = candidate
+                    return candidate
+            except Exception:
+                pass
+
+        _sidearm_folder_cache[hostname] = ""  # negative cache
+        return None
+    except Exception:
+        return None
+
 
 def _make_http_session() -> requests.Session:
     """Create a shared HTTP session with connection pooling and retry logic."""
@@ -2494,9 +2538,19 @@ class D1BaseballScraper(BaseSchoolScraper):
                 r'window\.livestats_foldername\s*=\s*["\']([^"\']+)["\']', html
             )
             if not m:
-                logger.debug("livestats_foldername not found in Sidearm HTML for %s", box_url)
-                return None
-            folder = m.group(1)
+                # HTML fetch may have been blocked by a WAF (e.g. Imperva) that
+                # allows browsers but blocks datacenter IPs.  Fall back to
+                # deriving the folder from the box_url hostname: the folder is
+                # always a prefix of the first domain label (e.g. "bucknell"
+                # from "bucknellbison.com").  Try shortening the label one
+                # character at a time until the static API returns valid data.
+                folder = _sidearm_folder_from_url(box_url, sport="baseball")
+                if not folder:
+                    logger.debug("livestats_foldername not found and hostname fallback failed for %s", box_url)
+                    return None
+                logger.debug("Derived Sidearm folder %r from hostname for %s", folder, box_url)
+            else:
+                folder = m.group(1)
 
             # Extract sport from the URL path. Sidearm uses several URL formats:
             #   Modern Angular: /sidearmstats/baseball/summary
