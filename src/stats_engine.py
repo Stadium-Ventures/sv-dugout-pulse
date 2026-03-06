@@ -2593,6 +2593,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 f"http://static.sidearmstats.com/schools/{folder}/{sport}/game.json"
                 "?detail=full"
             )
+            logger.info("Sidearm: fetching %s for %s (is_home=%s)", json_url, player_name, is_home)
             jresp = _http.get(json_url, timeout=_TIMEOUT_D1BASEBALL)
             jresp.raise_for_status()
             data = jresp.json()
@@ -2624,10 +2625,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if player_last in v.get("Name", "").lower():
                         return self._parse_sidearm_pitching_json(v)
 
-            logger.debug("Player %s not found in Sidearm stats JSON for %s", player_name, box_url)
+            logger.info("Sidearm: player %s not found in JSON for %s (is_home=%s, team_keys=%s)", player_name, box_url, is_home, team_keys)
             return None
-        except Exception:
-            logger.debug("Sidearm stats JSON fetch failed for %s @ %s", player_name, box_url)
+        except Exception as _exc:
+            logger.info("Sidearm stats JSON exception for %s @ %s: %s", player_name, box_url, _exc)
             return None
 
     @staticmethod
