@@ -2483,8 +2483,10 @@ class D1BaseballScraper(BaseSchoolScraper):
             resp.raise_for_status()
             html = resp.text
             final_url = resp.url
-        except Exception:
-            logger.debug("Sidearm HTML fetch failed for %s — attempting JSON fallback", box_url)
+        except Exception as _html_exc:
+            logger.info("Sidearm HTML fetch failed for %s (%s) — attempting JSON fallback", box_url, _html_exc)
+
+        logger.info("Sidearm parse: html_len=%d box_url=%s", len(html), box_url)
 
         # Primary path: Sidearm static JSON API.  Works even when html is empty
         # because _parse_sidearm_stats_json falls back to hostname-based folder
@@ -2493,10 +2495,11 @@ class D1BaseballScraper(BaseSchoolScraper):
             result = self._parse_sidearm_stats_json(
                 player_name, html, box_url, final_url=final_url, is_home=is_home,
             )
+            logger.info("Sidearm _parse_sidearm_stats_json result: %s", result)
             if result:
                 return result
-        except Exception:
-            pass
+        except Exception as _json_exc:
+            logger.info("Sidearm _parse_sidearm_stats_json raised: %s", _json_exc)
 
         if not html:
             return None
@@ -2562,9 +2565,9 @@ class D1BaseballScraper(BaseSchoolScraper):
                 # character at a time until the static API returns valid data.
                 folder = _sidearm_folder_from_url(box_url, sport="baseball")
                 if not folder:
-                    logger.debug("livestats_foldername not found and hostname fallback failed for %s", box_url)
+                    logger.info("Sidearm: livestats_foldername not found and hostname fallback failed for %s", box_url)
                     return None
-                logger.debug("Derived Sidearm folder %r from hostname for %s", folder, box_url)
+                logger.info("Sidearm: derived folder %r from hostname for %s", folder, box_url)
             else:
                 folder = m.group(1)
 
