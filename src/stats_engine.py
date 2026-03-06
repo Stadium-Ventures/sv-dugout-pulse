@@ -42,6 +42,13 @@ def _make_http_session() -> requests.Session:
     adapter = HTTPAdapter(pool_connections=10, pool_maxsize=20, max_retries=retry)
     session.mount("http://", adapter)
     session.mount("https://", adapter)
+    session.headers.update({
+        "User-Agent": (
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        )
+    })
     return session
 
 
