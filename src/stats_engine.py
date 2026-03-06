@@ -2472,21 +2472,37 @@ class D1BaseballScraper(BaseSchoolScraper):
         *is_home* constrains the search to the player's own team to avoid
         cross-team name collisions.
         """
+        # Fetch the school's HTML page — may be blocked by a WAF (e.g. Imperva
+        # blocks GitHub Actions datacenter IPs even with a browser User-Agent).
+        # We attempt it but treat failure as non-fatal so the JSON fallback
+        # (which probes static.sidearmstats.com directly) can still run.
+        html = ""
+        final_url = box_url
         try:
             resp = _http.get(box_url, timeout=_TIMEOUT_D1BASEBALL)
             resp.raise_for_status()
             html = resp.text
+            final_url = resp.url
+        except Exception:
+            logger.debug("Sidearm HTML fetch failed for %s — attempting JSON fallback", box_url)
 
-            # Primary path: Sidearm static JSON API (works for all JS-rendered sites)
-            # Pass the final URL (after redirects) so legacy boxscore.aspx links
-            # can still have their sport extracted from the redirected URL path.
+        # Primary path: Sidearm static JSON API.  Works even when html is empty
+        # because _parse_sidearm_stats_json falls back to hostname-based folder
+        # derivation when window.livestats_foldername is not found in the HTML.
+        try:
             result = self._parse_sidearm_stats_json(
-                player_name, html, box_url, final_url=resp.url, is_home=is_home,
+                player_name, html, box_url, final_url=final_url, is_home=is_home,
             )
             if result:
                 return result
+        except Exception:
+            pass
 
-            # Fallback: legacy HTML table parsing (rarely succeeds on modern Sidearm)
+        if not html:
+            return None
+
+        # Fallback: legacy HTML table parsing (rarely succeeds on modern Sidearm)
+        try:
             result = self._find_player_in_sidearm(player_name, html)
 
             # Supplement HR count from scoring summary if the batting table
@@ -2512,7 +2528,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
             return result
         except Exception:
-            logger.debug("Failed to fetch Sidearm box score at %s", box_url)
+            logger.debug("Failed to parse Sidearm box score at %s", box_url)
             return None
 
     def _parse_sidearm_stats_json(
