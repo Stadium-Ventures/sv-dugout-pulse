@@ -1406,12 +1406,14 @@ class BaseSchoolScraper(abc.ABC):
     """
 
     @abc.abstractmethod
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         """
         Return a stats dict for the player, or None if unavailable.
         Must not raise — catch and log internally.
 
         If *yesterday_only* is True, only return Final results from yesterday.
+        *position* is the player's roster position (e.g. "Two-Way") — subclasses
+        that support two-way merging use this; others may ignore it.
         """
         ...
 
@@ -1428,7 +1430,7 @@ class SidearmScraper(BaseSchoolScraper):
         # Add URLs as you discover them
     }
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         base_url = self.SIDEARM_URLS.get(team)
         if not base_url:
             logger.debug("No Sidearm URL configured for %s", team)
@@ -1461,7 +1463,7 @@ class StatBroadcastScraper(BaseSchoolScraper):
         # Add URLs as you discover them
     }
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         url = self.STATBROADCAST_URLS.get(team)
         if not url:
             logger.debug("No StatBroadcast URL configured for %s", team)
@@ -1488,7 +1490,7 @@ class NCAAOrgScraper(BaseSchoolScraper):
 
     BASE_URL = "https://stats.ncaa.org"
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         try:
             # stats.ncaa.org requires team lookup -> schedule -> boxscore
             # This is a structural placeholder — the site changes frequently
@@ -1526,7 +1528,7 @@ class NCAAComScraper(BaseSchoolScraper):
             self._scoreboard_cache.clear()
             self._boxscore_cache.clear()
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         self._refresh_today()
         try:
             all_games = self._find_all_games(team, yesterday_only=yesterday_only)
@@ -1907,8 +1909,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             self._today = current
             self._scores_cache.clear()
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         self._refresh_today()
+        is_two_way = (position == "Two-Way")
         try:
             tiles = self._find_all_game_tiles(team, yesterday_only=yesterday_only)
             if not tiles:
@@ -1957,6 +1960,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if "statbroadcast.com" in box_url or "statb.us" in box_url:
                     player_stats = self._parse_statbroadcast_box_score(
                         player_name, box_url, is_home=tile_info.get("is_home"),
+                        is_two_way=is_two_way,
                     )
                     if player_stats is not None:
                         # StatBroadcast is the authoritative source for game state —
@@ -1981,6 +1985,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 else:
                     player_stats = self._parse_sidearm_box_score(
                         player_name, box_url, is_home=tile_info.get("is_home"),
+                        is_two_way=is_two_way,
                     )
                     if player_stats:
                         context.update(player_stats)
@@ -2226,7 +2231,8 @@ class D1BaseballScraper(BaseSchoolScraper):
     # ---- StatBroadcast box score parsing ----
 
     def _parse_statbroadcast_box_score(
-        self, player_name: str, box_url: str, is_home: Optional[bool] = None
+        self, player_name: str, box_url: str, is_home: Optional[bool] = None,
+        is_two_way: bool = False,
     ) -> Optional[dict]:
         """Fetch and parse a StatBroadcast live stats page for a specific player.
 
@@ -2311,7 +2317,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                         sb_game_status = "Live"
                         sb_inning_label = state
 
-                result = self._parse_statbroadcast_html(player_name, html)
+                result = self._parse_statbroadcast_html(player_name, html, is_two_way=is_two_way)
                 if result:
                     result["_sb_game_status"] = sb_game_status or "Live"
                     if sb_inning_label:
@@ -2332,7 +2338,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         return None
 
     @staticmethod
-    def _parse_statbroadcast_html(player_name: str, html: str) -> Optional[dict]:
+    def _parse_statbroadcast_html(player_name: str, html: str, is_two_way: bool = False) -> Optional[dict]:
         """Parse a player's stats from StatBroadcast box score HTML.
 
         Full batting table cols:
@@ -2342,10 +2348,16 @@ class D1BaseballScraper(BaseSchoolScraper):
 
         The page also contains a "TODAY" summary table (first header = "TODAY") which
         has a different column layout and should be skipped.
+
+        When *is_two_way* is True, the loop scans all tables to collect both
+        batting and pitching lines before deciding what to return.
         """
         soup = BeautifulSoup(html, "html.parser")
         player_last = player_name.split()[-1].lower()
         player_first = player_name.split()[0].lower()[:3] if len(player_name.split()) > 1 else ""
+
+        batting_result: Optional[dict] = None
+        pitching_result: Optional[dict] = None
 
         for table in soup.select("table"):
             header_row = table.select_one("tr")
@@ -2376,7 +2388,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if not first_in_cell.startswith(player_first):
                         continue
 
-                if is_batting:
+                if is_batting and batting_result is None:
                     try:
                         ab  = int(cells[3])  if len(cells) > 3  and cells[3].isdigit()  else 0
                         r   = int(cells[4])  if len(cells) > 4  and cells[4].isdigit()  else 0
@@ -2393,27 +2405,28 @@ class D1BaseballScraper(BaseSchoolScraper):
                     # Pitchers appear in the batting table with 0 AB/BB — skip them
                     # so the loop can find their pitching line instead.
                     # Position players with 0 AB/BB are simply in the lineup but
-                    # haven't batted yet — return them as found.
+                    # haven't batted yet — record them as found.
                     if ab == 0 and bb == 0:
                         pos = cells[0].lower() if cells else ""
                         if pos in ("p", "sp", "rp"):
                             continue  # pitcher — look for pitching line
-                        return {"at_bats": 0, "hits": 0, "runs": 0, "rbi": 0,
-                                "walks": 0, "strikeouts": 0, "home_runs": 0,
-                                "stats_summary": "In lineup", "_player_found": True}
-                    parts = [f"{h}-{ab}"]
-                    if hr:  parts.append(_fmt(hr,  "HR"))
-                    if tpl: parts.append(_fmt(tpl, "3B"))
-                    if rbi: parts.append(_fmt(rbi, "RBI"))
-                    if r:   parts.append(_fmt(r,   "R"))
-                    if bb:  parts.append(_fmt(bb,  "BB"))
-                    if k:   parts.append(_fmt(k,   "K"))
-                    if dbl: parts.append(_fmt(dbl, "2B"))
-                    return {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
-                            "walks": bb, "strikeouts": k, "home_runs": hr,
-                            "stats_summary": ", ".join(parts), "_player_found": True}
+                        batting_result = {"at_bats": 0, "hits": 0, "runs": 0, "rbi": 0,
+                                          "walks": 0, "strikeouts": 0, "home_runs": 0,
+                                          "stats_summary": "In lineup", "_player_found": True}
+                    else:
+                        parts = [f"{h}-{ab}"]
+                        if hr:  parts.append(_fmt(hr,  "HR"))
+                        if tpl: parts.append(_fmt(tpl, "3B"))
+                        if rbi: parts.append(_fmt(rbi, "RBI"))
+                        if r:   parts.append(_fmt(r,   "R"))
+                        if bb:  parts.append(_fmt(bb,  "BB"))
+                        if k:   parts.append(_fmt(k,   "K"))
+                        if dbl: parts.append(_fmt(dbl, "2B"))
+                        batting_result = {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
+                                          "walks": bb, "strikeouts": k, "home_runs": hr,
+                                          "stats_summary": ", ".join(parts), "_player_found": True}
 
-                if is_pitching:
+                if is_pitching and pitching_result is None:
                     try:
                         ip_str = cells[3] if len(cells) > 3 else "0"
                         parts_ip = ip_str.split(".")
@@ -2429,10 +2442,22 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if er: parts.append(_fmt(er, "ER"))
                     if k:  parts.append(_fmt(k,  "K"))
                     if bb: parts.append(_fmt(bb, "BB"))
-                    return {"ip": ip, "hits_allowed": h, "earned_runs": er,
-                            "walks": bb, "strikeouts": k,
-                            "stats_summary": ", ".join(parts),
-                            "_player_found": True, "is_pitcher_line": True}
+                    pitching_result = {"ip": ip, "hits_allowed": h, "earned_runs": er,
+                                       "walks": bb, "strikeouts": k,
+                                       "stats_summary": ", ".join(parts),
+                                       "_player_found": True, "is_pitcher_line": True}
+
+        if is_two_way and batting_result and pitching_result:
+            bat_sum = batting_result.get("stats_summary", "")
+            pit_sum = pitching_result.get("stats_summary", "")
+            merged = {**batting_result, **pitching_result}
+            merged["stats_summary"] = f"{bat_sum} | {pit_sum}"
+            merged["is_two_way"] = True
+            return merged
+        if pitching_result is not None:
+            return pitching_result
+        if batting_result is not None:
+            return batting_result
         return None
 
     @staticmethod
@@ -2459,7 +2484,8 @@ class D1BaseballScraper(BaseSchoolScraper):
     # ---- Sidearm box score parsing ----
 
     def _parse_sidearm_box_score(
-        self, player_name: str, box_url: str, is_home: Optional[bool] = None
+        self, player_name: str, box_url: str, is_home: Optional[bool] = None,
+        is_two_way: bool = False,
     ) -> Optional[dict]:
         """Fetch and parse a Sidearm box score page for a specific player.
 
@@ -2486,20 +2512,18 @@ class D1BaseballScraper(BaseSchoolScraper):
         except Exception as _html_exc:
             logger.info("Sidearm HTML fetch failed for %s (%s) — attempting JSON fallback", box_url, _html_exc)
 
-        logger.info("Sidearm parse: html_len=%d box_url=%s", len(html), box_url)
-
         # Primary path: Sidearm static JSON API.  Works even when html is empty
         # because _parse_sidearm_stats_json falls back to hostname-based folder
         # derivation when window.livestats_foldername is not found in the HTML.
         try:
             result = self._parse_sidearm_stats_json(
                 player_name, html, box_url, final_url=final_url, is_home=is_home,
+                is_two_way=is_two_way,
             )
-            logger.info("Sidearm _parse_sidearm_stats_json result: %s", result)
             if result:
                 return result
         except Exception as _json_exc:
-            logger.info("Sidearm _parse_sidearm_stats_json raised: %s", _json_exc)
+            logger.debug("Sidearm _parse_sidearm_stats_json raised: %s", _json_exc)
 
         if not html:
             return None
@@ -2536,7 +2560,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
     def _parse_sidearm_stats_json(
         self, player_name: str, html: str, box_url: str, final_url: str = "",
-        is_home: Optional[bool] = None,
+        is_home: Optional[bool] = None, is_two_way: bool = False,
     ) -> Optional[dict]:
         """Fetch player stats from the Sidearm static JSON API.
 
@@ -2613,21 +2637,26 @@ class D1BaseballScraper(BaseSchoolScraper):
                 team_stats = stats.get(team_key, {})
                 pg = team_stats.get("PlayerGroups", {})
 
-                # Batting — don't return immediately on None (pitcher found in
-                # batting section with 0 AB/BB would short-circuit pitching lookup)
+                batting_result = None
                 batting = pg.get("Batting", {})
                 for v in batting.get("Values", []):
                     if player_last in v.get("Name", "").lower():
-                        result = self._parse_sidearm_batting_json(v)
-                        if result is not None:
-                            return result
-                        break  # found player, no batting stats; fall through to pitching
+                        batting_result = self._parse_sidearm_batting_json(v)
+                        break
 
-                # Pitching
+                pitching_result = None
                 pitching = pg.get("Pitching", {})
                 for v in pitching.get("Values", []):
                     if player_last in v.get("Name", "").lower():
-                        return self._parse_sidearm_pitching_json(v)
+                        pitching_result = self._parse_sidearm_pitching_json(v)
+                        break
+
+                if is_two_way and batting_result and pitching_result:
+                    return self._merge_two_way_stats(batting_result, pitching_result)
+                if pitching_result is not None:
+                    return pitching_result
+                if batting_result is not None:
+                    return batting_result
 
             logger.info("Sidearm: player %s not found in JSON for %s (is_home=%s, team_keys=%s)", player_name, box_url, is_home, team_keys)
             return None
@@ -2718,6 +2747,20 @@ class D1BaseballScraper(BaseSchoolScraper):
             }
         except Exception:
             return None
+
+    @staticmethod
+    def _merge_two_way_stats(batting: dict, pitching: dict) -> dict:
+        """Combine batting and pitching dicts for a two-way player.
+
+        Pitching fields take precedence for grading (is_pitcher_line=True).
+        stats_summary shows both lines separated by |.
+        """
+        bat_sum = batting.get("stats_summary", "")
+        pit_sum = pitching.get("stats_summary", "")
+        merged = {**batting, **pitching}   # pitching overwrites shared keys
+        merged["stats_summary"] = f"{bat_sum} | {pit_sum}"
+        merged["is_two_way"] = True
+        return merged
 
     @staticmethod
     def _count_hrs_from_summary(player_name: str, html: str) -> int:
@@ -2946,7 +2989,7 @@ class ESPNScraper(BaseSchoolScraper):
             self._scoreboard_cache.clear()
             self._summary_cache.clear()
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False) -> Optional[dict]:
+    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         self._refresh_today()
         try:
             all_games = self._find_all_games(team, yesterday_only=yesterday_only)
@@ -3408,13 +3451,14 @@ class NCAAStatsFetcher:
         """
         name = player.get("player_name", "")
         team = player.get("team", "")
+        position = player.get("position", "")
 
         scrapers = self._school_scrapers.get(team, self._default_chain)
         best_context = None
 
         for scraper in scrapers:
             try:
-                result = scraper.fetch_stats(name, team, yesterday_only=yesterday_only)
+                result = scraper.fetch_stats(name, team, yesterday_only=yesterday_only, position=position)
                 if result is None:
                     continue
 
@@ -3534,6 +3578,7 @@ class NCAAStatsFetcher:
         """
         name = player.get("player_name", "")
         team = player.get("team", "")
+        is_two_way = (player.get("position", "") == "Two-Way")
 
         # --- Detection gate: confirm 2+ team games exist ---
         # Primary: ESPN
@@ -3603,7 +3648,9 @@ class NCAAStatsFetcher:
                         continue
 
                     if "statbroadcast.com" in box_url or "statb.us" in box_url:
-                        player_stats = self._d1baseball._parse_statbroadcast_box_score(name, box_url)
+                        player_stats = self._d1baseball._parse_statbroadcast_box_score(
+                            name, box_url, is_two_way=is_two_way,
+                        )
                         if player_stats:
                             player_stats.pop("_sb_game_status", None)
                             player_stats.pop("_sb_inning_label", None)
@@ -3611,7 +3658,9 @@ class NCAAStatsFetcher:
                             context["_game_position"] = tile_idx
                             results.append(context)
                     else:
-                        player_stats = self._d1baseball._parse_sidearm_box_score(name, box_url)
+                        player_stats = self._d1baseball._parse_sidearm_box_score(
+                            name, box_url, is_two_way=is_two_way,
+                        )
                         if player_stats:
                             context.update(player_stats)
                             context["_game_position"] = tile_idx
