@@ -2613,11 +2613,15 @@ class D1BaseballScraper(BaseSchoolScraper):
                 team_stats = stats.get(team_key, {})
                 pg = team_stats.get("PlayerGroups", {})
 
-                # Batting
+                # Batting — don't return immediately on None (pitcher found in
+                # batting section with 0 AB/BB would short-circuit pitching lookup)
                 batting = pg.get("Batting", {})
                 for v in batting.get("Values", []):
                     if player_last in v.get("Name", "").lower():
-                        return self._parse_sidearm_batting_json(v)
+                        result = self._parse_sidearm_batting_json(v)
+                        if result is not None:
+                            return result
+                        break  # found player, no batting stats; fall through to pitching
 
                 # Pitching
                 pitching = pg.get("Pitching", {})
