@@ -2043,6 +2043,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
         results = []
         seen_keys = set()
+        seen_box_urls = set()
 
         for date_str, is_yesterday in dates_to_check:
             html = self._get_scores(date_str)
@@ -2078,10 +2079,23 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if not matched:
                     continue
 
+                # Extract box score link early — used for deduplication
+                box_link = tile.select_one(".box-score-links a")
+                box_url = box_link.get("href", "") if box_link else ""
+
+                # Deduplicate: D1Baseball lists the same game under multiple
+                # category sections (Top 25, SEC, Southland, etc.), each with a
+                # different data-key. Also deduplicate by box score URL so those
+                # duplicate category listings don't inflate the game count.
                 tile_key = tile.get("data-key", "")
-                if tile_key in seen_keys:
+                if tile_key and tile_key in seen_keys:
                     continue
-                seen_keys.add(tile_key)
+                if box_url and box_url in seen_box_urls:
+                    continue
+                if tile_key:
+                    seen_keys.add(tile_key)
+                if box_url:
+                    seen_box_urls.add(box_url)
 
                 # Status filtering
                 is_final = "status-final" in tile.get("class", [])
@@ -2091,10 +2105,6 @@ class D1BaseballScraper(BaseSchoolScraper):
                     continue
                 if is_yesterday and not (is_final or is_live):
                     continue
-
-                # Extract box score link
-                box_link = tile.select_one(".box-score-links a")
-                box_url = box_link.get("href", "") if box_link else ""
 
                 # Extract scores
                 teams = tile.select(".team")
