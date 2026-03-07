@@ -176,6 +176,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     game_status = stats.get("game_status", "N/A")
     game_date = stats.get("game_date") or date.today().isoformat()
     game_number = stats.get("game_number") or 0
+    split_squad = stats.get("split_squad", False)
     summary = stats.get("stats_summary", "")
 
     # Skip if no game data
@@ -183,7 +184,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
         return
 
     tier_label = f"T{tier}" if tier <= 4 else "T?"
-    gm_label = f" (Gm {game_number})" if game_number else ""
+    gm_label = " (SS)" if split_squad else (f" (Gm {game_number})" if game_number else "")
 
     # --- Alert: Home Run (any player, any tier) ---
     # Value-aware: re-alerts if HR count increases (e.g. 1→2)

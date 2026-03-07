@@ -300,6 +300,8 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     gn = stats.get("game_number")
     if gn:
         entry["game_number"] = gn
+    if stats.get("split_squad"):
+        entry["split_squad"] = True
     return entry
 
 

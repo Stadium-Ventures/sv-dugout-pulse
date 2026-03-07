@@ -512,6 +512,11 @@ class ProStatsFetcher:
             all_team_games = self._find_all_todays_games_team_only(team, player_id)
             is_doubleheader = len(all_team_games) > 1
 
+            # Spring Training split squad: two independent games, not a true DH
+            is_split_squad = is_doubleheader and any(
+                g.get("schedule", {}).get("game_type") == "S" for g in all_team_games
+            )
+
             # Build game_id → position map for correct numbering
             team_game_ids = [g["game_id"] for g in all_team_games]
 
@@ -526,6 +531,8 @@ class ProStatsFetcher:
                         result["game_number"] = team_game_ids.index(game["game_id"]) + 1
                     except ValueError:
                         result["game_number"] = len(results) + 1
+                    if is_split_squad:
+                        result["split_squad"] = True
                 results.append(result)
 
             return results
@@ -617,6 +624,11 @@ class ProStatsFetcher:
             )
             is_doubleheader = len(all_team_games) > 1
 
+            # Spring Training split squad: two independent games, not a true DH
+            is_split_squad = is_doubleheader and any(
+                g.get("schedule", {}).get("game_type") == "S" for g in all_team_games
+            )
+
             # Build a game_id → position map for numbering
             team_game_ids = [g["game_id"] for g in all_team_games]
 
@@ -636,6 +648,8 @@ class ProStatsFetcher:
                         result["game_number"] = team_game_ids.index(game["game_id"]) + 1
                     except ValueError:
                         result["game_number"] = len(results) + 1
+                    if is_split_squad:
+                        result["split_squad"] = True
 
                 results.append(result)
 

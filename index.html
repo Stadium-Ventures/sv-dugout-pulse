@@ -1007,7 +1007,7 @@ function renderCard(p) {
           : `<span class="player-name">${esc(p.player_name)}</span>`}
         ${heartbeatHtml(p.player_name, isClient)}
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
-        ${p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
+        ${p.split_squad ? '<span class="badge badge-gm">SS</span>' : p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
         <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
         <span class="badge badge-tier-dim">T${pri}</span>
