@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from .config import ROSTER_URL, SCHOOL_LOOKUP_PATH
+from .config import ROSTER_URL, SCHOOL_LOOKUP_PATH, NCAA_GAME_LOG_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -3572,7 +3572,128 @@ class NCAAStatsFetcher:
                 )
                 continue
 
+        # Game log fallback: if all scrapers returned "Did Not Play" for a
+        # Final game, check if an earlier successful run already captured
+        # today's stats in the game log (e.g. Imperva blocked later attempts
+        # after the first fetch succeeded while the game was live).
+        if (best_context is not None
+                and best_context.get("game_status") == "Final"
+                and best_context.get("stats_summary") == "Did Not Play"):
+            fallback = self._game_log_fallback(
+                name, team,
+                best_context.get("game_date", ""),
+                best_context.get("game_context", ""),
+                player.get("position", ""),
+            )
+            if fallback:
+                best_context.update(fallback)
+                best_context["data_source"] = "game log"
+                logger.info("Game log fallback: used cached stats for %s @ %s", name, team)
+
         return best_context  # may be None
+
+    @staticmethod
+    def _game_log_fallback(
+        player_name: str,
+        team: str,
+        game_date: str,
+        game_context: str,
+        position: str,
+    ) -> Optional[dict]:
+        """Return stats from the game log if today's game is already cached.
+
+        Triggers when all live scrapers return 'Did Not Play' for a Final game
+        that we know the player appeared in — e.g. when Imperva blocks the box
+        score page on a later run after an earlier run succeeded.
+
+        Matches on date + opponent name (extracted from game_context).
+        """
+        if not game_date:
+            return None
+        try:
+            with open(NCAA_GAME_LOG_PATH) as f:
+                log = json.load(f)
+        except Exception:
+            return None
+
+        key = f"{player_name}|{team}"
+        entries = log.get(key, [])
+        if not entries:
+            return None
+
+        # Normalise opponent from game_context for matching
+        ctx_lower = game_context.lower()
+
+        for entry in entries:
+            if entry.get("date") != game_date:
+                continue
+            opp = entry.get("opponent", "")
+            # Strip "vs " / "at " prefix, then check if the opponent name
+            # appears anywhere in the game_context string.
+            opp_clean = re.sub(r"^(vs\.?\s+|at\s+)", "", opp, flags=re.IGNORECASE).strip().lower()
+            if not opp_clean or opp_clean not in ctx_lower:
+                continue
+
+            stats = entry.get("stats", {})
+            if not stats:
+                continue
+
+            is_pitcher = position == "Pitcher" or "ip" in stats
+            if is_pitcher:
+                ip_val = float(stats.get("ip", "0") or "0")
+                outs = round(ip_val * 3)
+                innings, partial = divmod(outs, 3)
+                ip_display = f"{innings}.{partial}" if partial else str(innings)
+                er = int(stats.get("er", 0))
+                k  = int(stats.get("k", 0))
+                bb = int(stats.get("bb", 0))
+                h  = int(stats.get("h", 0))
+                parts = [f"{ip_display} IP"]
+                if h:  parts.append(f"{h} H")
+                parts.append(f"{er} ER")
+                parts.append(f"{k} K")
+                if bb: parts.append(f"{bb} BB")
+                qs = ip_val >= 6.0 and er <= 3
+                return {
+                    "stats_summary": ", ".join(parts),
+                    "is_pitcher_line": True,
+                    "ip": ip_val,
+                    "earned_runs": er,
+                    "strikeouts": k,
+                    "walks_allowed": bb,
+                    "hits_allowed": h,
+                    "quality_start": qs,
+                    "_player_found": True,
+                }
+            else:
+                ab  = int(stats.get("ab", 0))
+                h   = int(stats.get("h", 0))
+                hr  = int(stats.get("hr", 0))
+                rbi = int(stats.get("rbi", 0))
+                r   = int(stats.get("r", 0))
+                bb  = int(stats.get("bb", 0))
+                k   = int(stats.get("k", 0))
+                sb  = int(stats.get("sb", 0))
+                parts = [f"{h}-{ab}"]
+                if hr:  parts.append(f"{hr} HR")
+                if rbi: parts.append(f"{rbi} RBI")
+                if r:   parts.append(f"{r} R")
+                if sb:  parts.append(f"{sb} SB")
+                if bb:  parts.append(f"{bb} BB")
+                if k:   parts.append(f"{k} K")
+                return {
+                    "stats_summary": ", ".join(parts),
+                    "hits": h,
+                    "at_bats": ab,
+                    "home_runs": hr,
+                    "rbi": rbi,
+                    "runs": r,
+                    "stolen_bases": sb,
+                    "walks": bb,
+                    "strikeouts": k,
+                    "_player_found": True,
+                }
+        return None
 
     def _waterfall_fetch_all(self, player: dict, yesterday_only: bool = False) -> list[dict]:
         """Collect stats from ALL games when 2+ games exist (doubleheader).
