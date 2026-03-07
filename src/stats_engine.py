@@ -2807,30 +2807,54 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 rows = table.select("tr")
                 for row in rows:
-                    # Player name is in a <th> within the row
+                    # Player name is in a <th> within the row (standard Sidearm).
+                    # Some Sidearm variants (e.g. lionsports.net) put all cells
+                    # including the name in <td> — handle both layouts.
                     row_th = row.select("th")
-                    if not row_th:
+                    cells = row.select("td")
+                    if row_th:
+                        name_text = row_th[0].get_text(strip=True)
+                        stat_headers = col_headers[1:]  # skip "Player"
+                        cell_texts = [c.get_text(strip=True) for c in cells]
+                    elif cells:
+                        # All-<td> variant: locate "PLAYER" column by header to
+                        # handle tables that prepend a Position column before the
+                        # player name (e.g. lionsports.net batting tables).
+                        try:
+                            player_col_idx = next(
+                                i for i, h in enumerate(col_headers)
+                                if h in ("PLAYER", "NAME")
+                            )
+                        except StopIteration:
+                            player_col_idx = 0
+                        if player_col_idx >= len(cells):
+                            continue
+                        name_text = cells[player_col_idx].get_text(strip=True)
+                        stat_headers = col_headers[player_col_idx + 1:]
+                        cell_texts = [c.get_text(strip=True) for c in cells[player_col_idx + 1:]]
+                    else:
                         continue
-                    name_text = row_th[0].get_text(strip=True)
 
                     if player_last not in name_text.lower():
                         continue
 
-                    cells = row.select("td")
-                    if not cells:
+                    if not cell_texts:
                         continue
 
-                    # Build stat map: col_headers[1:] align with td cells
-                    # (col_headers[0] is "Player", rest are stat columns)
-                    stat_headers = col_headers[1:]  # skip "Player"
-                    # First td is typically Pos, rest are stats
-                    cell_texts = [c.get_text(strip=True) for c in cells]
-
-                    # Check if this is a batting or pitching table
-                    if "AB" in col_headers:
-                        return self._parse_sidearm_batting(stat_headers, cell_texts)
-                    elif "IP" in col_headers:
-                        return self._parse_sidearm_pitching(stat_headers, cell_texts)
+                    # Check if this is a batting or pitching table.
+                    # IP check first — some pitching tables also include an AB
+                    # column (batters faced), so IP is the more specific signal.
+                    # Only return if the parser finds real stats — pitchers often
+                    # appear as token 0-AB rows in batting tables, so we must
+                    # continue to the pitching table in that case.
+                    if "IP" in col_headers:
+                        result = self._parse_sidearm_pitching(stat_headers, cell_texts)
+                        if result is not None:
+                            return result
+                    elif "AB" in col_headers:
+                        result = self._parse_sidearm_batting(stat_headers, cell_texts)
+                        if result is not None:
+                            return result
 
             return None
         except Exception:
