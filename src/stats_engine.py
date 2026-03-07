@@ -3434,14 +3434,27 @@ class NCAAStatsFetcher:
         A ``_player_found`` flag (set by scrapers that locate the player
         in a box score) is also accepted — covers 0-AB appearances like
         pinch runners or walk-only plate appearances.
+
+        For pitcher lines specifically: require at least one non-zero
+        pitching stat.  All-zero pitcher lines (0 IP, 0 K, 0 BB, 0 H, 0 ER)
+        are scraper artifacts — e.g. ESPN matching a player by name in the
+        box score but returning stale/empty data.  A pitcher who genuinely
+        appeared would have at minimum IP > 0 or a walk or a hit.
         """
         if result.get("game_status") in ("Scheduled", "N/A"):
             return True  # no stats expected — accept as-is
+        if result.get("is_pitcher_line"):
+            return bool(
+                result.get("ip", 0) > 0
+                or result.get("strikeouts", 0) > 0
+                or result.get("walks_allowed", 0) > 0
+                or result.get("hits_allowed", 0) > 0
+                or result.get("earned_runs", 0) > 0
+            )
         return (
             result.get("_player_found", False)
             or result.get("at_bats", 0) > 0
             or result.get("ip", 0) > 0
-            or result.get("is_pitcher_line", False)
         )
 
     def _waterfall_fetch(self, player: dict, yesterday_only: bool = False) -> Optional[dict]:
