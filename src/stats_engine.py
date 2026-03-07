@@ -3194,7 +3194,11 @@ class ESPNScraper(BaseSchoolScraper):
                         if "Final" not in status_desc:
                             continue
                     elif is_yesterday:
-                        if "Progress" not in status_desc and "Final" not in status_desc:
+                        # Only include yesterday's games still in progress (late-night
+                        # spillover). Final games from yesterday must not be included
+                        # when searching for today's games — they would falsely make
+                        # any team that played yesterday appear to have 2 games today.
+                        if "Progress" not in status_desc:
                             continue
 
                     for competitor in comp.get("competitors", []):
