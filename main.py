@@ -565,6 +565,38 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
     logger.info("Yesterday pulse: %d total entries (%d added, %d upgraded)", len(existing), added, updated)
 
 
+def _load_locked_finals(today_str: str) -> dict[str, list[dict]]:
+    """Load Final entries from current_pulse.json to prevent re-fetching.
+
+    Returns a dict keyed by 'player_name|team' -> list of locked pulse entries.
+    Only NCAA entries are locked (Pro links are stable).  Entries must be
+    Final, have a game_date matching today, and contain real stats.
+    """
+    locked: dict[str, list[dict]] = {}
+    if not os.path.exists(OUTPUT_PATH):
+        return locked
+    try:
+        with open(OUTPUT_PATH) as f:
+            raw = json.load(f)
+        players = raw.get("players", raw) if isinstance(raw, dict) else raw
+        for p in players:
+            if p.get("game_status") != "Final":
+                continue
+            if p.get("level") != "NCAA":
+                continue
+            if p.get("game_date") != today_str:
+                continue
+            summary = p.get("stats_summary", "")
+            if summary in ("Did Not Play", "No game data", "Game cancelled", ""):
+                continue
+            key = f"{p['player_name']}|{p['team']}"
+            locked.setdefault(key, []).append(p)
+        logger.info("Stats lock: %d NCAA players with Final stats locked for %s", len(locked), today_str)
+    except Exception:
+        logger.warning("Failed to load locked finals — will re-fetch all")
+    return locked
+
+
 def run_live():
     """Full pipeline: fetch roster + recruits -> fetch stats -> grade -> alert -> write JSON."""
     logger.info("Starting live pulse run")
@@ -586,6 +618,9 @@ def run_live():
     recruits = [p for p in all_players if not p.get("is_client")]
     logger.info("Loaded %d clients + %d recruits", len(clients), len(recruits))
 
+    today_str = _today_et().isoformat()
+    locked_finals = _load_locked_finals(today_str)
+
     fetcher = StatsFetcher()
     analyzer = PerformanceAnalyzer()
 
@@ -595,7 +630,22 @@ def run_live():
         Returns (entries_list, alert_data_list) to support doubleheaders.
         """
         name = player["player_name"]
+        team = player["team"]
         is_client = player.get("is_client", True)
+
+        # Stats lock: if we already captured Final stats for this NCAA
+        # player today, carry them forward instead of re-fetching.
+        # This prevents stale/reused live links from corrupting data.
+        lock_key = f"{name}|{team}"
+        locked = locked_finals.get(lock_key)
+        if locked:
+            logger.info("%s | locked Final — skipping fetch", name)
+            # Still need to re-fetch if there could be an additional game
+            # (doubleheader).  If we locked 1 game but the player might
+            # have a 2nd, fetch anyway and merge.
+            # Simple case: single game locked, return it.
+            return locked, []
+
         try:
             all_stats = None
             for attempt in range(2):

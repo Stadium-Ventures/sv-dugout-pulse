@@ -2411,6 +2411,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             # Batting: name at cells[2] (POS, #, PLAYER, ...)
             # Pitching: name at cells[1] (no POS column: #, Player, ...)
             name_idx = 2 if is_batting else 1
+            _check_next_for_sub = False
+            _player_pos = ""
 
             for row in table.select("tr")[1:]:
                 cells = [c.get_text(strip=True) for c in row.select("td")]
@@ -2469,6 +2471,17 @@ class D1BaseballScraper(BaseSchoolScraper):
                         batting_result = {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
                                           "walks": bb, "strikeouts": k, "home_runs": hr,
                                           "stats_summary": ", ".join(parts), "_player_found": True}
+                    # Flag: check the very next row for a substitute
+                    _check_next_for_sub = True
+                    _player_pos = cells[0].upper() if cells else ""
+
+                # After finding our player, check if the NEXT row is a pinch
+                # hitter/runner — that means our player was pulled from the game.
+                elif is_batting and batting_result is not None and _check_next_for_sub:
+                    _check_next_for_sub = False  # only check the immediately next row
+                    sub_pos = cells[0].strip().upper() if cells else ""
+                    if sub_pos in ("PH", "PR"):
+                        batting_result["stats_summary"] += " (pulled)"
 
                 if is_pitching and pitching_result is None:
                     try:
