@@ -1249,15 +1249,27 @@ class ProStatsFetcher:
                     found_in_box = True
                     ab = int(entry.get("ab", 0))
                     bb = int(entry.get("bb", 0))
+                    order_str = entry.get("battingOrder", "")
                     if ab + bb > 0:
                         result.update(self._parse_batter_line(entry))
+                        # Check if this starter was later replaced
+                        if order_str and not entry.get("substitution", False):
+                            was_replaced = any(
+                                isinstance(b, dict)
+                                and b.get("battingOrder") == order_str
+                                and b.get("substitution", False)
+                                for b in batters
+                            )
+                            if was_replaced and result.get("stats_summary"):
+                                result["stats_summary"] += " (pulled)"
                     else:
                         # In lineup but no plate appearance yet
-                        order_str = entry.get("battingOrder", "")
                         pos = entry.get("position", "")
                         is_sub = entry.get("substitution", False)
                         if is_sub:
                             result["stats_summary"] = f"Entered game ({pos})" if pos else "Entered game"
+                        elif result.get("game_status") == "Final":
+                            result["stats_summary"] = f"Started — 0 PA ({pos})" if pos else "Started — 0 PA"
                         elif order_str and order_str.isdigit():
                             spot = int(order_str) // 100
                             result["stats_summary"] = f"In lineup — batting {self._ordinal(spot)} ({pos})" if pos else f"In lineup — batting {self._ordinal(spot)}"

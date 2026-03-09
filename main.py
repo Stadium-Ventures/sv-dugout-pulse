@@ -303,11 +303,16 @@ def _sanitize_stats(stats: dict) -> dict:
 
 def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     """Assemble a single player's output record."""
+    # Final game + "In lineup" = started but pulled before batting
+    summary = stats.get("stats_summary", "No game data")
+    if stats.get("game_status") == "Final" and summary in ("In lineup", "In starting lineup"):
+        summary = "Started — 0 PA"
+
     entry = {
         "player_name": player["player_name"],
         "team": player["team"],
         "level": player["level"],
-        "stats_summary": stats.get("stats_summary", "No game data"),
+        "stats_summary": summary,
         "game_context": stats.get("game_context", ""),
         "game_status": stats.get("game_status", "N/A"),
         "game_time": stats.get("game_time"),
@@ -691,6 +696,45 @@ def run_live():
 
     _fetch_yesterday_pass(all_players, fetcher, analyzer)
     _flush_ncaa_game_log()
+
+    # Quick NCAA L7 refresh — game log was just updated, so re-aggregate
+    # the NCAA portion of L7 window stats to include today's Final games.
+    _refresh_ncaa_l7(all_players)
+
+
+def _refresh_ncaa_l7(all_players: list[dict]):
+    """Re-aggregate NCAA L7 window stats from the freshly-flushed game log.
+
+    Only touches NCAA players and reads the local game log — no API calls.
+    Pro entries are preserved from the last full historical run.
+    """
+    try:
+        aggregator = WindowStatsAggregator()
+        today = date.today()
+        start_7d = today - timedelta(days=7)
+
+        # Load existing window data to preserve Pro entries
+        existing = []
+        if os.path.exists(WINDOW_7D_PATH):
+            with open(WINDOW_7D_PATH) as f:
+                raw = json.load(f)
+                existing = raw.get("players", raw) if isinstance(raw, dict) else raw
+
+        pro_entries = [e for e in existing if e.get("level") == "Pro"]
+
+        # Re-aggregate NCAA entries from the fresh game log
+        ncaa_entries = []
+        for player in all_players:
+            if player.get("level") != "NCAA":
+                continue
+            entry = aggregator._build_window_entry(player, "7d", start_7d, today)
+            if entry:
+                ncaa_entries.append(entry)
+
+        write_window_json(pro_entries + ncaa_entries, WINDOW_7D_PATH)
+        logger.info("NCAA L7 refresh: %d NCAA entries updated", len(ncaa_entries))
+    except Exception:
+        logger.exception("NCAA L7 refresh failed — window_7d.json unchanged")
 
 
 def run_mock():
