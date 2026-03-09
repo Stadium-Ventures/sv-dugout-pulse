@@ -57,12 +57,30 @@ _http = _make_http_session()
 # =============================================================================
 
 def ip_to_outs(ip_val) -> int:
-    """Convert innings pitched (e.g. '6.1') to total outs (e.g. 19)."""
+    """Convert innings pitched (e.g. '6.1') to total outs (e.g. 19).
+
+    Handles both baseball notation ('5.1' = 5⅓ IP) and accidental
+    float strings ('5.333333' = 5⅓ IP) by detecting fractional parts
+    that aren't valid baseball thirds (0, 1, 2).
+    """
     ip_str = str(ip_val)
     try:
         if "." in ip_str:
             parts = ip_str.split(".")
-            return (int(parts[0]) * 3) + int(parts[1])
+            whole = int(parts[0])
+            frac_str = parts[1]
+            # Valid baseball notation: fractional part is 0, 1, or 2
+            if frac_str in ("0", "1", "2"):
+                return whole * 3 + int(frac_str)
+            # Float value (e.g. "5.333333"): convert via rounding
+            frac = float(ip_val) - whole
+            if frac < 0.16:
+                outs = 0
+            elif frac < 0.5:
+                outs = 1
+            else:
+                outs = 2
+            return whole * 3 + outs
         return int(float(ip_str)) * 3
     except (ValueError, IndexError):
         return 0
