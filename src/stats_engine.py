@@ -2414,16 +2414,24 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 if is_batting and batting_result is None:
                     try:
-                        ab  = int(cells[3])  if len(cells) > 3  and cells[3].isdigit()  else 0
-                        r   = int(cells[4])  if len(cells) > 4  and cells[4].isdigit()  else 0
-                        h   = int(cells[5])  if len(cells) > 5  and cells[5].isdigit()  else 0
-                        rbi = int(cells[6])  if len(cells) > 6  and cells[6].isdigit()  else 0
-                        dbl = int(cells[7])  if len(cells) > 7  and cells[7].isdigit()  else 0
-                        tpl = int(cells[8])  if len(cells) > 8  and cells[8].isdigit()  else 0
-                        hr  = int(cells[9])  if len(cells) > 9  and cells[9].isdigit()  else 0
-                        bb  = int(cells[10]) if len(cells) > 10 and cells[10].isdigit() else 0
-                        k   = int(cells[11]) if len(cells) > 11 and cells[11].isdigit() else 0
-                    except (ValueError, IndexError):
+                        # Build stat map from headers instead of hardcoded indices
+                        # First 3 columns are always POS, #, PLAYER
+                        stat_headers = headers[3:]
+                        stat_values = cells[3:]
+                        stat_map = {}
+                        for i, hdr in enumerate(stat_headers):
+                            if i < len(stat_values):
+                                stat_map[hdr] = stat_values[i]
+                        ab  = int(stat_map["AB"])            if stat_map.get("AB", "").isdigit()  else 0
+                        r   = int(stat_map.get("R", "0"))    if stat_map.get("R", "").isdigit()   else 0
+                        h   = int(stat_map.get("H", "0"))    if stat_map.get("H", "").isdigit()   else 0
+                        rbi = int(stat_map.get("RBI", "0"))  if stat_map.get("RBI", "").isdigit() else 0
+                        dbl = int(stat_map.get("2B", "0"))   if stat_map.get("2B", "").isdigit()  else 0
+                        tpl = int(stat_map.get("3B", "0"))   if stat_map.get("3B", "").isdigit()  else 0
+                        hr  = int(stat_map.get("HR", "0"))   if stat_map.get("HR", "").isdigit()  else 0
+                        bb  = int(stat_map.get("BB", "0"))   if stat_map.get("BB", "").isdigit()  else 0
+                        k   = int(stat_map.get("K", "0"))    if stat_map.get("K", "").isdigit()   else 0
+                    except (ValueError, IndexError, KeyError):
                         continue
                     # If no plate appearances yet, check position to decide what to do.
                     # Pitchers appear in the batting table with 0 AB/BB — skip them
@@ -2452,13 +2460,21 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 if is_pitching and pitching_result is None:
                     try:
-                        ip_str = cells[3] if len(cells) > 3 else "0"
+                        # Build stat map from headers instead of hardcoded indices
+                        # Pitching tables: #(0), Player(1), then stat columns
+                        stat_headers = headers[2:]
+                        stat_values = cells[2:]
+                        stat_map = {}
+                        for i, hdr in enumerate(stat_headers):
+                            if i < len(stat_values):
+                                stat_map[hdr] = stat_values[i]
+                        ip_str = stat_map.get("IP", "0")
                         parts_ip = ip_str.split(".")
                         ip = int(parts_ip[0]) + (int(parts_ip[1]) / 3 if len(parts_ip) > 1 else 0)
-                        h  = int(cells[4]) if len(cells) > 4 and cells[4].isdigit() else 0
-                        er = int(cells[6]) if len(cells) > 6 and cells[6].isdigit() else 0
-                        bb = int(cells[7]) if len(cells) > 7 and cells[7].isdigit() else 0
-                        k  = int(cells[8]) if len(cells) > 8 and cells[8].isdigit() else 0
+                        h  = int(stat_map.get("H", "0"))  if stat_map.get("H", "").isdigit()  else 0
+                        er = int(stat_map.get("ER", "0")) if stat_map.get("ER", "").isdigit() else 0
+                        bb = int(stat_map.get("BB", "0")) if stat_map.get("BB", "").isdigit() else 0
+                        k  = int(stat_map.get("K", "0"))  if stat_map.get("K", "").isdigit()  else 0
                     except (ValueError, IndexError):
                         continue
                     parts = [f"{ip_str} IP"]

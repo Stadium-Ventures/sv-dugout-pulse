@@ -46,6 +46,35 @@ _ncaa_log_pending: list[tuple] = []  # [(key, game_date, opponent, entry_stats),
 _ncaa_log_lock = threading.Lock()
 
 
+def _ip_float_to_display(ip_val) -> str:
+    """Convert IP float (e.g. 5.333) back to baseball notation (e.g. '5.1')."""
+    if isinstance(ip_val, str):
+        try:
+            val = float(ip_val)
+        except (ValueError, TypeError):
+            return ip_val
+    else:
+        try:
+            val = float(ip_val)
+        except (ValueError, TypeError):
+            return "0"
+
+    if val == 0:
+        return "0"
+
+    whole = int(val)
+    frac = val - whole
+    # Map fractional part to outs: ~0.33 = 1 out, ~0.67 = 2 outs
+    if frac < 0.16:
+        outs = 0
+    elif frac < 0.5:
+        outs = 1
+    else:
+        outs = 2
+
+    return f"{whole}.{outs}" if outs else str(whole)
+
+
 def _today_et() -> date:
     """Return today's date in ET with a 4 AM day boundary."""
     now = datetime.now(_ET)
@@ -129,7 +158,7 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
     # Two-Way: trust the scraper's is_pitcher_line flag
     if is_pitcher:
         entry_stats = {
-            "ip": str(stats.get("ip", "0")),
+            "ip": _ip_float_to_display(stats.get("ip", 0)),
             "er": int(stats.get("earned_runs", stats.get("er", 0))),
             "k": int(stats.get("strikeouts", stats.get("k", 0))),
             "bb": int(stats.get("walks_allowed", stats.get("bb", 0))),

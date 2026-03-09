@@ -8,8 +8,6 @@ import logging
 from urllib.parse import quote
 
 from .config import (
-    HITTER_GOOD_HITS,
-    HITTER_STANDOUT_HITS,
     PITCHER_QS_IP,
     PITCHER_QS_MAX_ER,
     PITCHER_STANDOUT_KS,
@@ -84,62 +82,89 @@ class PerformanceAnalyzer:
         doubles = stats.get("doubles", 0)
         triples = stats.get("triples", 0)
         hbp = stats.get("hit_by_pitch", 0)
-        xbh = doubles + triples + hr  # extra-base hits
-        tob = hits + bb + hbp  # times on base
-        pa = ab + bb + hbp     # plate appearances
+        pa = ab + bb + hbp
+        singles = max(hits - doubles - triples - hr, 0)
+        tob = hits + bb + hbp
 
-        # Standout: HR, 3+ hits, high-leverage RBI (3+),
-        # elite plate discipline (3+ BB), dominant OBP day (4+ TOB),
-        # or 2+ stolen bases
-        if (hr >= 1 or hits >= HITTER_STANDOUT_HITS or rbi >= 3
-                or bb >= 3 or tob >= 4 or sb >= 2):
-            reasons = []
-            if hr >= 1:
-                reasons.append(f"{hr} HR" if hr > 1 else "Home run")
-            if hits >= HITTER_STANDOUT_HITS:
-                reasons.append(f"{hits} hits")
-            if rbi >= 3:
-                reasons.append(f"{rbi} RBI")
-            if bb >= 3:
-                reasons.append(f"{bb} walks — great plate discipline")
-            if tob >= 4 and not reasons:
-                reasons.append(f"Reached base {tob} times")
-            if sb >= 2:
-                reasons.append(f"{sb} stolen bases")
-            return GRADE_STANDOUT, " + ".join(reasons) if reasons else "Big game"
+        # ── Game wOBA (standard linear weights) ──
+        woba_num = (
+            0.69 * (bb + hbp)
+            + 0.87 * singles
+            + 1.22 * doubles
+            + 1.58 * triples
+            + 2.01 * hr
+        )
+        woba = woba_num / pa if pa > 0 else 0.0
 
-        # Good: 2+ hits, productive on-base day (2+ TOB in 3+ PA), 2+ RBI,
-        # stolen base, or extra-base hit (2B/3B)
-        if (hits >= HITTER_GOOD_HITS or (tob >= 2 and pa >= 3)
-                or rbi >= 2 or sb >= 1 or xbh >= 1):
-            if xbh >= 1 and not hr:
-                xb_type = "triple" if triples else "double"
-                return GRADE_GOOD, f"Extra-base hit ({xb_type})"
-            if hits >= HITTER_GOOD_HITS:
-                return GRADE_GOOD, f"{hits} hits"
-            if rbi >= 2:
-                return GRADE_GOOD, f"{rbi} RBI"
-            if sb >= 1:
-                return GRADE_GOOD, "Stolen base"
-            if tob >= 2:
-                return GRADE_GOOD, f"Reached base {tob} times in {pa} PA"
-            return GRADE_GOOD, "Productive at-bat"
+        # Bonuses: a little extra for SB, tiny extra for RBI
+        game_score = woba + 0.10 * sb + 0.03 * rbi
 
-        # Good start: reached base early in the game (1-for-1, walk in first PA, etc.)
-        if pa <= 2 and tob >= 1:
-            return GRADE_GOOD, "Reached base early"
+        # Hard rule: 0-for-3+ is never Good or better
+        hitless_cap = hits == 0 and ab >= 3
 
-        # Off Day: hitless in 4+ AB, or 3+ strikeouts
-        if (ab >= 4 and hits == 0) or (k >= 3 and pa >= 3):
-            reasons = []
-            if ab >= 4 and hits == 0:
-                reasons.append(f"Hitless in {ab} at-bats")
+        # ── Off Day: hitless in 4+ AB ──
+        if ab >= 4 and hits == 0:
+            reasons = [f"Hitless in {ab} at-bats"]
             if k >= 3:
                 reasons.append(f"{k} strikeouts")
             return GRADE_SOFT_FLAG, " with ".join(reasons)
 
-        # Routine: everything else
+        # ── Standout: dominant wOBA game (>= .650) ──
+        if game_score >= 0.650 and not hitless_cap:
+            return GRADE_STANDOUT, self._hitter_reason(stats, tob)
+
+        # ── Good: solid wOBA game (>= .350) ──
+        if game_score >= 0.350 and not hitless_cap:
+            return GRADE_GOOD, self._hitter_reason(stats, tob)
+
+        # ── Good: reached base early (small sample, game still going) ──
+        if pa <= 2 and tob >= 1 and not hitless_cap:
+            return GRADE_GOOD, "Reached base early"
+
+        # ── Routine ──
         return GRADE_ROUTINE, f"{hits}-for-{ab}" if ab > 0 else ""
+
+    @staticmethod
+    def _hitter_reason(stats: dict, tob: int) -> str:
+        """Build a human-readable reason string for Good/Standout grades."""
+        hr = stats.get("home_runs", 0)
+        hits = stats.get("hits", 0)
+        doubles = stats.get("doubles", 0)
+        triples = stats.get("triples", 0)
+        sb = stats.get("stolen_bases", 0)
+        rbi = stats.get("rbi", 0)
+        bb = stats.get("walks", 0)
+
+        reasons = []
+        if hr >= 1:
+            reasons.append(f"{hr} HR" if hr > 1 else "Home run")
+        if hits >= 3:
+            reasons.append(f"{hits} hits")
+        elif doubles + triples >= 1 and not hr:
+            xb_count = doubles + triples
+            xb_type = "triple" if triples else "double"
+            if xb_count > 1:
+                reasons.append(f"{xb_count} extra-base hits")
+            else:
+                reasons.append(f"Extra-base hit ({xb_type})")
+        if sb >= 2:
+            reasons.append(f"{sb} stolen bases")
+        if rbi >= 3:
+            reasons.append(f"{rbi} RBI")
+        if bb >= 3:
+            reasons.append(f"{bb} walks")
+        if not reasons:
+            if tob >= 3:
+                reasons.append(f"Reached base {tob} times")
+            elif hits >= 2:
+                reasons.append(f"{hits} hits")
+            elif rbi >= 2:
+                reasons.append(f"{rbi} RBI")
+            elif sb >= 1:
+                reasons.append("Stolen base")
+            else:
+                reasons.append("Productive game")
+        return " + ".join(reasons)
 
     def _grade_pitcher(self, stats: dict) -> tuple[str, str]:
         ip = stats.get("ip", 0.0)
