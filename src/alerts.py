@@ -185,6 +185,8 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
 
     tier_label = f"T{tier}" if tier <= 4 else "T?"
     gm_label = " (SS)" if split_squad else (f" (Gm {game_number})" if game_number else "")
+    box_url = stats.get("box_score_url", "")
+    box_link = f"\n<{box_url}|Box Score>" if box_url else ""
 
     # --- Alert: Home Run (any player, any tier) ---
     # Value-aware: re-alerts if HR count increases (e.g. 1→2)
@@ -201,7 +203,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
             hr_text = "a HR"
         if send_slack_message(
             f"{emoji} *{name}* ({tier_label}) just hit {hr_text}{gm_label}!\n"
-            f"_{team}_ — {summary} — {game_context}"
+            f"_{team}_ — {summary} — {game_context}{box_link}"
         ):
             _mark_sent(game_date, name, "hr", value=hr, game_number=game_number)
 
@@ -215,7 +217,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     if is_pitching and ip > 0 and not _already_sent(game_date, name, "entered", game_number=game_number):
         if send_slack_message(
             f"🔥 *{name}* ({tier_label}) is pitching{gm_label}!\n"
-            f"_{team}_ — {summary} — {game_context}"
+            f"_{team}_ — {summary} — {game_context}{box_link}"
         ):
             _mark_sent(game_date, name, "entered", game_number=game_number)
 
@@ -237,7 +239,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
                 k_label = f"{strikeouts} K's"
             if send_slack_message(
                 f"{k_emoji} *{name}* ({tier_label}) has {k_label}{gm_label}!\n"
-                f"_{team}_ — {summary} — {game_context}"
+                f"_{team}_ — {summary} — {game_context}{box_link}"
             ):
                 _mark_sent(game_date, name, "ks", value=strikeouts, game_number=game_number)
 
@@ -246,7 +248,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
         if not _already_sent(game_date, name, "qs", game_number=game_number):
             if send_slack_message(
                 f"⭐ *{name}* ({tier_label}) — strong outing (6+ IP, 3 or fewer runs){gm_label}!\n"
-                f"_{team}_ — {summary} — {game_context}"
+                f"_{team}_ — {summary} — {game_context}{box_link}"
             ):
                 _mark_sent(game_date, name, "qs", game_number=game_number)
 
@@ -272,7 +274,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
                 if send_slack_message(
                     f"💪 *{name}* ({tier_label}) has reached base "
                     f"{tob_count}+ times{gm_label}!\n"
-                    f"_{team}_ — {summary} — {game_context}"
+                    f"_{team}_ — {summary} — {game_context}{box_link}"
                 ):
                     _mark_sent(game_date, name, "3ob", game_number=game_number)
 
@@ -281,7 +283,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
         if not _already_sent(game_date, name, "standout_recap", game_number=game_number):
             if send_slack_message(
                 f"🌟 *{name}* ({tier_label}) — Standout performance{gm_label}!\n"
-                f"_{team}_ — {summary} — {game_context}"
+                f"_{team}_ — {summary} — {game_context}{box_link}"
             ):
                 _mark_sent(game_date, name, "standout_recap", game_number=game_number)
 

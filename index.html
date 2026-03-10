@@ -1200,11 +1200,11 @@ function renderWindowCard(p) {
         statLine = `${s.ip ?? '0'} IP, ${s.er ?? 0} ER, ${s.k ?? 0} K, ${s.bb ?? 0} BB`;
       } else {
         // Hitter line
-        const parts = [`${s.h}-${s.ab}`];
-        if (s.hr > 0) parts.push(`${s.hr} HR`);
-        if (s.rbi > 0) parts.push(`${s.rbi} RBI`);
-        if (s.r > 0) parts.push(`${s.r} R`);
-        if (s.sb > 0) parts.push(`${s.sb} SB`);
+        const parts = [`${s.h ?? 0}-${s.ab ?? 0}`];
+        if ((s.hr ?? 0) > 0) parts.push(`${s.hr} HR`);
+        if ((s.rbi ?? 0) > 0) parts.push(`${s.rbi} RBI`);
+        if ((s.r ?? 0) > 0) parts.push(`${s.r} R`);
+        if ((s.sb ?? 0) > 0) parts.push(`${s.sb} SB`);
         statLine = parts.join(', ');
       }
       const oppStr = g.opponent ? `<span class="game-log-opp">${esc(g.opponent)}</span> ` : '';
