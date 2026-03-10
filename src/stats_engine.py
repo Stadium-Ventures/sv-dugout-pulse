@@ -2501,10 +2501,12 @@ class D1BaseballScraper(BaseSchoolScraper):
                         if rbi: parts.append(_fmt(rbi, "RBI"))
                         if r:   parts.append(_fmt(r,   "R"))
                         if bb:  parts.append(_fmt(bb,  "BB"))
+                        sb  = int(stat_map.get("SB",  "0")) if stat_map.get("SB",  "").isdigit() else 0
+                        _hbp_raw = stat_map.get("HBP", "") or stat_map.get("HP", "")
+                        hbp = int(_hbp_raw) if str(_hbp_raw).isdigit() else 0
+                        if hbp: parts.append(_fmt(hbp, "HBP"))
                         if k:   parts.append(_fmt(k,   "K"))
                         if dbl: parts.append(_fmt(dbl, "2B"))
-                        sb  = int(stat_map.get("SB", "0"))  if stat_map.get("SB", "").isdigit() else 0
-                        hbp = int(stat_map.get("HBP", "0")) if stat_map.get("HBP", "").isdigit() else 0
                         batting_result = {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
                                           "walks": bb, "strikeouts": k, "home_runs": hr,
                                           "doubles": dbl, "triples": tpl, "stolen_bases": sb,
@@ -2808,8 +2810,9 @@ class D1BaseballScraper(BaseSchoolScraper):
             bb  = int(v.get("Walks", 0) or 0)
             k   = int(v.get("Strikeouts", 0) or 0)
             sb  = int(v.get("StolenBases", 0) or 0)
+            hbp = int(v.get("HitByPitch", 0) or 0)
 
-            if ab == 0 and bb == 0:
+            if ab == 0 and bb == 0 and hbp == 0:
                 return None  # didn't actually play
 
             parts = [f"{h}-{ab}"]
@@ -2825,12 +2828,12 @@ class D1BaseballScraper(BaseSchoolScraper):
                 parts.append(_fmt(sb, "SB"))
             if bb:
                 parts.append(_fmt(bb, "BB"))
+            if hbp:
+                parts.append(_fmt(hbp, "HBP"))
             if k:
                 parts.append(_fmt(k, "K"))
             if dbl:
                 parts.append(_fmt(dbl, "2B"))
-
-            hbp = int(v.get("HitByPitch", 0) or 0)
 
             return {
                 "stats_summary": ", ".join(parts),
@@ -3521,6 +3524,8 @@ class ESPNScraper(BaseSchoolScraper):
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if hbp:
+            parts.append(_fmt(hbp, "HBP"))
         if k:
             parts.append(_fmt(k, "K"))
 
