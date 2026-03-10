@@ -729,8 +729,27 @@ def run_live():
             if alert_data_list:
                 alert_queue.extend(alert_data_list)
 
+    # Deduplicate alert queue before sending.
+    # False doubleheader detection can produce 2 entries for the same player+game
+    # with different game_numbers, causing duplicate alerts.  Drop any entry whose
+    # (player, game_date, stats fingerprint) was already seen in this run.
+    seen_alert_fingerprints: set = set()
+    deduped_alert_queue = []
+    for _ap, _as, _ag in alert_queue:
+        _fp = (
+            _ap.get("player_name", ""),
+            _as.get("game_date", ""),
+            _as.get("home_runs", 0),
+            _as.get("hits", 0),
+            _as.get("at_bats", 0),
+            _as.get("ip", 0.0),
+        )
+        if _fp not in seen_alert_fingerprints:
+            seen_alert_fingerprints.add(_fp)
+            deduped_alert_queue.append((_ap, _as, _ag))
+
     # Send alerts serially to avoid Slack rate limits
-    for player, stats, grade in alert_queue:
+    for player, stats, grade in deduped_alert_queue:
         check_and_send_alerts(player, stats, grade=grade)
     save_sent_alerts()  # Persist all alert state in one write
 

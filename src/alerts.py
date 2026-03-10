@@ -94,14 +94,36 @@ def _alert_key(game_date: str, player_name: str, alert_type: str,
     return base
 
 
+_COOLDOWN_MINUTES = 20  # Suppress identical alerts within this window
+
+
 def _already_sent(game_date: str, player_name: str, alert_type: str,
                   current_value=None, game_number: int = 0) -> bool:
     """Check if this alert was already sent (persists across runs).
 
     For value-aware alerts (like HR count), re-triggers if current_value
     exceeds the previously alerted value.
+
+    Also checks a cooldown guard using the :ts timestamp key written by
+    _mark_sent.  If the same alert (ignoring game_number) was sent within
+    _COOLDOWN_MINUTES, treat it as already sent — this catches cross-run
+    duplicates when a prior run's git push was skipped (rebase conflict).
     """
     key = _alert_key(game_date, player_name, alert_type, game_number)
+
+    # Cooldown guard: check the game_number=0 timestamp key as a catch-all.
+    # If ANY game_number variant of this alert was sent recently, skip.
+    base_ts_key = _alert_key(game_date, player_name, alert_type, 0) + ":ts"
+    ts_str = _sent_alerts.get(base_ts_key) or _sent_alerts.get(key + ":ts")
+    if ts_str:
+        try:
+            sent_at = datetime.fromisoformat(ts_str)
+            age_minutes = (datetime.now(ZoneInfo("UTC")) - sent_at).total_seconds() / 60
+            if age_minutes < _COOLDOWN_MINUTES:
+                return True
+        except Exception:
+            pass
+
     if key not in _sent_alerts:
         return False
     # Value-aware check: re-alert if the stat increased (e.g. 2nd HR)
@@ -114,9 +136,16 @@ def _already_sent(game_date: str, player_name: str, alert_type: str,
 
 def _mark_sent(game_date: str, player_name: str, alert_type: str,
                value=True, game_number: int = 0):
-    """Mark an alert as sent (in-memory). Call save_sent_alerts() to persist."""
+    """Mark an alert as sent (in-memory). Call save_sent_alerts() to persist.
+
+    Stores the value AND a sent_at timestamp.  The timestamp enables a
+    cooldown guard in _already_sent that catches cross-run duplicates even
+    when the previous run's sent_alerts.json push was skipped (rebase conflict).
+    """
     key = _alert_key(game_date, player_name, alert_type, game_number)
     _sent_alerts[key] = value
+    # Also store a timestamp key so the cooldown check can compare wall-clock time
+    _sent_alerts[key + ":ts"] = datetime.now(ZoneInfo("UTC")).isoformat()
 
 
 # ---------------------------------------------------------------------------
