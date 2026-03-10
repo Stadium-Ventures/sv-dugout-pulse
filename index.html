@@ -1196,8 +1196,12 @@ function renderWindowCard(p) {
       const s = g.stats || {};
       let statLine;
       if ('ip' in s && !('ab' in s)) {
-        // Pitcher line
-        statLine = `${s.ip ?? '0'} IP, ${s.er ?? 0} ER, ${s.k ?? 0} K, ${s.bb ?? 0} BB`;
+        // Pitcher line (handle '--' sentinel for sparse/missing data)
+        const gIp = (s.ip == null || s.ip === '--') ? '0' : s.ip;
+        const gEr = (s.er == null || s.er === '--') ? 0 : s.er;
+        const gK  = (s.k  == null || s.k  === '--') ? 0 : s.k;
+        const gBb = (s.bb == null || s.bb === '--') ? 0 : s.bb;
+        statLine = `${gIp} IP, ${gEr} ER, ${gK} K, ${gBb} BB`;
       } else {
         // Hitter line
         const parts = [`${s.h ?? 0}-${s.ab ?? 0}`];
@@ -1659,6 +1663,10 @@ function manageAutoRefresh() {
           indicator.querySelector('span').textContent = 'Auto-refreshing';
         } else {
           indicator.querySelector('span').textContent = 'Update failed — retrying';
+          // Retry sooner on failure instead of waiting full 5 min
+          clearInterval(autoRefreshTimer);
+          autoRefreshTimer = null;
+          setTimeout(() => setupAutoRefresh(), 15000);
         }
       }, 300000);
     }

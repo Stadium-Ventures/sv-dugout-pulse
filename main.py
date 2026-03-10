@@ -117,24 +117,29 @@ def _normalize_date(d: str) -> str:
 
 
 def _extract_opponent(game_context: str, player_team: str) -> str:
-    """Extract opponent from game context like 'Texas 5, Arkansas 3 | Final'."""
+    """Extract opponent from game context like 'Texas 5, Arkansas 3 | Final'.
+
+    Also handles score-less contexts like 'Texas vs Arkansas | Scheduled'
+    and MLB formats like 'New York Yankees 4, New York Mets 10 | Final'.
+    """
     if not game_context:
         return ""
     # Strip status suffix (e.g. " | Final", " | Top 5th")
     score_part = game_context.split("|")[0].strip()
-    # Try to find teams: "TeamA N, TeamB N" or "TeamA N @ TeamB N"
-    # Match patterns like "Texas 5, Arkansas 3" or "Texas 5 @ Arkansas 3"
+
+    # Pattern 1: "TeamA N, TeamB N" or "TeamA N @ TeamB N" (with scores)
     m = re.match(r"^(.+?)\s+\d+\s*[,@]\s*(.+?)\s+\d+", score_part)
+    if not m:
+        # Pattern 2: "TeamA vs TeamB" or "TeamA at TeamB" (no scores)
+        m = re.match(r"^(.+?)\s+(?:vs\.?|at|@)\s+(.+?)$", score_part, re.IGNORECASE)
     if m:
         team_a, team_b = m.group(1).strip(), m.group(2).strip()
         # The opponent is whichever team isn't ours
-        if player_team.lower() in team_a.lower():
+        pt = player_team.lower()
+        if pt in team_a.lower() or team_a.lower() in pt:
             return f"vs {team_b}"
-        elif player_team.lower() in team_b.lower():
+        elif pt in team_b.lower() or team_b.lower() in pt:
             return f"vs {team_a}"
-        # Fallback: partial match
-        if team_a.lower() in player_team.lower():
-            return f"vs {team_b}"
         return f"vs {team_a}"
     return ""
 
@@ -333,6 +338,7 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "box_score_url": stats.get("box_score_url"),
         "player_profile_url": _build_profile_url(player, stats),
         "performance_grade": analysis["performance_grade"],
+        "grade_reason": analysis.get("grade_reason", ""),
         "social_search_url": analysis["social_search_url"],
         "data_source": stats.get("data_source", ""),
         "is_client": player.get("is_client", True),
