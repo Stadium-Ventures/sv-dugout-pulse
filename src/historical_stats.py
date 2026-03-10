@@ -805,7 +805,7 @@ class NCAAGameLogAggregator:
     def _aggregate_hitter(self, entries: list[dict]) -> tuple[dict, list]:
         totals = {
             "h": 0, "ab": 0, "hr": 0, "2b": 0, "3b": 0,
-            "rbi": 0, "r": 0, "bb": 0, "k": 0, "sb": 0,
+            "rbi": 0, "r": 0, "bb": 0, "hbp": 0, "k": 0, "sb": 0,
         }
         game_entries = []
 
@@ -819,6 +819,7 @@ class NCAAGameLogAggregator:
             totals["rbi"] += int(s.get("rbi", 0))
             totals["r"] += int(s.get("r", 0))
             totals["bb"] += int(s.get("bb", 0))
+            totals["hbp"] += int(s.get("hbp", 0))
             totals["k"] += int(s.get("k", 0))
             totals["sb"] += int(s.get("stolen_bases", s.get("sb", 0)))
             game_entries.append({
@@ -828,6 +829,7 @@ class NCAAGameLogAggregator:
                     "h": int(s.get("h", 0)), "ab": int(s.get("ab", 0)),
                     "hr": int(s.get("hr", 0)), "rbi": int(s.get("rbi", 0)),
                     "r": int(s.get("r", 0)), "bb": int(s.get("bb", 0)),
+                    "hbp": int(s.get("hbp", 0)),
                     "k": int(s.get("k", 0)), "sb": int(s.get("stolen_bases", s.get("sb", 0))),
                 },
             })
@@ -835,7 +837,7 @@ class NCAAGameLogAggregator:
         # Sort game entries most recent first
         game_entries.sort(key=lambda g: g["date"], reverse=True)
 
-        hbp = 0
+        hbp = totals["hbp"]
         sf = 0
         pa = totals["ab"] + totals["bb"] + hbp + sf
         avg = totals["h"] / totals["ab"] if totals["ab"] > 0 else 0

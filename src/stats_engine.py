@@ -2477,8 +2477,12 @@ class D1BaseballScraper(BaseSchoolScraper):
                         if bb:  parts.append(_fmt(bb,  "BB"))
                         if k:   parts.append(_fmt(k,   "K"))
                         if dbl: parts.append(_fmt(dbl, "2B"))
+                        sb  = int(stat_map.get("SB", "0"))  if stat_map.get("SB", "").isdigit() else 0
+                        hbp = int(stat_map.get("HBP", "0")) if stat_map.get("HBP", "").isdigit() else 0
                         batting_result = {"at_bats": ab, "hits": h, "runs": r, "rbi": rbi,
                                           "walks": bb, "strikeouts": k, "home_runs": hr,
+                                          "doubles": dbl, "triples": tpl, "stolen_bases": sb,
+                                          "hit_by_pitch": hbp,
                                           "stats_summary": ", ".join(parts), "_player_found": True}
                     # Flag: check the very next row for a substitute
                     _check_next_for_sub = True
@@ -2518,7 +2522,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if k:  parts.append(_fmt(k,  "K"))
                     if bb: parts.append(_fmt(bb, "BB"))
                     pitching_result = {"ip": ip, "hits_allowed": h, "earned_runs": er,
-                                       "walks": bb, "strikeouts": k,
+                                       "walks_allowed": bb, "strikeouts": k,
                                        "stats_summary": ", ".join(parts),
                                        "_player_found": True, "is_pitcher_line": True}
 
@@ -2779,15 +2783,21 @@ class D1BaseballScraper(BaseSchoolScraper):
             if dbl:
                 parts.append(_fmt(dbl, "2B"))
 
+            hbp = int(v.get("HitByPitch", 0) or 0)
+
             return {
                 "stats_summary": ", ".join(parts),
                 "hits": h,
                 "at_bats": ab,
                 "home_runs": hr,
+                "doubles": dbl,
+                "triples": tpl,
                 "rbi": rbi,
                 "runs": r,
                 "stolen_bases": sb,
                 "walks": bb,
+                "strikeouts": k,
+                "hit_by_pitch": hbp,
                 "_player_found": True,
             }
         except Exception:
@@ -2988,16 +2998,21 @@ class D1BaseballScraper(BaseSchoolScraper):
         if dbl:
             parts.append(_fmt(dbl, "2B"))
 
+        hbp = int(stats.get("HBP", 0) or 0)
+
         return {
             "stats_summary": ", ".join(parts),
             "hits": h,
             "at_bats": ab,
             "home_runs": hr,
+            "doubles": dbl,
+            "triples": tpl,
             "rbi": rbi,
             "runs": r,
             "stolen_bases": sb,
             "walks": bb,
             "strikeouts": k,
+            "hit_by_pitch": hbp,
             "_player_found": True,
         }
 
@@ -3439,10 +3454,13 @@ class ESPNScraper(BaseSchoolScraper):
         h = int(sm.get("H", 0) or 0)
         ab = int(sm.get("AB", 0) or 0)
         hr = int(sm.get("HR", 0) or 0)
+        dbl = int(sm.get("2B", 0) or 0)
+        tpl = int(sm.get("3B", 0) or 0)
         rbi = int(sm.get("RBI", 0) or 0)
         r = int(sm.get("R", 0) or 0)
         sb = int(sm.get("SB", 0) or 0)
         bb = int(sm.get("BB", 0) or 0)
+        hbp = int(sm.get("HBP", 0) or 0)
         k = int(sm.get("K", sm.get("SO", 0)) or 0)
 
         parts = [f"{h}-{ab}"]
@@ -3464,11 +3482,14 @@ class ESPNScraper(BaseSchoolScraper):
             "hits": h,
             "at_bats": ab,
             "home_runs": hr,
+            "doubles": dbl,
+            "triples": tpl,
             "rbi": rbi,
             "runs": r,
             "stolen_bases": sb,
             "walks": bb,
             "strikeouts": k,
+            "hit_by_pitch": hbp,
         }
 
     @staticmethod

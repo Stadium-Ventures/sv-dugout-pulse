@@ -176,7 +176,7 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
             "ip": _ip_float_to_display(stats.get("ip", 0)),
             "er": int(stats.get("earned_runs", stats.get("er", 0))),
             "k": int(stats.get("strikeouts", stats.get("k", 0))),
-            "bb": int(stats.get("walks_allowed", stats.get("bb", 0))),
+            "bb": int(stats.get("walks_allowed", stats.get("walks", stats.get("bb", 0)))),
             "h": int(stats.get("hits_allowed", stats.get("h", 0))),
         }
     else:
@@ -189,6 +189,7 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
             "rbi": int(stats.get("rbi", 0)),
             "r": int(stats.get("runs", stats.get("r", 0))),
             "bb": int(stats.get("walks", stats.get("bb", 0))),
+            "hbp": int(stats.get("hit_by_pitch", stats.get("hbp", 0))),
             "k": int(stats.get("strikeouts", stats.get("k", 0))),
             "sb": int(stats.get("stolen_bases", stats.get("sb", 0))),
         }
@@ -237,20 +238,36 @@ def _flush_ncaa_game_log():
         seen_by_key[key] = seen
 
     added = 0
+    updated = 0
     for key, game_date, opponent, entry_stats in _ncaa_log_pending:
         seen = seen_by_key.get(key, set())
 
-        # Only append if we don't already have this date|opponent combo
         dedup = f"{game_date}|{opponent}"
         if dedup not in seen:
+            # New entry — append
             log.setdefault(key, []).append({"date": game_date, "opponent": opponent, "stats": entry_stats})
             seen.add(dedup)
             seen_by_key[key] = seen
             added += 1
+        else:
+            # Existing entry — update if new data has more substance
+            # (e.g. walks populated on a later fetch after box score fully loaded)
+            for existing in log.get(key, []):
+                if existing.get("date") == game_date and existing.get("opponent") == opponent:
+                    old_s = existing.get("stats", {})
+                    # Count non-zero fields as a measure of data completeness
+                    old_nonzero = sum(1 for v in old_s.values() if v and v != "0")
+                    new_nonzero = sum(1 for v in entry_stats.values() if v and v != "0")
+                    if new_nonzero > old_nonzero:
+                        existing["stats"] = entry_stats
+                        updated += 1
+                        logger.info("NCAA game log: updated %s on %s (non-zero fields %d→%d)",
+                                    key, game_date, old_nonzero, new_nonzero)
+                    break
 
-    if added > 0:
+    if added > 0 or updated > 0:
         _atomic_json_write(NCAA_GAME_LOG_PATH, log, indent=2, ensure_ascii=False)
-        logger.info("NCAA game log: flushed %d new entries (%d queued)", added, len(_ncaa_log_pending))
+        logger.info("NCAA game log: flushed %d new, %d updated (%d queued)", added, updated, len(_ncaa_log_pending))
     else:
         logger.debug("NCAA game log: no new entries to flush (%d queued, all dupes)", len(_ncaa_log_pending))
 
