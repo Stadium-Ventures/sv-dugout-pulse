@@ -102,6 +102,8 @@ class PerformanceAnalyzer:
         # Hard rule: 0-for-3+ is never Good or better
         hitless_cap = hits == 0 and ab >= 3
 
+        is_final = stats.get("game_status") == "Final"
+
         # ── Off Day: hitless in 4+ AB ──
         if ab >= 4 and hits == 0:
             reasons = [f"Hitless in {ab} at-bats"]
@@ -109,16 +111,16 @@ class PerformanceAnalyzer:
                 reasons.append(f"{k} strikeouts")
             return GRADE_SOFT_FLAG, " with ".join(reasons)
 
-        # ── Standout: dominant wOBA game (>= .650) ──
-        if game_score >= 0.650 and not hitless_cap:
+        # ── Standout: dominant wOBA game (>= .650), needs 3+ PA ──
+        if game_score >= 0.650 and pa >= 3 and not hitless_cap:
             return GRADE_STANDOUT, self._hitter_reason(stats, tob)
 
         # ── Good: solid wOBA game (>= .350) ──
         if game_score >= 0.350 and not hitless_cap:
             return GRADE_GOOD, self._hitter_reason(stats, tob)
 
-        # ── Good: reached base early (small sample, game still going) ──
-        if pa <= 2 and tob >= 1 and not hitless_cap:
+        # ── Good: reached base early (in-progress games only) ──
+        if pa <= 2 and tob >= 1 and not hitless_cap and not is_final:
             return GRADE_GOOD, "Reached base early"
 
         # ── Routine ──

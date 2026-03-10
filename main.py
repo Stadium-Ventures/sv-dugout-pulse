@@ -47,8 +47,18 @@ _ncaa_log_lock = threading.Lock()
 
 
 def _ip_float_to_display(ip_val) -> str:
-    """Convert IP float (e.g. 5.333) back to baseball notation (e.g. '5.1')."""
+    """Convert IP float (e.g. 5.333) back to baseball notation (e.g. '5.1').
+
+    Also handles strings already in baseball notation ('5.1') by detecting
+    fractional parts that are valid thirds (0, 1, 2) and passing through.
+    """
     if isinstance(ip_val, str):
+        # If already in baseball notation (fractional part is 0, 1, or 2), pass through
+        if "." in ip_val:
+            parts = ip_val.split(".")
+            if len(parts) == 2 and parts[1] in ("0", "1", "2"):
+                # Already baseball notation — clean up trailing .0
+                return parts[0] if parts[1] == "0" else ip_val
         try:
             val = float(ip_val)
         except (ValueError, TypeError):
