@@ -12,6 +12,7 @@ import abc
 import base64
 import logging
 import re
+import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from typing import Optional
 from zoneinfo import ZoneInfo
@@ -299,9 +300,15 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
     return False
 
 
+def _strip_accents(s: str) -> str:
+    """Remove diacritical marks: José → Jose, Müller → Muller."""
+    nfkd = unicodedata.normalize("NFKD", s)
+    return "".join(c for c in nfkd if not unicodedata.combining(c))
+
+
 def _normalize_last_name(name: str) -> str:
-    """Strip suffixes like Jr, Sr, II, III, IV and lowercase."""
-    name = name.strip().lower()
+    """Strip accents, suffixes (Jr, Sr, II, III, IV), and lowercase."""
+    name = _strip_accents(name).strip().lower()
     # Remove trailing suffixes (with or without dots/commas)
     name = re.sub(r"[,\s]+(jr\.?|sr\.?|ii|iii|iv|v)$", "", name)
     return name.strip()
@@ -2254,9 +2261,9 @@ class D1BaseballScraper(BaseSchoolScraper):
 
             # Page shows today's game — check for player in lineup
             soup = BeautifulSoup(resp.text, "html.parser")
-            player_last = player_name.split()[-1].lower()
+            player_last = _strip_accents(player_name.split()[-1]).lower()
             for th in soup.select("table tr th"):
-                if player_last in th.get_text(strip=True).lower():
+                if player_last in _strip_accents(th.get_text(strip=True)).lower():
                     return True
 
             return False
@@ -2389,8 +2396,8 @@ class D1BaseballScraper(BaseSchoolScraper):
         batting and pitching lines before deciding what to return.
         """
         soup = BeautifulSoup(html, "html.parser")
-        player_last = player_name.split()[-1].lower()
-        player_first = player_name.split()[0].lower()[:3] if len(player_name.split()) > 1 else ""
+        player_last = _strip_accents(player_name.split()[-1]).lower()
+        player_first = _strip_accents(player_name.split()[0]).lower()[:3] if len(player_name.split()) > 1 else ""
 
         batting_result: Optional[dict] = None
         pitching_result: Optional[dict] = None
@@ -2399,7 +2406,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             header_row = table.select_one("tr")
             if not header_row:
                 continue
-            headers = [th.get_text(strip=True).upper() for th in header_row.select("th, td")]
+            headers = [th.get_text(strip=True).upper().strip() for th in header_row.select("th, td")]
             # Skip the "TODAY" summary table — it has a different column layout
             if headers and headers[0] == "TODAY":
                 continue
@@ -2419,10 +2426,11 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if len(cells) <= name_idx:
                     continue
                 name_cell = cells[name_idx]  # "LastName,FirstName"
-                if player_last not in name_cell.lower():
+                name_cell_norm = _strip_accents(name_cell).lower()
+                if player_last not in name_cell_norm:
                     continue
-                if "," in name_cell and player_first:
-                    first_in_cell = name_cell.split(",", 1)[1].strip().lower()
+                if "," in name_cell_norm and player_first:
+                    first_in_cell = name_cell_norm.split(",", 1)[1].strip()
                     if not first_in_cell.startswith(player_first):
                         continue
 
@@ -2444,7 +2452,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                         tpl = int(stat_map.get("3B", "0"))   if stat_map.get("3B", "").isdigit()  else 0
                         hr  = int(stat_map.get("HR", "0"))   if stat_map.get("HR", "").isdigit()  else 0
                         bb  = int(stat_map.get("BB", "0"))   if stat_map.get("BB", "").isdigit()  else 0
-                        k   = int(stat_map.get("K", "0"))    if stat_map.get("K", "").isdigit()   else 0
+                        k_str = stat_map.get("K", stat_map.get("SO", "0"))
+                        k   = int(k_str) if k_str.isdigit() else 0
                     except (ValueError, IndexError, KeyError):
                         continue
                     # If no plate appearances yet, check position to decide what to do.
@@ -2689,7 +2698,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             data = jresp.json()
 
             stats = data.get("Stats", {})
-            player_last = player_name.split()[-1].lower()
+            player_last = _strip_accents(player_name.split()[-1]).lower()
 
             # Only search the player's own team to avoid cross-team name collisions
             if is_home is True:
@@ -2701,19 +2710,23 @@ class D1BaseballScraper(BaseSchoolScraper):
 
             for team_key in team_keys:
                 team_stats = stats.get(team_key, {})
+                if not isinstance(team_stats, dict):
+                    continue
                 pg = team_stats.get("PlayerGroups", {})
+                if not isinstance(pg, dict):
+                    continue
 
                 batting_result = None
                 batting = pg.get("Batting", {})
-                for v in batting.get("Values", []):
-                    if player_last in v.get("Name", "").lower():
+                for v in (batting.get("Values") or []):
+                    if player_last in _strip_accents(v.get("Name", "")).lower():
                         batting_result = self._parse_sidearm_batting_json(v)
                         break
 
                 pitching_result = None
                 pitching = pg.get("Pitching", {})
-                for v in pitching.get("Values", []):
-                    if player_last in v.get("Name", "").lower():
+                for v in (pitching.get("Values") or []):
+                    if player_last in _strip_accents(v.get("Name", "")).lower():
                         pitching_result = self._parse_sidearm_pitching_json(v)
                         break
 
@@ -2846,14 +2859,14 @@ class D1BaseballScraper(BaseSchoolScraper):
         Only searches visible text in <td> and <div> elements to avoid
         double-counting from embedded JavaScript data.
         """
-        player_last = player_name.split()[-1].lower()
+        player_last = _strip_accents(player_name.split()[-1]).lower()
         soup = BeautifulSoup(html, "html.parser")
 
         # Remove script/style tags to avoid matching embedded JS data
         for tag in soup.select("script, style"):
             tag.decompose()
 
-        text = soup.get_text()
+        text = _strip_accents(soup.get_text())
         pattern = rf"{re.escape(player_last)},\s*\w+\s+homered"
         return len(re.findall(pattern, text, re.IGNORECASE))
 
@@ -2865,7 +2878,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         """
         try:
             soup = BeautifulSoup(html, "html.parser")
-            player_last = player_name.split()[-1].lower()
+            player_last = _strip_accents(player_name.split()[-1]).lower()
 
             tables = soup.select("table")
             for table in tables:
@@ -2909,7 +2922,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     else:
                         continue
 
-                    if player_last not in name_text.lower():
+                    if player_last not in _strip_accents(name_text).lower():
                         continue
 
                     if not cell_texts:
@@ -3046,8 +3059,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                     name_cell = cells[0].get_text(strip=True)
 
                     # Fuzzy match on player name (last name at minimum)
-                    player_last = player_name.split()[-1].lower()
-                    if player_last in name_cell.lower():
+                    player_last = _strip_accents(player_name.split()[-1]).lower()
+                    if player_last in _strip_accents(name_cell).lower():
                         return self._extract_stats_from_row(cells, table)
 
             logger.debug("Player %s not found in box score at %s", player_name, box_url)
@@ -3409,7 +3422,7 @@ class ESPNScraper(BaseSchoolScraper):
                     athlete = athlete_entry.get("athlete", {})
                     display_name = athlete.get("displayName", "")
 
-                    if player_last in display_name.lower():
+                    if player_last in _strip_accents(display_name).lower():
                         stat_values = athlete_entry.get("stats", [])
                         stat_map = {}
                         for i, label in enumerate(labels):

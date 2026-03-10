@@ -13,6 +13,7 @@ import logging
 import os
 import re
 import time
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
 from typing import Optional
@@ -498,7 +499,9 @@ class D1BaseballSeasonFetcher:
 
     @staticmethod
     def _normalize_last_name(name: str) -> str:
-        """Strip suffixes like Jr, Sr, II, III, IV and lowercase."""
+        """Strip accents, suffixes (Jr, Sr, II, III, IV), and lowercase."""
+        nfkd = unicodedata.normalize("NFKD", name)
+        name = "".join(c for c in nfkd if not unicodedata.combining(c))
         name = name.strip().lower()
         name = re.sub(r"[,\s]+(jr\.?|sr\.?|ii|iii|iv|v)$", "", name)
         return name.strip()
