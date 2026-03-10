@@ -82,6 +82,7 @@ WINDOW_SEASON_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "wind
 YESTERDAY_PULSE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "yesterday_pulse.json")
 NCAA_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_game_log.json")
 SCHOOL_LOOKUP_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "school_lookup.json")
+SIDEARM_FOLDER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sidearm_folder_cache.json")
 SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
 ROSTER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "roster_cache.json")
 

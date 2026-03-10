@@ -27,12 +27,34 @@ from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from .config import ROSTER_URL, SCHOOL_LOOKUP_PATH, NCAA_GAME_LOG_PATH
+from .config import ROSTER_URL, SCHOOL_LOOKUP_PATH, NCAA_GAME_LOG_PATH, SIDEARM_FOLDER_CACHE_PATH
 
 logger = logging.getLogger(__name__)
 
-# Cache: hostname -> sidearm folder name, so we only probe the static API once per host
+# Cache: hostname -> sidearm folder name, so we only probe the static API once per process.
+# Backed by a persistent JSON file so the probe only ever runs once per host across all runs.
 _sidearm_folder_cache: dict[str, str] = {}
+
+
+def _load_sidearm_folder_cache() -> None:
+    """Load the persistent hostname→folder cache from disk into the in-memory dict."""
+    try:
+        with open(SIDEARM_FOLDER_CACHE_PATH, "r") as f:
+            _sidearm_folder_cache.update(json.load(f))
+    except Exception:
+        pass
+
+
+def _save_sidearm_folder_cache() -> None:
+    """Persist the in-memory hostname→folder cache to disk."""
+    try:
+        with open(SIDEARM_FOLDER_CACHE_PATH, "w") as f:
+            json.dump(_sidearm_folder_cache, f, indent=2)
+    except Exception:
+        pass
+
+
+_load_sidearm_folder_cache()
 
 
 def _sidearm_folder_from_url(box_url: str, sport: str = "baseball") -> Optional[str]:
@@ -43,7 +65,8 @@ def _sidearm_folder_from_url(box_url: str, sport: str = "baseball") -> Optional[
     label one character at a time and validate each candidate by checking
     whether the static.sidearmstats.com API returns a Stats object.
 
-    Results are cached so each host is probed at most once per process.
+    Results are cached in memory (per process) and persisted to
+    data/sidearm_folder_cache.json so the probe only runs once per host ever.
     """
     try:
         from urllib.parse import urlparse as _urlparse
@@ -66,11 +89,13 @@ def _sidearm_folder_from_url(box_url: str, sport: str = "baseball") -> Optional[
                 r = _requests.get(url, timeout=8, headers={"User-Agent": "Mozilla/5.0"})
                 if r.status_code == 200 and r.json().get("Stats"):
                     _sidearm_folder_cache[hostname] = candidate
+                    _save_sidearm_folder_cache()
                     return candidate
             except Exception:
                 pass
 
         _sidearm_folder_cache[hostname] = ""  # negative cache
+        _save_sidearm_folder_cache()
         return None
     except Exception:
         return None
