@@ -2731,6 +2731,23 @@ class D1BaseballScraper(BaseSchoolScraper):
             jresp.raise_for_status()
             data = jresp.json()
 
+            # Reject stale data: game.json always returns the last StatCrew-uploaded
+            # game, which may be days or months old if the school doesn't push live
+            # updates.  Serving stats from a wrong game is worse than returning None.
+            game_date_str = (data.get("Game") or {}).get("Date", "")
+            if game_date_str:
+                try:
+                    import datetime as _datetime
+                    game_date = _datetime.datetime.strptime(game_date_str, "%m/%d/%Y").date()
+                    if game_date != _today_et():
+                        logger.info(
+                            "Sidearm: game.json date %s != today for %s — stale, skipping",
+                            game_date_str, box_url,
+                        )
+                        return None
+                except Exception:
+                    pass
+
             stats = data.get("Stats", {})
             player_last = _strip_accents(player_name.split()[-1]).lower()
 
