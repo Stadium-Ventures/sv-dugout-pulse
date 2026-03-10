@@ -2016,9 +2016,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                         # Player not found (DNP) — game state corrected above,
                         # fall through to the DNP path below.
                 else:
+                    sidearm_folder = _SCHOOL_LOOKUP.get(team, {}).get("sidearm_folder", "")
                     player_stats = self._parse_sidearm_box_score(
                         player_name, box_url, is_home=tile_info.get("is_home"),
-                        is_two_way=is_two_way,
+                        is_two_way=is_two_way, sidearm_folder=sidearm_folder,
                     )
                     if player_stats:
                         context.update(player_stats)
@@ -2564,7 +2565,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
     def _parse_sidearm_box_score(
         self, player_name: str, box_url: str, is_home: Optional[bool] = None,
-        is_two_way: bool = False,
+        is_two_way: bool = False, sidearm_folder: str = "",
     ) -> Optional[dict]:
         """Fetch and parse a Sidearm box score page for a specific player.
 
@@ -2597,7 +2598,7 @@ class D1BaseballScraper(BaseSchoolScraper):
         try:
             result = self._parse_sidearm_stats_json(
                 player_name, html, box_url, final_url=final_url, is_home=is_home,
-                is_two_way=is_two_way,
+                is_two_way=is_two_way, sidearm_folder=sidearm_folder,
             )
             if result:
                 return result
@@ -2639,7 +2640,7 @@ class D1BaseballScraper(BaseSchoolScraper):
 
     def _parse_sidearm_stats_json(
         self, player_name: str, html: str, box_url: str, final_url: str = "",
-        is_home: Optional[bool] = None, is_two_way: bool = False,
+        is_home: Optional[bool] = None, is_two_way: bool = False, sidearm_folder: str = "",
     ) -> Optional[dict]:
         """Fetch player stats from the Sidearm static JSON API.
 
@@ -2655,24 +2656,28 @@ class D1BaseballScraper(BaseSchoolScraper):
         try:
             import re as _re
 
-            # Extract folder name from the JS variable injected into every Sidearm page
-            m = _re.search(
-                r'window\.livestats_foldername\s*=\s*["\']([^"\']+)["\']', html
-            )
-            if not m:
-                # HTML fetch may have been blocked by a WAF (e.g. Imperva) that
-                # allows browsers but blocks datacenter IPs.  Fall back to
-                # deriving the folder from the box_url hostname: the folder is
-                # always a prefix of the first domain label (e.g. "bucknell"
-                # from "bucknellbison.com").  Try shortening the label one
-                # character at a time until the static API returns valid data.
-                folder = _sidearm_folder_from_url(box_url, sport="baseball")
-                if not folder:
-                    logger.info("Sidearm: livestats_foldername not found and hostname fallback failed for %s", box_url)
-                    return None
-                logger.info("Sidearm: derived folder %r from hostname for %s", folder, box_url)
+            # Extract folder name: prefer hardcoded hint, then JS variable, then hostname probe
+            if sidearm_folder:
+                folder = sidearm_folder
+                logger.info("Sidearm: using hardcoded folder %r for %s", folder, box_url)
             else:
-                folder = m.group(1)
+                m = _re.search(
+                    r'window\.livestats_foldername\s*=\s*["\']([^"\']+)["\']', html
+                )
+                if not m:
+                    # HTML fetch may have been blocked by a WAF (e.g. Imperva) that
+                    # allows browsers but blocks datacenter IPs.  Fall back to
+                    # deriving the folder from the box_url hostname: the folder is
+                    # always a prefix of the first domain label (e.g. "bucknell"
+                    # from "bucknellbison.com").  Try shortening the label one
+                    # character at a time until the static API returns valid data.
+                    folder = _sidearm_folder_from_url(box_url, sport="baseball")
+                    if not folder:
+                        logger.info("Sidearm: livestats_foldername not found and hostname fallback failed for %s", box_url)
+                        return None
+                    logger.info("Sidearm: derived folder %r from hostname for %s", folder, box_url)
+                else:
+                    folder = m.group(1)
 
             # Extract sport from the URL path. Sidearm uses several URL formats:
             #   Modern Angular: /sidearmstats/baseball/summary
