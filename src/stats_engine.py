@@ -2499,7 +2499,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                         h  = int(stat_map.get("H", "0"))  if stat_map.get("H", "").isdigit()  else 0
                         er = int(stat_map.get("ER", "0")) if stat_map.get("ER", "").isdigit() else 0
                         bb = int(stat_map.get("BB", "0")) if stat_map.get("BB", "").isdigit() else 0
-                        k  = int(stat_map.get("K", "0"))  if stat_map.get("K", "").isdigit()  else 0
+                        k_str = stat_map.get("K", stat_map.get("SO", "0"))
+                        k  = int(k_str) if k_str.isdigit() else 0
                     except (ValueError, IndexError):
                         continue
                     parts = [f"{ip_str} IP"]
@@ -2784,7 +2785,15 @@ class D1BaseballScraper(BaseSchoolScraper):
         """Parse pitching stats from a Sidearm game.json PlayerGroups Pitching Value."""
         try:
             ip_str = str(v.get("InningsPitched", "0") or "0")
-            ip = float(ip_str) if ip_str.replace(".", "").isdigit() else 0.0
+            # Sidearm returns IP in baseball notation (5.1 = 5⅓ IP)
+            # Convert to float using outs: 5.1 → 5 + 1/3 = 5.333
+            if ip_str.replace(".", "").isdigit() and "." in ip_str:
+                parts_ip = ip_str.split(".")
+                ip = int(parts_ip[0]) + (int(parts_ip[1]) / 3 if len(parts_ip) > 1 else 0)
+            elif ip_str.isdigit():
+                ip = float(ip_str)
+            else:
+                ip = 0.0
             h  = int(v.get("HitsAllowed", 0) or 0)
             er = int(v.get("EarnedRuns", 0) or 0)
             k  = int(v.get("Strikeouts", 0) or 0)

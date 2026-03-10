@@ -689,7 +689,7 @@ class D1BaseballSeasonFetcher:
         whip = (h + bb) / ip if ip > 0 else 0.0
         k_per_9 = (k * 9) / ip if ip > 0 else 0
         bb_per_9 = (bb * 9) / ip if ip > 0 else 0
-        outs = self._safe_int(str(int(ip))) * 3 + (self._safe_int(ip_str.split(".")[-1]) if "." in ip_str else 0)
+        outs = ip_to_outs(ip_str)
         bf = outs + h + bb
         k_pct = k / bf if bf > 0 else 0
         bb_pct = bb / bf if bf > 0 else 0
@@ -700,7 +700,7 @@ class D1BaseballSeasonFetcher:
         return {
             "games_played": app,
             "ip": ip,
-            "ip_display": ip_str,
+            "ip_display": outs_to_ip_display(outs),
             "h": h, "er": er, "bb": bb, "k": k, "hr": 0,
             "w": w, "l": l, "sv": sv,
             "era": era, "whip": whip,

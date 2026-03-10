@@ -1197,7 +1197,7 @@ function renderWindowCard(p) {
       let statLine;
       if ('ip' in s && !('ab' in s)) {
         // Pitcher line
-        statLine = `${s.ip} IP, ${s.er} ER, ${s.k} K, ${s.bb} BB`;
+        statLine = `${s.ip ?? '0'} IP, ${s.er ?? 0} ER, ${s.k ?? 0} K, ${s.bb ?? 0} BB`;
       } else {
         // Hitter line
         const parts = [`${s.h}-${s.ab}`];

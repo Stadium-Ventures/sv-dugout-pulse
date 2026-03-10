@@ -315,7 +315,8 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     """Assemble a single player's output record."""
     # Final game + "In lineup" = started but pulled before batting
     summary = stats.get("stats_summary", "No game data")
-    if stats.get("game_status") == "Final" and summary in ("In lineup", "In starting lineup"):
+    summary_lower = (summary or "").lower()
+    if stats.get("game_status") == "Final" and ("in lineup" in summary_lower or "in starting" in summary_lower):
         summary = "Started — 0 PA"
 
     entry = {
@@ -649,11 +650,9 @@ def run_live():
         lock_key = f"{name}|{team}"
         locked = locked_finals.get(lock_key)
         if locked:
-            logger.info("%s | locked Final — skipping fetch", name)
-            # Still need to re-fetch if there could be an additional game
-            # (doubleheader).  If we locked 1 game but the player might
-            # have a 2nd, fetch anyway and merge.
-            # Simple case: single game locked, return it.
+            locked_game_nums = {e.get("game_number", 1) for e in locked}
+            logger.info("%s | %d locked Final game(s) (games %s) — carrying forward",
+                        name, len(locked), locked_game_nums)
             return locked, []
 
         try:
@@ -770,7 +769,7 @@ def _refresh_ncaa_l7(all_players: list[dict]):
     """
     try:
         aggregator = WindowStatsAggregator()
-        today = date.today()
+        today = _today_et()
         start_7d = today - timedelta(days=7)
 
         # Load existing window data to preserve Pro entries
