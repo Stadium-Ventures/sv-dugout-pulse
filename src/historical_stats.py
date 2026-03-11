@@ -822,7 +822,7 @@ class NCAAGameLogAggregator:
             totals["hbp"] += int(s.get("hbp", 0))
             totals["k"] += int(s.get("k", 0))
             totals["sb"] += int(s.get("stolen_bases", s.get("sb", 0)))
-            game_entries.append({
+            ge = {
                 "date": e["date"],
                 "opponent": e.get("opponent", ""),
                 "stats": {
@@ -832,7 +832,10 @@ class NCAAGameLogAggregator:
                     "hbp": int(s.get("hbp", 0)),
                     "k": int(s.get("k", 0)), "sb": int(s.get("stolen_bases", s.get("sb", 0))),
                 },
-            })
+            }
+            if e.get("box_score_url"):
+                ge["box_score_url"] = e["box_score_url"]
+            game_entries.append(ge)
 
         # Sort game entries most recent first
         game_entries.sort(key=lambda g: g["date"], reverse=True)
@@ -872,7 +875,7 @@ class NCAAGameLogAggregator:
             totals["k"] += int(s.get("k", s.get("strikeouts", 0)))
             totals["bb"] += int(s.get("bb", s.get("walks_allowed", 0)))
             totals["h"] += int(s.get("h", s.get("hits_allowed", 0)))
-            game_entries.append({
+            ge = {
                 "date": e["date"],
                 "opponent": e.get("opponent", ""),
                 "stats": {
@@ -882,7 +885,10 @@ class NCAAGameLogAggregator:
                     "bb": int(s.get("bb", s.get("walks_allowed", 0))),
                     "h": int(s.get("h", s.get("hits_allowed", 0))),
                 },
-            })
+            }
+            if e.get("box_score_url"):
+                ge["box_score_url"] = e["box_score_url"]
+            game_entries.append(ge)
 
         # Sort game entries most recent first
         game_entries.sort(key=lambda g: g["date"], reverse=True)
@@ -1078,6 +1084,8 @@ class WindowStatsAggregator:
                 "ab": stats.get("ab", 0) if not sparse else "--",
                 "h": stats.get("h", 0) if not sparse else "--",
                 "hr": stats.get("hr", 0) if not sparse else "--",
+                "bb": stats.get("bb", 0) if not sparse else "--",
+                "k": stats.get("k", 0) if not sparse else "--",
                 "rbi": stats.get("rbi", 0) if not sparse else "--",
                 "r": stats.get("r", 0) if not sparse else "--",
                 "sb": stats.get("sb", 0) if not sparse else "--",

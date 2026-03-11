@@ -202,8 +202,10 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
         if entry_stats.get("ab", 0) == 0 and not any(entry_stats.get(k) for k in ("bb", "r", "sb")):
             return
 
+    box_url = stats.get("box_score_url", "")
+
     with _ncaa_log_lock:
-        _ncaa_log_pending.append((key, game_date, opponent, entry_stats))
+        _ncaa_log_pending.append((key, game_date, opponent, entry_stats, box_url))
     logger.debug("NCAA game log: queued %s on %s", key, game_date)
 
 
@@ -239,13 +241,17 @@ def _flush_ncaa_game_log():
 
     added = 0
     updated = 0
-    for key, game_date, opponent, entry_stats in _ncaa_log_pending:
+    for key, game_date, opponent, entry_stats, box_url in _ncaa_log_pending:
         seen = seen_by_key.get(key, set())
+
+        entry = {"date": game_date, "opponent": opponent, "stats": entry_stats}
+        if box_url:
+            entry["box_score_url"] = box_url
 
         dedup = f"{game_date}|{opponent}"
         if dedup not in seen:
             # New entry — append
-            log.setdefault(key, []).append({"date": game_date, "opponent": opponent, "stats": entry_stats})
+            log.setdefault(key, []).append(entry)
             seen.add(dedup)
             seen_by_key[key] = seen
             added += 1
@@ -263,6 +269,11 @@ def _flush_ncaa_game_log():
                         updated += 1
                         logger.info("NCAA game log: updated %s on %s (non-zero fields %d→%d)",
                                     key, game_date, old_nonzero, new_nonzero)
+                    # Backfill box_score_url if missing
+                    if box_url and not existing.get("box_score_url"):
+                        existing["box_score_url"] = box_url
+                        if not updated:  # count as update for save trigger
+                            updated += 1
                     break
 
     if added > 0 or updated > 0:

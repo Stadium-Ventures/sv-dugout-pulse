@@ -593,7 +593,7 @@
     margin-top: 0.75rem;
   }
   .stat-row.pitcher-row { grid-template-columns: repeat(5, 1fr); }
-  .stat-row.hitter-row  { grid-template-columns: repeat(5, 1fr); }
+  .stat-row.hitter-row  { grid-template-columns: repeat(6, 1fr); }
 
   .stat-cell {
     display: flex;
@@ -687,6 +687,13 @@
     color: var(--text);
     font-variant-numeric: tabular-nums;
   }
+  a.game-log-link {
+    text-decoration: none;
+    color: inherit;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  a.game-log-link:hover { background: var(--surface-hover); }
 
   /* ---- Search bar ---- */
   .search-wrap {
@@ -1177,8 +1184,12 @@ function renderWindowCard(p) {
           <span class="stat-value ${sp}">${stats.hr ?? '--'}</span>
         </div>
         <div class="stat-cell">
-          <span class="stat-label">RBI</span>
-          <span class="stat-value ${sp}">${stats.rbi ?? '--'}</span>
+          <span class="stat-label">BB</span>
+          <span class="stat-value ${sp}">${stats.bb ?? '--'}</span>
+        </div>
+        <div class="stat-cell">
+          <span class="stat-label">K</span>
+          <span class="stat-value ${sp}">${stats.k ?? '--'}</span>
         </div>
         <div class="stat-cell">
           <span class="stat-label">SB</span>
@@ -1237,11 +1248,18 @@ function renderWindowCard(p) {
         if ((s.hr ?? 0) > 0) parts.push(`${s.hr} HR`);
         if ((s.rbi ?? 0) > 0) parts.push(`${s.rbi} RBI`);
         if ((s.r ?? 0) > 0) parts.push(`${s.r} R`);
+        if ((s.bb ?? 0) > 0) parts.push(`${s.bb} BB`);
+        if ((s.k ?? 0) > 0) parts.push(`${s.k} K`);
         if ((s.sb ?? 0) > 0) parts.push(`${s.sb} SB`);
         statLine = parts.join(', ');
       }
       const oppStr = g.opponent ? `<span class="game-log-opp">${esc(g.opponent)}</span> ` : '';
-      return `<div class="game-log-row"><span class="game-log-date">${dateStr}</span><span class="game-log-stats">${oppStr}${esc(statLine)}</span></div>`;
+      const boxUrl = g.box_score_url || '';
+      const rowInner = `<span class="game-log-date">${dateStr}</span><span class="game-log-stats">${oppStr}${esc(statLine)}</span>`;
+      if (boxUrl) {
+        return `<a class="game-log-row game-log-link" href="${esc(boxUrl, true)}" target="_blank" rel="noopener">${rowInner}</a>`;
+      }
+      return `<div class="game-log-row">${rowInner}</div>`;
     }).join('');
     gameLogHtml = `
       <div class="game-log-toggle" id="glt-${logId}" onclick="toggleGameLog('${logId}')" role="button" aria-expanded="false">
