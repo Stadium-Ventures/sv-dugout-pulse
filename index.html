@@ -101,6 +101,30 @@
   }
   .clear-filters-btn:hover { color: var(--text); border-color: var(--text-dim); }
 
+  /* ---- Loading ---- */
+  .loading-splash {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    gap: 1rem;
+  }
+  .loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
   /* ---- Grid ---- */
   .grid {
     display: grid;
@@ -844,7 +868,12 @@
   <button class="clear-filters-btn" id="clearFiltersBtn" title="Reset all filters" style="display:none;">Clear filters</button>
 </div>
 
-<div class="grid" id="grid"></div>
+<div class="grid" id="grid">
+  <div class="loading-splash" id="loadingSplash">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading player data...</div>
+  </div>
+</div>
 <div class="no-game-section" id="noGameSection" style="display:none;">
   <div class="no-game-header" id="noGameHeader" onclick="toggleNoGame()" role="button" aria-expanded="false">
     <span class="no-game-chevron" aria-hidden="true">&#x25B6;</span>
@@ -1481,6 +1510,8 @@ async function switchWindow(window) {
 
   // Load data if not cached
   if (window !== 'today' && windowData[window] === null) {
+    document.getElementById('grid').innerHTML =
+      '<div class="loading-splash"><div class="loading-spinner"></div><div class="loading-text">Loading...</div></div>';
     _windowFetchFailed[window] = false;
     try {
       const resp = await fetch(WINDOW_PATHS[window] + '?t=' + Date.now(), { cache: 'no-store' });
