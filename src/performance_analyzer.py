@@ -25,6 +25,17 @@ GRADE_SOFT_FLAG = "\U0001f6a9 Off Day"
 GRADE_SCHEDULED = "\U0001f552 Scheduled"
 GRADE_NO_DATA = "\u2014 No Data"
 
+# Lower rank = better grade (used to pick the best grade for Two-Way players)
+_GRADE_RANK = {
+    GRADE_MILESTONE: 0,
+    GRADE_STANDOUT: 1,
+    GRADE_GOOD: 2,
+    GRADE_ROUTINE: 3,
+    GRADE_SOFT_FLAG: 4,
+    GRADE_SCHEDULED: 5,
+    GRADE_NO_DATA: 6,
+}
+
 
 class PerformanceAnalyzer:
     """Analyze a player's daily stats and assign a performance grade."""
@@ -61,13 +72,21 @@ class PerformanceAnalyzer:
             return GRADE_MILESTONE, stats["milestone_label"]
 
         position = player.get("position", "Hitter")
-        if position == "Pitcher" or stats.get("is_pitcher_line"):
-            return self._grade_pitcher(stats)
-        elif position == "Two-Way":
-            # Grade whichever line they have today
-            if stats.get("is_pitcher_line"):
+        if position == "Two-Way":
+            # Two-Way players who both hit and pitched: grade both, take the better one
+            if stats.get("is_pitcher_line") and stats.get("at_bats", 0) > 0:
+                p_grade, p_reason = self._grade_pitcher(stats)
+                h_grade, h_reason = self._grade_hitter(stats)
+                p_rank = _GRADE_RANK.get(p_grade, 99)
+                h_rank = _GRADE_RANK.get(h_grade, 99)
+                if h_rank <= p_rank:
+                    return h_grade, h_reason
+                return p_grade, p_reason
+            elif stats.get("is_pitcher_line"):
                 return self._grade_pitcher(stats)
             return self._grade_hitter(stats)
+        elif position == "Pitcher" or stats.get("is_pitcher_line"):
+            return self._grade_pitcher(stats)
         else:
             return self._grade_hitter(stats)
 
