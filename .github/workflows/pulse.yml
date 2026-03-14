@@ -11,8 +11,8 @@ on:
     # Yesterday cleanup — just after 4 AM ET day boundary
     - cron: "15 9 * * *"       # 4:15 AM ET — rotate yesterday after day flip
     # Live updates every 15 minutes during game hours
-    - cron: "*/15 14-23 * * *"  # 2pm-11:45pm UTC (10am-7:45pm ET)
-    - cron: "*/15 0-6 * * *"   # 12am-6:45am UTC (8pm-2:45am ET)
+    - cron: "*/5 14-23 * * *"   # 2pm-11:55pm UTC (10am-7:55pm ET)
+    - cron: "*/5 0-6 * * *"    # 12am-6:55am UTC (8pm-2:55am ET)
   workflow_dispatch:
     inputs:
       mode:
