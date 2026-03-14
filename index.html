@@ -934,7 +934,7 @@ function statusTier(s) { return STATUS_PRIORITY[s] ?? 4; }
 // Sub-sort within Live: 0=has stats, 1=in game no stats yet, 2=not confirmed in game
 function liveSubTier(p) {
   const s = p.stats_summary || '';
-  if (s === 'Game in progress — not in lineup' || s === 'Game in progress') return 2;
+  if (s === 'Game in progress — not in lineup' || s === 'Game in progress' || s === "Game in progress — hasn't pitched") return 2;
   if (s === 'In lineup' || s === 'In starting lineup' || s === 'Game in progress — not yet pitching') return 1;
   return 0;
 }

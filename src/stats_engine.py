@@ -1313,7 +1313,7 @@ class ProStatsFetcher:
         if not found_in_box and result["stats_summary"] == "No game data":
             if result["game_status"] == "Live":
                 if position == "Pitcher":
-                    result["stats_summary"] = "In game — hasn't pitched yet"
+                    result["stats_summary"] = "Game in progress — hasn't pitched"
                 else:
                     result["stats_summary"] = "Game in progress — not in lineup"
             elif result["game_status"] == "Final":
@@ -4211,7 +4211,7 @@ class NCAAStatsFetcher:
                         "Game in progress",
                         "Game in progress — not in lineup",
                     )):
-                result["stats_summary"] = "In game — hasn't pitched yet"
+                result["stats_summary"] = "Game in progress — hasn't pitched"
 
             return result
 
