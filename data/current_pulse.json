@@ -1,30 +1,6 @@
 {
-  "generated_at": "2026-03-14T04:00:36.404605+00:00",
+  "generated_at": "2026-03-14T04:10:34.916649+00:00",
   "players": [
-    {
-      "player_name": "Kyle Jones",
-      "team": "Florida",
-      "level": "NCAA",
-      "stats_summary": "1-4, R, HBP, 2B",
-      "game_context": "South Carolina 0, Florida 0 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631736",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Extra-base hit (double)",
-      "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 1
-      }
-    },
     {
       "player_name": "Myles Bailey",
       "team": "Florida State",
@@ -50,11 +26,35 @@
       }
     },
     {
+      "player_name": "Kyle Jones",
+      "team": "Florida",
+      "level": "NCAA",
+      "stats_summary": "1-4, R, HBP, 2B",
+      "game_context": "South Carolina 0, Florida 0 | Final",
+      "game_status": "Final",
+      "game_time": null,
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631736",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Extra-base hit (double)",
+      "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 1
+      }
+    },
+    {
       "player_name": "Kellon Lindsey",
       "team": "Los Angeles Dodgers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Los Angeles Dodgers 10, Seattle Mariners 4 | Top 9",
+      "game_context": "Los Angeles Dodgers 10, Seattle Mariners 4 | Bottom 9",
       "game_status": "Live",
       "game_time": "9:10 PM ET",
       "game_date": "2026-03-14",
@@ -112,37 +112,6 @@
       }
     },
     {
-      "player_name": "Dax Kilby",
-      "team": "New York Yankees",
-      "level": "Pro",
-      "stats_summary": "Did Not Play",
-      "game_context": "New York Yankees 6, Atlanta Braves 7 | Final",
-      "game_status": "Final",
-      "game_time": "1:05 PM ET",
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 03/14",
-        "date_full": "2026-03-14",
-        "opponent": "Philadelphia Phillies",
-        "home_away": "vs",
-        "time": "1:05 PM ET",
-        "display": "vs Philadelphia Phillies - Sat 03/14 1:05 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/831563",
-      "player_profile_url": "https://www.mlb.com/player/828076",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
-      "data_source": "MLB Stats API",
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Hitter",
-        "roster_priority": 1
-      }
-    },
-    {
       "player_name": "Garrett Whitlock",
       "team": "Boston Red Sox",
       "level": "Pro",
@@ -171,6 +140,37 @@
         "draft_class": "N/A",
         "position": "Pitcher",
         "roster_priority": 1
+      }
+    },
+    {
+      "player_name": "Carter Johnson",
+      "team": "Miami Marlins",
+      "level": "Pro",
+      "stats_summary": "Did Not Play",
+      "game_context": "Miami Marlins 1, New York Mets 0 | Final",
+      "game_status": "Final",
+      "game_time": "6:10 PM ET",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Sat 03/14",
+        "date_full": "2026-03-14",
+        "opponent": "Washington Nationals",
+        "home_away": "@",
+        "time": "12:05 PM ET",
+        "display": "@ Washington Nationals - Sat 03/14 12:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/831462",
+      "player_profile_url": "https://www.mlb.com/player/815793",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Carter%20Johnson%22%20Marlins&f=live",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Hitter",
+        "roster_priority": 2
       }
     },
     {
@@ -222,56 +222,32 @@
       }
     },
     {
-      "player_name": "Carter Johnson",
-      "team": "Miami Marlins",
+      "player_name": "Dax Kilby",
+      "team": "New York Yankees",
       "level": "Pro",
       "stats_summary": "Did Not Play",
-      "game_context": "Miami Marlins 1, New York Mets 0 | Final",
+      "game_context": "New York Yankees 6, Atlanta Braves 7 | Final",
       "game_status": "Final",
-      "game_time": "6:10 PM ET",
+      "game_time": "1:05 PM ET",
       "game_date": "2026-03-13",
       "is_yesterday": false,
       "next_game": {
         "date": "Sat 03/14",
         "date_full": "2026-03-14",
-        "opponent": "Washington Nationals",
-        "home_away": "@",
-        "time": "12:05 PM ET",
-        "display": "@ Washington Nationals - Sat 03/14 12:05 PM ET"
+        "opponent": "Philadelphia Phillies",
+        "home_away": "vs",
+        "time": "1:05 PM ET",
+        "display": "vs Philadelphia Phillies - Sat 03/14 1:05 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/831462",
-      "player_profile_url": "https://www.mlb.com/player/815793",
+      "box_score_url": "https://www.mlb.com/gameday/831563",
+      "player_profile_url": "https://www.mlb.com/player/828076",
       "performance_grade": "😐 Routine",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Carter%20Johnson%22%20Marlins&f=live",
+      "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
       "is_client": true,
       "tags": {
         "draft_class": "N/A",
-        "position": "Hitter",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Aiden Robbins",
-      "team": "Texas",
-      "level": "NCAA",
-      "stats_summary": "1-5, 2 R, BB, K",
-      "game_context": "Ole Miss 9, Texas 8 | Bottom 11",
-      "game_status": "Live",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629234",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "2 stolen bases",
-      "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
         "position": "Hitter",
         "roster_priority": 1
       }
@@ -343,26 +319,26 @@
       "split_squad": true
     },
     {
-      "player_name": "Cam Flukey",
-      "team": "Coastal Carolina",
+      "player_name": "Aiden Robbins",
+      "team": "Texas",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "Coastal Carolina 10, Appalachian State 6 | Final",
+      "stats_summary": "1-5, 2 R, BB, K",
+      "game_context": "Ole Miss 9, Texas 8 | Final",
       "game_status": "Final",
-      "game_time": "6:00 PM ET",
+      "game_time": null,
       "game_date": "2026-03-13",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629765",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cam%20Flukey%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629234",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
+      "performance_grade": "✅ Good",
+      "grade_reason": "2 stolen bases",
+      "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
       "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
         "draft_class": "2026",
-        "position": "Pitcher",
+        "position": "Hitter",
         "roster_priority": 1
       }
     },
@@ -460,6 +436,30 @@
       }
     },
     {
+      "player_name": "Cam Flukey",
+      "team": "Coastal Carolina",
+      "level": "NCAA",
+      "stats_summary": "Did Not Play",
+      "game_context": "Coastal Carolina 10, Appalachian State 6 | Final",
+      "game_status": "Final",
+      "game_time": "6:00 PM ET",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629765",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cam%20Flukey%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Pitcher",
+        "roster_priority": 1
+      }
+    },
+    {
       "player_name": "Forrest Wall",
       "team": "Unsigned",
       "level": "Pro",
@@ -481,54 +481,6 @@
         "draft_class": "N/A",
         "position": "Hitter",
         "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Ty Finkbeiner",
-      "team": "Michigan",
-      "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Michigan 2, UCLA 10 | Top 9",
-      "game_status": "Live",
-      "game_time": "9:00 PM ET",
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635875",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2028",
-        "position": "Pitcher",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Riley Goodman",
-      "team": "South Carolina",
-      "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "South Carolina 0, Florida 1 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631736",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Pitcher",
-        "roster_priority": 2
       }
     },
     {
@@ -563,11 +515,35 @@
       }
     },
     {
+      "player_name": "Ty Finkbeiner",
+      "team": "Michigan",
+      "level": "NCAA",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Michigan 2, UCLA 10 | Top 9",
+      "game_status": "Live",
+      "game_time": "9:00 PM ET",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635875",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2028",
+        "position": "Pitcher",
+        "roster_priority": 2
+      }
+    },
+    {
       "player_name": "Blake Rambusch",
       "team": "Seattle Mariners",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Los Angeles Dodgers 10, Seattle Mariners 4 | Top 9",
+      "game_context": "Los Angeles Dodgers 10, Seattle Mariners 4 | Bottom 9",
       "game_status": "Live",
       "game_time": "9:10 PM ET",
       "game_date": "2026-03-14",
@@ -680,54 +656,6 @@
       }
     },
     {
-      "player_name": "Adam McKelvey",
-      "team": "Georgia Tech",
-      "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "Georgia Tech 9, Clemson 3 | Final",
-      "game_status": "Final",
-      "game_time": "8:00 PM ET",
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631135",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Adam%20McKelvey%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Adam%20McKelvey%22%20Georgia%20Tech&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Pitcher",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Ben Tryon",
-      "team": "Dallas Baptist",
-      "level": "NCAA",
-      "stats_summary": "1-1, RBI, R, 4 BB",
-      "game_context": "New Mexico State 2, Dallas Baptist 14 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631340",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
-      "performance_grade": "🔥 Standout",
-      "grade_reason": "4 walks",
-      "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 3
-      }
-    },
-    {
       "player_name": "Justin Riemer",
       "team": "Athletics",
       "level": "Pro",
@@ -792,6 +720,120 @@
       },
       "game_number": 2,
       "split_squad": true
+    },
+    {
+      "player_name": "Kade Brown",
+      "team": "Athletics",
+      "level": "Pro",
+      "stats_summary": "Did Not Play",
+      "game_context": "San Diego Padres 13, Athletics 9 | Final",
+      "game_status": "Final",
+      "game_time": "4:05 PM ET",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Sat 03/14",
+        "date_full": "2026-03-14",
+        "opponent": "Kansas City Royals",
+        "home_away": "vs",
+        "time": "4:05 PM ET",
+        "display": "vs Kansas City Royals - Sat 03/14 4:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/831778",
+      "player_profile_url": "https://www.mlb.com/player/824044",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 3
+      },
+      "game_number": 1,
+      "split_squad": true
+    },
+    {
+      "player_name": "Kade Brown",
+      "team": "Athletics",
+      "level": "Pro",
+      "stats_summary": "Did Not Play",
+      "game_context": "Athletics 13, Milwaukee Brewers 4 | Final",
+      "game_status": "Final",
+      "game_time": "4:10 PM ET",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Sat 03/14",
+        "date_full": "2026-03-14",
+        "opponent": "Kansas City Royals",
+        "home_away": "vs",
+        "time": "4:05 PM ET",
+        "display": "vs Kansas City Royals - Sat 03/14 4:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/831935",
+      "player_profile_url": "https://www.mlb.com/player/824044",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 3
+      },
+      "game_number": 2,
+      "split_squad": true
+    },
+    {
+      "player_name": "Ben Tryon",
+      "team": "Dallas Baptist",
+      "level": "NCAA",
+      "stats_summary": "1-1, RBI, R, 4 BB",
+      "game_context": "New Mexico State 2, Dallas Baptist 14 | Final",
+      "game_status": "Final",
+      "game_time": null,
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631340",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
+      "performance_grade": "🔥 Standout",
+      "grade_reason": "4 walks",
+      "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 3
+      }
+    },
+    {
+      "player_name": "Riley Goodman",
+      "team": "South Carolina",
+      "level": "NCAA",
+      "stats_summary": "Did Not Play",
+      "game_context": "South Carolina 0, Florida 1 | Final",
+      "game_status": "Final",
+      "game_time": null,
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631736",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Pitcher",
+        "roster_priority": 2
+      }
     },
     {
       "player_name": "Brady Neal",
@@ -914,27 +956,27 @@
       }
     },
     {
-      "player_name": "Alex Kranzler",
-      "team": "Vanderbilt",
+      "player_name": "Adam McKelvey",
+      "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Did Not Play",
-      "game_context": "LSU 12, Vanderbilt 13 | Final",
+      "game_context": "Georgia Tech 9, Clemson 3 | Final",
       "game_status": "Final",
-      "game_time": "TBA",
+      "game_time": "8:00 PM ET",
       "game_date": "2026-03-13",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636386",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631135",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Adam%20McKelvey%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
+      "social_search_url": "https://x.com/search?q=%22Adam%20McKelvey%22%20Georgia%20Tech&f=live",
       "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
-        "draft_class": "2026",
+        "draft_class": "2027",
         "position": "Pitcher",
-        "roster_priority": 3
+        "roster_priority": 2
       }
     },
     {
@@ -1024,72 +1066,6 @@
       }
     },
     {
-      "player_name": "Kade Brown",
-      "team": "Athletics",
-      "level": "Pro",
-      "stats_summary": "Did Not Play",
-      "game_context": "San Diego Padres 13, Athletics 9 | Final",
-      "game_status": "Final",
-      "game_time": "4:05 PM ET",
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 03/14",
-        "date_full": "2026-03-14",
-        "opponent": "Kansas City Royals",
-        "home_away": "vs",
-        "time": "4:05 PM ET",
-        "display": "vs Kansas City Royals - Sat 03/14 4:05 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/831778",
-      "player_profile_url": "https://www.mlb.com/player/824044",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
-      "data_source": "MLB Stats API",
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Pitcher",
-        "roster_priority": 3
-      },
-      "game_number": 1,
-      "split_squad": true
-    },
-    {
-      "player_name": "Kade Brown",
-      "team": "Athletics",
-      "level": "Pro",
-      "stats_summary": "Did Not Play",
-      "game_context": "Athletics 13, Milwaukee Brewers 4 | Final",
-      "game_status": "Final",
-      "game_time": "4:10 PM ET",
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 03/14",
-        "date_full": "2026-03-14",
-        "opponent": "Kansas City Royals",
-        "home_away": "vs",
-        "time": "4:05 PM ET",
-        "display": "vs Kansas City Royals - Sat 03/14 4:05 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/831935",
-      "player_profile_url": "https://www.mlb.com/player/824044",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
-      "data_source": "MLB Stats API",
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Pitcher",
-        "roster_priority": 3
-      },
-      "game_number": 2,
-      "split_squad": true
-    },
-    {
       "player_name": "Ryan DeSanto",
       "team": "Cleveland Guardians",
       "level": "Pro",
@@ -1152,6 +1128,30 @@
       }
     },
     {
+      "player_name": "Alex Kranzler",
+      "team": "Vanderbilt",
+      "level": "NCAA",
+      "stats_summary": "Did Not Play",
+      "game_context": "LSU 12, Vanderbilt 13 | Final",
+      "game_status": "Final",
+      "game_time": "TBA",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636386",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Pitcher",
+        "roster_priority": 3
+      }
+    },
+    {
       "player_name": "Duke McCarron",
       "team": "Saint Josephs",
       "level": "NCAA",
@@ -1204,7 +1204,7 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "1-3, RBI, R, K",
-      "game_context": "Ohio State 5, Washington 2 | Top 6",
+      "game_context": "Ohio State 5, Washington 2 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-03-13",
@@ -1219,6 +1219,78 @@
       "is_client": true,
       "tags": {
         "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 2
+      }
+    },
+    {
+      "player_name": "Sam Mitchell",
+      "team": "Southern Miss",
+      "level": "NCAA",
+      "stats_summary": "Did Not Play",
+      "game_context": "Southern Miss 5, Arkansas State 8 | Final",
+      "game_status": "Final",
+      "game_time": null,
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629908",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2028",
+        "position": "Pitcher",
+        "roster_priority": 3
+      }
+    },
+    {
+      "player_name": "Tanner Chun",
+      "team": "Tulane",
+      "level": "NCAA",
+      "stats_summary": "3-5, 2 RBI, R, BB, K, 2B",
+      "game_context": "Creighton 6, Tulane 6 | Top 12",
+      "game_status": "Live",
+      "game_time": null,
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630286",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Tanner%20Chun%22&btnI=",
+      "performance_grade": "🔥 Standout",
+      "grade_reason": "3 hits",
+      "social_search_url": "https://x.com/search?q=%22Tanner%20Chun%22%20Tulane&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Hitter",
+        "roster_priority": 3
+      }
+    },
+    {
+      "player_name": "Sam Harry",
+      "team": "Sacramento State",
+      "level": "NCAA",
+      "stats_summary": "1-3, R, 2 BB, 2 K",
+      "game_context": "Pacific 5, Sacramento State 3 | Final",
+      "game_status": "Final",
+      "game_time": null,
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631305",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Reached base 3 times",
+      "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2028",
         "position": "Hitter",
         "roster_priority": 2
       }
@@ -1244,78 +1316,6 @@
       "tags": {
         "draft_class": "2027",
         "position": "Pitcher",
-        "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Tanner Chun",
-      "team": "Tulane",
-      "level": "NCAA",
-      "stats_summary": "3-5, 2 RBI, R, BB, K, 2B",
-      "game_context": "Creighton 6, Tulane 6 | Bottom 11",
-      "game_status": "Live",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630286",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Tanner%20Chun%22&btnI=",
-      "performance_grade": "🔥 Standout",
-      "grade_reason": "3 hits",
-      "social_search_url": "https://x.com/search?q=%22Tanner%20Chun%22%20Tulane&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Hitter",
-        "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Sam Harry",
-      "team": "Sacramento State",
-      "level": "NCAA",
-      "stats_summary": "1-2, R, 2 BB, K",
-      "game_context": "Pacific 5, Sacramento State 3 | Middle 9",
-      "game_status": "Live",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631305",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Reached base 3 times",
-      "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2028",
-        "position": "Hitter",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Boston Torres",
-      "team": "Wake Forest",
-      "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "Florida State 10, Wake Forest 0 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://godeacs.com/boxscore.aspx?id=14531",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Boston%20Torres%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Boston%20Torres%22%20Wake%20Forest&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
         "roster_priority": 3
       }
     },
@@ -1368,26 +1368,26 @@
       }
     },
     {
-      "player_name": "Sam Mitchell",
-      "team": "Southern Miss",
+      "player_name": "Boston Torres",
+      "team": "Wake Forest",
       "level": "NCAA",
       "stats_summary": "Did Not Play",
-      "game_context": "Southern Miss 5, Arkansas State 8 | Final",
+      "game_context": "Florida State 10, Wake Forest 0 | Final",
       "game_status": "Final",
       "game_time": null,
       "game_date": "2026-03-13",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629908",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
+      "box_score_url": "https://godeacs.com/boxscore.aspx?id=14531",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Boston%20Torres%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
+      "social_search_url": "https://x.com/search?q=%22Boston%20Torres%22%20Wake%20Forest&f=live",
       "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
-        "draft_class": "2028",
-        "position": "Pitcher",
+        "draft_class": "2026",
+        "position": "Hitter",
         "roster_priority": 3
       }
     },
@@ -1395,8 +1395,8 @@
       "player_name": "Lee Ellis",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "0-3, R, K",
-      "game_context": "Ohio State 5, Washington 2 | Top 6",
+      "stats_summary": "0-3, K",
+      "game_context": "Ohio State 5, Washington 2 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-03-13",
@@ -1526,30 +1526,6 @@
       }
     },
     {
-      "player_name": "Lee Sowers",
-      "team": "North Carolina",
-      "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "North Carolina 8, California 1 | Bottom 9",
-      "game_status": "Live",
-      "game_time": "9:05 PM ET",
-      "game_date": "2026-03-13",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=645461",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Sowers%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Lee%20Sowers%22%20North%20Carolina&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Hitter",
-        "roster_priority": 4
-      }
-    },
-    {
       "player_name": "Brisen Tweedy",
       "team": "USF",
       "level": "NCAA",
@@ -1571,6 +1547,30 @@
         "draft_class": "2028",
         "position": "Pitcher",
         "roster_priority": 3
+      }
+    },
+    {
+      "player_name": "Lee Sowers",
+      "team": "North Carolina",
+      "level": "NCAA",
+      "stats_summary": "Did Not Play",
+      "game_context": "North Carolina 8, California 1 | Final",
+      "game_status": "Final",
+      "game_time": "9:05 PM ET",
+      "game_date": "2026-03-13",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=645461",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Sowers%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Lee%20Sowers%22%20North%20Carolina&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Hitter",
+        "roster_priority": 4
       }
     },
     {
