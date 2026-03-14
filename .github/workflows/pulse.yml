@@ -84,11 +84,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/*.json
           git diff --staged --quiet || git commit -m "Update pulse data [bot]"
-          # If another run pushed first, rebase may conflict on data JSONs.
-          # Abort and skip — the next scheduled run will push fresh data.
-          if ! git pull --rebase --autostash origin main; then
-            echo "Rebase conflict (concurrent run) — skipping push, next run will update"
-            git rebase --abort 2>/dev/null || true
-            exit 0
-          fi
+          # Merge remote changes, preferring our freshly-generated data files on conflict.
+          # Aborting and skipping the push causes sent_alerts.json to stay stale,
+          # which makes the next run re-fire the same Slack alerts (double-alert bug).
+          git fetch origin main
+          git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
           git push
