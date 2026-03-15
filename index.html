@@ -1561,14 +1561,14 @@ async function switchWindow(window) {
 }
 
 // Live workflow cron windows (UTC):
-//   00:00–06:55 UTC  (every 5 min)  = 8:00 PM–2:55 AM ET
-//   14:00–23:55 UTC  (every 5 min)  = 10:00 AM–7:55 PM ET
-// Gap: 06:55–14:00 UTC = 2:55 AM–10:00 AM ET (no live runs)
+//   00:00–06:45 UTC  (every 15 min)  = 8:00 PM–2:45 AM ET
+//   14:00–23:45 UTC  (every 15 min)  = 10:00 AM–7:45 PM ET
+// Gap: 06:45–14:00 UTC = 2:45 AM–10:00 AM ET (no live runs)
 function getNextUpdateTime() {
   const now = new Date();
   const h = now.getUTCHours(), m = now.getUTCMinutes();
   const totalMins = h * 60 + m;
-  const GAP_START = 6 * 60 + 56;  // 06:56 UTC (after last run at 06:55)
+  const GAP_START = 6 * 60 + 46;  // 06:46 UTC (after last run at 06:45)
   const GAP_END   = 14 * 60;       // 14:00 UTC
 
   let next;
@@ -1577,8 +1577,8 @@ function getNextUpdateTime() {
     next = new Date(now);
     next.setUTCHours(14, 0, 0, 0);
   } else {
-    // In an active window — next 5-min mark
-    const nextM = Math.ceil((m + 1) / 5) * 5;
+    // In an active window — next 15-min mark
+    const nextM = Math.ceil((m + 1) / 15) * 15;
     next = new Date(now);
     if (nextM >= 60) {
       next.setUTCHours(h + 1, 0, 0, 0);
