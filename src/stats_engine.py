@@ -2500,8 +2500,9 @@ class D1BaseballScraper(BaseSchoolScraper):
                         if tpl: parts.append(_fmt(tpl, "3B"))
                         if rbi: parts.append(_fmt(rbi, "RBI"))
                         if r:   parts.append(_fmt(r,   "R"))
-                        if bb:  parts.append(_fmt(bb,  "BB"))
                         sb  = int(stat_map.get("SB",  "0")) if stat_map.get("SB",  "").isdigit() else 0
+                        if sb:  parts.append(_fmt(sb,  "SB"))
+                        if bb:  parts.append(_fmt(bb,  "BB"))
                         _hbp_raw = stat_map.get("HBP", "") or stat_map.get("HP", "")
                         hbp = int(_hbp_raw) if str(_hbp_raw).isdigit() else 0
                         if hbp: parts.append(_fmt(hbp, "HBP"))
