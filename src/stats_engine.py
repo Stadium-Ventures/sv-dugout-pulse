@@ -1970,13 +1970,13 @@ class D1BaseballScraper(BaseSchoolScraper):
     def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
         self._refresh_today()
         is_two_way = (position == "Two-Way")
+        first_context = None
         try:
             tiles = self._find_all_game_tiles(team, yesterday_only=yesterday_only)
             if not tiles:
                 logger.debug("No D1Baseball game found for %s (yesterday_only=%s)", team, yesterday_only)
                 return None
 
-            first_context = None
             for tile_info in tiles:
                 context = self._build_tile_context(tile_info)
                 if first_context is None:
@@ -2065,6 +2065,10 @@ class D1BaseballScraper(BaseSchoolScraper):
             return None
         except Exception:
             logger.info("D1Baseball fetch failed for %s @ %s", player_name, team)
+            if first_context is not None:
+                if first_context.get("game_status") == "Live":
+                    first_context["stats_summary"] = "Game in progress"
+                return first_context
             return None
 
     # ---- scores API / game discovery ----
@@ -2072,18 +2076,22 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _get_scores(self, date_str: str) -> str:
         """Fetch D1Baseball scores HTML for a date (YYYYMMDD). Caches per date."""
         if date_str not in self._scores_cache:
-            resp = _http.get(
-                self.SCORES_URL,
-                params={"date": date_str},
-                headers={
-                    "Referer": "https://d1baseball.com/scores/",
-                    "X-Requested-With": "XMLHttpRequest",
-                },
-                timeout=_TIMEOUT_D1BASEBALL,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            self._scores_cache[date_str] = data.get("content", {}).get("d1-scores", "")
+            try:
+                resp = _http.get(
+                    self.SCORES_URL,
+                    params={"date": date_str},
+                    headers={
+                        "Referer": "https://d1baseball.com/scores/",
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                    timeout=_TIMEOUT_D1BASEBALL,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                self._scores_cache[date_str] = data.get("content", {}).get("d1-scores", "")
+            except Exception as _e:
+                logger.info("D1Baseball scores fetch failed for %s: %s", date_str, _e)
+                self._scores_cache[date_str] = ""
         return self._scores_cache[date_str]
 
     def _find_all_game_tiles(self, team: str, yesterday_only: bool = False) -> list[dict]:
