@@ -387,6 +387,69 @@ def _fmt(n: int, label: str) -> str:
     return label if n == 1 else f"{n} {label}"
 
 
+# ===== Stat field aliases =====
+# Sources use different names for the same stat. This map lets us look up a
+# value by trying all known aliases, so every parser is resilient to naming
+# variations regardless of whether the source uses "K", "SO", or "Strikeouts".
+
+_STAT_ALIASES = {
+    "ab":  ("AB", "AtBats", "at_bats"),
+    "h":   ("H", "Hits", "hits"),
+    "r":   ("R", "Runs", "runs"),
+    "rbi": ("RBI", "RunsBattedIn", "rbi"),
+    "hr":  ("HR", "HomeRuns", "home_runs"),
+    "2b":  ("2B", "Doubles", "doubles"),
+    "3b":  ("3B", "Triples", "triples"),
+    "bb":  ("BB", "Walks", "BaseOnBalls", "walks"),
+    "k":   ("K", "SO", "Strikeouts", "strikeouts"),
+    "sb":  ("SB", "StolenBases", "stolen_bases"),
+    "hbp": ("HBP", "HitByPitch", "hit_by_pitch"),
+    "sf":  ("SF", "SacFlies", "SacrificeFlies", "sac_flies"),
+    # Pitching
+    "ip":  ("IP", "InningsPitched", "innings_pitched"),
+    "er":  ("ER", "EarnedRuns", "earned_runs"),
+    "ha":  ("H", "HA", "HitsAllowed", "hits_allowed"),
+    "bba": ("BB", "BBA", "WalksAllowed", "walks_allowed"),
+}
+
+
+def _stat(source: dict, canonical: str, default=0):
+    """Look up a stat from *source* using all known aliases for *canonical*.
+
+    >>> _stat({"SO": "7"}, "k")  # returns 7
+    """
+    # Try canonical key first
+    val = source.get(canonical)
+    if val is not None and val != "":
+        try:
+            return int(val)
+        except (ValueError, TypeError):
+            pass
+
+    # Try aliases
+    for alias in _STAT_ALIASES.get(canonical, ()):
+        val = source.get(alias)
+        if val is not None and val != "":
+            try:
+                return int(val)
+            except (ValueError, TypeError):
+                continue
+
+    return default
+
+
+def _stat_str(source: dict, canonical: str, default="0") -> str:
+    """Like _stat() but returns the raw string value (for IP display)."""
+    val = source.get(canonical)
+    if val is not None and val != "":
+        return str(val)
+    for alias in _STAT_ALIASES.get(canonical, ()):
+        val = source.get(alias)
+        if val is not None and val != "":
+            return str(val)
+    return default
+
+
 # ===== Shared data structures =====
 
 def empty_stats() -> dict:
@@ -2478,16 +2541,15 @@ class D1BaseballScraper(BaseSchoolScraper):
                         for i, hdr in enumerate(stat_headers):
                             if i < len(stat_values):
                                 stat_map[hdr] = stat_values[i]
-                        ab  = int(stat_map["AB"])            if stat_map.get("AB", "").isdigit()  else 0
-                        r   = int(stat_map.get("R", "0"))    if stat_map.get("R", "").isdigit()   else 0
-                        h   = int(stat_map.get("H", "0"))    if stat_map.get("H", "").isdigit()   else 0
-                        rbi = int(stat_map.get("RBI", "0"))  if stat_map.get("RBI", "").isdigit() else 0
-                        dbl = int(stat_map.get("2B", "0"))   if stat_map.get("2B", "").isdigit()  else 0
-                        tpl = int(stat_map.get("3B", "0"))   if stat_map.get("3B", "").isdigit()  else 0
-                        hr  = int(stat_map.get("HR", "0"))   if stat_map.get("HR", "").isdigit()  else 0
-                        bb  = int(stat_map.get("BB", "0"))   if stat_map.get("BB", "").isdigit()  else 0
-                        k_str = stat_map.get("K", stat_map.get("SO", "0"))
-                        k   = int(k_str) if k_str.isdigit() else 0
+                        ab  = _stat(stat_map, "ab")
+                        r   = _stat(stat_map, "r")
+                        h   = _stat(stat_map, "h")
+                        rbi = _stat(stat_map, "rbi")
+                        dbl = _stat(stat_map, "2b")
+                        tpl = _stat(stat_map, "3b")
+                        hr  = _stat(stat_map, "hr")
+                        bb  = _stat(stat_map, "bb")
+                        k   = _stat(stat_map, "k")
                     except (ValueError, IndexError, KeyError):
                         continue
                     # If no plate appearances yet, check position to decide what to do.
@@ -2508,11 +2570,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                         if tpl: parts.append(_fmt(tpl, "3B"))
                         if rbi: parts.append(_fmt(rbi, "RBI"))
                         if r:   parts.append(_fmt(r,   "R"))
-                        sb  = int(stat_map.get("SB",  "0")) if stat_map.get("SB",  "").isdigit() else 0
+                        sb  = _stat(stat_map, "sb")
                         if sb:  parts.append(_fmt(sb,  "SB"))
                         if bb:  parts.append(_fmt(bb,  "BB"))
-                        _hbp_raw = stat_map.get("HBP", "") or stat_map.get("HP", "")
-                        hbp = int(_hbp_raw) if str(_hbp_raw).isdigit() else 0
+                        hbp = _stat(stat_map, "hbp")
                         if hbp: parts.append(_fmt(hbp, "HBP"))
                         if k:   parts.append(_fmt(k,   "K"))
                         if dbl: parts.append(_fmt(dbl, "2B"))
@@ -2543,14 +2604,13 @@ class D1BaseballScraper(BaseSchoolScraper):
                         for i, hdr in enumerate(stat_headers):
                             if i < len(stat_values):
                                 stat_map[hdr] = stat_values[i]
-                        ip_str = stat_map.get("IP", "0")
+                        ip_str = _stat_str(stat_map, "ip", "0")
                         parts_ip = ip_str.split(".")
                         ip = int(parts_ip[0]) + (int(parts_ip[1]) / 3 if len(parts_ip) > 1 else 0)
-                        h  = int(stat_map.get("H", "0"))  if stat_map.get("H", "").isdigit()  else 0
-                        er = int(stat_map.get("ER", "0")) if stat_map.get("ER", "").isdigit() else 0
-                        bb = int(stat_map.get("BB", "0")) if stat_map.get("BB", "").isdigit() else 0
-                        k_str = stat_map.get("K", stat_map.get("SO", "0"))
-                        k  = int(k_str) if k_str.isdigit() else 0
+                        h  = _stat(stat_map, "ha")
+                        er = _stat(stat_map, "er")
+                        bb = _stat(stat_map, "bba")
+                        k  = _stat(stat_map, "k")
                     except (ValueError, IndexError):
                         continue
                     parts = [f"{ip_str} IP"]
@@ -2809,17 +2869,18 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _parse_sidearm_batting_json(v: dict) -> Optional[dict]:
         """Parse batting stats from a Sidearm game.json PlayerGroups Batting Value."""
         try:
-            ab  = int(v.get("AtBats", 0) or 0)
-            h   = int(v.get("Hits", 0) or 0)
-            r   = int(v.get("Runs", 0) or 0)
-            rbi = int(v.get("RunsBattedIn", 0) or 0)
-            hr  = int(v.get("HomeRuns", 0) or 0)
-            tpl = int(v.get("Triples", 0) or 0)
-            dbl = int(v.get("Doubles", 0) or 0)
-            bb  = int(v.get("Walks", 0) or 0)
-            k   = int(v.get("Strikeouts", 0) or 0)
-            sb  = int(v.get("StolenBases", 0) or 0)
-            hbp = int(v.get("HitByPitch", 0) or 0)
+            ab  = _stat(v, "ab")
+            h   = _stat(v, "h")
+            r   = _stat(v, "r")
+            rbi = _stat(v, "rbi")
+            hr  = _stat(v, "hr")
+            tpl = _stat(v, "3b")
+            dbl = _stat(v, "2b")
+            bb  = _stat(v, "bb")
+            k   = _stat(v, "k")
+            sb  = _stat(v, "sb")
+            hbp = _stat(v, "hbp")
+            sf  = _stat(v, "sf")
 
             if ab == 0 and bb == 0 and hbp == 0:
                 return None  # didn't actually play
@@ -2857,6 +2918,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 "walks": bb,
                 "strikeouts": k,
                 "hit_by_pitch": hbp,
+                "sac_flies": sf,
                 "_player_found": True,
             }
         except Exception:
@@ -2866,7 +2928,7 @@ class D1BaseballScraper(BaseSchoolScraper):
     def _parse_sidearm_pitching_json(v: dict) -> Optional[dict]:
         """Parse pitching stats from a Sidearm game.json PlayerGroups Pitching Value."""
         try:
-            ip_str = str(v.get("InningsPitched", "0") or "0")
+            ip_str = _stat_str(v, "ip", "0")
             # Sidearm returns IP in baseball notation (5.1 = 5⅓ IP)
             # Convert to float using outs: 5.1 → 5 + 1/3 = 5.333
             if ip_str.replace(".", "").isdigit() and "." in ip_str:
@@ -2876,10 +2938,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                 ip = float(ip_str)
             else:
                 ip = 0.0
-            h  = int(v.get("HitsAllowed", 0) or 0)
-            er = int(v.get("EarnedRuns", 0) or 0)
-            k  = int(v.get("Strikeouts", 0) or 0)
-            bb = int(v.get("WalksAllowed", 0) or 0)
+            h  = _stat(v, "ha")
+            er = _stat(v, "er")
+            k  = _stat(v, "k")
+            bb = _stat(v, "bba")
 
             parts = [f"{ip_str} IP"]
             if h:
@@ -3025,16 +3087,17 @@ class D1BaseballScraper(BaseSchoolScraper):
             if i < len(values):
                 stats[header] = values[i]
 
-        ab  = int(stats.get("AB", 0) or 0)
-        h   = int(stats.get("H", 0) or 0)
-        hr  = int(stats.get("HR", 0) or 0)
-        tpl = int(stats.get("3B", 0) or 0)
-        dbl = int(stats.get("2B", 0) or 0)
-        rbi = int(stats.get("RBI", 0) or 0)
-        r   = int(stats.get("R", 0) or 0)
-        sb  = int(stats.get("SB", 0) or 0)
-        bb  = int(stats.get("BB", 0) or 0)
-        k   = int(stats.get("K", stats.get("SO", 0)) or 0)
+        ab  = _stat(stats, "ab")
+        h   = _stat(stats, "h")
+        hr  = _stat(stats, "hr")
+        tpl = _stat(stats, "3b")
+        dbl = _stat(stats, "2b")
+        rbi = _stat(stats, "rbi")
+        r   = _stat(stats, "r")
+        sb  = _stat(stats, "sb")
+        bb  = _stat(stats, "bb")
+        k   = _stat(stats, "k")
+        hbp = _stat(stats, "hbp")
 
         if ab == 0 and bb == 0:
             return None  # didn't actually play
@@ -3052,12 +3115,12 @@ class D1BaseballScraper(BaseSchoolScraper):
             parts.append(_fmt(sb, "SB"))
         if bb:
             parts.append(_fmt(bb, "BB"))
+        if hbp:
+            parts.append(_fmt(hbp, "HBP"))
         if k:
             parts.append(_fmt(k, "K"))
         if dbl:
             parts.append(_fmt(dbl, "2B"))
-
-        hbp = int(stats.get("HBP", 0) or 0)
 
         return {
             "stats_summary": ", ".join(parts),
@@ -3083,12 +3146,12 @@ class D1BaseballScraper(BaseSchoolScraper):
             if i < len(values):
                 stats[header] = values[i]
 
-        ip_str = stats.get("IP", "0") or "0"
+        ip_str = _stat_str(stats, "ip", "0")
         ip = float(ip_str) if str(ip_str).replace(".", "").isdigit() else 0.0
-        h = int(stats.get("H", 0) or 0)
-        er = int(stats.get("ER", 0) or 0)
-        k = int(stats.get("SO", 0) or stats.get("K", 0) or 0)
-        bb = int(stats.get("BB", 0) or 0)
+        h = _stat(stats, "ha")
+        er = _stat(stats, "er")
+        k = _stat(stats, "k")
+        bb = _stat(stats, "bba")
 
         parts = [f"{ip_str} IP"]
         if h:
@@ -3510,17 +3573,17 @@ class ESPNScraper(BaseSchoolScraper):
 
     @staticmethod
     def _parse_batting(sm: dict) -> dict:
-        h = int(sm.get("H", 0) or 0)
-        ab = int(sm.get("AB", 0) or 0)
-        hr = int(sm.get("HR", 0) or 0)
-        dbl = int(sm.get("2B", 0) or 0)
-        tpl = int(sm.get("3B", 0) or 0)
-        rbi = int(sm.get("RBI", 0) or 0)
-        r = int(sm.get("R", 0) or 0)
-        sb = int(sm.get("SB", 0) or 0)
-        bb = int(sm.get("BB", 0) or 0)
-        hbp = int(sm.get("HBP", 0) or 0)
-        k = int(sm.get("K", sm.get("SO", 0)) or 0)
+        h   = _stat(sm, "h")
+        ab  = _stat(sm, "ab")
+        hr  = _stat(sm, "hr")
+        dbl = _stat(sm, "2b")
+        tpl = _stat(sm, "3b")
+        rbi = _stat(sm, "rbi")
+        r   = _stat(sm, "r")
+        sb  = _stat(sm, "sb")
+        bb  = _stat(sm, "bb")
+        hbp = _stat(sm, "hbp")
+        k   = _stat(sm, "k")
 
         parts = [f"{h}-{ab}"]
         if hr:
@@ -3555,12 +3618,12 @@ class ESPNScraper(BaseSchoolScraper):
 
     @staticmethod
     def _parse_pitching(sm: dict) -> dict:
-        ip_str = sm.get("IP", "0") or "0"
+        ip_str = _stat_str(sm, "ip", "0")
         ip = float(ip_str) if ip_str.replace(".", "").isdigit() else 0.0
-        h = int(sm.get("H", 0) or 0)
-        er = int(sm.get("ER", 0) or 0)
-        k = int(sm.get("K", sm.get("SO", 0)) or 0)
-        bb = int(sm.get("BB", 0) or 0)
+        h  = _stat(sm, "ha")
+        er = _stat(sm, "er")
+        k  = _stat(sm, "k")
+        bb = _stat(sm, "bba")
 
         parts = [f"{ip_str} IP"]
         if h:
