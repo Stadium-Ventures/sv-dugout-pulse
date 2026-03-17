@@ -203,10 +203,11 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
             return
 
     box_url = stats.get("box_score_url", "")
+    game_number = stats.get("game_number") or 0
 
     with _ncaa_log_lock:
-        _ncaa_log_pending.append((key, game_date, opponent, entry_stats, box_url))
-    logger.debug("NCAA game log: queued %s on %s", key, game_date)
+        _ncaa_log_pending.append((key, game_date, opponent, entry_stats, box_url, game_number))
+    logger.debug("NCAA game log: queued %s on %s (gm %s)", key, game_date, game_number)
 
 
 def _flush_ncaa_game_log():
@@ -241,14 +242,17 @@ def _flush_ncaa_game_log():
 
     added = 0
     updated = 0
-    for key, game_date, opponent, entry_stats, box_url in _ncaa_log_pending:
+    for key, game_date, opponent, entry_stats, box_url, game_number in _ncaa_log_pending:
         seen = seen_by_key.get(key, set())
 
         entry = {"date": game_date, "opponent": opponent, "stats": entry_stats}
         if box_url:
             entry["box_score_url"] = box_url
+        if game_number:
+            entry["game_number"] = game_number
 
-        dedup = f"{game_date}|{opponent}"
+        # Include game_number in dedup key so doubleheaders aren't collapsed
+        dedup = f"{game_date}|{opponent}|{game_number}" if game_number else f"{game_date}|{opponent}"
         if dedup not in seen:
             # New entry — append
             log.setdefault(key, []).append(entry)
@@ -259,7 +263,10 @@ def _flush_ncaa_game_log():
             # Existing entry — update if new data has more substance
             # (e.g. walks populated on a later fetch after box score fully loaded)
             for existing in log.get(key, []):
-                if existing.get("date") == game_date and existing.get("opponent") == opponent:
+                existing_gn = existing.get("game_number", 0)
+                if (existing.get("date") == game_date
+                        and existing.get("opponent") == opponent
+                        and existing_gn == game_number):
                     old_s = existing.get("stats", {})
                     # Count non-zero fields as a measure of data completeness
                     old_nonzero = sum(1 for v in old_s.values() if v and v != "0")
@@ -467,7 +474,7 @@ def _supplement_yesterday(pulse: list):
                 if p.get("game_date") == yesterday_str
             ]
         except Exception:
-            pass
+            logger.warning("Failed to read yesterday_pulse.json in _supplement_yesterday — starting fresh")
 
     # Dedup key: (player_name, game_number) so doubleheader games don't collide
     def _dedup_key(p):
@@ -513,7 +520,7 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
                 if p.get("game_date") == yesterday_str
             ]
         except Exception:
-            pass
+            logger.warning("Failed to read yesterday_pulse.json in _fetch_yesterday_pass — starting fresh")
 
     # Dedup key: (player_name, game_number) so doubleheader games don't collide
     def _dedup_key(p):

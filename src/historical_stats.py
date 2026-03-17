@@ -1115,8 +1115,15 @@ class WindowStatsAggregator:
 
 
 def write_window_json(data: list, path: str):
-    """Write window stats to JSON file."""
+    """Write window stats to JSON file (atomic via temp file + rename)."""
+    import tempfile
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, "w") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        os.replace(tmp, path)
+    except BaseException:
+        os.unlink(tmp)
+        raise
     logger.info("Wrote %d entries to %s", len(data), path)
