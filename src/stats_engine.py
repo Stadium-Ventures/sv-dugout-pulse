@@ -2402,12 +2402,20 @@ class D1BaseballScraper(BaseSchoolScraper):
             event_id = m.group(1)
 
             # Step 1: get event metadata (xmlfile path contains groupid)
-            r1 = _http.get(
-                f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}",
-                headers={"Referer": box_url},
-                timeout=15,
-            )
-            r1.raise_for_status()
+            # Retry once on transient failures (timeout, 5xx) before giving up.
+            for _sb_attempt in range(2):
+                try:
+                    r1 = _http.get(
+                        f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}",
+                        headers={"Referer": box_url},
+                        timeout=15,
+                    )
+                    r1.raise_for_status()
+                    break
+                except Exception:
+                    if _sb_attempt == 1:
+                        raise
+                    _time.sleep(1.5)
             event_xml = base64.b64decode(
                 _codecs.encode(r1.text.strip(), "rot_13") + "=="
             ).decode("utf-8", errors="replace")
@@ -2436,13 +2444,21 @@ class D1BaseballScraper(BaseSchoolScraper):
                     f"&sport=bsgame&filetime=-1&type=statmonitr&start=true"
                 )
                 encoded = base64.b64encode(data_str.encode()).decode()
-                r2 = _http.get(
-                    "https://stats.statbroadcast.com/interface/webservice/stats",
-                    params={"data": encoded},
-                    headers={"Referer": box_url, "X-Requested-With": "XMLHttpRequest"},
-                    timeout=15,
-                )
-                r2.raise_for_status()
+                # Retry once on transient failures before falling through to ESPN.
+                for _sb_attempt in range(2):
+                    try:
+                        r2 = _http.get(
+                            "https://stats.statbroadcast.com/interface/webservice/stats",
+                            params={"data": encoded},
+                            headers={"Referer": box_url, "X-Requested-With": "XMLHttpRequest"},
+                            timeout=15,
+                        )
+                        r2.raise_for_status()
+                        break
+                    except Exception:
+                        if _sb_attempt == 1:
+                            raise
+                        _time.sleep(1.5)
                 html = base64.b64decode(
                     _codecs.encode(r2.text.strip(), "rot_13") + "=="
                 ).decode("utf-8", errors="replace")
