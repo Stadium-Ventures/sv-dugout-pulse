@@ -22,6 +22,7 @@ GRADE_STANDOUT = "\U0001f525 Standout"
 GRADE_GOOD = "\u2705 Good"
 GRADE_ROUTINE = "\U0001f610 Routine"
 GRADE_SOFT_FLAG = "\U0001f6a9 Off Day"
+GRADE_DNP = "\u2014 DNP"
 GRADE_SCHEDULED = "\U0001f552 Scheduled"
 GRADE_NO_DATA = "\u2014 No Data"
 
@@ -32,8 +33,9 @@ _GRADE_RANK = {
     GRADE_GOOD: 2,
     GRADE_ROUTINE: 3,
     GRADE_SOFT_FLAG: 4,
-    GRADE_SCHEDULED: 5,
-    GRADE_NO_DATA: 6,
+    GRADE_DNP: 5,
+    GRADE_SCHEDULED: 6,
+    GRADE_NO_DATA: 7,
 }
 
 
@@ -64,6 +66,15 @@ class PerformanceAnalyzer:
 
         if stats.get("game_status") == "Scheduled":
             return GRADE_SCHEDULED, ""
+
+        # DNP: game happened but player didn't appear
+        summary = (stats.get("stats_summary") or "").lower()
+        if stats.get("game_status") == "Final" and (
+            "did not play" in summary
+            or "started — 0 pa" in summary
+            or summary == "dnp"
+        ):
+            return GRADE_DNP, ""
 
         # Milestone always takes priority
         if stats.get("is_debut"):
