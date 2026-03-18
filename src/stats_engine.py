@@ -2540,7 +2540,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                     continue
                 name_cell = cells[name_idx]  # "LastName,FirstName"
                 name_cell_norm = _strip_accents(name_cell).lower()
-                if player_last not in name_cell_norm:
+                # Check last name: exact substring match OR truncated name
+                # (box scores sometimes truncate long names, e.g. "Eckelm" for "Eckelman")
+                cell_last = name_cell_norm.split(",")[0].strip() if "," in name_cell_norm else name_cell_norm.split()[0].strip() if name_cell_norm else ""
+                if not _names_match(player_last, cell_last):
                     continue
                 if "," in name_cell_norm and player_first:
                     first_in_cell = name_cell_norm.split(",", 1)[1].strip()
@@ -3069,7 +3072,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                     else:
                         continue
 
-                    if player_last not in _strip_accents(name_text).lower():
+                    # Use _names_match for truncated/fuzzy name handling
+                    name_text_norm = _strip_accents(name_text).lower()
+                    cell_last = name_text_norm.split(",")[0].strip() if "," in name_text_norm else name_text_norm.split()[0].strip() if name_text_norm else ""
+                    if not _names_match(player_last, cell_last):
                         continue
 
                     if not cell_texts:
