@@ -2097,7 +2097,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                             context["game_context"] = f"{away} {a_s}, {home} {hs} | Final"
                         elif sb_inning and context.get("game_status") == "Live":
                             context["game_context"] = f"{away} {a_s}, {home} {hs} | {sb_inning}"
-                        if player_stats:
+                        if player_stats and player_stats.get("_player_found"):
                             # Player was found — merge stats and return
                             context.update(player_stats)
                             return context
@@ -2538,16 +2538,22 @@ class D1BaseballScraper(BaseSchoolScraper):
                 cells = [c.get_text(strip=True) for c in row.select("td")]
                 if len(cells) <= name_idx:
                     continue
-                name_cell = cells[name_idx]  # "LastName,FirstName"
+                name_cell = cells[name_idx]  # "LastName,FirstName" or "FirstName LastName"
                 name_cell_norm = _strip_accents(name_cell).lower()
-                # Check last name: exact substring match OR truncated name
+                # Extract last name — format varies: "Last,First" or "First Last"
+                if "," in name_cell_norm:
+                    cell_last = name_cell_norm.split(",")[0].strip()
+                    cell_first = name_cell_norm.split(",", 1)[1].strip()
+                else:
+                    parts = name_cell_norm.split()
+                    cell_last = parts[-1].strip() if parts else ""
+                    cell_first = parts[0].strip() if len(parts) > 1 else ""
+                # Use _names_match for truncated/fuzzy name handling
                 # (box scores sometimes truncate long names, e.g. "Eckelm" for "Eckelman")
-                cell_last = name_cell_norm.split(",")[0].strip() if "," in name_cell_norm else name_cell_norm.split()[0].strip() if name_cell_norm else ""
                 if not _names_match(player_last, cell_last):
                     continue
-                if "," in name_cell_norm and player_first:
-                    first_in_cell = name_cell_norm.split(",", 1)[1].strip()
-                    if not first_in_cell.startswith(player_first):
+                if cell_first and player_first:
+                    if not cell_first.startswith(player_first):
                         continue
 
                 if is_batting and batting_result is None:
