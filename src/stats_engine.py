@@ -677,7 +677,7 @@ class ProStatsFetcher:
                 return None
 
             status = game["schedule"].get("status", "")
-            if status != "Final":
+            if status not in ("Final", "Completed Early"):
                 return None
 
             result = self._extract_stats(player, player_id, game)
@@ -743,7 +743,7 @@ class ProStatsFetcher:
             results = []
             for game in player_games:
                 status = game["schedule"].get("status", "")
-                if status != "Final":
+                if status not in ("Final", "Completed Early"):
                     continue
 
                 result = self._extract_stats(player, player_id, game)
@@ -1380,8 +1380,10 @@ class ProStatsFetcher:
         sched = game["schedule"]
         box = game["boxscore"]
 
-        # Game context (same as _extract_stats)
+        # Game context — normalize exhibition "Completed Early" to "Final"
         status = sched.get("status", "Unknown")
+        if status == "Completed Early":
+            status = "Final"
         home = sched.get("home_name", "")
         away = sched.get("away_name", "")
         home_score = sched.get("home_score", 0)
@@ -1484,8 +1486,10 @@ class ProStatsFetcher:
         sched = game["schedule"]
         box = game["boxscore"]
 
-        # Game context
+        # Game context — normalize exhibition "Completed Early" to "Final"
         status = sched.get("status", "Unknown")
+        if status == "Completed Early":
+            status = "Final"
         home = sched.get("home_name", "")
         away = sched.get("away_name", "")
         home_score = sched.get("home_score", 0)
