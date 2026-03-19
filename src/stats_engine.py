@@ -550,14 +550,8 @@ class ProStatsFetcher:
             mlb_id = player.get("mlb_id")
             player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
-                # Player not in MLB registry — try Spring Breakout by team name
-                game = self._find_breakout_game_by_team(team)
-                if game is None:
-                    logger.info("Player not found in MLB lookup: %s", name)
-                    return empty_stats()
-                result = self._extract_stats_by_name(player, name, game)
-                result["data_source"] = "MLB Stats API"
-                return result
+                logger.info("Player not found in MLB lookup: %s", name)
+                return empty_stats()
 
             game = self._find_todays_game(player_id, team)
 
@@ -604,14 +598,8 @@ class ProStatsFetcher:
             mlb_id = player.get("mlb_id")
             player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
-                # Player not in MLB registry — try Spring Breakout by team name
-                game = self._find_breakout_game_by_team(team)
-                if game is None:
-                    logger.info("Player not found in MLB lookup: %s", name)
-                    return [empty_stats()]
-                result = self._extract_stats_by_name(player, name, game)
-                result["data_source"] = "MLB Stats API"
-                return [result]
+                logger.info("Player not found in MLB lookup: %s", name)
+                return [empty_stats()]
 
             games = self._find_all_todays_games(player_id, team)
             next_game = self._find_next_game(player_id, team)
@@ -678,20 +666,7 @@ class ProStatsFetcher:
             mlb_id = player.get("mlb_id")
             player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
-                # Try Spring Breakout by team name for yesterday
-                yesterday = self._today - timedelta(days=1)
-                yesterday_str = yesterday.strftime("%m/%d/%Y")
-                game = self._find_breakout_game_on_date(team, yesterday_str)
-                if game is None:
-                    return None
-                status = game["schedule"].get("status", "")
-                if status != "Final":
-                    return None
-                result = self._extract_stats_by_name(player, name, game)
-                result["is_yesterday"] = True
-                result["game_date"] = yesterday.isoformat()
-                result["data_source"] = "MLB Stats API"
-                return result
+                return None
 
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
@@ -738,20 +713,7 @@ class ProStatsFetcher:
             mlb_id = player.get("mlb_id")
             player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
-                # Try Spring Breakout by team name for yesterday
-                yesterday = self._today - timedelta(days=1)
-                yesterday_str = yesterday.strftime("%m/%d/%Y")
-                game = self._find_breakout_game_on_date(team, yesterday_str)
-                if game is None:
-                    return []
-                status = game["schedule"].get("status", "")
-                if status != "Final":
-                    return []
-                result = self._extract_stats_by_name(player, name, game)
-                result["is_yesterday"] = True
-                result["game_date"] = yesterday.isoformat()
-                result["data_source"] = "MLB Stats API"
-                return [result]
+                return []
 
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
@@ -808,19 +770,22 @@ class ProStatsFetcher:
     def _find_game_on_date(self, player_id: int, team_lower: str,
                            date_str: str) -> Optional[dict]:
         """Find a game on a specific date for a player's team."""
-        # Search MLB + Spring Breakout schedules combined
+        # For Spring Breakout players, check sportId=21 only
+        if player_id in self.SPRING_BREAKOUT_IDS:
+            try:
+                schedule = statsapi.schedule(date=date_str, sportId=21)
+            except Exception:
+                schedule = []
+            return self._match_team_in_schedule(schedule, team_lower, player_id)
+
+        # Search MLB schedule first
         try:
-            mlb_schedule = statsapi.schedule(date=date_str, sportId=1)
+            schedule = statsapi.schedule(date=date_str, sportId=1)
+            game = self._match_team_in_schedule(schedule, team_lower, player_id)
+            if game:
+                return game
         except Exception:
-            mlb_schedule = []
-        try:
-            breakout_schedule = statsapi.schedule(date=date_str, sportId=21)
-        except Exception:
-            breakout_schedule = []
-        combined = mlb_schedule + breakout_schedule
-        game = self._match_team_in_schedule(combined, team_lower, player_id)
-        if game:
-            return game
+            pass
 
         # Search MiLB if player has a known team
         api_team_id = self._player_team_cache.get(player_id)
@@ -859,17 +824,20 @@ class ProStatsFetcher:
         team games to detect doubleheaders).
         """
         try:
-            # --- 1. Search MLB + Spring Breakout schedules combined ---
+            # For Spring Breakout players, check sportId=21 only
+            if player_id and player_id in self.SPRING_BREAKOUT_IDS:
+                try:
+                    schedule = statsapi.schedule(date=date_str, sportId=21)
+                except Exception:
+                    schedule = []
+                return self._match_all_in_schedule(schedule, team_lower, player_id)
+
+            # --- 1. Search MLB schedule ---
             try:
                 mlb_schedule = statsapi.schedule(date=date_str, sportId=1)
             except Exception:
                 mlb_schedule = []
-            try:
-                breakout_schedule = statsapi.schedule(date=date_str, sportId=21)
-            except Exception:
-                breakout_schedule = []
-            combined = mlb_schedule + breakout_schedule
-            games = self._match_all_in_schedule(combined, team_lower, player_id)
+            games = self._match_all_in_schedule(mlb_schedule, team_lower, player_id)
             if games:
                 return games
 
@@ -1017,11 +985,9 @@ class ProStatsFetcher:
                 game = self._match_team_in_schedule(breakout_schedule, team_lower, player_id)
                 return game  # None if no breakout game today
 
-            # --- 1. Search MLB + Spring Breakout schedules ---
+            # --- 1. Search MLB schedule by roster team name ---
             mlb_schedule = self._get_schedule(sport_id=1)
-            breakout_schedule = self._get_schedule(sport_id=21)
-            combined = mlb_schedule + breakout_schedule
-            game = self._match_team_in_schedule(combined, team_lower, player_id)
+            game = self._match_team_in_schedule(mlb_schedule, team_lower, player_id)
             if game:
                 return game
 
@@ -1056,9 +1022,9 @@ class ProStatsFetcher:
     def _find_all_todays_games(self, player_id: int, team: str = "") -> list[dict]:
         """Find ALL games today for the player's team (supports doubleheaders).
 
-        Same combined MLB+Breakout→MiLB→parent fallback chain as
-        _find_todays_game(), but uses _match_all_in_schedule() to collect
-        every game instead of picking one.
+        Same MLB→MiLB→parent fallback chain as _find_todays_game(), but uses
+        _match_all_in_schedule() to collect every game instead of picking one.
+        Spring Breakout players are routed to sportId=21 exclusively.
         """
         team_lower = team.lower() if team else ""
 
@@ -1068,11 +1034,9 @@ class ProStatsFetcher:
                 breakout_schedule = self._get_schedule(sport_id=21)
                 return self._match_all_in_schedule(breakout_schedule, team_lower, player_id)
 
-            # --- 1. Search MLB + Spring Breakout schedules ---
+            # --- 1. Search MLB schedule by roster team name ---
             mlb_schedule = self._get_schedule(sport_id=1)
-            breakout_schedule = self._get_schedule(sport_id=21)
-            combined = mlb_schedule + breakout_schedule
-            games = self._match_all_in_schedule(combined, team_lower, player_id)
+            games = self._match_all_in_schedule(mlb_schedule, team_lower, player_id)
             if games:
                 return games
 
@@ -1121,11 +1085,9 @@ class ProStatsFetcher:
         if not team_lower:
             return []
         try:
-            # --- 1. MLB + Spring Breakout schedules ---
+            # --- 1. MLB schedule ---
             mlb_schedule = self._get_schedule(sport_id=1)
-            breakout_schedule = self._get_schedule(sport_id=21)
-            combined = mlb_schedule + breakout_schedule
-            games = self._match_all_in_schedule(combined, team_lower, None)
+            games = self._match_all_in_schedule(mlb_schedule, team_lower, None)
             if games:
                 return games
 
