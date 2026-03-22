@@ -642,6 +642,10 @@ def _load_locked_finals(today_str: str) -> dict[str, list[dict]]:
             if summary in ("Did Not Play", "No game data", "Game cancelled", ""):
                 continue
             key = f"{p['player_name']}|{p['team']}"
+            gn = p.get("game_number") or 0
+            existing_gns = {e.get("game_number") or 0 for e in locked.get(key, [])}
+            if gn in existing_gns:
+                continue  # Skip duplicate game_number for same player
             locked.setdefault(key, []).append(p)
         logger.info("Stats lock: %d NCAA players with Final stats locked for %s", len(locked), today_str)
     except Exception:
@@ -772,6 +776,20 @@ def run_live():
     save_sent_alerts()  # Persist all alert state in one write
 
     _flush_ncaa_game_log()
+
+    # Deduplicate pulse entries.  Concurrent fetches + stats lock can
+    # produce duplicate entries for the same player+game_number.  Keep the
+    # first (which is typically the locked/carried-forward entry).
+    seen_pulse_keys: set = set()
+    deduped_pulse: list = []
+    for p in pulse:
+        pk = (p.get("player_name", ""), p.get("team", ""), p.get("game_number") or 0)
+        if pk not in seen_pulse_keys:
+            seen_pulse_keys.add(pk)
+            deduped_pulse.append(p)
+    if len(deduped_pulse) < len(pulse):
+        logger.info("Pulse dedup: removed %d duplicate entries", len(pulse) - len(deduped_pulse))
+    pulse = deduped_pulse
 
     # Write output — convert yesterday-only entries to N/A for Today tab
     today_str = _today_et().isoformat()
