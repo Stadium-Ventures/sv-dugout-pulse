@@ -1337,7 +1337,11 @@ class ProStatsFetcher:
 
     @staticmethod
     def _format_game_time(game_datetime_str: str) -> str:
-        """Format game datetime string to readable time (e.g., '7:05 PM ET')."""
+        """Format game datetime string to readable time (e.g., '7:05 PM ET').
+
+        Returns empty string for midnight times — APIs use 00:00 as a
+        placeholder when the real start time is TBD.
+        """
         if not game_datetime_str:
             return ""
         try:
@@ -1345,6 +1349,9 @@ class ProStatsFetcher:
             dt = datetime.fromisoformat(game_datetime_str.replace("Z", "+00:00"))
             # Convert to ET with proper DST handling (EST in winter, EDT in summer)
             dt_et = dt.astimezone(ZoneInfo("America/New_York"))
+            # Midnight = TBD placeholder, not a real game time
+            if dt_et.hour == 0 and dt_et.minute == 0:
+                return ""
             return dt_et.strftime("%-I:%M %p ET").replace(" 0", " ")
         except Exception:
             return ""
@@ -1948,6 +1955,7 @@ class NCAAComScraper(BaseSchoolScraper):
 
         for check_date in dates_to_check:
             date_str = check_date.strftime("%Y/%m/%d")
+            expected_mmdd = check_date.strftime("%m/%d/%Y")  # NCAA.com startDate fmt
             games = self._get_scoreboard(date_str)
             is_yesterday = (check_date == yesterday)
 
@@ -1963,6 +1971,13 @@ class NCAAComScraper(BaseSchoolScraper):
                             continue
                     elif is_yesterday and state not in ("final", "live"):
                         # Normal mode: for yesterday, only include live or final
+                        continue
+
+                    # NCAA.com scoreboard can include next-day games in
+                    # "pre" state (with TBD midnight placeholders). Skip
+                    # if the startDate doesn't match the date we asked for.
+                    start_date = game.get("startDate", "")
+                    if start_date and start_date != expected_mmdd:
                         continue
 
                     for side in ("home", "away"):
@@ -3776,12 +3791,19 @@ class ESPNScraper(BaseSchoolScraper):
 
     @staticmethod
     def _format_espn_time(date_str: str) -> str:
-        """Convert ESPN ISO date (e.g. '2026-02-13T18:00Z') to ET time string."""
+        """Convert ESPN ISO date (e.g. '2026-02-13T18:00Z') to ET time string.
+
+        Returns empty string for midnight times — APIs use 00:00 as a
+        placeholder when the real start time is TBD.
+        """
         if not date_str:
             return ""
         try:
             dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
             dt_et = dt.astimezone(ZoneInfo("America/New_York"))
+            # Midnight = TBD placeholder, not a real game time
+            if dt_et.hour == 0 and dt_et.minute == 0:
+                return ""
             return dt_et.strftime("%-I:%M %p ET")
         except Exception:
             return ""
@@ -4384,7 +4406,9 @@ class NCAAStatsFetcher:
         """
         # --- NCAA.com pass ---
         try:
-            today_str = _today_et().strftime("%Y/%m/%d")
+            today = _today_et()
+            today_str = today.strftime("%Y/%m/%d")
+            today_mmdd = today.strftime("%m/%d/%Y")  # NCAA.com startDate format
             games = self._ncaa_com._get_scoreboard(today_str)
             team_lower = team.lower()
             for exact in (True, False):
@@ -4392,6 +4416,12 @@ class NCAAStatsFetcher:
                     game = g.get("game", {})
                     game_state = game.get("gameState", "")
                     if game_state not in ("pre", "live"):
+                        continue
+                    # NCAA.com scoreboard can include next-day games in "pre"
+                    # state (with TBD midnight start times).  Skip if the
+                    # startDate doesn't match today.
+                    start_date = game.get("startDate", "")
+                    if start_date and start_date != today_mmdd:
                         continue
                     for side in ("home", "away"):
                         side_info = game.get(side, {})
