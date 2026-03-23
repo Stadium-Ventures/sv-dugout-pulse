@@ -26,7 +26,7 @@ def fetch_roster(url: Optional[str] = None) -> list[dict]:
     Download the Google Sheet CSV and return rows as a list of raw dicts
     (keyed by the original Sheet column headers).
     """
-    url = url or ROSTER_URL
+    url = (url or ROSTER_URL).strip()
     logger.info("Fetching roster from %s", url)
 
     try:
