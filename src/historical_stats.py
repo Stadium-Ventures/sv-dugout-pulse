@@ -455,12 +455,17 @@ D1B_SLUG = {
     "Saint Josephs": "stjosephs",
     "South Carolina": "scarolina",
     "Southern Miss": "smiss",
+    "Southern Mississippi": "smiss",
     "Texas": "texas",
     "Tulane": "tulane",
     "UCF": "ucf",
     "USF": "sflorida",
     "Vanderbilt": "vandy",
     "Virginia": "virginia",
+    "Cincinnati": "cincy",
+    "Marshall": "marshall",
+    "Northwestern State": "nwstate",
+    "Norrthwestern State": "nwstate",  # typo in SV_Follow_Master sheet
     "Wake Forest": "wake",
 }
 
