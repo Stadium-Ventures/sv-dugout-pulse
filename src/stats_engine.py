@@ -500,19 +500,6 @@ TEAM_NAME_MAP = {
 class ProStatsFetcher:
     """Fetch game/stats data for MLB and MiLB players via MLB-StatsAPI."""
 
-    # Players participating in Spring Breakout (sportId=21 exhibition games).
-    # When these players can't be found in the regular schedule's boxscore,
-    # check the Breakout schedule instead.
-    SPRING_BREAKOUT_IDS: set[int] = {
-        826209,   # Aaron Watson
-        815793,   # Carter Johnson
-        694514,   # Sterlin Thompson
-        813916,   # Kellon Lindsey
-        695402,   # Najer Victor
-        701411,   # Jack Cebert
-        828076,   # Dax Kilby
-    }
-
     def __init__(self):
         self._games_cache: dict[str, list] = {}
         self._player_cache: dict[str, int] = {}
@@ -770,14 +757,6 @@ class ProStatsFetcher:
     def _find_game_on_date(self, player_id: int, team_lower: str,
                            date_str: str) -> Optional[dict]:
         """Find a game on a specific date for a player's team."""
-        # For Spring Breakout players, check sportId=21 only
-        if player_id in self.SPRING_BREAKOUT_IDS:
-            try:
-                schedule = statsapi.schedule(date=date_str, sportId=21)
-            except Exception:
-                schedule = []
-            return self._match_team_in_schedule(schedule, team_lower, player_id)
-
         # Search MLB schedule first
         try:
             schedule = statsapi.schedule(date=date_str, sportId=1)
@@ -824,14 +803,6 @@ class ProStatsFetcher:
         team games to detect doubleheaders).
         """
         try:
-            # For Spring Breakout players, check sportId=21 only
-            if player_id and player_id in self.SPRING_BREAKOUT_IDS:
-                try:
-                    schedule = statsapi.schedule(date=date_str, sportId=21)
-                except Exception:
-                    schedule = []
-                return self._match_all_in_schedule(schedule, team_lower, player_id)
-
             # --- 1. Search MLB schedule ---
             try:
                 mlb_schedule = statsapi.schedule(date=date_str, sportId=1)
@@ -970,21 +941,14 @@ class ProStatsFetcher:
     def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
         """Find a game today for the player's team.
 
-        Search strategy (for Spring Breakout players: only check sportId=21):
-        1. MLB + Spring Breakout schedules combined (checks both, picks
-           the game where the player appears in the boxscore)
+        Search strategy:
+        1. MLB schedule (picks the game where the player appears in the boxscore)
         2. MiLB schedule by player's actual team (handles regular season)
         3. Parent MLB team schedule as fallback
         """
         team_lower = team.lower() if team else ""
 
         try:
-            # For known Spring Breakout players, ONLY check the breakout schedule
-            if player_id in self.SPRING_BREAKOUT_IDS:
-                breakout_schedule = self._get_schedule(sport_id=21)
-                game = self._match_team_in_schedule(breakout_schedule, team_lower, player_id)
-                return game  # None if no breakout game today
-
             # --- 1. Search MLB schedule by roster team name ---
             mlb_schedule = self._get_schedule(sport_id=1)
             game = self._match_team_in_schedule(mlb_schedule, team_lower, player_id)
@@ -1024,16 +988,10 @@ class ProStatsFetcher:
 
         Same MLB→MiLB→parent fallback chain as _find_todays_game(), but uses
         _match_all_in_schedule() to collect every game instead of picking one.
-        Spring Breakout players are routed to sportId=21 exclusively.
         """
         team_lower = team.lower() if team else ""
 
         try:
-            # For known Spring Breakout players, ONLY check the breakout schedule
-            if player_id in self.SPRING_BREAKOUT_IDS:
-                breakout_schedule = self._get_schedule(sport_id=21)
-                return self._match_all_in_schedule(breakout_schedule, team_lower, player_id)
-
             # --- 1. Search MLB schedule by roster team name ---
             mlb_schedule = self._get_schedule(sport_id=1)
             games = self._match_all_in_schedule(mlb_schedule, team_lower, player_id)
@@ -1168,13 +1126,7 @@ class ProStatsFetcher:
                         return match
 
         # Player not found in any boxscore yet (games still Scheduled).
-        # For known Spring Breakout players, prefer the exhibition game.
-        # For everyone else, prefer the regular (non-exhibition) game.
-        is_breakout_player = player_id in self.SPRING_BREAKOUT_IDS
-        if is_breakout_player:
-            exhibition = [m for m in matches if m.get("is_exhibition")]
-            if exhibition:
-                return exhibition[0]
+        # Prefer regular (non-exhibition) games.
         regular = [m for m in matches if not m.get("is_exhibition")]
         if regular:
             return regular[-1]
@@ -1246,13 +1198,7 @@ class ProStatsFetcher:
             return found
 
         # No boxscore matches (games may not have started yet).
-        # For Spring Breakout players, prefer exhibition games only.
-        # For everyone else, prefer regular games only.
-        is_breakout_player = player_id in self.SPRING_BREAKOUT_IDS
-        if is_breakout_player:
-            exhibition = [m for m in matches if m.get("is_exhibition")]
-            if exhibition:
-                return exhibition
+        # Prefer regular (non-exhibition) games.
         regular = [m for m in matches if not m.get("is_exhibition")]
         return regular if regular else matches
 
@@ -1264,26 +1210,15 @@ class ProStatsFetcher:
         so teammates share a single lookup.
         """
         team_lower = team.lower() if team else ""
-        is_breakout_player = player_id in self.SPRING_BREAKOUT_IDS
-
-        # Cache key: breakout players get their own entry to avoid
-        # conflicting with regular teammates on the same org.
-        cache_key = f"{team_lower}:breakout" if is_breakout_player else team_lower
+        cache_key = team_lower
 
         # Check cache first — two players on the same team share one lookup
         if cache_key and cache_key in self._next_game_cache:
             return self._next_game_cache[cache_key]
 
-        # Collect team names + sport IDs to search.
-        # For breakout players, ONLY search sportId=21 — they won't be in
-        # regular ST games during Spring Breakout week.
         search_targets = []
         if team_lower:
-            if is_breakout_player:
-                search_targets.append((team_lower, 21))  # Spring Breakout only
-            else:
-                search_targets.append((team_lower, 1))   # MLB schedule
-                search_targets.append((team_lower, 21))  # Spring Breakout
+            search_targets.append((team_lower, 1))   # MLB schedule
 
         # Add MiLB team if known
         api_team_id = self._player_team_cache.get(player_id)
@@ -1356,137 +1291,6 @@ class ProStatsFetcher:
         except Exception:
             return ""
 
-    # ----- Spring Breakout helpers -----
-
-    def _find_breakout_game_by_team(self, team: str) -> Optional[dict]:
-        """Find a Spring Breakout game (sportId=21) today by team name."""
-        team_lower = team.lower() if team else ""
-        if not team_lower:
-            return None
-        breakout_schedule = self._get_schedule(sport_id=21)
-        return self._match_team_in_schedule(breakout_schedule, team_lower, None)
-
-    def _find_breakout_game_on_date(self, team: str, date_str: str) -> Optional[dict]:
-        """Find a Spring Breakout game on a specific date by team name."""
-        team_lower = team.lower() if team else ""
-        if not team_lower:
-            return None
-        try:
-            schedule = statsapi.schedule(date=date_str, sportId=21)
-        except Exception:
-            return None
-        return self._match_team_in_schedule(schedule, team_lower, None)
-
-    def _extract_stats_by_name(self, player: dict, player_name: str, game: dict) -> dict:
-        """Extract stats by matching player name in the boxscore.
-
-        Used for Spring Breakout / exhibition games where the player has no
-        MLB API ID. Falls back to the same game-context logic as _extract_stats.
-        """
-        result = empty_stats()
-        sched = game["schedule"]
-        box = game["boxscore"]
-
-        # Game context — normalize exhibition "Completed Early" to "Final"
-        status = sched.get("status", "Unknown")
-        if status in ("Completed Early", "Game Over"):
-            status = "Final"
-        home = sched.get("home_name", "")
-        away = sched.get("away_name", "")
-        home_score = sched.get("home_score", 0)
-        away_score = sched.get("away_score", 0)
-        inning = sched.get("current_inning", "")
-
-        game_time = self._format_game_time(sched.get("game_datetime", ""))
-        result["game_time"] = game_time
-
-        game_id = game.get("game_id", "")
-        if game_id:
-            result["box_score_url"] = f"https://www.mlb.com/gameday/{game_id}"
-
-        game_datetime = sched.get("game_datetime", "")
-        result["game_date"] = game_datetime[:10] if game_datetime and len(game_datetime) >= 10 else self._today.isoformat()
-
-        if status == "Final":
-            result["game_context"] = f"{away} {away_score}, {home} {home_score} | Final"
-            result["game_status"] = "Final"
-        elif status in ("In Progress", "Live"):
-            half = sched.get("inning_state", "")
-            result["game_context"] = (
-                f"{away} {away_score}, {home} {home_score} | {half} {inning}"
-            )
-            result["game_status"] = "Live"
-        elif status in ("Scheduled", "Pre-Game", "Warmup"):
-            result["game_context"] = f"{away} vs {home} | {game_time}" if game_time else f"{away} vs {home}"
-            result["game_status"] = "Scheduled"
-            result["stats_summary"] = f"Spring Breakout — {game_time}" if game_time else "Spring Breakout game today"
-        elif status in ("Postponed", "Cancelled", "Canceled", "Suspended"):
-            result["game_context"] = f"{away} vs {home} | Postponed"
-            result["game_status"] = "Cancelled"
-            result["stats_summary"] = "Game cancelled"
-        else:
-            result["game_context"] = f"{away} vs {home} | {status}"
-            result["game_status"] = status
-
-        # Find the player's stats line by name
-        position = player.get("position", "Hitter")
-        found_in_box = False
-        name_lower = player_name.lower()
-        # Build last-name match for fuzzy matching
-        name_parts = player_name.split()
-        last_name = name_parts[-1].lower() if name_parts else ""
-
-        side = game.get("side", "home")
-
-        if position == "Pitcher":
-            result["is_pitcher_line"] = True
-            pitchers = box.get(f"{side}Pitchers", [])
-            for entry in pitchers:
-                if not isinstance(entry, dict) or entry.get("personId", 0) == 0:
-                    continue
-                entry_name = entry.get("name", "").lower()
-                if name_lower in entry_name or entry_name in name_lower or (last_name and last_name in entry_name):
-                    found_in_box = True
-                    ip_val = entry.get("ip", "0")
-                    if float(ip_val) if ip_val else 0:
-                        result.update(self._parse_pitcher_line(entry))
-                    else:
-                        result["stats_summary"] = "On the mound"
-                    break
-        else:
-            batters = box.get(f"{side}Batters", [])
-            for entry in batters:
-                if not isinstance(entry, dict) or entry.get("personId", 0) == 0:
-                    continue
-                entry_name = entry.get("name", "").lower()
-                if name_lower in entry_name or entry_name in name_lower or (last_name and last_name in entry_name):
-                    found_in_box = True
-                    ab = int(entry.get("ab", 0))
-                    bb = int(entry.get("bb", 0))
-                    if ab + bb > 0:
-                        result.update(self._parse_batter_line(entry))
-                    else:
-                        pos = entry.get("position", "")
-                        is_sub = entry.get("substitution", False)
-                        if is_sub:
-                            result["stats_summary"] = f"Entered game ({pos})" if pos else "Entered game"
-                        elif result.get("game_status") == "Final":
-                            result["stats_summary"] = f"Started — 0 PA ({pos})" if pos else "Started — 0 PA"
-                        else:
-                            result["stats_summary"] = f"In lineup ({pos})" if pos else "In lineup"
-                    break
-
-        if not found_in_box and result["stats_summary"] == "No game data":
-            if result["game_status"] == "Live":
-                if position == "Pitcher":
-                    result["stats_summary"] = "Game in progress — hasn't pitched"
-                else:
-                    result["stats_summary"] = "Game in progress — not in lineup"
-            elif result["game_status"] == "Final":
-                result["stats_summary"] = "Did Not Play"
-
-        return result
-
     def _extract_stats(self, player: dict, player_id: int, game: dict) -> dict:
         """Pull the player's line from the boxscore."""
         result = empty_stats()
@@ -1527,13 +1331,9 @@ class ProStatsFetcher:
             result["game_status"] = "Live"
         elif status in ("Scheduled", "Pre-Game", "Warmup"):
             # Game hasn't started yet - show scheduled time
-            is_breakout = "prospects" in home.lower() or "prospects" in away.lower()
             result["game_context"] = f"{away} vs {home} | {game_time}" if game_time else f"{away} vs {home}"
             result["game_status"] = "Scheduled"
-            if is_breakout:
-                result["stats_summary"] = f"Spring Breakout — {game_time}" if game_time else "Spring Breakout game today"
-            else:
-                result["stats_summary"] = f"Game at {game_time}" if game_time else "Game today"
+            result["stats_summary"] = f"Game at {game_time}" if game_time else "Game today"
         elif status in ("Postponed", "Cancelled", "Canceled", "Suspended"):
             result["game_context"] = f"{away} vs {home} | Postponed"
             result["game_status"] = "Cancelled"
