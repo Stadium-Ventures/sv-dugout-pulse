@@ -974,7 +974,11 @@ function matchesFilters(p) {
   if (filters.roster === 'client' && p.is_client === false) return false;
   if (filters.roster === 'following' && p.is_client !== false) return false;
   if (filters.level !== 'all' && p.level !== filters.level) return false;
-  if (filters.position !== 'all' && p.tags.position !== filters.position) return false;
+  if (filters.position !== 'all') {
+    const pitcherPositions = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'];
+    const pos = p.tags?.position || '';
+    if (filters.position === 'Pitcher' ? !pitcherPositions.includes(pos) : pitcherPositions.includes(pos)) return false;
+  }
   if (filters.status !== 'all' && p.game_status !== filters.status) return false;
   if (filters.grade !== 'all' && !p.performance_grade.includes(filters.grade)) return false;
   if (filters.heartbeat !== 'all') {
@@ -1121,7 +1125,7 @@ function eraColor(val) {
 
 function renderWindowCard(p) {
   const position = p.tags?.position || 'Hitter';
-  const isPitcher = position === 'Pitcher';
+  const isPitcher = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'].includes(position) || 'ip' in stats;
   const gk = windowGradeKey(p.window_grade);
   const gc = WINDOW_GRADE_CLASS[gk] || 'grade-insufficient';
   const isClient = p.is_client !== false;
@@ -1300,7 +1304,11 @@ function matchesWindowFilters(p) {
   if (filters.roster === 'client' && p.is_client === false) return false;
   if (filters.roster === 'following' && p.is_client !== false) return false;
   if (filters.level !== 'all' && p.level !== filters.level) return false;
-  if (filters.position !== 'all' && p.tags?.position !== filters.position) return false;
+  if (filters.position !== 'all') {
+    const pitcherPositions = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'];
+    const pos = p.tags?.position || '';
+    if (filters.position === 'Pitcher' ? !pitcherPositions.includes(pos) : pitcherPositions.includes(pos)) return false;
+  }
   if (filters.heartbeat !== 'all') {
     if (p.is_client === false) return false;
     const hb = heartbeatData.get(p.player_name.toLowerCase());
