@@ -922,12 +922,34 @@ def run_historical():
     window_data = aggregator.run_all_windows(all_players)
 
     write_window_json(window_data["7d"], WINDOW_7D_PATH)
-    write_window_json(window_data["season"], WINDOW_SEASON_PATH)
+
+    # Preserve existing season data for players where D1B returned 403/empty.
+    # This prevents good data from being wiped when D1Baseball rate-limits us.
+    season_data = window_data["season"]
+    if os.path.exists(WINDOW_SEASON_PATH):
+        try:
+            with open(WINDOW_SEASON_PATH) as f:
+                raw = json.load(f)
+                existing = raw.get("players", raw) if isinstance(raw, dict) else raw
+            existing_by_name = {e["player_name"]: e for e in existing}
+            for i, entry in enumerate(season_data):
+                stats = entry.get("stats", {})
+                has_data = any(v != "--" for v in stats.values())
+                if not has_data and entry["player_name"] in existing_by_name:
+                    prev = existing_by_name[entry["player_name"]]
+                    prev_has_data = any(v != "--" for v in prev.get("stats", {}).values())
+                    if prev_has_data:
+                        season_data[i] = prev
+                        logger.info("Season: preserved existing data for %s (D1B fetch failed)", entry["player_name"])
+        except Exception:
+            logger.debug("Could not load existing season data for preservation")
+
+    write_window_json(season_data, WINDOW_SEASON_PATH)
 
     logger.info(
         "Historical aggregation complete: 7D=%d, Season=%d",
         len(window_data["7d"]),
-        len(window_data["season"]),
+        len(season_data),
     )
 
 

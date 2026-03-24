@@ -12,6 +12,7 @@ import json
 import logging
 import os
 import re
+import threading
 import time
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -495,12 +496,14 @@ class D1BaseballSeasonFetcher:
         # team_name -> {"batting": [row_dicts], "pitching": [row_dicts]}
         self._team_cache: dict[str, dict] = {}
         self._last_request: float = 0
+        self._lock = threading.Lock()
 
     def _rate_limit(self):
-        elapsed = time.time() - self._last_request
-        if elapsed < self.REQUEST_DELAY:
-            time.sleep(self.REQUEST_DELAY - elapsed)
-        self._last_request = time.time()
+        with self._lock:
+            elapsed = time.time() - self._last_request
+            if elapsed < self.REQUEST_DELAY:
+                time.sleep(self.REQUEST_DELAY - elapsed)
+            self._last_request = time.time()
 
     @staticmethod
     def _normalize_last_name(name: str) -> str:
