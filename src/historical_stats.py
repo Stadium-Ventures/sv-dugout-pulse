@@ -537,12 +537,13 @@ class D1BaseballSeasonFetcher:
         if team_data is None:
             return None
 
+        _PITCHER_POSITIONS = {"Pitcher", "LHP", "RHP", "LHR", "RHR", "SP", "RP", "CL"}
         if position == "Two-Way":
             result = self._find_batter(player_name, team_data["batting"])
             if result is None:
                 result = self._find_pitcher(player_name, team_data["pitching"])
             return result
-        elif position == "Pitcher":
+        elif position in _PITCHER_POSITIONS:
             return self._find_pitcher(player_name, team_data["pitching"])
         else:
             return self._find_batter(player_name, team_data["batting"])
