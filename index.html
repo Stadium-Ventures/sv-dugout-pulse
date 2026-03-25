@@ -1126,11 +1126,11 @@ function eraColor(val) {
 
 function renderWindowCard(p) {
   const position = p.tags?.position || 'Hitter';
+  const stats = p.stats || {};
   const isPitcher = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'].includes(position) || 'ip' in stats;
   const gk = windowGradeKey(p.window_grade);
   const gc = WINDOW_GRADE_CLASS[gk] || 'grade-insufficient';
   const isClient = p.is_client !== false;
-  const stats = p.stats || {};
   const gp = p.games_played ?? 0;
   const gpLabel = gp === 1 ? '1 G' : `${gp} G`;
 
