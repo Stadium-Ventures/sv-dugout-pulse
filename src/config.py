@@ -90,9 +90,9 @@ HS_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "hs_gam
 # ---------------------------------------------------------------------------
 # High School Stats (Google Sheet export)
 # ---------------------------------------------------------------------------
-HS_STATS_XLSX_URL = os.environ.get(
-    "HS_STATS_URL",
-    "https://docs.google.com/spreadsheets/d/1oKuxG0JxCoBJprCup1PGaAJFRluo4-qc10jOni2aG1s/export?format=xlsx",
+HS_STATS_XLSX_URL = (
+    os.environ.get("HS_STATS_URL", "")
+    or "https://docs.google.com/spreadsheets/d/1oKuxG0JxCoBJprCup1PGaAJFRluo4-qc10jOni2aG1s/export?format=xlsx"
 )
 
 # Name aliases for normalizing misspellings/variants in the HS sheet
