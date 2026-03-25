@@ -246,6 +246,7 @@
   }
   .badge-pro { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
   .badge-ncaa { background: rgba(245,158,11,0.2); color: var(--accent-orange); }
+  .badge-hs { background: rgba(16,185,129,0.2); color: #10b981; }
   .badge-t1 { background: rgba(168,85,247,0.15); color: #c084fc; }
   .badge-t2 { background: rgba(59,130,246,0.15); color: #93c5fd; }
   .badge-t3 { background: rgba(107,114,128,0.2); color: #9ca3af; }
@@ -1050,7 +1051,7 @@ function renderCard(p) {
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         ${p.split_squad ? '<span class="badge badge-gm">SS</span>' : p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
-        <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
+        <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
         <span class="badge badge-tier-dim">T${pri}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
@@ -1073,6 +1074,20 @@ function renderCard(p) {
         ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${p.game_status === 'Scheduled' ? 'Preview' : 'Box Score'}</a>` : ''}
       </div>
     </div>`;
+}
+
+function levelBadgeClass(level) {
+  if (level === 'Pro') return 'badge-pro';
+  if (level === 'NCAA') return 'badge-ncaa';
+  if (level === 'HS') return 'badge-hs';
+  return 'badge-pro';
+}
+
+function levelBadgeLabel(level) {
+  if (level === 'Pro') return '⚾ Pro';
+  if (level === 'NCAA') return '🎓 NCAA';
+  if (level === 'HS') return '🏫 HS';
+  return level;
 }
 
 function esc(s, forAttr) {
@@ -1290,7 +1305,7 @@ function renderWindowCard(p) {
           : `<span class="player-name">${esc(p.player_name)}</span>`}
         ${heartbeatHtml(p.player_name, isClient)}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
-        <span class="badge ${p.level === 'Pro' ? 'badge-pro' : 'badge-ncaa'}">${esc(p.level)}</span>
+        <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
