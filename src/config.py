@@ -103,6 +103,7 @@ HS_NAME_ALIASES = {
     "Bradedon Mackay": "Braedon Mackay",
     "Braedon Makay": "Braedon Mackay",
     "Hunter Wiecksowki": "Hunter Wieckowski",
+    "Ax Westmoreland": "Axton Westmoreland",
 }
 
 # ---------------------------------------------------------------------------
