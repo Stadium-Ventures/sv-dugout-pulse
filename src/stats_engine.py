@@ -3319,7 +3319,7 @@ class ESPNScraper(BaseSchoolScraper):
                 if not summary:
                     continue
 
-                player_stats = self._find_player(player_name, summary)
+                player_stats = self._find_player(player_name, summary, team=team)
                 if player_stats:
                     player_stats["_player_found"] = True
                     result.update(player_stats)
@@ -3608,13 +3608,40 @@ class ESPNScraper(BaseSchoolScraper):
         except Exception:
             return ""
 
-    def _find_player(self, player_name: str, summary: dict) -> Optional[dict]:
-        """Find a player's stats in the ESPN summary boxscore."""
+    def _find_player(self, player_name: str, summary: dict, team: str = "") -> Optional[dict]:
+        """Find a player's stats in the ESPN summary boxscore.
+
+        When *team* is provided, only search within the matching team's
+        player group to avoid false-positive last-name collisions with
+        the opponent (e.g. "Johnson" on Austin Peay matching our "Zack
+        Johnson" on Alabama).
+        """
         boxscore = summary.get("boxscore", {})
         player_last = player_name.split()[-1].lower()
+        team_lower = team.lower() if team else ""
+
+        # Resolve ESPN team ID from lookup table if available
+        espn_id = _SCHOOL_LOOKUP.get(team, {}).get("espn_id", "") if team else ""
 
         # ESPN puts individual player stats under "players", not "teams"
         for player_group in boxscore.get("players", []):
+            # Filter to our team's player group when team is known
+            if team_lower:
+                group_team = player_group.get("team", {})
+                if espn_id:
+                    if group_team.get("id", "") != espn_id:
+                        continue
+                else:
+                    group_names = [
+                        group_team.get("displayName", ""),
+                        group_team.get("shortDisplayName", ""),
+                        group_team.get("location", ""),
+                        group_team.get("name", ""),
+                    ]
+                    if not _school_name_matches(team_lower, group_names, exact=True):
+                        if not _school_name_matches(team_lower, group_names, exact=False):
+                            continue
+
             for stat_group in player_group.get("statistics", []):
                 labels = [lb.upper() for lb in stat_group.get("labels", [])]
                 is_pitching = "IP" in labels
@@ -4144,7 +4171,7 @@ class NCAAStatsFetcher:
                     continue
                 if not summary:
                     continue
-                player_stats = self._espn._find_player(name, summary)
+                player_stats = self._espn._find_player(name, summary, team=team)
                 if player_stats:
                     player_stats["_player_found"] = True
                     result.update(player_stats)
