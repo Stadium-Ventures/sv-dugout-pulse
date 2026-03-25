@@ -4462,6 +4462,13 @@ class StatsFetcher:
     def __init__(self):
         self.pro = ProStatsFetcher()
         self.ncaa = NCAAStatsFetcher()
+        self.hs = None  # Lazy init to avoid downloading sheet when not needed
+
+    def _get_hs(self):
+        if self.hs is None:
+            from .hs_stats import HSStatsFetcher
+            self.hs = HSStatsFetcher()
+        return self.hs
 
     def fetch(self, player: dict) -> dict:
         level = player.get("level", "")
@@ -4469,6 +4476,8 @@ class StatsFetcher:
             return self.pro.fetch(player)
         elif level == "NCAA":
             return self.ncaa.fetch(player)
+        elif level == "HS":
+            return self._get_hs().fetch(player)
         else:
             logger.warning("Unknown level '%s' for %s", level, player.get("player_name"))
             return empty_stats()
@@ -4480,6 +4489,8 @@ class StatsFetcher:
             return self.pro.fetch_all(player)
         elif level == "NCAA":
             return self.ncaa.fetch_all(player)
+        elif level == "HS":
+            return self._get_hs().fetch_all(player)
         else:
             logger.warning("Unknown level '%s' for %s", level, player.get("player_name"))
             return [empty_stats()]
@@ -4494,6 +4505,8 @@ class StatsFetcher:
             return self.ncaa.fetch_yesterday(player)
         elif level == "Pro":
             return self.pro.fetch_yesterday(player)
+        elif level == "HS":
+            return self._get_hs().fetch_yesterday(player)
         return None
 
     def fetch_all_yesterday(self, player: dict) -> list[dict]:
@@ -4507,4 +4520,6 @@ class StatsFetcher:
             return self.pro.fetch_all_yesterday(player)
         elif level == "NCAA":
             return self.ncaa.fetch_all_yesterday(player)
+        elif level == "HS":
+            return self._get_hs().fetch_all_yesterday(player)
         return []

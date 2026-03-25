@@ -42,7 +42,7 @@ COLUMN_MAP = {
 }
 
 # Levels to include (everything else is excluded)
-INCLUDED_LEVELS = {"Pro", "NCAA"}
+INCLUDED_LEVELS = {"Pro", "NCAA", "HS"}
 
 # ---------------------------------------------------------------------------
 # Performance grade thresholds
@@ -85,6 +85,25 @@ SCHOOL_LOOKUP_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "scho
 SIDEARM_FOLDER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sidearm_folder_cache.json")
 SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
 ROSTER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "roster_cache.json")
+HS_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "hs_game_log.json")
+
+# ---------------------------------------------------------------------------
+# High School Stats (Google Sheet export)
+# ---------------------------------------------------------------------------
+HS_STATS_XLSX_URL = os.environ.get(
+    "HS_STATS_URL",
+    "https://docs.google.com/spreadsheets/d/1oKuxG0JxCoBJprCup1PGaAJFRluo4-qc10jOni2aG1s/export?format=xlsx",
+)
+
+# Name aliases for normalizing misspellings/variants in the HS sheet
+HS_NAME_ALIASES = {
+    "David Vargas (DH)": "David Vargas",
+    "Trevor Condon (DH)": "Trevor Condon",
+    "Grifin Loy": "Griffin Loy",
+    "Bradedon Mackay": "Braedon Mackay",
+    "Braedon Makay": "Braedon Mackay",
+    "Hunter Wiecksowki": "Hunter Wieckowski",
+}
 
 # ---------------------------------------------------------------------------
 # Logging

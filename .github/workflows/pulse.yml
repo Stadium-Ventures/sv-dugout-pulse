@@ -61,6 +61,7 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
         run: |
           set -eo pipefail
           if [ -z "$SLACK_WEBHOOK_URL" ]; then echo "⚠️ SLACK_WEBHOOK_URL not set — alerts will be skipped"; fi
@@ -73,6 +74,7 @@ jobs:
         env:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
         run: |
           set -eo pipefail
           python -c "import src.historical_stats; import src.window_grader; print('Historical imports OK')"

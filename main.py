@@ -25,6 +25,7 @@ from zoneinfo import ZoneInfo
 
 from src.alerts import check_and_send_alerts, reset_sent_alerts, save_sent_alerts
 from src.config import (
+    HS_GAME_LOG_PATH,
     NCAA_GAME_LOG_PATH,
     OUTPUT_PATH,
     WINDOW_7D_PATH,
@@ -723,6 +724,35 @@ def run_live():
         logger.error("No players found — aborting")
         sys.exit(1)
 
+    # HS sheet refresh: download sheet and discover HS players not yet in roster
+    try:
+        from src.hs_stats import HSSheetParser, HSGameLog
+        hs_parser = HSSheetParser()
+        hs_parsed = hs_parser.parse_all()
+        if hs_parsed:
+            hs_log = HSGameLog()
+            hs_log.update_from_sheet(hs_parsed)
+            # Add HS players from sheet that aren't already in the roster
+            roster_names = {p["player_name"] for p in all_players}
+            sheet_names = hs_parser.get_all_player_names()
+            new_hs = sheet_names - roster_names
+            for name in sorted(new_hs):
+                pos = hs_parser.get_position_for_player(name)
+                all_players.append({
+                    "player_name": name,
+                    "team": "HS",
+                    "level": "HS",
+                    "position": pos,
+                    "mlb_id": None,
+                    "roster_priority": 99,
+                    "draft_class": "",
+                    "is_client": False,
+                })
+            if new_hs:
+                logger.info("Discovered %d HS players from sheet: %s", len(new_hs), sorted(new_hs))
+    except Exception:
+        logger.exception("HS sheet refresh failed in run_live — continuing without HS data")
+
     clients = [p for p in all_players if p.get("is_client")]
     recruits = [p for p in all_players if not p.get("is_client")]
     logger.info("Loaded %d clients + %d recruits", len(clients), len(recruits))
@@ -921,9 +951,9 @@ def run_live():
 
 
 def _refresh_ncaa_l7(all_players: list[dict]):
-    """Re-aggregate NCAA L7 window stats from the freshly-flushed game log.
+    """Re-aggregate NCAA + HS L7 window stats from the freshly-flushed game logs.
 
-    Only touches NCAA players and reads the local game log — no API calls.
+    Only touches NCAA/HS players and reads local game logs — no API calls.
     Pro entries are preserved from the last full historical run.
     """
     try:
@@ -949,8 +979,17 @@ def _refresh_ncaa_l7(all_players: list[dict]):
             if entry:
                 ncaa_entries.append(entry)
 
-        write_window_json(pro_entries + ncaa_entries, WINDOW_7D_PATH)
-        logger.info("NCAA L7 refresh: %d NCAA entries updated", len(ncaa_entries))
+        # Re-aggregate HS entries from the fresh game log
+        hs_entries = []
+        for player in all_players:
+            if player.get("level") != "HS":
+                continue
+            entry = aggregator._build_window_entry(player, "7d", start_7d, today)
+            if entry:
+                hs_entries.append(entry)
+
+        write_window_json(pro_entries + ncaa_entries + hs_entries, WINDOW_7D_PATH)
+        logger.info("L7 refresh: %d NCAA + %d HS entries updated", len(ncaa_entries), len(hs_entries))
     except Exception:
         logger.exception("NCAA L7 refresh failed — window_7d.json unchanged")
 
@@ -987,7 +1026,7 @@ def write_output(pulse: list[dict]):
 
 
 def run_historical():
-    """Aggregate historical stats: 7D (Pro + NCAA) + Season (everyone)."""
+    """Aggregate historical stats: 7D (Pro + NCAA + HS) + Season (everyone)."""
     logger.info("Starting historical stats aggregation")
 
     _rotate_yesterday()
@@ -996,6 +1035,35 @@ def run_historical():
     if not all_players:
         logger.error("No players found — aborting")
         sys.exit(1)
+
+    # HS sheet refresh before aggregation
+    try:
+        from src.hs_stats import HSSheetParser, HSGameLog
+        hs_parser = HSSheetParser()
+        hs_parsed = hs_parser.parse_all()
+        if hs_parsed:
+            hs_log = HSGameLog()
+            hs_log.update_from_sheet(hs_parsed)
+            # Discover HS players from sheet not in roster
+            roster_names = {p["player_name"] for p in all_players}
+            sheet_names = hs_parser.get_all_player_names()
+            new_hs = sheet_names - roster_names
+            for name in sorted(new_hs):
+                pos = hs_parser.get_position_for_player(name)
+                all_players.append({
+                    "player_name": name,
+                    "team": "HS",
+                    "level": "HS",
+                    "position": pos,
+                    "mlb_id": None,
+                    "roster_priority": 99,
+                    "draft_class": "",
+                    "is_client": False,
+                })
+            if new_hs:
+                logger.info("Discovered %d HS players from sheet: %s", len(new_hs), sorted(new_hs))
+    except Exception:
+        logger.exception("HS sheet refresh failed in run_historical — continuing without HS data")
 
     logger.info("Loaded %d total players for historical aggregation", len(all_players))
 

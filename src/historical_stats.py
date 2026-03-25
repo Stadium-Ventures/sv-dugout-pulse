@@ -943,6 +943,7 @@ class WindowStatsAggregator:
         self.mlb_fetcher = MLBHistoricalFetcher()
         self.d1b_fetcher = D1BaseballSeasonFetcher()
         self.ncaa_log = NCAAGameLogAggregator()
+        self.hs_log = None  # Lazy init
         self._today = date.today()
         self._season_start = date(self._today.year, 2, 1)
         if self._today < self._season_start:
@@ -1011,6 +1012,17 @@ class WindowStatsAggregator:
             )
         elif level == "NCAA" and window == "season":
             stats = self.d1b_fetcher.get_season_stats(name, team, position)
+        elif level == "HS":
+            try:
+                if self.hs_log is None:
+                    from .hs_stats import HSGameLog
+                    self.hs_log = HSGameLog()
+                stats, game_log_entries = self.hs_log.get_window_stats(
+                    name, position, start_date, end_date
+                )
+            except Exception:
+                logger.exception("HS window stats failed for %s", name)
+                stats = None
         else:
             stats = None
 

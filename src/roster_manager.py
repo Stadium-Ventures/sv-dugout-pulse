@@ -89,7 +89,7 @@ def filter_roster(rows: list[dict]) -> list[dict]:
         filtered.append(normalize_player(raw))
 
     logger.info(
-        "Filtered roster: %d players (kept Pro/NCAA, dropped HS)", len(filtered)
+        "Filtered roster: %d players (kept Pro/NCAA/HS)", len(filtered)
     )
     return filtered
 
