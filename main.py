@@ -653,6 +653,59 @@ def _load_locked_finals(today_str: str) -> dict[str, list[dict]]:
     return locked
 
 
+# Status messages that indicate no real player stats were scraped.
+_STATUS_ONLY_SUMMARIES = frozenset({
+    "Game in progress", "Game in progress — not in lineup",
+    "Did Not Play", "No game data", "Game cancelled", "",
+    "No game today",
+})
+
+
+def _entry_has_real_stats(entry: dict) -> bool:
+    """Return True if a pulse entry contains actual player stats (not just a status message)."""
+    summary = (entry.get("stats_summary") or "").strip()
+    if summary in _STATUS_ONLY_SUMMARIES:
+        return False
+    if summary.startswith("Game at "):
+        return False
+    if summary.lower().startswith("in lineup") or summary.lower().startswith("in starting"):
+        return False
+    return True
+
+
+def _load_live_stats_cache(today_str: str) -> dict[str, list[dict]]:
+    """Load Live NCAA entries with real stats from the previous pulse run.
+
+    When D1Baseball transiently fails and the waterfall falls back to ESPN
+    (which rarely has NCAA box-score stats), we lose the player's stats for
+    that cycle.  This cache lets us carry forward the previous good data
+    instead of showing 'not in lineup'.
+    """
+    cache: dict[str, list[dict]] = {}
+    if not os.path.exists(OUTPUT_PATH):
+        return cache
+    try:
+        with open(OUTPUT_PATH) as f:
+            raw = json.load(f)
+        players = raw.get("players", raw) if isinstance(raw, dict) else raw
+        for p in players:
+            if p.get("game_status") != "Live":
+                continue
+            if p.get("level") != "NCAA":
+                continue
+            if p.get("game_date") != today_str:
+                continue
+            if not _entry_has_real_stats(p):
+                continue
+            key = f"{p['player_name']}|{p['team']}"
+            cache.setdefault(key, []).append(p)
+        if cache:
+            logger.info("Live stats cache: %d NCAA players with Live stats preserved", len(cache))
+    except Exception:
+        logger.warning("Failed to load live stats cache")
+    return cache
+
+
 def run_live():
     """Full pipeline: fetch roster + recruits -> fetch stats -> grade -> alert -> write JSON."""
     logger.info("Starting live pulse run")
@@ -676,6 +729,7 @@ def run_live():
 
     today_str = _today_et().isoformat()
     locked_finals = _load_locked_finals(today_str)
+    live_stats_cache = _load_live_stats_cache(today_str)
 
     fetcher = StatsFetcher()
     analyzer = PerformanceAnalyzer()
@@ -733,6 +787,33 @@ def run_live():
                 entries.append(entry)
                 if is_client:
                     alert_data_list.append((player, stats, analysis["performance_grade"]))
+
+            # Live stats carry-forward: if every new entry for this NCAA
+            # player lacks real stats but the previous run had them,
+            # keep the old stats and just update game context/status.
+            cached = live_stats_cache.get(lock_key)
+            if (cached
+                    and player.get("level") == "NCAA"
+                    and entries
+                    and all(not _entry_has_real_stats(e) for e in entries)
+                    and any(_entry_has_real_stats(c) for c in cached)):
+                carried = []
+                for c in cached:
+                    patched = dict(c)
+                    # Use the freshest game context from the new fetch
+                    fresh = entries[0]
+                    if fresh.get("game_context"):
+                        patched["game_context"] = fresh["game_context"]
+                    if fresh.get("game_status"):
+                        patched["game_status"] = fresh["game_status"]
+                    carried.append(patched)
+                logger.info(
+                    "%s | Live stats carry-forward: kept previous %s (new fetch had no stats via %s)",
+                    name,
+                    cached[0].get("stats_summary", "?"),
+                    entries[0].get("data_source", "?"),
+                )
+                return carried, []
 
             return entries, alert_data_list
         except Exception:
