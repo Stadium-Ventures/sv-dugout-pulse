@@ -528,6 +528,7 @@ class ProStatsFetcher:
         self._refresh_today()
         team = player.get("team", "")
         name = player.get("player_name", "")
+        affiliate = player.get("affiliate", "")
 
         if not team or team == "Unsigned":
             logger.debug("Skipping %s — unsigned / no team", name)
@@ -540,10 +541,10 @@ class ProStatsFetcher:
                 logger.info("Player not found in MLB lookup: %s", name)
                 return empty_stats()
 
-            game = self._find_todays_game(player_id, team)
+            game = self._find_todays_game(player_id, team, affiliate=affiliate)
 
             # Always try to get next game info
-            next_game = self._find_next_game(player_id, team)
+            next_game = self._find_next_game(player_id, team, affiliate=affiliate)
 
             if game is None:
                 logger.debug("No game today for %s", name)
@@ -576,6 +577,7 @@ class ProStatsFetcher:
         self._refresh_today()
         team = player.get("team", "")
         name = player.get("player_name", "")
+        affiliate = player.get("affiliate", "")
 
         if not team or team == "Unsigned":
             logger.debug("Skipping %s — unsigned / no team", name)
@@ -588,8 +590,8 @@ class ProStatsFetcher:
                 logger.info("Player not found in MLB lookup: %s", name)
                 return [empty_stats()]
 
-            games = self._find_all_todays_games(player_id, team)
-            next_game = self._find_next_game(player_id, team)
+            games = self._find_all_todays_games(player_id, team, affiliate=affiliate)
+            next_game = self._find_next_game(player_id, team, affiliate=affiliate)
 
             if not games:
                 logger.debug("No game today for %s", name)
@@ -604,7 +606,7 @@ class ProStatsFetcher:
 
             # Check ALL team games (not just player games) to detect
             # doubleheaders even when the player only appears in one game.
-            all_team_games = self._find_all_todays_games_team_only(team, player_id)
+            all_team_games = self._find_all_todays_games_team_only(team, player_id, affiliate=affiliate)
             is_doubleheader = len(all_team_games) > 1
 
             # Spring Training split squad: two independent games, not a true DH
@@ -645,6 +647,7 @@ class ProStatsFetcher:
         self._refresh_today()
         team = player.get("team", "")
         name = player.get("player_name", "")
+        affiliate = player.get("affiliate", "")
 
         if not team or team == "Unsigned":
             return None
@@ -657,7 +660,9 @@ class ProStatsFetcher:
 
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
-            team_lower = team.lower()
+            # Use affiliate name for schedule matching when available
+            search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
+            team_lower = search_team.lower()
 
             game = self._find_game_on_date(player_id, team_lower, yesterday_str)
             if game is None:
@@ -692,6 +697,7 @@ class ProStatsFetcher:
         self._refresh_today()
         team = player.get("team", "")
         name = player.get("player_name", "")
+        affiliate = player.get("affiliate", "")
 
         if not team or team == "Unsigned":
             return []
@@ -704,7 +710,9 @@ class ProStatsFetcher:
 
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
-            team_lower = team.lower()
+            # Use affiliate name for schedule matching when available
+            search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
+            team_lower = search_team.lower()
 
             # Get all games the player appeared in yesterday
             player_games = self._find_all_games_on_date(
@@ -938,24 +946,35 @@ class ProStatsFetcher:
             logger.debug("Schedule fetch failed for sportId=%d, team=%s", sport_id, team_id)
             return []
 
-    def _find_todays_game(self, player_id: int, team: str = "") -> Optional[dict]:
+    def _find_todays_game(self, player_id: int, team: str = "",
+                          affiliate: str = "") -> Optional[dict]:
         """Find a game today for the player's team.
 
-        Search strategy:
+        When *affiliate* is provided and differs from *team* (org), skip the
+        MLB schedule and search MiLB directly by affiliate name.
+
+        Search strategy (no affiliate / affiliate == org):
         1. MLB schedule (picks the game where the player appears in the boxscore)
         2. MiLB schedule by player's actual team (handles regular season)
         3. Parent MLB team schedule as fallback
+
+        Search strategy (affiliate != org — minor leaguer):
+        1. MiLB schedule by player's cached team
+        2. MiLB schedule by affiliate name across all MiLB levels
         """
         team_lower = team.lower() if team else ""
+        affiliate_lower = affiliate.lower().strip() if affiliate else ""
+        is_milb = affiliate_lower and affiliate_lower != team_lower
 
         try:
-            # --- 1. Search MLB schedule by roster team name ---
-            mlb_schedule = self._get_schedule(sport_id=1)
-            game = self._match_team_in_schedule(mlb_schedule, team_lower, player_id)
-            if game:
-                return game
+            if not is_milb:
+                # --- MLB player: search MLB schedule first ---
+                mlb_schedule = self._get_schedule(sport_id=1)
+                game = self._match_team_in_schedule(mlb_schedule, team_lower, player_id)
+                if game:
+                    return game
 
-            # --- 2. Search player's actual MiLB team schedule ---
+            # --- Search player's actual MiLB team schedule ---
             api_team_id = self._player_team_cache.get(player_id)
             if api_team_id:
                 team_info = self._resolve_team(api_team_id)
@@ -970,8 +989,9 @@ class ProStatsFetcher:
                     if game:
                         return game
 
-                    # --- 3. Fallback: parent MLB team (spring training) ---
-                    if team_info["parent_id"]:
+                    # Fallback: parent MLB team (spring training)
+                    if not is_milb and team_info["parent_id"]:
+                        mlb_schedule = self._get_schedule(sport_id=1)
                         parent_info = self._resolve_team(team_info["parent_id"])
                         game = self._match_team_in_schedule(
                             mlb_schedule, parent_info["name"].lower(), player_id,
@@ -979,26 +999,40 @@ class ProStatsFetcher:
                         if game:
                             return game
 
+            # --- MiLB fallback: search by affiliate name across levels ---
+            if is_milb and not api_team_id:
+                for sport_id in self._SPORT_IDS[1:]:  # skip MLB (1)
+                    schedule = self._get_schedule(sport_id=sport_id)
+                    game = self._match_team_in_schedule(
+                        schedule, affiliate_lower, player_id,
+                    )
+                    if game:
+                        return game
+
         except Exception:
             logger.exception("Error searching today's games for player %d", player_id)
         return None
 
-    def _find_all_todays_games(self, player_id: int, team: str = "") -> list[dict]:
+    def _find_all_todays_games(self, player_id: int, team: str = "",
+                               affiliate: str = "") -> list[dict]:
         """Find ALL games today for the player's team (supports doubleheaders).
 
-        Same MLB→MiLB→parent fallback chain as _find_todays_game(), but uses
+        Same affiliate-aware logic as _find_todays_game(), but uses
         _match_all_in_schedule() to collect every game instead of picking one.
         """
         team_lower = team.lower() if team else ""
+        affiliate_lower = affiliate.lower().strip() if affiliate else ""
+        is_milb = affiliate_lower and affiliate_lower != team_lower
 
         try:
-            # --- 1. Search MLB schedule by roster team name ---
-            mlb_schedule = self._get_schedule(sport_id=1)
-            games = self._match_all_in_schedule(mlb_schedule, team_lower, player_id)
-            if games:
-                return games
+            if not is_milb:
+                # --- MLB player: search MLB schedule first ---
+                mlb_schedule = self._get_schedule(sport_id=1)
+                games = self._match_all_in_schedule(mlb_schedule, team_lower, player_id)
+                if games:
+                    return games
 
-            # --- 2. Search player's actual MiLB team schedule ---
+            # --- Search player's actual MiLB team schedule ---
             api_team_id = self._player_team_cache.get(player_id)
             if api_team_id:
                 team_info = self._resolve_team(api_team_id)
@@ -1013,8 +1047,9 @@ class ProStatsFetcher:
                     if games:
                         return games
 
-                    # --- 3. Fallback: parent MLB team (spring training) ---
-                    if team_info["parent_id"]:
+                    # Fallback: parent MLB team (spring training)
+                    if not is_milb and team_info["parent_id"]:
+                        mlb_schedule = self._get_schedule(sport_id=1)
                         parent_info = self._resolve_team(team_info["parent_id"])
                         games = self._match_all_in_schedule(
                             mlb_schedule, parent_info["name"].lower(), player_id,
@@ -1022,12 +1057,23 @@ class ProStatsFetcher:
                         if games:
                             return games
 
+            # --- MiLB fallback: search by affiliate name across levels ---
+            if is_milb and not api_team_id:
+                for sport_id in self._SPORT_IDS[1:]:
+                    schedule = self._get_schedule(sport_id=sport_id)
+                    games = self._match_all_in_schedule(
+                        schedule, affiliate_lower, player_id,
+                    )
+                    if games:
+                        return games
+
         except Exception:
             logger.exception("Error searching all today's games for player %d", player_id)
         return []
 
     def _find_all_todays_games_team_only(
         self, team: str, player_id: Optional[int] = None,
+        affiliate: str = "",
     ) -> list[dict]:
         """Find ALL of the team's games today, ignoring player boxscore presence.
 
@@ -1035,19 +1081,21 @@ class ProStatsFetcher:
         game is returned.  Schedule data is already cached by
         ``_get_schedule()``, so this is essentially free.
 
-        When *player_id* is provided and no MLB games match, falls back to
-        the player's MiLB team schedule (same pattern as
-        ``_find_all_todays_games``).
+        When *affiliate* differs from *team*, skips MLB schedule and searches
+        MiLB by affiliate name.
         """
         team_lower = team.lower() if team else ""
+        affiliate_lower = affiliate.lower().strip() if affiliate else ""
+        is_milb = affiliate_lower and affiliate_lower != team_lower
         if not team_lower:
             return []
         try:
-            # --- 1. MLB schedule ---
-            mlb_schedule = self._get_schedule(sport_id=1)
-            games = self._match_all_in_schedule(mlb_schedule, team_lower, None)
-            if games:
-                return games
+            if not is_milb:
+                # --- 1. MLB schedule ---
+                mlb_schedule = self._get_schedule(sport_id=1)
+                games = self._match_all_in_schedule(mlb_schedule, team_lower, None)
+                if games:
+                    return games
 
             # --- 2. MiLB schedule (if player_id known) ---
             if player_id:
@@ -1059,11 +1107,22 @@ class ProStatsFetcher:
                             sport_id=team_info["sport_id"],
                             team_id=api_team_id,
                         )
+                        search_name = team_info["name"].lower()
                         games = self._match_all_in_schedule(
-                            milb_schedule, team_info["name"].lower(), None,
+                            milb_schedule, search_name, None,
                         )
                         if games:
                             return games
+
+            # --- 3. MiLB fallback: search by affiliate name ---
+            if is_milb:
+                for sport_id in self._SPORT_IDS[1:]:
+                    schedule = self._get_schedule(sport_id=sport_id)
+                    games = self._match_all_in_schedule(
+                        schedule, affiliate_lower, None,
+                    )
+                    if games:
+                        return games
         except Exception:
             pass
         return []
@@ -1202,22 +1261,26 @@ class ProStatsFetcher:
         regular = [m for m in matches if not m.get("is_exhibition")]
         return regular if regular else matches
 
-    def _find_next_game(self, player_id: int, team: str) -> Optional[dict]:
+    def _find_next_game(self, player_id: int, team: str,
+                        affiliate: str = "") -> Optional[dict]:
         """Find the next scheduled game for a player's team.
 
-        Searches MLB schedule by roster team name, then the player's actual
-        MiLB team schedule if available.  Results are cached by team name
-        so teammates share a single lookup.
+        When *affiliate* differs from *team*, searches by affiliate name
+        at the MiLB level instead of the MLB schedule.
         """
+        affiliate_lower = affiliate.lower().strip() if affiliate else ""
         team_lower = team.lower() if team else ""
-        cache_key = team_lower
+        is_milb = affiliate_lower and affiliate_lower != team_lower
+
+        # Cache by the actual search team (affiliate for MiLB, org for MLB)
+        cache_key = affiliate_lower if is_milb else team_lower
 
         # Check cache first — two players on the same team share one lookup
         if cache_key and cache_key in self._next_game_cache:
             return self._next_game_cache[cache_key]
 
         search_targets = []
-        if team_lower:
+        if not is_milb and team_lower:
             search_targets.append((team_lower, 1))   # MLB schedule
 
         # Add MiLB team if known
@@ -1226,6 +1289,11 @@ class ProStatsFetcher:
             info = self._resolve_team(api_team_id)
             if info["sport_id"] != 1:
                 search_targets.append((info["name"].lower(), info["sport_id"]))
+
+        # Fallback: search by affiliate name across MiLB levels
+        if is_milb and not search_targets:
+            for sport_id in self._SPORT_IDS[1:]:
+                search_targets.append((affiliate_lower, sport_id))
 
         if not search_targets:
             return None

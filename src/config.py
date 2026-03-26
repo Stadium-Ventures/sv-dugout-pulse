@@ -33,6 +33,7 @@ COLUMN_MAP = {
     "Position": "position",
     "Draft Class": "draft_class",
     "X Handle": "x_handle",
+    "Affiliate": "affiliate",
     "Tier": "roster_priority",  # 1-4 internal priority — NOT performance grade
     "State (High School)": "state",
     "State": "state",  # Recruits sheet uses "State" instead of "State (High School)"
