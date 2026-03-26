@@ -162,7 +162,7 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
 
     game_date = _normalize_date(game_date)
     key = f"{player['player_name']}|{player['team']}"
-    opponent = _extract_opponent(stats.get("game_context", ""), player["team"])
+    opponent = _extract_opponent(stats.get("game_context", ""), player.get("affiliate") or player["team"])
 
     # Determine if pitcher or hitter line.
     roster_pos = player.get("position", "Hitter")
@@ -362,7 +362,7 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
 
     entry = {
         "player_name": player["player_name"],
-        "team": player["team"],
+        "team": player.get("affiliate") or player["team"],
         "level": player["level"],
         "stats_summary": summary,
         "game_context": stats.get("game_context", ""),
