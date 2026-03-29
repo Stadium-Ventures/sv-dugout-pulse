@@ -17,6 +17,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+from src.stats_engine import _is_pitcher_pos
 from .config import SENT_ALERTS_PATH
 
 _ET = ZoneInfo("US/Eastern")
@@ -237,7 +238,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
             _mark_sent(game_date, name, "hr", value=hr, game_number=game_number)
 
     # --- Alert: Pitcher enters game (any pitcher, any tier) ---
-    is_pitching = stats.get("is_pitcher_line", False) or position == "Pitcher"
+    is_pitching = stats.get("is_pitcher_line", False) or _is_pitcher_pos(position)
     try:
         ip = float(stats.get("ip", 0.0))
     except (ValueError, TypeError):

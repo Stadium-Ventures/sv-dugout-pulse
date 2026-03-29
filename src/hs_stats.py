@@ -20,6 +20,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+from src.stats_engine import _is_pitcher_pos
 from .config import (
     HS_GAME_LOG_PATH,
     HS_NAME_ALIASES,
@@ -455,7 +456,7 @@ class HSGameLog:
             return None, []
 
         # Determine pitcher vs hitter
-        is_pitcher = position == "Pitcher"
+        is_pitcher = _is_pitcher_pos(position)
         if position == "Two-Way":
             pitcher_entries = [
                 e for e in in_range if e.get("type") == "pitching"
@@ -635,7 +636,7 @@ class HSStatsFetcher:
         hitting_entries = [e for e in entries if e.get("type") == "hitting"]
         pitching_entries = [e for e in entries if e.get("type") == "pitching"]
 
-        is_pitcher = position == "Pitcher"
+        is_pitcher = _is_pitcher_pos(position)
         if position == "Two-Way":
             is_pitcher = len(pitching_entries) > len(hitting_entries)
 

@@ -19,6 +19,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
 from typing import Optional
 
+from src.stats_engine import _is_pitcher_pos
+
 import requests
 import statsapi
 from bs4 import BeautifulSoup
@@ -134,7 +136,7 @@ class MLBHistoricalFetcher:
             game_entries = self._build_game_entries(game_log, position)
 
             # Aggregate based on position
-            if position == "Pitcher":
+            if _is_pitcher_pos(position):
                 return self._aggregate_pitcher_stats(game_log), game_entries
             elif position == "Two-Way":
                 batter_result = self._aggregate_batter_stats(game_log)
@@ -165,7 +167,7 @@ class MLBHistoricalFetcher:
 
             # Determine pitcher vs hitter for this game
             ip_str = str(stat.get("inningsPitched", ""))
-            if ip_str and ip_str != "0" and (position == "Pitcher" or position == "Two-Way"):
+            if ip_str and ip_str != "0" and (_is_pitcher_pos(position) or position == "Two-Way"):
                 entry_stats = {
                     "ip": ip_str,
                     "er": int(stat.get("earnedRuns", 0)),
@@ -279,7 +281,7 @@ class MLBHistoricalFetcher:
                 game_types.append("S")  # Spring Training
 
             # Only fetch relevant stat groups based on position
-            if position == "Pitcher":
+            if _is_pitcher_pos(position):
                 groups = ("pitching",)
             elif position in ("Hitter", ""):
                 groups = ("hitting",)
@@ -799,7 +801,7 @@ class NCAAGameLogAggregator:
 
         # Determine pitcher vs hitter
         # For Two-Way: check if entries have ip field
-        is_pitcher = position == "Pitcher"
+        is_pitcher = _is_pitcher_pos(position)
         if position == "Two-Way":
             pitcher_entries = [e for e in in_range if self._is_pitcher_entry(e.get("stats", {}))]
             is_pitcher = len(pitcher_entries) > len(in_range) - len(pitcher_entries)
@@ -1056,7 +1058,7 @@ class WindowStatsAggregator:
         return result
 
     def _empty_stats(self, position: str) -> dict:
-        if position == "Pitcher":
+        if _is_pitcher_pos(position):
             return {
                 "ip": 0, "k": 0, "bb": 0, "era": 0, "whip": 0,
                 "k_per_9": 0, "bb_per_9": 0, "k_pct": 0, "bb_pct": 0,
@@ -1077,7 +1079,7 @@ class WindowStatsAggregator:
         return f"{val:.3f}"[1:]  # strip leading "0" → ".455"
 
     def _format_stats(self, stats: dict, window: str, position: str) -> dict:
-        is_pitcher = stats.get("is_pitcher", position == "Pitcher")
+        is_pitcher = stats.get("is_pitcher", _is_pitcher_pos(position))
 
         if is_pitcher:
             ip = stats.get("ip", 0)
@@ -1119,7 +1121,7 @@ class WindowStatsAggregator:
             }
 
     def _calculate_grade(self, stats: dict, window: str, position: str) -> str:
-        is_pitcher = stats.get("is_pitcher", position == "Pitcher")
+        is_pitcher = stats.get("is_pitcher", _is_pitcher_pos(position))
 
         if is_pitcher:
             ip = stats.get("ip", 0)

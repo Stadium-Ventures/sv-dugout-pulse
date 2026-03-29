@@ -7,6 +7,7 @@ Takes raw stats and assigns a performance_grade plus a social search URL.
 import logging
 from urllib.parse import quote
 
+from src.stats_engine import _is_pitcher_pos
 from .config import (
     PITCHER_QS_IP,
     PITCHER_QS_MAX_ER,
@@ -96,7 +97,7 @@ class PerformanceAnalyzer:
             elif stats.get("is_pitcher_line"):
                 return self._grade_pitcher(stats)
             return self._grade_hitter(stats)
-        elif position == "Pitcher" or stats.get("is_pitcher_line"):
+        elif _is_pitcher_pos(position) or stats.get("is_pitcher_line"):
             return self._grade_pitcher(stats)
         else:
             return self._grade_hitter(stats)
