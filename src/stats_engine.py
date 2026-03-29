@@ -450,6 +450,11 @@ def _stat_str(source: dict, canonical: str, default="0") -> str:
     return default
 
 
+def _is_pitcher_pos(position: str) -> bool:
+    """Return True if *position* represents a pitcher (Pitcher, LHP, RHP)."""
+    return position in ("Pitcher", "LHP", "RHP")
+
+
 # ===== Shared data structures =====
 
 def empty_stats() -> dict:
@@ -1414,7 +1419,7 @@ class ProStatsFetcher:
         position = player.get("position", "Hitter")
         found_in_box = False
 
-        if position == "Pitcher":
+        if _is_pitcher_pos(position):
             result["is_pitcher_line"] = True
             pitchers = box.get(f"{game['side']}Pitchers", [])
             for entry in pitchers:
@@ -1464,7 +1469,7 @@ class ProStatsFetcher:
         # Fallback for players not found in the boxscore at all
         if not found_in_box and result["stats_summary"] == "No game data":
             if result["game_status"] == "Live":
-                if position == "Pitcher":
+                if _is_pitcher_pos(position):
                     result["stats_summary"] = "Game in progress — hasn't pitched"
                 else:
                     result["stats_summary"] = "Game in progress — not in lineup"
@@ -1779,7 +1784,10 @@ class NCAAComScraper(BaseSchoolScraper):
             if first_context is not None:
                 status = first_context.get("game_status", "")
                 if status == "Live":
-                    first_context["stats_summary"] = "Game in progress — not in lineup"
+                    if _is_pitcher_pos(position):
+                        first_context["stats_summary"] = "Game in progress — hasn't pitched"
+                    else:
+                        first_context["stats_summary"] = "Game in progress — not in lineup"
                 elif status == "Final":
                     first_context["stats_summary"] = "Did Not Play"
                 return first_context
@@ -2650,7 +2658,12 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if not _names_match(player_last, cell_last):
                     continue
                 if cell_first and player_first:
-                    if not cell_first.startswith(player_first):
+                    # Handle abbreviated initials: "T." or "T" for "Tanner"
+                    cf_clean = cell_first.rstrip(".")
+                    if len(cf_clean) <= 2:
+                        if not player_first.startswith(cf_clean):
+                            continue
+                    elif not cell_first.startswith(player_first):
                         continue
 
                 if is_batting and batting_result is None:
@@ -3397,7 +3410,10 @@ class ESPNScraper(BaseSchoolScraper):
             if first_context is not None:
                 status = first_context.get("game_status", "")
                 if status == "Live":
-                    first_context["stats_summary"] = "Game in progress — not in lineup"
+                    if _is_pitcher_pos(position):
+                        first_context["stats_summary"] = "Game in progress — hasn't pitched"
+                    else:
+                        first_context["stats_summary"] = "Game in progress — not in lineup"
                 elif status == "Final":
                     first_context["stats_summary"] = "Did Not Play"
                 return first_context
@@ -4057,7 +4073,7 @@ class NCAAStatsFetcher:
             if not stats:
                 continue
 
-            is_pitcher = position == "Pitcher" or "ip" in stats
+            is_pitcher = _is_pitcher_pos(position) or "ip" in stats
             if is_pitcher:
                 ip_val = float(stats.get("ip", "0") or "0")
                 outs = round(ip_val * 3)
@@ -4442,10 +4458,11 @@ class NCAAStatsFetcher:
                     except Exception:
                         pass
 
-            # Normalize live "not in lineup" to "not yet pitching" for pitchers.
-            # Covers: D1Baseball generic placeholder, ESPN/Sidearm fallbacks.
+            # Normalize live "not in lineup" to "hasn't pitched" for pitchers.
+            # Covers: D1Baseball generic placeholder, ESPN/NCAA.com/Sidearm fallbacks,
+            # and roster positions like LHP/RHP that individual scrapers may miss.
             if (result.get("game_status") == "Live"
-                    and position == "Pitcher"
+                    and _is_pitcher_pos(position)
                     and result.get("stats_summary") in (
                         "Game in progress",
                         "Game in progress — not in lineup",

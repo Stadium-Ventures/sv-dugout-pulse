@@ -657,6 +657,7 @@ def _load_locked_finals(today_str: str) -> dict[str, list[dict]]:
 # Status messages that indicate no real player stats were scraped.
 _STATUS_ONLY_SUMMARIES = frozenset({
     "Game in progress", "Game in progress — not in lineup",
+    "Game in progress — hasn't pitched",
     "Did Not Play", "No game data", "Game cancelled", "",
     "No game today",
 })
