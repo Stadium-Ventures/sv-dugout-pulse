@@ -177,7 +177,8 @@ _SUFFIX_QUALIFIERS = {
     "poly", "marymount", "of", "commonwealth",
     # City qualifiers — prevents "alabama" matching "Alabama Birmingham" (UAB),
     # "illinois" matching "Illinois Chicago" (UIC), etc.
-    "birmingham", "chicago", "omaha", "huntsville",
+    "birmingham", "chicago", "omaha", "huntsville", "arlington",
+    "dallas", "san", "el",
 }
 _PREFIX_QUALIFIERS = {
     "north", "south", "east", "west", "central", "se", "ne", "sw", "nw",
@@ -306,8 +307,9 @@ def _school_name_matches(team_lower: str, names: list[str], exact: bool) -> bool
             check_name = n_expanded
 
             # Suffix guard: "florida" in "florida state" — check word after match
+            # Strip leading hyphens so "Texas-Arlington" → "arlington"
             if check_name.startswith(check_team) and len(check_name) > len(check_team):
-                suffix = check_name[len(check_team):].strip()
+                suffix = check_name[len(check_team):].strip().lstrip("-")
                 first_word = suffix.split()[0] if suffix else ""
                 if first_word in _SUFFIX_QUALIFIERS:
                     reject = True
