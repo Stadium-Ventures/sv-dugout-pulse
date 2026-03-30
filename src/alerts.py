@@ -213,6 +213,17 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     if game_status == "N/A":
         return
 
+    # Clear sticky out-of-lineup flag when a player returns to the lineup.
+    # This ensures we alert again if they go out a second time later.
+    _ool_key = f"ool_active|{name}"
+    _sum_lc = (summary or "").lower()
+    if (game_status in ("Live", "Final")
+            and "did not play" not in _sum_lc
+            and "not in lineup" not in _sum_lc
+            and _ool_key in _sent_alerts):
+        del _sent_alerts[_ool_key]
+        logger.info("Cleared out-of-lineup flag for %s (back in lineup)", name)
+
     tier_label = f"T{tier}" if tier <= 4 else "T?"
     gm_label = " (SS)" if split_squad else (f" (Gm {game_number})" if game_number else "")
     box_url = stats.get("box_score_url", "")
@@ -319,18 +330,19 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
                 _mark_sent(game_date, name, "pulled", game_number=game_number)
 
     # --- Alert: Regular starter out of lineup ---
+    # Uses a sticky flag (ool_active|Name) so we only alert ONCE per absence
+    # streak.  The flag is cleared above when the player returns to a lineup.
     _REGULAR_STARTER_MIN = 3  # must have appeared in 3+ of last 7 games
     if is_hitter and game_status in ("Live", "Final"):
         summary_lower = (summary or "").lower()
         is_out = ("did not play" in summary_lower or "not in lineup" in summary_lower)
         recent_starts = stats.get("recent_starts", 0)
-        if is_out and recent_starts >= _REGULAR_STARTER_MIN:
-            if not _already_sent(game_date, name, "out_of_lineup", game_number=game_number):
-                if send_slack_message(
-                    f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
-                    f"_{team}_ — started {recent_starts} of last 7 games — {game_context}{box_link}"
-                ):
-                    _mark_sent(game_date, name, "out_of_lineup", game_number=game_number)
+        if is_out and recent_starts >= _REGULAR_STARTER_MIN and _ool_key not in _sent_alerts:
+            if send_slack_message(
+                f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
+                f"_{team}_ — started {recent_starts} of last 7 games — {game_context}{box_link}"
+            ):
+                _sent_alerts[_ool_key] = True  # sticky until player returns
 
     # --- Alert: Standout game summary (when game goes Final) ---
     if game_status == "Final" and "Standout" in grade:
