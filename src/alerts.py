@@ -308,6 +308,30 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
                 ):
                     _mark_sent(game_date, name, "3ob", game_number=game_number)
 
+    # --- Alert: Position player pulled from game ---
+    is_hitter = position in ("Hitter", "Two-Way") and not stats.get("is_pitcher_line")
+    if is_hitter and "(pulled)" in summary:
+        if not _already_sent(game_date, name, "pulled", game_number=game_number):
+            if send_slack_message(
+                f"🚑 *{name}* ({tier_label}) was pulled from the game{gm_label}\n"
+                f"_{team}_ — {summary} — {game_context}{box_link}"
+            ):
+                _mark_sent(game_date, name, "pulled", game_number=game_number)
+
+    # --- Alert: Regular starter out of lineup ---
+    _REGULAR_STARTER_MIN = 3  # must have appeared in 3+ of last 7 games
+    if is_hitter and game_status in ("Live", "Final"):
+        summary_lower = (summary or "").lower()
+        is_out = ("did not play" in summary_lower or "not in lineup" in summary_lower)
+        recent_starts = stats.get("recent_starts", 0)
+        if is_out and recent_starts >= _REGULAR_STARTER_MIN:
+            if not _already_sent(game_date, name, "out_of_lineup", game_number=game_number):
+                if send_slack_message(
+                    f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
+                    f"_{team}_ — started {recent_starts} of last 7 games — {game_context}{box_link}"
+                ):
+                    _mark_sent(game_date, name, "out_of_lineup", game_number=game_number)
+
     # --- Alert: Standout game summary (when game goes Final) ---
     if game_status == "Final" and "Standout" in grade:
         if not _already_sent(game_date, name, "standout_recap", game_number=game_number):

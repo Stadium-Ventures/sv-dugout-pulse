@@ -145,6 +145,68 @@ def _extract_opponent(game_context: str, player_team: str) -> str:
     return ""
 
 
+def _count_recent_starts(player: dict, game_date: str) -> int:
+    """Count how many games a position player appeared in over the last 7 days.
+
+    Uses existing game log files for NCAA/HS and the MLB Stats API for Pro.
+    Only called for position players showing DNP / not-in-lineup, so the
+    extra I/O is minimal.  Returns 0 on any error.
+    """
+    level = player.get("level", "")
+    name = player.get("player_name", "")
+    team = player.get("team", "")
+
+    try:
+        ref_date = date.fromisoformat(game_date) if game_date else _today_et()
+    except (ValueError, TypeError):
+        ref_date = _today_et()
+    cutoff = (ref_date - timedelta(days=7)).isoformat()
+
+    try:
+        if level == "NCAA":
+            return _count_from_game_log(NCAA_GAME_LOG_PATH, f"{name}|{team}", cutoff)
+        if level == "HS":
+            return _count_from_game_log(HS_GAME_LOG_PATH, name, cutoff)
+        if level == "Pro":
+            return _count_pro_recent(player, cutoff)
+    except Exception:
+        logger.debug("recent_starts lookup failed for %s", name)
+    return 0
+
+
+def _count_from_game_log(path: str, key: str, cutoff: str) -> int:
+    """Count entries in a game-log JSON file where date >= cutoff."""
+    if not os.path.exists(path):
+        return 0
+    with open(path) as f:
+        log = json.load(f)
+    entries = log.get(key, [])
+    return sum(1 for e in entries if (e.get("date") or "") >= cutoff)
+
+
+def _count_pro_recent(player: dict, cutoff: str) -> int:
+    """Count recent Pro game appearances via the MLB Stats API gameLog endpoint."""
+    import requests as _requests  # local import to avoid circular / top-level dep
+
+    mlb_id = player.get("mlb_id")
+    if not mlb_id:
+        return 0
+    year = _today_et().year
+    url = (
+        f"https://statsapi.mlb.com/api/v1/people/{mlb_id}/stats"
+        f"?stats=gameLog&group=hitting&season={year}"
+    )
+    resp = _requests.get(url, timeout=10)
+    resp.raise_for_status()
+    data = resp.json()
+    count = 0
+    for stat_group in data.get("stats", []):
+        for split in stat_group.get("splits", []):
+            if (split.get("date") or "") >= cutoff:
+                count += 1
+    return count
+
+
 def _append_to_ncaa_game_log(player: dict, stats: dict):
     """Queue a single NCAA game result for batched write."""
     if player.get("level") != "NCAA":
@@ -817,6 +879,15 @@ def run_live():
                 )
                 entries.append(entry)
                 if is_client:
+                    # Enrich stats with recent-start count for out-of-lineup alert
+                    _summary_lc = (stats.get("stats_summary") or "").lower()
+                    _pos = player.get("position", "Hitter")
+                    if (_pos in ("Hitter", "Two-Way")
+                            and stats.get("game_status") in ("Live", "Final")
+                            and ("did not play" in _summary_lc
+                                 or "not in lineup" in _summary_lc)):
+                        stats["recent_starts"] = _count_recent_starts(
+                            player, stats.get("game_date") or "")
                     alert_data_list.append((player, stats, analysis["performance_grade"]))
 
             # Live stats carry-forward: if every new entry for this NCAA
