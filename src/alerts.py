@@ -330,19 +330,18 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
                 _mark_sent(game_date, name, "pulled", game_number=game_number)
 
     # --- Alert: Regular starter out of lineup ---
-    # Uses a sticky flag (ool_active|Name) so we only alert ONCE per absence
-    # streak.  The flag is cleared above when the player returns to a lineup.
-    _REGULAR_STARTER_MIN = 3  # must have appeared in 3+ of last 7 games
-    if is_hitter and game_status in ("Live", "Final"):
-        summary_lower = (summary or "").lower()
-        is_out = ("did not play" in summary_lower or "not in lineup" in summary_lower)
-        recent_starts = stats.get("recent_starts", 0)
-        if is_out and recent_starts >= _REGULAR_STARTER_MIN and _ool_key not in _sent_alerts:
-            if send_slack_message(
-                f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
-                f"_{team}_ — started {recent_starts} of last 7 games — {game_context}{box_link}"
-            ):
-                _sent_alerts[_ool_key] = True  # sticky until player returns
+    # PAUSED: alerts were firing incorrectly — re-enable once root cause is fixed
+    # _REGULAR_STARTER_MIN = 3  # must have appeared in 3+ of last 7 games
+    # if is_hitter and game_status in ("Live", "Final"):
+    #     summary_lower = (summary or "").lower()
+    #     is_out = ("did not play" in summary_lower or "not in lineup" in summary_lower)
+    #     recent_starts = stats.get("recent_starts", 0)
+    #     if is_out and recent_starts >= _REGULAR_STARTER_MIN and _ool_key not in _sent_alerts:
+    #         if send_slack_message(
+    #             f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
+    #             f"_{team}_ — started {recent_starts} of last 7 games — {game_context}{box_link}"
+    #         ):
+    #             _sent_alerts[_ool_key] = True  # sticky until player returns
 
     # --- Alert: Standout game summary (when game goes Final) ---
     if game_status == "Final" and "Standout" in grade:
