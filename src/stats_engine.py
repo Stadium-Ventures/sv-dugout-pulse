@@ -204,10 +204,25 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
             _sb_auth["_pow_solved"] = True
 
         # Step 2: extract auth tokens from the page.
+        found_vars = []
+        missing_vars = []
         for var in ("_sbk", "_sbc", "_sbcf", "_sbt", "_sbe", "_sbhn"):
             vm = re.search(rf'window\.{var}\s*=\s*["\']([^"\']*)', r.text)
             if vm:
                 _sb_auth[var] = vm.group(1)
+                found_vars.append(var)
+            else:
+                missing_vars.append(var)
+        if missing_vars:
+            logger.info("StatBroadcast auth: missing vars %s (found %s) for event %s",
+                        missing_vars, found_vars, event_id)
+            # Extra diagnostic: search for _sbk anywhere in the page
+            if "_sbk" in missing_vars:
+                sbk_anywhere = re.search(r'_sbk[^;]{0,60}', r.text)
+                logger.info("StatBroadcast: _sbk search in page: %r (page_len=%d, has_pow_challenge=%s)",
+                            sbk_anywhere.group(0) if sbk_anywhere else None,
+                            len(r.text),
+                            'var p=' in r.text)
 
         # Extract the custom decode function (_drf) and its rotation amount.
         # StatBroadcast uses a Caesar cipher with a variable shift (not always
