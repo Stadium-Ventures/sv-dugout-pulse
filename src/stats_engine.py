@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import abc
 import base64
+import hashlib
 import logging
 import re
 import unicodedata
@@ -123,6 +124,214 @@ def _make_http_session() -> requests.Session:
 
 
 _http = _make_http_session()
+
+# ===== StatBroadcast auth bypass =====
+# StatBroadcast requires:
+#   1. A SHA-256 proof-of-work cookie (sb_pow)
+#   2. A session token cookie (sb_st) — set by server after PoW
+#   3. A custom auth header (X-ST-<id>: <token>)
+#   4. Chain/event params (_eid, _c, _cf, _hn) in API requests
+#   5. XOR encryption on API responses (keyed by _sbk)
+# We solve/extract all of these once per process from the broadcast page.
+
+_sb_auth: dict = {}  # populated by _ensure_statbroadcast_auth
+_sb_auth_cache: dict = {}  # event_id → cached auth tokens
+_sb_last_page_load: float = 0.0  # timestamp of last broadcast page load
+
+
+def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
+    """Solve the StatBroadcast PoW and extract auth tokens.
+
+    After calling this, ``_sb_auth`` contains the tokens needed for API
+    requests and ``_http`` has the required cookies.
+
+    Auth tokens (cipher rotation, custom header, chain tokens) are tied to the
+    broadcast page load and may differ between events.  Results are cached per
+    event_id so that multiple players on the same game don't trigger redundant
+    page loads.
+    """
+    global _sb_last_page_load
+
+    if _sb_auth.get("ready") and _sb_auth.get("_sbe") == event_id:
+        return
+
+    # Check the per-event cache first.
+    if event_id in _sb_auth_cache:
+        _sb_auth.clear()
+        _sb_auth.update(_sb_auth_cache[event_id])
+        return
+
+    # Preserve PoW state across refreshes.
+    pow_solved = _sb_auth.get("_pow_solved", False)
+    _sb_auth.clear()
+    _sb_auth["_pow_solved"] = pow_solved
+
+    try:
+        s = requests.Session()
+        s.headers.update(_http.headers)
+        # Copy existing cookies (including sb_pow from a prior solve).
+        for c in _http.cookies:
+            s.cookies.set_cookie(c)
+
+        # Throttle broadcast page loads to avoid rate-limiting.
+        elapsed = _time.time() - _sb_last_page_load
+        if elapsed < 0.8:
+            _time.sleep(0.8 - elapsed)
+
+        # Step 1: fetch the broadcast page.
+        r = s.get(
+            f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
+            timeout=10,
+        )
+        _sb_last_page_load = _time.time()
+
+        # Step 1b: solve PoW challenge if present (only needed once per process).
+        if not _sb_auth.get("_pow_solved"):
+            m = re.search(r'var p="([a-f0-9]+)",d=(\d+)', r.text)
+            if m:
+                p_val, difficulty = m.group(1), int(m.group(2))
+                prefix = "0" * difficulty
+                logger.info("StatBroadcast PoW: difficulty=%d, solving...", difficulty)
+                for n in range(50_000_000):
+                    h = hashlib.sha256((p_val + str(n)).encode()).hexdigest()
+                    if h.startswith(prefix):
+                        s.cookies.set("sb_pow", f"{p_val}:{n}",
+                                      domain=".statbroadcast.com", path="/")
+                        logger.info("StatBroadcast PoW solved (n=%d)", n)
+                        break
+                else:
+                    logger.warning("StatBroadcast PoW: exhausted search space")
+                    return
+
+                # Reload broadcast page with PoW cookie to get auth tokens.
+                r = s.get(
+                    f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
+                    timeout=10,
+                )
+                _sb_last_page_load = _time.time()
+            _sb_auth["_pow_solved"] = True
+
+        # Step 2: extract auth tokens from the page.
+        for var in ("_sbk", "_sbc", "_sbcf", "_sbt", "_sbe", "_sbhn"):
+            vm = re.search(rf'window\.{var}\s*=\s*["\']([^"\']*)', r.text)
+            if vm:
+                _sb_auth[var] = vm.group(1)
+
+        # Extract the custom decode function (_drf) and its rotation amount.
+        # StatBroadcast uses a Caesar cipher with a variable shift (not always
+        # ROT13).  The shift value is embedded in the function body as the
+        # constant added during character rotation, e.g.  (c - 97 + N) % 26.
+        drf_m = re.search(r"window\._drf\s*=\s*['\"](\w+)", r.text)
+        if drf_m:
+            _sb_auth["_drf"] = drf_m.group(1)
+            fn_pattern = re.compile(
+                rf"function\s+{re.escape(drf_m.group(1))}\s*\([^)]*\)\s*\{{",
+            )
+            fn_start = fn_pattern.search(r.text)
+            if fn_start:
+                body_start = fn_start.end()
+                rot_m = re.search(
+                    r"charCodeAt.*?\+\s*(\d+)\s*\)\s*%\s*26",
+                    r.text[body_start:body_start + 500],
+                )
+                if rot_m:
+                    _sb_auth["_rot"] = int(rot_m.group(1))
+                    logger.info("StatBroadcast custom cipher: ROT%d", _sb_auth["_rot"])
+
+        # Copy cookies to shared session.
+        for c in s.cookies:
+            _http.cookies.set_cookie(c)
+
+        _sb_auth["ready"] = True
+        # Cache for this event so teammates don't trigger a re-load.
+        _sb_auth_cache[event_id] = dict(_sb_auth)
+        logger.info("StatBroadcast auth ready (header=%s)", _sb_auth.get("_sbhn", "?"))
+    except Exception:
+        logger.exception("StatBroadcast auth setup failed")
+
+
+def _sb_api_headers(referer: str) -> dict:
+    """Build headers for StatBroadcast webservice calls."""
+    hdrs: dict = {
+        "Referer": referer,
+        "X-Requested-With": "XMLHttpRequest",
+    }
+    hn = _sb_auth.get("_sbhn", "")
+    sbt = _sb_auth.get("_sbt", "")
+    if hn and sbt:
+        hdrs[hn] = sbt
+    return hdrs
+
+
+def _sb_api_params(data_b64: str, is_stats: bool = False) -> str:
+    """Build the full query string for a StatBroadcast webservice call."""
+    parts = [f"data={data_b64}"]
+    eid = _sb_auth.get("_sbe", "")
+    if eid:
+        parts.append(f"_eid={eid}")
+    hn = _sb_auth.get("_sbhn", "")
+    if hn:
+        parts.append(f"_hn={hn.replace('X-ST-', '')}")
+    if is_stats:
+        sbc = _sb_auth.get("_sbc", "")
+        sbcf = _sb_auth.get("_sbcf", "0")
+        if sbc:
+            parts.append(f"_c={sbc}")
+            parts.append(f"_cf={sbcf}")
+    return "&".join(parts)
+
+
+def _sb_decode_response(text: str, headers: dict) -> str:
+    """Decode a StatBroadcast webservice response body.
+
+    Handles the optional XOR encryption layer + variable Caesar cipher
+    + base64 decode.
+    """
+    raw = text.strip()
+    if not raw:
+        return ""
+
+    # If X-SB-Enc header is present and we have the key, XOR-decrypt first.
+    enc_flag = headers.get("X-SB-Enc", headers.get("x-sb-enc", ""))
+    sbk = _sb_auth.get("_sbk", "")
+    if enc_flag == "1" and sbk:
+        cipher = base64.b64decode(raw)
+        key = bytes.fromhex(sbk)
+        decrypted = bytes(cipher[i] ^ key[i % len(key)] for i in range(len(cipher)))
+        raw = decrypted.decode("latin-1")
+
+    # Update chain tokens from response headers for subsequent calls.
+    chain = headers.get("X-SB-Chain", headers.get("x-sb-chain", ""))
+    chain_cf = headers.get("X-SB-CF", headers.get("x-sb-cf", ""))
+    if chain:
+        _sb_auth["_sbc"] = chain
+    if chain_cf:
+        _sb_auth["_sbcf"] = chain_cf
+
+    # Apply Caesar cipher (variable shift extracted from _drf function).
+    # The JS function shifts each letter forward by N; the server pre-encodes
+    # with shift 26-N, so applying shift +N here recovers the original.
+    rot_n = _sb_auth.get("_rot", 13)  # default to ROT13 if not detected
+
+    result = []
+    for ch in raw:
+        c = ord(ch)
+        if 97 <= c < 123:       # a-z
+            result.append(chr((c - 97 + rot_n) % 26 + 97))
+        elif 65 <= c < 91:      # A-Z
+            result.append(chr((c - 65 + rot_n) % 26 + 65))
+        else:
+            result.append(ch)
+    rotated = "".join(result)
+
+    # base64 decode → UTF-8
+    # atou = decodeURIComponent(escape(atob(b64)))
+    try:
+        return base64.b64decode(rotated + "==").decode("utf-8", errors="replace")
+    except Exception:
+        # Padding might be off — try without extra padding
+        return base64.b64decode(rotated).decode("utf-8", errors="replace")
+
 
 # Per-scraper timeouts — tuned to each source's typical response latency
 _TIMEOUT_ESPN = 10        # Fast JSON API
@@ -2521,7 +2730,6 @@ class D1BaseballScraper(BaseSchoolScraper):
         Returns None only if the page could not be fetched/decoded at all.
         """
         try:
-            import codecs as _codecs
             m = re.search(r"[?&]id=(\d+)", box_url)
             if not m:
                 # Handle statb.us short URLs by following redirect
@@ -2532,13 +2740,19 @@ class D1BaseballScraper(BaseSchoolScraper):
                 box_url = r0.url
             event_id = m.group(1)
 
+            # Ensure PoW + auth tokens are set before hitting the API.
+            _ensure_statbroadcast_auth(event_id)
+
             # Step 1: get event metadata (xmlfile path contains groupid)
             # Retry once on transient failures (timeout, 5xx) before giving up.
+            # The JS sends data=btoa("") for event endpoint (empty data param).
+            event_data = base64.b64encode(b"").decode()
             for _sb_attempt in range(2):
                 try:
                     r1 = _http.get(
                         f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}",
-                        headers={"Referer": box_url},
+                        params=_sb_api_params(event_data),
+                        headers=_sb_api_headers(box_url),
                         timeout=15,
                     )
                     r1.raise_for_status()
@@ -2547,9 +2761,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if _sb_attempt == 1:
                         raise
                     _time.sleep(1.5)
-            event_xml = base64.b64decode(
-                _codecs.encode(r1.text.strip(), "rot_13") + "=="
-            ).decode("utf-8", errors="replace")
+            event_xml = _sb_decode_response(r1.text, dict(r1.headers))
             xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
             if not xmlfile_m:
                 return None
@@ -2580,8 +2792,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                     try:
                         r2 = _http.get(
                             "https://stats.statbroadcast.com/interface/webservice/stats",
-                            params={"data": encoded},
-                            headers={"Referer": box_url, "X-Requested-With": "XMLHttpRequest"},
+                            params=_sb_api_params(encoded, is_stats=True),
+                            headers=_sb_api_headers(box_url),
                             timeout=15,
                         )
                         r2.raise_for_status()
@@ -2590,9 +2802,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                         if _sb_attempt == 1:
                             raise
                         _time.sleep(1.5)
-                html = base64.b64decode(
-                    _codecs.encode(r2.text.strip(), "rot_13") + "=="
-                ).decode("utf-8", errors="replace")
+                html = _sb_decode_response(r2.text, dict(r2.headers))
 
                 # Extract game state from the first side we successfully fetch.
                 # Do this before the player search so we always capture it.
