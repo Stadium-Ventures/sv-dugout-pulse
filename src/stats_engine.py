@@ -2764,6 +2764,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             event_xml = _sb_decode_response(r1.text, dict(r1.headers))
             xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
             if not xmlfile_m:
+                logger.info("StatBroadcast event XML missing xmlfile for %s (event=%s, raw_len=%d, decoded_len=%d, first100=%r)",
+                            player_name, event_id, len(r1.text), len(event_xml), event_xml[:100])
                 return None
             xml_file = xmlfile_m.group(1)
 
@@ -2831,7 +2833,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             return None
 
         except Exception:
-            logger.debug("StatBroadcast parse failed for %s @ %s", player_name, box_url)
+            logger.info("StatBroadcast parse failed for %s @ %s", player_name, box_url, exc_info=True)
         return None
 
     @staticmethod
