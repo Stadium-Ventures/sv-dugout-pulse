@@ -159,19 +159,17 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
     _sb_auth["_pow_solved"] = pow_solved
 
     try:
-        s = requests.Session()
-        s.headers.update(_http.headers)
-        # Copy existing cookies (including sb_pow from a prior solve).
-        for c in _http.cookies:
-            s.cookies.set_cookie(c)
-
         # Throttle broadcast page loads to avoid rate-limiting.
         elapsed = _time.time() - _sb_last_page_load
         if elapsed < 0.5:
             _time.sleep(0.5 - elapsed)
 
-        # Step 1: fetch the broadcast page.
-        r = s.get(
+        # Step 1: fetch the broadcast page using the shared session directly.
+        # Using _http (not a separate session) ensures the same cookies/session
+        # state are used for both page loads and subsequent API calls. Using a
+        # separate session caused XOR key mismatches in GitHub Actions because
+        # the session cookie from the page load didn't transfer correctly.
+        r = _http.get(
             f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
             timeout=10,
         )
@@ -187,8 +185,8 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 for n in range(50_000_000):
                     h = hashlib.sha256((p_val + str(n)).encode()).hexdigest()
                     if h.startswith(prefix):
-                        s.cookies.set("sb_pow", f"{p_val}:{n}",
-                                      domain=".statbroadcast.com", path="/")
+                        _http.cookies.set("sb_pow", f"{p_val}:{n}",
+                                          domain=".statbroadcast.com", path="/")
                         logger.info("StatBroadcast PoW solved (n=%d)", n)
                         break
                 else:
@@ -196,7 +194,8 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                     return
 
                 # Reload broadcast page with PoW cookie to get auth tokens.
-                r = s.get(
+                _time.sleep(0.3)
+                r = _http.get(
                     f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
                     timeout=10,
                 )
@@ -244,10 +243,6 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 if rot_m:
                     _sb_auth["_rot"] = int(rot_m.group(1))
                     logger.info("StatBroadcast custom cipher: ROT%d", _sb_auth["_rot"])
-
-        # Copy cookies to shared session.
-        for c in s.cookies:
-            _http.cookies.set_cookie(c)
 
         _sb_auth["ready"] = True
         logger.info("StatBroadcast auth ready (header=%s)", _sb_auth.get("_sbhn", "?"))
