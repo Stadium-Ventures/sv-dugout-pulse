@@ -135,30 +135,22 @@ _http = _make_http_session()
 # We solve/extract all of these once per process from the broadcast page.
 
 _sb_auth: dict = {}  # populated by _ensure_statbroadcast_auth
-_sb_auth_cache: dict = {}  # event_id → cached auth tokens
 _sb_last_page_load: float = 0.0  # timestamp of last broadcast page load
 
 
 def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
-    """Solve the StatBroadcast PoW and extract auth tokens.
+    """Solve the StatBroadcast PoW and extract per-event auth tokens.
 
     After calling this, ``_sb_auth`` contains the tokens needed for API
     requests and ``_http`` has the required cookies.
 
-    Auth tokens (cipher rotation, custom header, chain tokens) are tied to the
-    broadcast page load and may differ between events.  Results are cached per
-    event_id so that multiple players on the same game don't trigger redundant
-    page loads.
+    The XOR key (_sbk) and Caesar cipher rotation are **per-event** — each
+    broadcast page load generates unique values.  We must load the broadcast
+    page for each new event.  The PoW cookie persists across page loads.
     """
     global _sb_last_page_load
 
     if _sb_auth.get("ready") and _sb_auth.get("_sbe") == event_id:
-        return
-
-    # Check the per-event cache first.
-    if event_id in _sb_auth_cache:
-        _sb_auth.clear()
-        _sb_auth.update(_sb_auth_cache[event_id])
         return
 
     # Preserve PoW state across refreshes.
@@ -175,8 +167,8 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
 
         # Throttle broadcast page loads to avoid rate-limiting.
         elapsed = _time.time() - _sb_last_page_load
-        if elapsed < 0.8:
-            _time.sleep(0.8 - elapsed)
+        if elapsed < 0.5:
+            _time.sleep(0.5 - elapsed)
 
         # Step 1: fetch the broadcast page.
         r = s.get(
@@ -243,8 +235,6 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
             _http.cookies.set_cookie(c)
 
         _sb_auth["ready"] = True
-        # Cache for this event so teammates don't trigger a re-load.
-        _sb_auth_cache[event_id] = dict(_sb_auth)
         logger.info("StatBroadcast auth ready (header=%s)", _sb_auth.get("_sbhn", "?"))
     except Exception:
         logger.exception("StatBroadcast auth setup failed")
@@ -308,6 +298,12 @@ def _sb_decode_response(text: str, headers: dict) -> str:
     if chain_cf:
         _sb_auth["_sbcf"] = chain_cf
 
+    # Check for non-ASCII bytes after XOR — indicates wrong key.
+    # If XOR produced garbage, the Caesar + base64 step will fail.
+    if any(ord(ch) > 127 for ch in raw):
+        logger.debug("StatBroadcast decode: non-ASCII after XOR — wrong key or unencrypted response")
+        return ""
+
     # Apply Caesar cipher (variable shift extracted from _drf function).
     # The JS function shifts each letter forward by N; the server pre-encodes
     # with shift 26-N, so applying shift +N here recovers the original.
@@ -330,7 +326,10 @@ def _sb_decode_response(text: str, headers: dict) -> str:
         return base64.b64decode(rotated + "==").decode("utf-8", errors="replace")
     except Exception:
         # Padding might be off — try without extra padding
-        return base64.b64decode(rotated).decode("utf-8", errors="replace")
+        try:
+            return base64.b64decode(rotated).decode("utf-8", errors="replace")
+        except Exception:
+            return ""
 
 
 # Per-scraper timeouts — tuned to each source's typical response latency
