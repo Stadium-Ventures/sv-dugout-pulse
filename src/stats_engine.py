@@ -284,6 +284,8 @@ def _sb_decode_response(text: str, headers: dict) -> str:
     # If X-SB-Enc header is present and we have the key, XOR-decrypt first.
     enc_flag = headers.get("X-SB-Enc", headers.get("x-sb-enc", ""))
     sbk = _sb_auth.get("_sbk", "")
+    logger.info("SB decode: enc_flag=%r, has_sbk=%s, raw_len=%d, raw_start=%r",
+                enc_flag, bool(sbk), len(raw), raw[:80])
     if enc_flag == "1" and sbk:
         cipher = base64.b64decode(raw)
         key = bytes.fromhex(sbk)
