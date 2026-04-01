@@ -213,15 +213,8 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
             else:
                 missing_vars.append(var)
         if missing_vars:
-            logger.info("StatBroadcast auth: missing vars %s (found %s) for event %s",
-                        missing_vars, found_vars, event_id)
-            # Extra diagnostic: search for _sbk anywhere in the page
-            if "_sbk" in missing_vars:
-                sbk_anywhere = re.search(r'_sbk[^;]{0,60}', r.text)
-                logger.info("StatBroadcast: _sbk search in page: %r (page_len=%d, has_pow_challenge=%s)",
-                            sbk_anywhere.group(0) if sbk_anywhere else None,
-                            len(r.text),
-                            'var p=' in r.text)
+            logger.debug("StatBroadcast auth: missing vars %s (found %s) for event %s",
+                         missing_vars, found_vars, event_id)
 
         # Extract the custom decode function (_drf) and its rotation amount.
         # StatBroadcast uses a Caesar cipher with a variable shift (not always
@@ -242,10 +235,10 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 )
                 if rot_m:
                     _sb_auth["_rot"] = int(rot_m.group(1))
-                    logger.info("StatBroadcast custom cipher: ROT%d", _sb_auth["_rot"])
+                    logger.debug("StatBroadcast custom cipher: ROT%d", _sb_auth["_rot"])
 
         _sb_auth["ready"] = True
-        logger.info("StatBroadcast auth ready (header=%s)", _sb_auth.get("_sbhn", "?"))
+        logger.debug("StatBroadcast auth ready (header=%s)", _sb_auth.get("_sbhn", "?"))
     except Exception:
         logger.exception("StatBroadcast auth setup failed")
 
@@ -294,8 +287,8 @@ def _sb_decode_response(text: str, headers: dict) -> str:
     # If X-SB-Enc header is present and we have the key, XOR-decrypt first.
     enc_flag = headers.get("X-SB-Enc", headers.get("x-sb-enc", ""))
     sbk = _sb_auth.get("_sbk", "")
-    logger.info("SB decode: enc_flag=%r, has_sbk=%s, raw_len=%d, raw_start=%r",
-                enc_flag, bool(sbk), len(raw), raw[:80])
+    logger.debug("SB decode: enc_flag=%r, has_sbk=%s, raw_len=%d",
+                 enc_flag, bool(sbk), len(raw))
     if enc_flag == "1" and sbk:
         cipher = base64.b64decode(raw)
         key = bytes.fromhex(sbk)
@@ -2775,8 +2768,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             event_xml = _sb_decode_response(r1.text, dict(r1.headers))
             xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
             if not xmlfile_m:
-                logger.info("StatBroadcast event XML missing xmlfile for %s (event=%s, raw_len=%d, decoded_len=%d, first100=%r)",
-                            player_name, event_id, len(r1.text), len(event_xml), event_xml[:100])
+                logger.debug("StatBroadcast event XML missing xmlfile for %s (event=%s, decoded_len=%d)",
+                             player_name, event_id, len(event_xml))
                 return None
             xml_file = xmlfile_m.group(1)
 
@@ -2844,7 +2837,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             return None
 
         except Exception:
-            logger.info("StatBroadcast parse failed for %s @ %s", player_name, box_url, exc_info=True)
+            logger.debug("StatBroadcast parse failed for %s @ %s", player_name, box_url, exc_info=True)
         return None
 
     @staticmethod
