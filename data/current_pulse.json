@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-04-03T19:11:54.892001+00:00",
+  "generated_at": "2026-04-03T19:21:52.752818+00:00",
   "players": [
     {
       "player_name": "Garrett Whitlock",
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "San Diego Padres 0, Boston Red Sox 1 | Top 4",
+      "game_context": "San Diego Padres 0, Boston Red Sox 2 | Bottom 4",
       "game_status": "Live",
       "game_time": "2:10 PM ET",
       "game_date": "2026-04-03",
@@ -29,6 +29,37 @@
       "tags": {
         "draft_class": "N/A",
         "position": "Pitcher",
+        "roster_priority": 1
+      }
+    },
+    {
+      "player_name": "Dax Kilby",
+      "team": "Tampa Tarpons",
+      "level": "Pro",
+      "stats_summary": "Game at 6:30 PM ET",
+      "game_context": "Lakeland Flying Tigers vs Tampa Tarpons | 6:30 PM ET",
+      "game_status": "Scheduled",
+      "game_time": "6:30 PM ET",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Sat 04/04",
+        "date_full": "2026-04-04",
+        "opponent": "Lakeland Flying Tigers",
+        "home_away": "vs",
+        "time": "6:30 PM ET",
+        "display": "vs Lakeland Flying Tigers - Sat 04/04 6:30 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/820299",
+      "player_profile_url": "https://www.mlb.com/player/828076",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Hitter",
         "roster_priority": 1
       }
     },
@@ -64,32 +95,25 @@
       }
     },
     {
-      "player_name": "Dax Kilby",
-      "team": "Tampa Tarpons",
-      "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
-      "game_context": "Lakeland Flying Tigers vs Tampa Tarpons | 6:30 PM ET",
+      "player_name": "Aiden Robbins",
+      "team": "Texas",
+      "level": "NCAA",
+      "stats_summary": "Game at 7:00 PM",
+      "game_context": "Texas vs South Carolina",
       "game_status": "Scheduled",
-      "game_time": "6:30 PM ET",
+      "game_time": "7:00 PM",
       "game_date": "2026-04-03",
       "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 04/04",
-        "date_full": "2026-04-04",
-        "opponent": "Lakeland Flying Tigers",
-        "home_away": "vs",
-        "time": "6:30 PM ET",
-        "display": "vs Lakeland Flying Tigers - Sat 04/04 6:30 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/820299",
-      "player_profile_url": "https://www.mlb.com/player/828076",
+      "next_game": null,
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847563",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
-      "data_source": "MLB Stats API",
+      "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
+      "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
-        "draft_class": "N/A",
+        "draft_class": "2026",
         "position": "Hitter",
         "roster_priority": 1
       }
@@ -134,30 +158,6 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 1
-      }
-    },
-    {
-      "player_name": "Aiden Robbins",
-      "team": "Texas",
-      "level": "NCAA",
-      "stats_summary": "Game at 7:00 PM",
-      "game_context": "Texas vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "7:00 PM",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847563",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
       "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
@@ -353,6 +353,30 @@
       }
     },
     {
+      "player_name": "Myles Bailey",
+      "team": "Florida State",
+      "level": "NCAA",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Florida State 1, Virginia 0 | Top 5",
+      "game_status": "Live",
+      "game_time": "2:00 PM ET",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636352",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 1
+      }
+    },
+    {
       "player_name": "Caleb Daniel",
       "team": "Georgia Tech",
       "level": "NCAA",
@@ -377,35 +401,11 @@
       }
     },
     {
-      "player_name": "Myles Bailey",
-      "team": "Florida State",
-      "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Florida State 1, Virginia 0 | Bottom 4",
-      "game_status": "Live",
-      "game_time": "2:00 PM ET",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636352",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 1
-      }
-    },
-    {
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "0-1, BB, K",
-      "game_context": "Florida State 1, Virginia 0 | Bottom 4",
+      "game_context": "Florida State 1, Virginia 0 | Top 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-04-03",
@@ -473,30 +473,6 @@
       }
     },
     {
-      "player_name": "Will Rhine",
-      "team": "Alabama",
-      "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 1, Oklahoma 3 | Top 4",
-      "game_status": "Live",
-      "game_time": "7:30 PM ET",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634026",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Will%20Rhine%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Will%20Rhine%22%20Alabama&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2028",
-        "position": "Hitter",
-        "roster_priority": 2
-      }
-    },
-    {
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
@@ -517,6 +493,30 @@
       "tags": {
         "draft_class": "2028",
         "position": "Pitcher",
+        "roster_priority": 2
+      }
+    },
+    {
+      "player_name": "Will Rhine",
+      "team": "Alabama",
+      "level": "NCAA",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Alabama 1, Oklahoma 3 | Bottom 4",
+      "game_status": "Live",
+      "game_time": "7:30 PM ET",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634026",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Will%20Rhine%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Will%20Rhine%22%20Alabama&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2028",
+        "position": "Hitter",
         "roster_priority": 2
       }
     },
@@ -689,75 +689,34 @@
       }
     },
     {
-      "player_name": "Bo Lowrance",
-      "team": "Christ Church",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
+      "player_name": "Austin Amaral",
+      "team": "Wilmington Blue Rocks",
+      "level": "Pro",
+      "stats_summary": "Game at 6:35 PM ET",
+      "game_context": "Jersey Shore BlueClaws vs Wilmington Blue Rocks | 6:35 PM ET",
+      "game_status": "Scheduled",
+      "game_time": "6:35 PM ET",
+      "game_date": "2026-04-03",
       "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
+      "next_game": {
+        "date": "Sat 04/04",
+        "date_full": "2026-04-04",
+        "opponent": "Jersey Shore BlueClaws",
+        "home_away": "vs",
+        "time": "6:05 PM ET",
+        "display": "vs Jersey Shore BlueClaws - Sat 04/04 6:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/821858",
+      "player_profile_url": "https://www.mlb.com/player/694544",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Bo%20Lowrance%22%20Christ%20Church&f=live",
-      "data_source": "HS Sheet",
+      "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
+      "data_source": "MLB Stats API",
       "is_client": true,
       "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 1
-      }
-    },
-    {
-      "player_name": "Colin Raymond",
-      "team": "Stony Brook",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Colin%20Raymond%22%20Stony%20Brook&f=live",
-      "data_source": "HS Sheet",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2028",
-        "position": "Hitter",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Max Phillips",
-      "team": "Trinity",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Max%20Phillips%22%20Trinity&f=live",
-      "data_source": "HS Sheet",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Hitter",
-        "roster_priority": 1
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 3
       }
     },
     {
@@ -823,33 +782,26 @@
       }
     },
     {
-      "player_name": "Austin Amaral",
-      "team": "Wilmington Blue Rocks",
+      "player_name": "Forrest Wall",
+      "team": "Retired",
       "level": "Pro",
-      "stats_summary": "Game at 6:35 PM ET",
-      "game_context": "Jersey Shore BlueClaws vs Wilmington Blue Rocks | 6:35 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "6:35 PM ET",
-      "game_date": "2026-04-03",
+      "stats_summary": "No game scheduled",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
       "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 04/04",
-        "date_full": "2026-04-04",
-        "opponent": "Jersey Shore BlueClaws",
-        "home_away": "vs",
-        "time": "6:05 PM ET",
-        "display": "vs Jersey Shore BlueClaws - Sat 04/04 6:05 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/821858",
-      "player_profile_url": "https://www.mlb.com/player/694544",
-      "performance_grade": "🕒 Scheduled",
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "https://www.mlb.com/player/657088",
+      "performance_grade": "— No Data",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
-      "data_source": "MLB Stats API",
+      "social_search_url": "https://x.com/search?q=%22Forrest%20Wall%22%20Retired&f=live",
+      "data_source": "",
       "is_client": true,
       "tags": {
         "draft_class": "N/A",
-        "position": "Pitcher",
+        "position": "Hitter",
         "roster_priority": 3
       }
     },
@@ -916,6 +868,54 @@
       }
     },
     {
+      "player_name": "Taj Marchand",
+      "team": "James Island",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Taj%20Marchand%22%20James%20Island&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 1
+      }
+    },
+    {
+      "player_name": "Bo Lowrance",
+      "team": "Christ Church",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Bo%20Lowrance%22%20Christ%20Church&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 1
+      }
+    },
+    {
       "player_name": "Kade Brown",
       "team": "Stockton Ports",
       "level": "Pro",
@@ -938,37 +938,6 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
-      "data_source": "MLB Stats API",
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Pitcher",
-        "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Najer Victor",
-      "team": "Rocket City Trash Pandas",
-      "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
-      "game_context": "Biloxi Shuckers vs Rocket City Trash Pandas | 7:35 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "7:35 PM ET",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 04/04",
-        "date_full": "2026-04-04",
-        "opponent": "Biloxi Shuckers",
-        "home_away": "vs",
-        "time": "7:35 PM ET",
-        "display": "vs Biloxi Shuckers - Sat 04/04 7:35 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/817734",
-      "player_profile_url": "https://www.mlb.com/player/695402",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Najer%20Victor%22%20Angels&f=live",
       "data_source": "MLB Stats API",
       "is_client": true,
       "tags": {
@@ -1007,6 +976,110 @@
         "position": "Hitter",
         "roster_priority": 3
       }
+    },
+    {
+      "player_name": "Max Phillips",
+      "team": "Trinity",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Max%20Phillips%22%20Trinity&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Hitter",
+        "roster_priority": 1
+      }
+    },
+    {
+      "player_name": "Najer Victor",
+      "team": "Rocket City Trash Pandas",
+      "level": "Pro",
+      "stats_summary": "Game at 7:35 PM ET",
+      "game_context": "Biloxi Shuckers vs Rocket City Trash Pandas | 7:35 PM ET",
+      "game_status": "Scheduled",
+      "game_time": "7:35 PM ET",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Sat 04/04",
+        "date_full": "2026-04-04",
+        "opponent": "Biloxi Shuckers",
+        "home_away": "vs",
+        "time": "7:35 PM ET",
+        "display": "vs Biloxi Shuckers - Sat 04/04 7:35 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/817734",
+      "player_profile_url": "https://www.mlb.com/player/695402",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Najer%20Victor%22%20Angels&f=live",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 3
+      }
+    },
+    {
+      "player_name": "Colin Raymond",
+      "team": "Stony Brook",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Colin%20Raymond%22%20Stony%20Brook&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2028",
+        "position": "Hitter",
+        "roster_priority": 2
+      }
+    },
+    {
+      "player_name": "Alex Kranzler",
+      "team": "Vanderbilt",
+      "level": "NCAA",
+      "stats_summary": "No game data",
+      "game_context": "Vanderbilt 0, Texas AM 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": null,
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628430",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
+      "data_source": "",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Pitcher",
+        "roster_priority": 3
+      },
+      "game_number": 1
     },
     {
       "player_name": "Ryan DeSanto",
@@ -1104,55 +1177,6 @@
       "game_number": 2
     },
     {
-      "player_name": "Alex Kranzler",
-      "team": "Vanderbilt",
-      "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Vanderbilt 0, Texas AM 0 | Top 1",
-      "game_status": "Live",
-      "game_time": null,
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628430",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Pitcher",
-        "roster_priority": 3
-      },
-      "game_number": 1
-    },
-    {
-      "player_name": "Forrest Wall",
-      "team": "Retired",
-      "level": "Pro",
-      "stats_summary": "No game scheduled",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": "https://www.mlb.com/player/657088",
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Forrest%20Wall%22%20Retired&f=live",
-      "data_source": "",
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Hitter",
-        "roster_priority": 3
-      }
-    },
-    {
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
@@ -1181,7 +1205,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "1-2, K",
-      "game_context": "Alabama 1, Oklahoma 3 | Inn 3",
+      "game_context": "Alabama 1, Oklahoma 3 | Inn 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-04-03",
@@ -1204,16 +1228,16 @@
       "player_name": "Boston Torres",
       "team": "Wake Forest",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
-      "game_context": "Wake Forest vs Pittsburgh",
-      "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Wake Forest 0, Pittsburgh 1 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "3:00 PM ET",
       "game_date": "2026-04-03",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848313",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=643715",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Boston%20Torres%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Boston%20Torres%22%20Wake%20Forest&f=live",
       "data_source": "D1Baseball",
@@ -1221,30 +1245,6 @@
       "tags": {
         "draft_class": "2026",
         "position": "Hitter",
-        "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Brady St. Pierre",
-      "team": "SE Louisiana",
-      "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southeastern Louisiana 0, Incarnate Word 3 | Bottom 4",
-      "game_status": "Live",
-      "game_time": "TBA",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632293",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brady%20St.%20Pierre%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Brady%20St.%20Pierre%22%20SE%20Louisiana&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Pitcher",
         "roster_priority": 3
       }
     },
@@ -1273,27 +1273,27 @@
       }
     },
     {
-      "player_name": "Taj Marchand",
-      "team": "James Island",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
+      "player_name": "Brady St. Pierre",
+      "team": "SE Louisiana",
+      "level": "NCAA",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Southeastern Louisiana 0, Incarnate Word 5 | Top 5",
+      "game_status": "Live",
+      "game_time": "TBA",
+      "game_date": "2026-04-03",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632293",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brady%20St.%20Pierre%22&btnI=",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Taj%20Marchand%22%20James%20Island&f=live",
-      "data_source": "HS Sheet",
+      "social_search_url": "https://x.com/search?q=%22Brady%20St.%20Pierre%22%20SE%20Louisiana&f=live",
+      "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 1
+        "draft_class": "2027",
+        "position": "Pitcher",
+        "roster_priority": 3
       }
     },
     {
@@ -1301,7 +1301,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Southeastern Louisiana 0, Incarnate Word 3 | Bottom 4",
+      "game_context": "Southeastern Louisiana 0, Incarnate Word 5 | Top 5",
       "game_status": "Live",
       "game_time": "TBA",
       "game_date": "2026-04-03",
@@ -1369,11 +1369,35 @@
       }
     },
     {
+      "player_name": "Mason Eckelman",
+      "team": "Ohio State",
+      "level": "NCAA",
+      "stats_summary": "Game at 6:00 PM",
+      "game_context": "Maryland vs Ohio State",
+      "game_status": "Scheduled",
+      "game_time": "6:00 PM",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401851015",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 2
+      }
+    },
+    {
       "player_name": "Evan Taylor",
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 1, Oklahoma 3 | Bottom 3",
+      "game_context": "Alabama 1, Oklahoma 3 | Top 4",
       "game_status": "Live",
       "game_time": "7:30 PM ET",
       "game_date": "2026-04-03",
@@ -1397,7 +1421,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Florida State 1, Virginia 0 | Bottom 4",
+      "game_context": "Florida State 1, Virginia 0 | Top 5",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-04-03",
@@ -1413,30 +1437,6 @@
       "tags": {
         "draft_class": "2027",
         "position": "Pitcher",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Mason Eckelman",
-      "team": "Ohio State",
-      "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Maryland vs Ohio State",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401851015",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
         "roster_priority": 2
       }
     },
@@ -1633,51 +1633,27 @@
       }
     },
     {
-      "player_name": "Sam Mitchell",
-      "team": "Southern Miss",
+      "player_name": "Tanner Chun",
+      "team": "Tulane",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 1, Old Dominion 0 | Top 1",
-      "game_status": "Live",
-      "game_time": "3:00 PM ET",
+      "stats_summary": "Game at 7:05 PM",
+      "game_context": "Tulane vs Wichita State",
+      "game_status": "Scheduled",
+      "game_time": "7:05 PM",
       "game_date": "2026-04-03",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634045",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853227",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Tanner%20Chun%22&btnI=",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
+      "social_search_url": "https://x.com/search?q=%22Tanner%20Chun%22%20Tulane&f=live",
       "data_source": "D1Baseball",
       "is_client": true,
       "tags": {
-        "draft_class": "2028",
-        "position": "Pitcher",
+        "draft_class": "2027",
+        "position": "Hitter",
         "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Peyton Glavine",
-      "team": "Unsigned",
-      "level": "Pro",
-      "stats_summary": "No game data",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Peyton%20Glavine%22%20Unsigned&f=live",
-      "data_source": "",
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Pitcher",
-        "roster_priority": 4
       }
     },
     {
@@ -1705,27 +1681,27 @@
       }
     },
     {
-      "player_name": "Tanner Chun",
-      "team": "Tulane",
-      "level": "NCAA",
-      "stats_summary": "Game at 7:05 PM",
-      "game_context": "Tulane vs Wichita State",
-      "game_status": "Scheduled",
-      "game_time": "7:05 PM",
-      "game_date": "2026-04-03",
+      "player_name": "Peyton Glavine",
+      "team": "Unsigned",
+      "level": "Pro",
+      "stats_summary": "No game data",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853227",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Tanner%20Chun%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Tanner%20Chun%22%20Tulane&f=live",
-      "data_source": "D1Baseball",
+      "social_search_url": "https://x.com/search?q=%22Peyton%20Glavine%22%20Unsigned&f=live",
+      "data_source": "",
       "is_client": true,
       "tags": {
-        "draft_class": "2027",
-        "position": "Hitter",
-        "roster_priority": 3
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 4
       }
     },
     {
@@ -1733,7 +1709,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "4.0 IP, 5 H, 3 ER, 4 K, 1 BB",
-      "game_context": "Saint Louis 4, Saint Josephs 3 | Top 7",
+      "game_context": "Saint Louis 4, Saint Josephs 4 | Bottom 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-04-03",
@@ -1750,6 +1726,30 @@
         "draft_class": "2026",
         "position": "Pitcher",
         "roster_priority": 4
+      }
+    },
+    {
+      "player_name": "Sam Mitchell",
+      "team": "Southern Miss",
+      "level": "NCAA",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Southern Miss 1, Old Dominion 0 | Top 2",
+      "game_status": "Live",
+      "game_time": "3:00 PM ET",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634045",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2028",
+        "position": "Pitcher",
+        "roster_priority": 3
       }
     },
     {
@@ -1772,6 +1772,30 @@
       "is_client": true,
       "tags": {
         "draft_class": "2027",
+        "position": "Hitter",
+        "roster_priority": 4
+      }
+    },
+    {
+      "player_name": "Lucas Steele",
+      "team": "Auburn",
+      "level": "NCAA",
+      "stats_summary": "Game at 7:00 PM",
+      "game_context": "Arkansas vs Auburn",
+      "game_status": "Scheduled",
+      "game_time": "7:00 PM",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847128",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
         "position": "Hitter",
         "roster_priority": 4
       }
@@ -1832,30 +1856,6 @@
       }
     },
     {
-      "player_name": "Lucas Steele",
-      "team": "Auburn",
-      "level": "NCAA",
-      "stats_summary": "Game at 7:00 PM",
-      "game_context": "Arkansas vs Auburn",
-      "game_status": "Scheduled",
-      "game_time": "7:00 PM",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847128",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 4
-      }
-    },
-    {
       "player_name": "Michael Gillen",
       "team": "UCF",
       "level": "NCAA",
@@ -1884,7 +1884,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "1-2, K",
-      "game_context": "Alabama 1, Oklahoma 3 | Top 4",
+      "game_context": "Alabama 1, Oklahoma 3 | Bottom 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-04-03",
@@ -2192,6 +2192,30 @@
       }
     },
     {
+      "player_name": "Luke Fithian",
+      "team": "Rutgers",
+      "level": "NCAA",
+      "stats_summary": "Game at 6:00 PM",
+      "game_context": "Rutgers vs Indiana",
+      "game_status": "Scheduled",
+      "game_time": "6:00 PM",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401850225",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Luke%20Fithian%22&btnI=",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Luke%20Fithian%22%20Rutgers&f=live",
+      "data_source": "D1Baseball",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Pitcher",
+        "roster_priority": 4
+      }
+    },
+    {
       "player_name": "John Crandall",
       "team": "",
       "level": "HS",
@@ -2240,35 +2264,11 @@
       }
     },
     {
-      "player_name": "Luke Fithian",
-      "team": "Rutgers",
-      "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Rutgers vs Indiana",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401850225",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Luke%20Fithian%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Luke%20Fithian%22%20Rutgers&f=live",
-      "data_source": "D1Baseball",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2027",
-        "position": "Pitcher",
-        "roster_priority": 4
-      }
-    },
-    {
       "player_name": "Truitt Webb",
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southeastern Louisiana 0, Incarnate Word 3 | Bottom 4",
+      "game_context": "Southeastern Louisiana 0, Incarnate Word 5 | Bottom 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-04-03",
@@ -2316,7 +2316,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 1, Oklahoma 3 | Top 4",
+      "game_context": "Alabama 1, Oklahoma 3 | Bottom 4",
       "game_status": "Live",
       "game_time": "7:30 PM ET",
       "game_date": "2026-04-03",
@@ -2340,7 +2340,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 1, Old Dominion 0 | Top 1",
+      "game_context": "Southern Miss 1, Old Dominion 0 | Top 1",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-04-03",
@@ -2364,7 +2364,7 @@
       "team": "Cincinnati",
       "level": "NCAA",
       "stats_summary": "1-2, R",
-      "game_context": "Cincinnati 3, Oklahoma State 2 | Bottom 3",
+      "game_context": "Cincinnati 4, Oklahoma State 2 | Top 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-04-03",
@@ -2381,30 +2381,6 @@
         "draft_class": "2027",
         "position": "2B",
         "roster_priority": 1
-      }
-    },
-    {
-      "player_name": "Axton Westmoreland",
-      "team": "Hernando",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Axton%20Westmoreland%22%20Hernando&f=live",
-      "data_source": "HS Sheet",
-      "is_client": true,
-      "tags": {
-        "draft_class": "2028",
-        "position": "Hitter",
-        "roster_priority": 2
       }
     },
     {
@@ -2456,6 +2432,30 @@
       }
     },
     {
+      "player_name": "Brody Trosclair",
+      "team": "Northwestern State",
+      "level": "NCAA",
+      "stats_summary": "Game at 7:30 PM",
+      "game_context": "Northwestern State vs UT Rio Grande Valley",
+      "game_status": "Scheduled",
+      "game_time": "7:30 PM",
+      "game_date": "2026-04-03",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brody%20Trosclair%22&btnI=",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Brody%20Trosclair%22%20Northwestern%20State&f=live",
+      "data_source": "D1Baseball",
+      "is_client": false,
+      "tags": {
+        "draft_class": "2028",
+        "position": "LHP",
+        "roster_priority": 2
+      }
+    },
+    {
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
@@ -2487,34 +2487,10 @@
       }
     },
     {
-      "player_name": "Brody Trosclair",
-      "team": "Northwestern State",
-      "level": "NCAA",
-      "stats_summary": "Game at 7:30 PM",
-      "game_context": "Northwestern State vs UT Rio Grande Valley",
-      "game_status": "Scheduled",
-      "game_time": "7:30 PM",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brody%20Trosclair%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Brody%20Trosclair%22%20Northwestern%20State&f=live",
-      "data_source": "D1Baseball",
-      "is_client": false,
-      "tags": {
-        "draft_class": "2028",
-        "position": "LHP",
-        "roster_priority": 2
-      }
-    },
-    {
-      "player_name": "Dayne Wray",
-      "team": "Lousiana Monroe",
-      "level": "NCAA",
-      "stats_summary": "No game scheduled",
+      "player_name": "Axton Westmoreland",
+      "team": "Hernando",
+      "level": "HS",
+      "stats_summary": "No game today",
       "game_context": "",
       "game_status": "N/A",
       "game_time": null,
@@ -2522,16 +2498,40 @@
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Dayne%20Wray%22&btnI=",
+      "player_profile_url": null,
       "performance_grade": "— No Data",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Dayne%20Wray%22%20Lousiana%20Monroe&f=live",
-      "data_source": "",
-      "is_client": false,
+      "social_search_url": "https://x.com/search?q=%22Axton%20Westmoreland%22%20Hernando&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
       "tags": {
         "draft_class": "2028",
-        "position": "2B",
-        "roster_priority": 1
+        "position": "Hitter",
+        "roster_priority": 2
+      }
+    },
+    {
+      "player_name": "Hunter Wieckowski",
+      "team": "Timber Creek",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Hunter%20Wieckowski%22%20Timber%20Creek&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Pitcher",
+        "roster_priority": 2
       }
     },
     {
@@ -2566,27 +2566,34 @@
       }
     },
     {
-      "player_name": "Jace Moran",
-      "team": "Suwannee",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
+      "player_name": "Nick Potter",
+      "team": "Fayetteville Woodpeckers",
+      "level": "Pro",
+      "stats_summary": "Game at 7:05 PM ET",
+      "game_context": "Wilson Warbirds vs Fayetteville Woodpeckers | 7:05 PM ET",
+      "game_status": "Scheduled",
+      "game_time": "7:05 PM ET",
+      "game_date": "2026-04-03",
       "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
+      "next_game": {
+        "date": "Sat 04/04",
+        "date_full": "2026-04-04",
+        "opponent": "Wilson Warbirds",
+        "home_away": "vs",
+        "time": "7:05 PM ET",
+        "display": "vs Wilson Warbirds - Sat 04/04 7:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/827291",
+      "player_profile_url": "https://www.mlb.com/player/830769",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Jace%20Moran%22%20Suwannee&f=live",
-      "data_source": "HS Sheet",
-      "is_client": true,
+      "social_search_url": "https://x.com/search?q=%22Nick%20Potter%22%20Astros&f=live",
+      "data_source": "MLB Stats API",
+      "is_client": false,
       "tags": {
-        "draft_class": "2027",
-        "position": "Hitter",
-        "roster_priority": 2
+        "draft_class": "",
+        "position": "RHP",
+        "roster_priority": 99
       }
     },
     {
@@ -2693,10 +2700,10 @@
       }
     },
     {
-      "player_name": "Hunter Wieckowski",
-      "team": "Timber Creek",
-      "level": "HS",
-      "stats_summary": "No game today",
+      "player_name": "Dayne Wray",
+      "team": "Lousiana Monroe",
+      "level": "NCAA",
+      "stats_summary": "No game scheduled",
       "game_context": "",
       "game_status": "N/A",
       "game_time": null,
@@ -2704,16 +2711,16 @@
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
-      "player_profile_url": null,
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Dayne%20Wray%22&btnI=",
       "performance_grade": "— No Data",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Hunter%20Wieckowski%22%20Timber%20Creek&f=live",
-      "data_source": "HS Sheet",
-      "is_client": true,
+      "social_search_url": "https://x.com/search?q=%22Dayne%20Wray%22%20Lousiana%20Monroe&f=live",
+      "data_source": "",
+      "is_client": false,
       "tags": {
-        "draft_class": "2027",
-        "position": "Pitcher",
-        "roster_priority": 2
+        "draft_class": "2028",
+        "position": "2B",
+        "roster_priority": 1
       }
     },
     {
@@ -2748,7 +2755,31 @@
       }
     },
     {
-      "player_name": "Nick Potter",
+      "player_name": "Jace Moran",
+      "team": "Suwannee",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Jace%20Moran%22%20Suwannee&f=live",
+      "data_source": "HS Sheet",
+      "is_client": true,
+      "tags": {
+        "draft_class": "2027",
+        "position": "Hitter",
+        "roster_priority": 2
+      }
+    },
+    {
+      "player_name": "Caden Powell",
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game at 7:05 PM ET",
@@ -2766,15 +2797,15 @@
         "display": "vs Wilson Warbirds - Sat 04/04 7:05 PM ET"
       },
       "box_score_url": "https://www.mlb.com/gameday/827291",
-      "player_profile_url": "https://www.mlb.com/player/830769",
+      "player_profile_url": "https://www.mlb.com/player/702547",
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Nick%20Potter%22%20Astros&f=live",
+      "social_search_url": "https://x.com/search?q=%22Caden%20Powell%22%20Astros&f=live",
       "data_source": "MLB Stats API",
       "is_client": false,
       "tags": {
         "draft_class": "",
-        "position": "RHP",
+        "position": "SS/3B",
         "roster_priority": 99
       }
     },
@@ -2837,37 +2868,6 @@
       "tags": {
         "draft_class": "",
         "position": "RHP",
-        "roster_priority": 99
-      }
-    },
-    {
-      "player_name": "Caden Powell",
-      "team": "Fayetteville Woodpeckers",
-      "level": "Pro",
-      "stats_summary": "Game at 7:05 PM ET",
-      "game_context": "Wilson Warbirds vs Fayetteville Woodpeckers | 7:05 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "7:05 PM ET",
-      "game_date": "2026-04-03",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Sat 04/04",
-        "date_full": "2026-04-04",
-        "opponent": "Wilson Warbirds",
-        "home_away": "vs",
-        "time": "7:05 PM ET",
-        "display": "vs Wilson Warbirds - Sat 04/04 7:05 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/827291",
-      "player_profile_url": "https://www.mlb.com/player/702547",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Caden%20Powell%22%20Astros&f=live",
-      "data_source": "MLB Stats API",
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "SS/3B",
         "roster_priority": 99
       }
     }
