@@ -1087,8 +1087,27 @@ def run_mock():
         )
 
 
+def _stable_sort_key(p: dict) -> tuple:
+    """Return a sort key that is consistent across runs.
+
+    ThreadPoolExecutor + as_completed produces non-deterministic order.
+    If two concurrent runs write the same players in different order, git's
+    line-level merge can include entries from BOTH runs (duplicate cards).
+    Sorting by a stable key ensures identical line positions across runs,
+    so git sees real conflicts and ``-X ours`` picks one version cleanly.
+    """
+    return (
+        p.get("tags", {}).get("roster_priority", 99),
+        p.get("player_name", ""),
+        p.get("team", ""),
+        p.get("game_number") or 0,
+    )
+
+
 def write_output(pulse: list[dict]):
     """Write the pulse list to data/current_pulse.json with generated_at envelope."""
+    # Stable sort so concurrent runs produce identical line positions (see _stable_sort_key).
+    pulse = sorted(pulse, key=_stable_sort_key)
     envelope = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "players": pulse,

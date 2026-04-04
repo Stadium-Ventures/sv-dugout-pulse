@@ -838,8 +838,8 @@
 
 <div class="filters">
   <div class="filter-group" data-filter="roster">
-    <button class="filter-btn active" data-value="all">All</button>
-    <button class="filter-btn" data-value="client">Clients</button>
+    <button class="filter-btn" data-value="all">All</button>
+    <button class="filter-btn active" data-value="client">Clients</button>
     <button class="filter-btn" data-value="following">Following</button>
   </div>
   <div class="filter-group" data-filter="level">
@@ -909,7 +909,7 @@ let allPlayers = [];
 let dataGeneratedAt = null;
 let yesterdaySourceDate = null;
 let autoRefreshTimer = null;
-let filters = { roster:'all', level:'all', position:'all', status:'all', grade:'all', heartbeat:'all' };
+let filters = { roster:'client', level:'all', position:'all', status:'all', grade:'all', heartbeat:'all' };
 let searchQuery = '';
 let heartbeatData = new Map();
 
@@ -928,6 +928,17 @@ const WINDOW_PATHS = {
 function gradeKey(g) {
   for (const k of GRADE_ORDER) { if (g.includes(k)) return k; }
   return 'No Data';
+}
+
+// Deduplicate players by name+team+game_number (git merge can introduce dupes)
+function _dedupPlayers(players) {
+  const seen = new Set();
+  return players.filter(p => {
+    const k = `${p.player_name}|${p.team}|${p.game_number || 0}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 }
 
 const STATUS_PRIORITY = { 'Live': 0, 'Final': 1, 'Scheduled': 2, 'Cancelled': 3, 'N/A': 4 };
@@ -1561,10 +1572,10 @@ async function switchWindow(window) {
         const raw = await resp.json();
         // yesterday_pulse.json uses the same envelope as current_pulse
         if (window === 'yesterday') {
-          windowData[window] = raw.players || [];
+          windowData[window] = _dedupPlayers(raw.players || []);
           yesterdaySourceDate = raw.source_date || null;
         } else {
-          windowData[window] = raw;
+          windowData[window] = Array.isArray(raw) ? _dedupPlayers(raw) : raw;
         }
       } else {
         windowData[window] = [];
@@ -1725,10 +1736,10 @@ function manageAutoRefresh() {
         ]);
         if (raw) {
           if (Array.isArray(raw)) {
-            allPlayers = raw;
+            allPlayers = _dedupPlayers(raw);
             dataGeneratedAt = null;
           } else {
-            allPlayers = raw.players || [];
+            allPlayers = _dedupPlayers(raw.players || []);
             dataGeneratedAt = raw.generated_at || null;
           }
           updateTimestamp();
@@ -1878,15 +1889,15 @@ async function refreshData() {
   ]);
   if (raw) {
     if (currentWindow === 'today') {
-      allPlayers = Array.isArray(raw) ? raw : (raw.players || []);
+      allPlayers = _dedupPlayers(Array.isArray(raw) ? raw : (raw.players || []));
       dataGeneratedAt = Array.isArray(raw) ? null : (raw.generated_at || null);
       updateTimestamp();
     } else if (currentWindow === 'yesterday') {
-      windowData.yesterday = raw.players || [];
+      windowData.yesterday = _dedupPlayers(raw.players || []);
       yesterdaySourceDate = raw.source_date || null;
       updateTimestamp();
     } else {
-      windowData[currentWindow] = raw;
+      windowData[currentWindow] = Array.isArray(raw) ? _dedupPlayers(raw) : raw;
     }
     render();
     setTimeout(() => indicator.classList.remove('active'), 500);
@@ -1926,10 +1937,10 @@ async function fetchHeartbeat() {
   ]);
   if (raw) {
     if (Array.isArray(raw)) {
-      allPlayers = raw;
+      allPlayers = _dedupPlayers(raw);
       dataGeneratedAt = null;
     } else {
-      allPlayers = raw.players || [];
+      allPlayers = _dedupPlayers(raw.players || []);
       dataGeneratedAt = raw.generated_at || null;
     }
     updateTimestamp();
