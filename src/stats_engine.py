@@ -2810,16 +2810,6 @@ class D1BaseballScraper(BaseSchoolScraper):
                         _time.sleep(1.5)
                 html = _sb_decode_response(r2.text, dict(r2.headers))
 
-                # TEMP DEBUG: dump raw decoded HTML for Finkbeiner investigation
-                if "finkbeiner" in player_name.lower():
-                    import os
-                    os.makedirs("data", exist_ok=True)
-                    dbg_path = f"data/_debug_sb_{event_id}_{team_side}.html"
-                    with open(dbg_path, "w") as _df:
-                        _df.write(f"<!-- player={player_name} side={team_side} html_len={len(html)} raw_len={len(r2.text)} -->\n")
-                        _df.write(html or "<!-- EMPTY -->")
-                    logger.info("DEBUG dumped %s (html_len=%d)", dbg_path, len(html))
-
                 # Extract game state from the first side we successfully fetch.
                 # Do this before the player search so we always capture it.
                 if sb_game_status is None:
@@ -3410,28 +3400,35 @@ class D1BaseballScraper(BaseSchoolScraper):
                 if "AB" not in col_headers and "IP" not in col_headers:
                     continue
 
-                # Locate the PLAYER/NAME column by header. Some tables prepend
-                # a jersey "#" or position column before the name, so column 0
-                # is not always the player. Falls back to 0 if no header match.
-                try:
-                    player_col_idx = next(
-                        i for i, h in enumerate(col_headers)
-                        if h in ("PLAYER", "NAME")
-                    )
-                except StopIteration:
-                    player_col_idx = 0
-
                 rows = table.select("tr")
                 for row in rows:
-                    # Merge <th> + <td> in document order so we can index into
-                    # the row by the header column index regardless of which
-                    # cells the Sidearm variant marks as <th> vs <td>.
-                    row_cells = row.select("th, td")
-                    if not row_cells or player_col_idx >= len(row_cells):
+                    # Player name is in a <th> within the row (standard Sidearm).
+                    # Some Sidearm variants (e.g. lionsports.net) put all cells
+                    # including the name in <td> — handle both layouts.
+                    row_th = row.select("th")
+                    cells = row.select("td")
+                    if row_th:
+                        name_text = row_th[0].get_text(strip=True)
+                        stat_headers = col_headers[1:]  # skip "Player"
+                        cell_texts = [c.get_text(strip=True) for c in cells]
+                    elif cells:
+                        # All-<td> variant: locate "PLAYER" column by header to
+                        # handle tables that prepend a Position column before the
+                        # player name (e.g. lionsports.net batting tables).
+                        try:
+                            player_col_idx = next(
+                                i for i, h in enumerate(col_headers)
+                                if h in ("PLAYER", "NAME")
+                            )
+                        except StopIteration:
+                            player_col_idx = 0
+                        if player_col_idx >= len(cells):
+                            continue
+                        name_text = cells[player_col_idx].get_text(strip=True)
+                        stat_headers = col_headers[player_col_idx + 1:]
+                        cell_texts = [c.get_text(strip=True) for c in cells[player_col_idx + 1:]]
+                    else:
                         continue
-                    name_text = row_cells[player_col_idx].get_text(strip=True)
-                    stat_headers = col_headers[player_col_idx + 1:]
-                    cell_texts = [c.get_text(strip=True) for c in row_cells[player_col_idx + 1:]]
 
                     # Use _names_match for truncated/fuzzy name handling
                     name_text_norm = _strip_accents(name_text).lower()
