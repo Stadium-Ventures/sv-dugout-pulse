@@ -2718,9 +2718,6 @@ class D1BaseballScraper(BaseSchoolScraper):
         self, player_name: str, box_url: str, is_home: Optional[bool] = None,
         is_two_way: bool = False,
     ) -> Optional[dict]:
-        _dbg_fb = "finkbeiner" in player_name.lower()
-        if _dbg_fb:
-            logger.info("DEBUG SB ENTER %s url=%s is_home=%s", player_name, box_url, is_home)
         """Fetch and parse a StatBroadcast live stats page for a specific player.
 
         StatBroadcast is a JS app, but its webservice endpoint returns encoded HTML.
@@ -2769,8 +2766,6 @@ class D1BaseballScraper(BaseSchoolScraper):
                         raise
                     _time.sleep(1.5)
             event_xml = _sb_decode_response(r1.text, dict(r1.headers))
-            if _dbg_fb:
-                logger.info("DEBUG SB event_xml len=%d head=%r", len(event_xml), event_xml[:200])
             xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
             if not xmlfile_m:
                 logger.debug("StatBroadcast event XML missing xmlfile for %s (event=%s, decoded_len=%d)",
@@ -2814,9 +2809,6 @@ class D1BaseballScraper(BaseSchoolScraper):
                             raise
                         _time.sleep(1.5)
                 html = _sb_decode_response(r2.text, dict(r2.headers))
-                if _dbg_fb:
-                    logger.info("DEBUG SB side=%s html_len=%d raw_len=%d r2_status=%d",
-                                team_side, len(html or ""), len(r2.text), r2.status_code)
 
                 # TEMP DEBUG: dump raw decoded HTML for Finkbeiner investigation
                 if "finkbeiner" in player_name.lower():
@@ -2854,9 +2846,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 return ctx
             return None
 
-        except Exception as _e:
-            if "finkbeiner" in player_name.lower():
-                logger.info("DEBUG SB parse failed for %s @ %s: %r", player_name, box_url, _e)
+        except Exception:
             logger.debug("StatBroadcast parse failed for %s @ %s", player_name, box_url, exc_info=True)
         return None
 
