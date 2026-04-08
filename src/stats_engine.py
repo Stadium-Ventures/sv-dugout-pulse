@@ -193,7 +193,7 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
         sb = _get_sb_session()
         r = sb.get(
             _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
-            timeout=10,
+            timeout=25,
         )
         _sb_last_page_load = _time.time()
 
@@ -219,7 +219,7 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 _time.sleep(0.3)
                 r = sb.get(
                     _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
-                    timeout=10,
+                    timeout=25,
                 )
                 _sb_last_page_load = _time.time()
             _sb_auth["_pow_solved"] = True
