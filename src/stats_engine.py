@@ -137,6 +137,19 @@ _http = _make_http_session()
 _sb_auth: dict = {}  # populated by _ensure_statbroadcast_auth
 _sb_last_page_load: float = 0.0  # timestamp of last broadcast page load
 
+# StatBroadcast sits behind Cloudflare's bot WAF, which fingerprints the TLS
+# ClientHello.  Plain `requests` (urllib3 / OpenSSL) gets a 403 "you have been
+# blocked" page; curl_cffi can impersonate Chrome's TLS stack and gets through.
+# Use a dedicated session for SB only — all other scrapers stay on `_http`.
+_sb_session = None  # type: ignore
+
+def _get_sb_session():
+    global _sb_session
+    if _sb_session is None:
+        from curl_cffi import requests as _cr  # local import: optional dep
+        _sb_session = _cr.Session(impersonate="chrome120")
+    return _sb_session
+
 
 def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
     """Solve the StatBroadcast PoW and extract per-event auth tokens.
@@ -164,12 +177,10 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
         if elapsed < 0.5:
             _time.sleep(0.5 - elapsed)
 
-        # Step 1: fetch the broadcast page using the shared session directly.
-        # Using _http (not a separate session) ensures the same cookies/session
-        # state are used for both page loads and subsequent API calls. Using a
-        # separate session caused XOR key mismatches in GitHub Actions because
-        # the session cookie from the page load didn't transfer correctly.
-        r = _http.get(
+        # Step 1: fetch the broadcast page via curl_cffi (Chrome TLS impersonation
+        # — required to bypass Cloudflare's WAF, which 403s plain `requests`).
+        sb = _get_sb_session()
+        r = sb.get(
             f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
             timeout=10,
         )
@@ -185,8 +196,8 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 for n in range(50_000_000):
                     h = hashlib.sha256((p_val + str(n)).encode()).hexdigest()
                     if h.startswith(prefix):
-                        _http.cookies.set("sb_pow", f"{p_val}:{n}",
-                                          domain=".statbroadcast.com", path="/")
+                        sb.cookies.set("sb_pow", f"{p_val}:{n}",
+                                       domain=".statbroadcast.com", path="/")
                         logger.info("StatBroadcast PoW solved (n=%d)", n)
                         break
                 else:
@@ -195,7 +206,7 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
 
                 # Reload broadcast page with PoW cookie to get auth tokens.
                 _time.sleep(0.3)
-                r = _http.get(
+                r = sb.get(
                     f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
                     timeout=10,
                 )
@@ -205,7 +216,7 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
         # Step 2: extract auth tokens from the page.
         found_vars = []
         missing_vars = []
-        for var in ("_sbk", "_sbc", "_sbcf", "_sbt", "_sbe", "_sbhn"):
+        for var in ("_sbk", "_sbc", "_sbcf", "_sbt", "_sbe", "_sbhn", "_sbs"):
             vm = re.search(rf'window\.{var}\s*=\s*["\']([^"\']*)', r.text)
             if vm:
                 _sb_auth[var] = vm.group(1)
@@ -262,6 +273,10 @@ def _sb_api_params(data_b64: str, is_stats: bool = False) -> str:
     eid = _sb_auth.get("_sbe", "")
     if eid:
         parts.append(f"_eid={eid}")
+    sbs = _sb_auth.get("_sbs", "")
+    if sbs:
+        from urllib.parse import quote
+        parts.append(f"_sbs={quote(sbs, safe='')}")
     hn = _sb_auth.get("_sbhn", "")
     if hn:
         parts.append(f"_hn={hn.replace('X-ST-', '')}")
@@ -2737,7 +2752,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             m = re.search(r"[?&]id=(\d+)", box_url)
             if not m:
                 # Handle statb.us short URLs by following redirect
-                r0 = _http.get(box_url, timeout=10, allow_redirects=True)
+                r0 = _get_sb_session().get(box_url, timeout=10, allow_redirects=True)
                 m = re.search(r"[?&]id=(\d+)", r0.url)
                 if not m:
                     return None
@@ -2753,9 +2768,8 @@ class D1BaseballScraper(BaseSchoolScraper):
             event_data = base64.b64encode(b"").decode()
             for _sb_attempt in range(2):
                 try:
-                    r1 = _http.get(
-                        f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}",
-                        params=_sb_api_params(event_data),
+                    r1 = _get_sb_session().get(
+                        f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}?{_sb_api_params(event_data)}",
                         headers=_sb_api_headers(box_url),
                         timeout=15,
                     )
@@ -2796,9 +2810,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                 # Retry once on transient failures before falling through to ESPN.
                 for _sb_attempt in range(2):
                     try:
-                        r2 = _http.get(
-                            "https://stats.statbroadcast.com/interface/webservice/stats",
-                            params=_sb_api_params(encoded, is_stats=True),
+                        r2 = _get_sb_session().get(
+                            f"https://stats.statbroadcast.com/interface/webservice/stats?{_sb_api_params(encoded, is_stats=True)}",
                             headers=_sb_api_headers(box_url),
                             timeout=15,
                         )
