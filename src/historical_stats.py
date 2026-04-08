@@ -264,8 +264,8 @@ class MLBHistoricalFetcher:
         Fetch player's game-by-game stats for the date range.
 
         Uses the raw MLB Stats API which returns splits with date fields.
-        Includes Spring Training (gameType=S) when the date range overlaps
-        the Spring Training window.
+        Regular season only — Spring Training (gameType=S) is excluded so
+        7-day and Season windows reflect meaningful competition.
 
         When position is known, only fetches the relevant stat group
         (hitting or pitching) to cut API calls roughly in half.
@@ -274,11 +274,8 @@ class MLBHistoricalFetcher:
             sport_id = self._player_sport.get(player_id, 1)
             season = end_date.year
 
-            # Determine which game types to query
-            game_types = ["R"]  # Regular season
-            if (start_date.month <= self._SPRING_TRAINING_END_MONTH
-                    or end_date.month <= self._SPRING_TRAINING_END_MONTH):
-                game_types.append("S")  # Spring Training
+            # Regular season only — Spring Training intentionally excluded
+            game_types = ["R"]
 
             # Only fetch relevant stat groups based on position
             if _is_pitcher_pos(position):
