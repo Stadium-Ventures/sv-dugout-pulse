@@ -2797,11 +2797,17 @@ class D1BaseballScraper(BaseSchoolScraper):
                     if _sb_attempt == 1:
                         raise
                     _time.sleep(1.5)
+            if r1.headers.get("x-sb-rejected") == "1":
+                logger.warning(
+                    "StatBroadcast rejected event request for %s (event=%s) — auth/_sbs likely missing or stale",
+                    player_name, event_id,
+                )
+                return None
             event_xml = _sb_decode_response(r1.text, dict(r1.headers))
             xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
             if not xmlfile_m:
-                logger.debug("StatBroadcast event XML missing xmlfile for %s (event=%s, decoded_len=%d)",
-                             player_name, event_id, len(event_xml))
+                logger.warning("StatBroadcast event XML missing xmlfile for %s (event=%s, decoded_len=%d)",
+                               player_name, event_id, len(event_xml))
                 return None
             xml_file = xmlfile_m.group(1)
 
