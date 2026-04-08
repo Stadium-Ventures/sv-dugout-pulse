@@ -2849,8 +2849,8 @@ class D1BaseballScraper(BaseSchoolScraper):
                 return ctx
             return None
 
-        except Exception:
-            logger.debug("StatBroadcast parse failed for %s @ %s", player_name, box_url, exc_info=True)
+        except Exception as _sb_exc:
+            logger.warning("StatBroadcast parse failed for %s @ %s: %s", player_name, box_url, _sb_exc, exc_info=True)
         return None
 
     @staticmethod
