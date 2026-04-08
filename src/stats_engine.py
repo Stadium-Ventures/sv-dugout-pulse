@@ -142,6 +142,17 @@ _sb_last_page_load: float = 0.0  # timestamp of last broadcast page load
 # blocked" page; curl_cffi can impersonate Chrome's TLS stack and gets through.
 # Use a dedicated session for SB only — all other scrapers stay on `_http`.
 _sb_session = None  # type: ignore
+# Optional: route all stats.statbroadcast.com traffic through a Cloudflare
+# Worker proxy to bypass the IP-reputation 403s that Cloudflare serves to
+# GitHub Actions runners.  Set SB_PROXY_URL to the worker origin (no trailing
+# slash), e.g. "https://sv-sb-proxy.example.workers.dev".
+_SB_PROXY_URL = os.environ.get("SB_PROXY_URL", "").rstrip("/")
+
+def _sb_url(url: str) -> str:
+    """Rewrite a stats.statbroadcast.com URL to go through the proxy if set."""
+    if not _SB_PROXY_URL:
+        return url
+    return url.replace("https://stats.statbroadcast.com", _SB_PROXY_URL, 1)
 
 def _get_sb_session():
     global _sb_session
@@ -181,7 +192,7 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
         # — required to bypass Cloudflare's WAF, which 403s plain `requests`).
         sb = _get_sb_session()
         r = sb.get(
-            f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
+            _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
             timeout=10,
         )
         _sb_last_page_load = _time.time()
@@ -207,7 +218,7 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 # Reload broadcast page with PoW cookie to get auth tokens.
                 _time.sleep(0.3)
                 r = sb.get(
-                    f"https://stats.statbroadcast.com/broadcast/?id={event_id}",
+                    _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
                     timeout=10,
                 )
                 _sb_last_page_load = _time.time()
@@ -2769,7 +2780,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             for _sb_attempt in range(2):
                 try:
                     r1 = _get_sb_session().get(
-                        f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}?{_sb_api_params(event_data)}",
+                        _sb_url(f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}?{_sb_api_params(event_data)}"),
                         headers=_sb_api_headers(box_url),
                         timeout=15,
                     )
@@ -2811,7 +2822,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                 for _sb_attempt in range(2):
                     try:
                         r2 = _get_sb_session().get(
-                            f"https://stats.statbroadcast.com/interface/webservice/stats?{_sb_api_params(encoded, is_stats=True)}",
+                            _sb_url(f"https://stats.statbroadcast.com/interface/webservice/stats?{_sb_api_params(encoded, is_stats=True)}"),
                             headers=_sb_api_headers(box_url),
                             timeout=15,
                         )
