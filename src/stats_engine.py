@@ -136,6 +136,12 @@ _http = _make_http_session()
 
 _sb_auth: dict = {}  # populated by _ensure_statbroadcast_auth
 _sb_last_page_load: float = 0.0  # timestamp of last broadcast page load
+# Serializes the entire SB call sequence (auth → event → stats).  Required
+# because main.py uses ThreadPoolExecutor and the auth state (_sbk, _sbs, etc.)
+# is per-event but stored in module globals — concurrent calls would clobber
+# each other's keys, causing XOR decode failures (decoded_len=0).
+import threading as _threading
+_sb_lock = _threading.Lock()
 
 # StatBroadcast sits behind Cloudflare's bot WAF, which fingerprints the TLS
 # ClientHello.  Plain `requests` (urllib3 / OpenSSL) gets a 403 "you have been
@@ -2766,6 +2772,7 @@ class D1BaseballScraper(BaseSchoolScraper):
           - Player not found (DNP): ``{"_sb_game_status": "Final"|"Live", "_sb_inning_label": ...}``
         Returns None only if the page could not be fetched/decoded at all.
         """
+        _sb_lock.acquire()
         try:
             m = re.search(r"[?&]id=(\d+)", box_url)
             if not m:
@@ -2875,6 +2882,8 @@ class D1BaseballScraper(BaseSchoolScraper):
 
         except Exception as _sb_exc:
             logger.warning("StatBroadcast parse failed for %s @ %s: %s", player_name, box_url, _sb_exc, exc_info=True)
+        finally:
+            _sb_lock.release()
         return None
 
     @staticmethod
