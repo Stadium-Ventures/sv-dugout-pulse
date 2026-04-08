@@ -207,8 +207,15 @@ def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
                 for n in range(50_000_000):
                     h = hashlib.sha256((p_val + str(n)).encode()).hexdigest()
                     if h.startswith(prefix):
+                        # Cookie domain must match the host we're talking to.
+                        # When proxied, that's the proxy host, not statbroadcast.com.
+                        if _SB_PROXY_URL:
+                            from urllib.parse import urlparse
+                            _cookie_domain = urlparse(_SB_PROXY_URL).hostname or ""
+                        else:
+                            _cookie_domain = ".statbroadcast.com"
                         sb.cookies.set("sb_pow", f"{p_val}:{n}",
-                                       domain=".statbroadcast.com", path="/")
+                                       domain=_cookie_domain, path="/")
                         logger.info("StatBroadcast PoW solved (n=%d)", n)
                         break
                 else:
