@@ -919,8 +919,13 @@ class ProStatsFetcher:
 
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
-            # Use affiliate name for schedule matching when available
-            search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
+            # Prefer API's current team (handles promotions/demotions)
+            api_team_id = self._player_team_cache.get(player_id)
+            if api_team_id:
+                api_info = self._resolve_team(api_team_id)
+                search_team = api_info["name"] if api_info["name"] else (affiliate or team)
+            else:
+                search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
             team_lower = search_team.lower()
 
             game = self._find_game_on_date(player_id, team_lower, yesterday_str)
@@ -969,8 +974,13 @@ class ProStatsFetcher:
 
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
-            # Use affiliate name for schedule matching when available
-            search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
+            # Prefer API's current team (handles promotions/demotions)
+            api_team_id = self._player_team_cache.get(player_id)
+            if api_team_id:
+                api_info = self._resolve_team(api_team_id)
+                search_team = api_info["name"] if api_info["name"] else (affiliate or team)
+            else:
+                search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
             team_lower = search_team.lower()
 
             # Get all games the player appeared in yesterday
@@ -1209,17 +1219,15 @@ class ProStatsFetcher:
                           affiliate: str = "") -> Optional[dict]:
         """Find a game today for the player's team.
 
-        When *affiliate* is provided and differs from *team* (org), skip the
-        MLB schedule and search MiLB directly by affiliate name.
+        Always trusts the MLB API's ``currentTeam`` first — this handles
+        promotions/demotions/trades that haven't been updated in the
+        roster sheet yet.
 
-        Search strategy (no affiliate / affiliate == org):
-        1. MLB schedule (picks the game where the player appears in the boxscore)
-        2. MiLB schedule by player's actual team (handles regular season)
-        3. Parent MLB team schedule as fallback
-
-        Search strategy (affiliate != org — minor leaguer):
-        1. MiLB schedule by player's cached team
-        2. MiLB schedule by affiliate name across all MiLB levels
+        Search strategy:
+        1. MLB schedule (org-level, skipped for known minor leaguers)
+        2. MiLB schedule by player's API-reported current team
+        3. Parent MLB team schedule as fallback (spring training)
+        4. MiLB fallback: search by sheet affiliate name across levels
         """
         team_lower = team.lower() if team else ""
         affiliate_lower = affiliate.lower().strip() if affiliate else ""
@@ -1233,18 +1241,18 @@ class ProStatsFetcher:
                 if game:
                     return game
 
-            # --- Search player's actual MiLB team schedule ---
+            # --- Search player's actual MiLB team (from API) ---
             api_team_id = self._player_team_cache.get(player_id)
             if api_team_id:
                 team_info = self._resolve_team(api_team_id)
                 cached_name = team_info["name"].lower()
-                # When affiliate is set, only trust cached team if it matches
-                cache_matches_affiliate = (
-                    not is_milb
-                    or affiliate_lower in cached_name
-                    or cached_name in affiliate_lower
-                )
-                if team_info["sport_id"] != 1 and cache_matches_affiliate:
+                # Log when the API team doesn't match the sheet affiliate
+                if is_milb and affiliate_lower and affiliate_lower not in cached_name and cached_name not in affiliate_lower:
+                    logger.warning(
+                        "Roster mismatch for player %d: sheet says '%s' but API says '%s' — using API team (possible promotion/demotion)",
+                        player_id, affiliate, team_info["name"],
+                    )
+                if team_info["sport_id"] != 1:
                     milb_schedule = self._get_schedule(
                         sport_id=team_info["sport_id"],
                         team_id=api_team_id,
@@ -1283,8 +1291,10 @@ class ProStatsFetcher:
                                affiliate: str = "") -> list[dict]:
         """Find ALL games today for the player's team (supports doubleheaders).
 
-        Same affiliate-aware logic as _find_todays_game(), but uses
-        _match_all_in_schedule() to collect every game instead of picking one.
+        Always trusts the MLB API's ``currentTeam`` first — this handles
+        promotions/demotions/trades that haven't been updated in the
+        roster sheet yet.  Uses _match_all_in_schedule() to collect every
+        game instead of picking one.
         """
         team_lower = team.lower() if team else ""
         affiliate_lower = affiliate.lower().strip() if affiliate else ""
@@ -1298,17 +1308,12 @@ class ProStatsFetcher:
                 if games:
                     return games
 
-            # --- Search player's actual MiLB team schedule ---
+            # --- Search player's actual MiLB team (from API) ---
             api_team_id = self._player_team_cache.get(player_id)
             if api_team_id:
                 team_info = self._resolve_team(api_team_id)
                 cached_name = team_info["name"].lower()
-                cache_matches_affiliate = (
-                    not is_milb
-                    or affiliate_lower in cached_name
-                    or cached_name in affiliate_lower
-                )
-                if team_info["sport_id"] != 1 and cache_matches_affiliate:
+                if team_info["sport_id"] != 1:
                     milb_schedule = self._get_schedule(
                         sport_id=team_info["sport_id"],
                         team_id=api_team_id,
@@ -1353,8 +1358,9 @@ class ProStatsFetcher:
         game is returned.  Schedule data is already cached by
         ``_get_schedule()``, so this is essentially free.
 
-        When *affiliate* differs from *team*, skips MLB schedule and searches
-        MiLB by affiliate name.
+        Always trusts the MLB API's ``currentTeam`` first — this handles
+        promotions/demotions/trades that haven't been updated in the
+        roster sheet yet.
         """
         team_lower = team.lower() if team else ""
         affiliate_lower = affiliate.lower().strip() if affiliate else ""
@@ -1369,18 +1375,13 @@ class ProStatsFetcher:
                 if games:
                     return games
 
-            # --- 2. MiLB schedule (if player_id known) ---
+            # --- 2. MiLB schedule via API team (if player_id known) ---
             if player_id:
                 api_team_id = self._player_team_cache.get(player_id)
                 if api_team_id:
                     team_info = self._resolve_team(api_team_id)
                     cached_name = team_info["name"].lower()
-                    cache_matches_affiliate = (
-                        not is_milb
-                        or affiliate_lower in cached_name
-                        or cached_name in affiliate_lower
-                    )
-                    if team_info["sport_id"] != 1 and cache_matches_affiliate:
+                    if team_info["sport_id"] != 1:
                         milb_schedule = self._get_schedule(
                             sport_id=team_info["sport_id"],
                             team_id=api_team_id,
@@ -1549,8 +1550,14 @@ class ProStatsFetcher:
         team_lower = team.lower() if team else ""
         is_milb = affiliate_lower and affiliate_lower != team_lower
 
-        # Cache by the actual search team (affiliate for MiLB, org for MLB)
-        cache_key = affiliate_lower if is_milb else team_lower
+        # Cache by the API's current team when available (handles promotions),
+        # falling back to sheet affiliate for MiLB or org for MLB
+        api_team_id = self._player_team_cache.get(player_id)
+        api_team_name = ""
+        if api_team_id:
+            info = self._resolve_team(api_team_id)
+            api_team_name = info["name"].lower()
+        cache_key = api_team_name or (affiliate_lower if is_milb else team_lower)
 
         # Check cache first — two players on the same team share one lookup
         if cache_key and cache_key in self._next_game_cache:
@@ -1560,18 +1567,10 @@ class ProStatsFetcher:
         if not is_milb and team_lower:
             search_targets.append((team_lower, 1))   # MLB schedule
 
-        # Add MiLB team if known and it matches affiliate
-        api_team_id = self._player_team_cache.get(player_id)
-        if api_team_id:
-            info = self._resolve_team(api_team_id)
-            cached_name = info["name"].lower()
-            cache_matches_affiliate = (
-                not is_milb
-                or affiliate_lower in cached_name
-                or cached_name in affiliate_lower
-            )
-            if info["sport_id"] != 1 and cache_matches_affiliate:
-                search_targets.append((cached_name, info["sport_id"]))
+        # Always trust the API's current team (handles promotions/demotions)
+        if api_team_id and api_team_name:
+            if info["sport_id"] != 1:
+                search_targets.append((api_team_name, info["sport_id"]))
 
         # Fallback: search by affiliate name across MiLB levels
         if is_milb and not search_targets:
