@@ -810,6 +810,7 @@ class ProStatsFetcher:
                 result = empty_stats()
                 result["next_game"] = next_game
                 result["mlb_player_id"] = player_id
+                self._stamp_api_team(result, player_id)
                 if next_game:
                     result["stats_summary"] = f"Next: {next_game['display']}"
                 else:
@@ -820,6 +821,7 @@ class ProStatsFetcher:
             result["next_game"] = next_game
             result["mlb_player_id"] = player_id
             result["data_source"] = "MLB Stats API"
+            self._stamp_api_team(result, player_id)
             return result
 
         except Exception:
@@ -857,6 +859,7 @@ class ProStatsFetcher:
                 result = empty_stats()
                 result["next_game"] = next_game
                 result["mlb_player_id"] = player_id
+                self._stamp_api_team(result, player_id)
                 if next_game:
                     result["stats_summary"] = f"Next: {next_game['display']}"
                 else:
@@ -882,6 +885,7 @@ class ProStatsFetcher:
                 result["next_game"] = next_game
                 result["mlb_player_id"] = player_id
                 result["data_source"] = "MLB Stats API"
+                self._stamp_api_team(result, player_id)
                 if is_doubleheader:
                     try:
                         result["game_number"] = team_game_ids.index(game["game_id"]) + 1
@@ -941,6 +945,7 @@ class ProStatsFetcher:
             result["game_date"] = yesterday.isoformat()
             result["mlb_player_id"] = player_id
             result["data_source"] = "MLB Stats API"
+            self._stamp_api_team(result, player_id)
             return result
 
         except Exception:
@@ -1014,6 +1019,7 @@ class ProStatsFetcher:
                 result["is_yesterday"] = True
                 result["game_date"] = yesterday.isoformat()
                 result["mlb_player_id"] = player_id
+                self._stamp_api_team(result, player_id)
 
                 if is_doubleheader:
                     try:
@@ -1173,6 +1179,22 @@ class ProStatsFetcher:
         except Exception:
             logger.exception("Player lookup failed for %s", name)
         return None
+
+    def _get_api_current_team(self, player_id: int) -> Optional[str]:
+        """Return the player's current team name per the MLB API, or None."""
+        api_team_id = self._player_team_cache.get(player_id)
+        if api_team_id:
+            info = self._resolve_team(api_team_id)
+            if info.get("name"):
+                return info["name"]
+        return None
+
+    def _stamp_api_team(self, result: dict, player_id: int) -> dict:
+        """Inject ``api_current_team`` into a stats result dict."""
+        team_name = self._get_api_current_team(player_id)
+        if team_name:
+            result["api_current_team"] = team_name
+        return result
 
     def _resolve_team(self, team_id: int) -> dict:
         """Fetch and cache team details (name, sport level, parent org)."""
