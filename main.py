@@ -422,9 +422,15 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     if stats.get("game_status") == "Final" and ("in lineup" in summary_lower or "in starting" in summary_lower):
         summary = "Started — 0 PA"
 
+    # Prefer the live MLB API team over the static Google Sheet affiliate.
+    # This auto-detects promotions, demotions, and trades without waiting
+    # for someone to manually update the roster spreadsheet.
+    api_team = stats.get("api_current_team")
+    sheet_team = player.get("affiliate") or player["team"]
+
     entry = {
         "player_name": player["player_name"],
-        "team": player.get("affiliate") or player["team"],
+        "team": api_team or sheet_team,
         "level": player["level"],
         "stats_summary": summary,
         "game_context": stats.get("game_context", ""),
