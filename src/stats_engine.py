@@ -1263,7 +1263,7 @@ class ProStatsFetcher:
                 if game:
                     return game
 
-            # --- Search player's actual MiLB team (from API) ---
+            # --- Search player's actual current team (from API) ---
             api_team_id = self._player_team_cache.get(player_id)
             if api_team_id:
                 team_info = self._resolve_team(api_team_id)
@@ -1274,7 +1274,16 @@ class ProStatsFetcher:
                         "Roster mismatch for player %d: sheet says '%s' but API says '%s' — using API team (possible promotion/demotion)",
                         player_id, affiliate, team_info["name"],
                     )
-                if team_info["sport_id"] != 1:
+                if team_info["sport_id"] == 1:
+                    # API says player is on an MLB roster — search MLB
+                    # schedule even if the sheet still lists a MiLB affiliate.
+                    mlb_schedule = self._get_schedule(sport_id=1)
+                    game = self._match_team_in_schedule(
+                        mlb_schedule, cached_name, player_id,
+                    )
+                    if game:
+                        return game
+                else:
                     milb_schedule = self._get_schedule(
                         sport_id=team_info["sport_id"],
                         team_id=api_team_id,
@@ -1330,12 +1339,21 @@ class ProStatsFetcher:
                 if games:
                     return games
 
-            # --- Search player's actual MiLB team (from API) ---
+            # --- Search player's actual current team (from API) ---
             api_team_id = self._player_team_cache.get(player_id)
             if api_team_id:
                 team_info = self._resolve_team(api_team_id)
                 cached_name = team_info["name"].lower()
-                if team_info["sport_id"] != 1:
+                if team_info["sport_id"] == 1:
+                    # API says player is on an MLB roster — search MLB
+                    # schedule even if the sheet still lists a MiLB affiliate.
+                    mlb_schedule = self._get_schedule(sport_id=1)
+                    games = self._match_all_in_schedule(
+                        mlb_schedule, cached_name, player_id,
+                    )
+                    if games:
+                        return games
+                else:
                     milb_schedule = self._get_schedule(
                         sport_id=team_info["sport_id"],
                         team_id=api_team_id,
