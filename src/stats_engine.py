@@ -1408,20 +1408,18 @@ class ProStatsFetcher:
         if not team_lower:
             return []
         try:
-            if not is_milb:
-                # --- 1. MLB schedule ---
-                mlb_schedule = self._get_schedule(sport_id=1)
-                games = self._match_all_in_schedule(mlb_schedule, team_lower, None)
-                if games:
-                    return games
-
-            # --- 2. MiLB schedule via API team (if player_id known) ---
+            # --- 1. API team (always trust first) ---
             if player_id:
                 api_team_id = self._player_team_cache.get(player_id)
                 if api_team_id:
                     team_info = self._resolve_team(api_team_id)
                     cached_name = team_info["name"].lower()
-                    if team_info["sport_id"] != 1:
+                    if team_info["sport_id"] == 1:
+                        mlb_schedule = self._get_schedule(sport_id=1)
+                        games = self._match_all_in_schedule(mlb_schedule, cached_name, None)
+                        if games:
+                            return games
+                    else:
                         milb_schedule = self._get_schedule(
                             sport_id=team_info["sport_id"],
                             team_id=api_team_id,
@@ -1431,6 +1429,13 @@ class ProStatsFetcher:
                         )
                         if games:
                             return games
+
+            # --- 2. Sheet-based MLB schedule fallback ---
+            if not is_milb:
+                mlb_schedule = self._get_schedule(sport_id=1)
+                games = self._match_all_in_schedule(mlb_schedule, team_lower, None)
+                if games:
+                    return games
 
             # --- 3. MiLB fallback: search by affiliate name ---
             if is_milb:
@@ -1604,18 +1609,18 @@ class ProStatsFetcher:
             return self._next_game_cache[cache_key]
 
         search_targets = []
-        if not is_milb and team_lower:
-            search_targets.append((team_lower, 1))   # MLB schedule
 
-        # Always trust the API's current team (handles promotions/demotions)
+        # Always trust the API's current team first
         if api_team_id and api_team_name:
-            if info["sport_id"] != 1:
-                search_targets.append((api_team_name, info["sport_id"]))
+            search_targets.append((api_team_name, info["sport_id"]))
 
-        # Fallback: search by affiliate name across MiLB levels
-        if is_milb and not search_targets:
-            for sport_id in self._SPORT_IDS[1:]:
-                search_targets.append((affiliate_lower, sport_id))
+        # Sheet-based fallback
+        if not search_targets:
+            if not is_milb and team_lower:
+                search_targets.append((team_lower, 1))   # MLB schedule
+            elif is_milb:
+                for sport_id in self._SPORT_IDS[1:]:
+                    search_targets.append((affiliate_lower, sport_id))
 
         if not search_targets:
             return None

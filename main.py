@@ -224,7 +224,7 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
 
     game_date = _normalize_date(game_date)
     key = f"{player['player_name']}|{player['team']}"
-    opponent = _extract_opponent(stats.get("game_context", ""), player.get("affiliate") or player["team"])
+    opponent = _extract_opponent(stats.get("game_context", ""), stats.get("api_current_team") or player.get("affiliate") or player["team"])
 
     # Determine if pitcher or hitter line.
     roster_pos = player.get("position", "Hitter")
