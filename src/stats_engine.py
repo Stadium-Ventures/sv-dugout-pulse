@@ -143,6 +143,21 @@ _sb_last_page_load: float = 0.0  # timestamp of last broadcast page load
 import threading as _threading
 _sb_lock = _threading.Lock()
 
+# Per-run cache of StatBroadcast event data.  Each main.py invocation is a
+# fresh process, so this naturally resets every scheduled run.  Without it,
+# every player on the same game triggers a fresh event+stats fetch — a
+# 9-player game would make ~18 SB API calls when 2 would suffice.  With
+# college games clustered on a handful of events, that volume is what
+# trips StatBroadcast's Cloudflare WAF against the Worker egress IP.
+#   _sb_event_cache[event_id] = {
+#       "xml_file":   str,
+#       "html":       {"H": str|None, "V": str|None},
+#       "status":     str|None,   # "Final" | "Live"
+#       "inning":     str|None,   # e.g. "Top 6"
+#       "poisoned":   bool,       # True after a 403 — skip further calls
+#   }
+_sb_event_cache: dict = {}
+
 # StatBroadcast sits behind Cloudflare's bot WAF, which fingerprints the TLS
 # ClientHello.  Plain `requests` (urllib3 / OpenSSL) gets a 403 "you have been
 # blocked" page; curl_cffi can impersonate Chrome's TLS stack and gets through.
@@ -2828,43 +2843,75 @@ class D1BaseballScraper(BaseSchoolScraper):
                 box_url = r0.url
             event_id = m.group(1)
 
+            # Fast path: this event already got a 403/failure earlier in the
+            # run — don't waste more WAF budget on it, just return the game
+            # state we captured then (if any) so callers can still correct
+            # D1Baseball's lagging status.
+            cached = _sb_event_cache.get(event_id)
+            if cached and cached.get("poisoned"):
+                if cached.get("status"):
+                    ctx: dict = {"_sb_game_status": cached["status"]}
+                    if cached.get("inning"):
+                        ctx["_sb_inning_label"] = cached["inning"]
+                    return ctx
+                return None
+
             # Ensure PoW + auth tokens are set before hitting the API.
             _ensure_statbroadcast_auth(event_id)
 
-            # Step 1: get event metadata (xmlfile path contains groupid)
-            # Retry once on transient failures (timeout, 5xx) before giving up.
-            # The JS sends data=btoa("") for event endpoint (empty data param).
-            event_data = base64.b64encode(b"").decode()
-            for _sb_attempt in range(2):
-                try:
-                    r1 = _get_sb_session().get(
-                        _sb_url(f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}?{_sb_api_params(event_data)}"),
-                        headers=_sb_api_headers(box_url),
-                        timeout=15,
+            # Step 1: get event metadata (xmlfile path contains groupid).
+            # Cached per event for the life of the process so we only fetch
+            # it once per game, not once per player on that game.
+            if cached and cached.get("xml_file"):
+                xml_file = cached["xml_file"]
+            else:
+                # Retry once on transient failures (timeout, 5xx) before giving up.
+                # The JS sends data=btoa("") for event endpoint (empty data param).
+                event_data = base64.b64encode(b"").decode()
+                for _sb_attempt in range(2):
+                    try:
+                        r1 = _get_sb_session().get(
+                            _sb_url(f"https://stats.statbroadcast.com/interface/webservice/event/{event_id}?{_sb_api_params(event_data)}"),
+                            headers=_sb_api_headers(box_url),
+                            timeout=15,
+                        )
+                        r1.raise_for_status()
+                        break
+                    except Exception as _sb_exc:
+                        # Poison this event on 403 — CF is blocking our
+                        # egress IP for this event's origin.  Retrying won't
+                        # help and just speeds up the WAF's escalation.
+                        status = getattr(getattr(_sb_exc, "response", None), "status_code", None)
+                        if status == 403 or "403" in str(_sb_exc):
+                            _sb_event_cache[event_id] = {
+                                **(cached or {}),
+                                "poisoned": True,
+                            }
+                            raise
+                        if _sb_attempt == 1:
+                            raise
+                        _time.sleep(1.5)
+                if r1.headers.get("x-sb-rejected") == "1":
+                    logger.warning(
+                        "StatBroadcast rejected event request for %s (event=%s) — auth/_sbs likely missing or stale",
+                        player_name, event_id,
                     )
-                    r1.raise_for_status()
-                    break
-                except Exception:
-                    if _sb_attempt == 1:
-                        raise
-                    _time.sleep(1.5)
-            if r1.headers.get("x-sb-rejected") == "1":
-                logger.warning(
-                    "StatBroadcast rejected event request for %s (event=%s) — auth/_sbs likely missing or stale",
-                    player_name, event_id,
-                )
-                return None
-            event_xml = _sb_decode_response(r1.text, dict(r1.headers))
-            xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
-            if not xmlfile_m:
-                logger.warning("StatBroadcast event XML missing xmlfile for %s (event=%s, decoded_len=%d)",
-                               player_name, event_id, len(event_xml))
-                return None
-            xml_file = xmlfile_m.group(1)
+                    return None
+                event_xml = _sb_decode_response(r1.text, dict(r1.headers))
+                xmlfile_m = re.search(r"<xmlfile><!\[CDATA\[([^\]]+)\]\]></xmlfile>", event_xml)
+                if not xmlfile_m:
+                    logger.warning("StatBroadcast event XML missing xmlfile for %s (event=%s, decoded_len=%d)",
+                                   player_name, event_id, len(event_xml))
+                    return None
+                xml_file = xmlfile_m.group(1)
+                cached = _sb_event_cache.setdefault(event_id, {})
+                cached["xml_file"] = xml_file
+                cached.setdefault("html", {})
 
-            # Step 2: fetch box score HTML for the player's team (or both if unknown)
-            sb_game_status: Optional[str] = None  # "Final" or "Live"
-            sb_inning_label: Optional[str] = None  # e.g. "Top 6" when Live
+            # Step 2: fetch box score HTML for the player's team (or both if unknown).
+            # Cached per (event, side) — all players on the same team share the HTML.
+            sb_game_status: Optional[str] = cached.get("status")
+            sb_inning_label: Optional[str] = cached.get("inning")
 
             # Only search the player's own team to avoid cross-team name collisions
             if is_home is True:
@@ -2874,31 +2921,39 @@ class D1BaseballScraper(BaseSchoolScraper):
             else:
                 sides_to_check = ("H", "V")
 
+            html_by_side = cached.setdefault("html", {})
             for team_side in sides_to_check:
-                data_str = (
-                    f"event={event_id}&xml={xml_file}"
-                    f"&xsl=baseball/sb.bsgame.views.box.xsl"
-                    f'&params={{"team":"{team_side}"}}'
-                    f"&sport=bsgame&filetime=-1&type=statmonitr&start=true"
-                )
-                encoded = base64.b64encode(data_str.encode()).decode()
-                # Retry once on transient failures before falling through to ESPN.
-                for _sb_attempt in range(2):
-                    try:
-                        r2 = _get_sb_session().get(
-                            _sb_url(f"https://stats.statbroadcast.com/interface/webservice/stats?{_sb_api_params(encoded, is_stats=True)}"),
-                            headers=_sb_api_headers(box_url),
-                            timeout=15,
-                        )
-                        r2.raise_for_status()
-                        break
-                    except Exception:
-                        if _sb_attempt == 1:
-                            raise
-                        _time.sleep(1.5)
-                html = _sb_decode_response(r2.text, dict(r2.headers))
+                html = html_by_side.get(team_side)
+                if html is None:
+                    data_str = (
+                        f"event={event_id}&xml={xml_file}"
+                        f"&xsl=baseball/sb.bsgame.views.box.xsl"
+                        f'&params={{"team":"{team_side}"}}'
+                        f"&sport=bsgame&filetime=-1&type=statmonitr&start=true"
+                    )
+                    encoded = base64.b64encode(data_str.encode()).decode()
+                    # Retry once on transient failures before falling through to ESPN.
+                    for _sb_attempt in range(2):
+                        try:
+                            r2 = _get_sb_session().get(
+                                _sb_url(f"https://stats.statbroadcast.com/interface/webservice/stats?{_sb_api_params(encoded, is_stats=True)}"),
+                                headers=_sb_api_headers(box_url),
+                                timeout=15,
+                            )
+                            r2.raise_for_status()
+                            break
+                        except Exception as _sb_exc:
+                            status = getattr(getattr(_sb_exc, "response", None), "status_code", None)
+                            if status == 403 or "403" in str(_sb_exc):
+                                cached["poisoned"] = True
+                                raise
+                            if _sb_attempt == 1:
+                                raise
+                            _time.sleep(1.5)
+                    html = _sb_decode_response(r2.text, dict(r2.headers))
+                    html_by_side[team_side] = html
 
-                # Extract game state from the first side we successfully fetch.
+                # Extract game state from the first side we have HTML for.
                 # Do this before the player search so we always capture it.
                 if sb_game_status is None:
                     state = self._extract_sb_game_state(html)
@@ -2907,6 +2962,10 @@ class D1BaseballScraper(BaseSchoolScraper):
                     elif state:
                         sb_game_status = "Live"
                         sb_inning_label = state
+                    if sb_game_status:
+                        cached["status"] = sb_game_status
+                        if sb_inning_label:
+                            cached["inning"] = sb_inning_label
 
                 result = self._parse_statbroadcast_html(player_name, html, is_two_way=is_two_way)
                 if result:
@@ -2918,7 +2977,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             # Player not found — return game state so the caller can correct the
             # D1Baseball tile's potentially lagging status.
             if sb_game_status is not None:
-                ctx: dict = {"_sb_game_status": sb_game_status}
+                ctx = {"_sb_game_status": sb_game_status}
                 if sb_inning_label:
                     ctx["_sb_inning_label"] = sb_inning_label
                 return ctx
