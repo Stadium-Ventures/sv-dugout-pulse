@@ -62,7 +62,10 @@ jobs:
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
-          SB_PROXY_URL: ${{ secrets.SB_PROXY_URL }}
+          # TEMP: proxy was returning 403 from SB's WAF — testing direct
+          # curl_cffi Chrome impersonation from the Actions runner.  Restore
+          # `${{ secrets.SB_PROXY_URL }}` if direct also fails.
+          SB_PROXY_URL: ""
         run: |
           set -eo pipefail
           if [ -z "$SLACK_WEBHOOK_URL" ]; then echo "⚠️ SLACK_WEBHOOK_URL not set — alerts will be skipped"; fi
