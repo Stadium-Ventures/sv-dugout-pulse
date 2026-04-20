@@ -202,19 +202,26 @@ class MLBHistoricalFetcher:
             # Resolve sport level for the player so _fetch_game_log uses
             # the correct sportId
             if mlb_id not in self._player_sport:
+                # statsapi.lookup_player() is a name-search — it returns 0
+                # results when passed an ID string. Use the direct /people
+                # endpoint instead so we can reliably resolve currentTeam
+                # from a known mlb_id.
                 try:
-                    data = statsapi.lookup_player(str(mlb_id))
-                    if data:
-                        ct = data[0].get("currentTeam", {})
-                        if isinstance(ct, dict) and ct.get("id"):
-                            resp = _http.get(
-                                f"https://statsapi.mlb.com/api/v1/teams/{ct['id']}",
-                                timeout=10,
-                            )
-                            t = resp.json()["teams"][0]
-                            self._player_sport[mlb_id] = t.get("sport", {}).get("id", 1)
-                        else:
-                            self._player_sport[mlb_id] = 1
+                    resp = _http.get(
+                        f"https://statsapi.mlb.com/api/v1/people/{mlb_id}?hydrate=currentTeam",
+                        timeout=10,
+                    )
+                    people = resp.json().get("people", [])
+                    ct = people[0].get("currentTeam", {}) if people else {}
+                    if isinstance(ct, dict) and ct.get("id"):
+                        t_resp = _http.get(
+                            f"https://statsapi.mlb.com/api/v1/teams/{ct['id']}",
+                            timeout=10,
+                        )
+                        t = t_resp.json()["teams"][0]
+                        self._player_sport[mlb_id] = t.get("sport", {}).get("id", 1)
+                    else:
+                        self._player_sport[mlb_id] = 1
                 except Exception:
                     self._player_sport[mlb_id] = 1
             return mlb_id
