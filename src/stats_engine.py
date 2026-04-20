@@ -1147,13 +1147,20 @@ class ProStatsFetcher:
             self._player_cache[name] = mlb_id
             # Eagerly resolve current team so schedule lookups work
             if mlb_id not in self._player_team_cache:
+                # statsapi.lookup_player() is a name-search — it returns 0
+                # results when passed an ID string. Use the direct /people
+                # endpoint instead so we can reliably resolve currentTeam
+                # from a known mlb_id.
                 try:
-                    data = statsapi.lookup_player(str(mlb_id))
-                    if data:
-                        ct = data[0].get("currentTeam", {})
-                        if isinstance(ct, dict) and ct.get("id"):
-                            self._resolve_team(ct["id"])
-                            self._player_team_cache[mlb_id] = ct["id"]
+                    resp = _http.get(
+                        f"https://statsapi.mlb.com/api/v1/people/{mlb_id}?hydrate=currentTeam",
+                        timeout=10,
+                    )
+                    people = resp.json().get("people", [])
+                    ct = people[0].get("currentTeam", {}) if people else {}
+                    if isinstance(ct, dict) and ct.get("id"):
+                        self._resolve_team(ct["id"])
+                        self._player_team_cache[mlb_id] = ct["id"]
                 except Exception:
                     logger.debug("Team resolve failed for mlb_id %d", mlb_id)
             return mlb_id
