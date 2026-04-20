@@ -1169,8 +1169,12 @@ def run_historical():
 
     write_window_json(window_data["7d"], WINDOW_7D_PATH)
 
-    # Preserve existing season data for players where D1B returned 403/empty.
-    # This prevents good data from being wiped when D1Baseball rate-limits us.
+    # Preserve existing season data for NCAA players where D1B returned 403/empty.
+    # D1Baseball rate-limits aggressively, so we don't want to wipe good data on a
+    # transient failure.  We explicitly scope this to NCAA — for Pro players the
+    # MLB Stats API is reliable, so an empty response means the player genuinely
+    # has no games (e.g. a prospect who hasn't debuted yet), and we should let
+    # the fresh empty entry replace the stale one instead of propping it up.
     season_data = window_data["season"]
     if os.path.exists(WINDOW_SEASON_PATH):
         try:
@@ -1179,6 +1183,8 @@ def run_historical():
                 existing = raw.get("players", raw) if isinstance(raw, dict) else raw
             existing_by_name = {e["player_name"]: e for e in existing}
             for i, entry in enumerate(season_data):
+                if entry.get("level") != "NCAA":
+                    continue
                 stats = entry.get("stats", {})
                 has_data = any(v != "--" for v in stats.values())
                 if not has_data and entry["player_name"] in existing_by_name:
