@@ -169,6 +169,13 @@ _sb_session = None  # type: ignore
 # slash), e.g. "https://sv-sb-proxy.example.workers.dev".
 _SB_PROXY_URL = os.environ.get("SB_PROXY_URL", "").rstrip("/")
 
+# Optional: tunnel all StatBroadcast traffic through a residential HTTP proxy.
+# Datacenter egress (CF Workers, Fly, Deno, Actions runners) gets categorically
+# blocked by SB's Cloudflare WAF on ASN reputation.  Residential ISP IPs aren't
+# on those blocklists because blocking Comcast/Verizon would block real users.
+# Format: "http://user:pass@host:port" (Webshare, Smartproxy, etc.).
+_SB_HTTP_PROXY = os.environ.get("SB_HTTP_PROXY", "").strip()
+
 def _sb_url(url: str) -> str:
     """Rewrite a stats.statbroadcast.com URL to go through the proxy if set."""
     if not _SB_PROXY_URL:
@@ -179,7 +186,11 @@ def _get_sb_session():
     global _sb_session
     if _sb_session is None:
         from curl_cffi import requests as _cr  # local import: optional dep
-        _sb_session = _cr.Session(impersonate="chrome120")
+        kwargs = {"impersonate": "chrome120"}
+        if _SB_HTTP_PROXY:
+            kwargs["proxies"] = {"http": _SB_HTTP_PROXY, "https": _SB_HTTP_PROXY}
+            logger.info("StatBroadcast: routing through residential HTTP proxy")
+        _sb_session = _cr.Session(**kwargs)
     return _sb_session
 
 

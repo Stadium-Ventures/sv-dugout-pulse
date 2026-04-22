@@ -66,6 +66,9 @@ jobs:
           # curl_cffi Chrome impersonation from the Actions runner.  Restore
           # `${{ secrets.SB_PROXY_URL }}` if direct also fails.
           SB_PROXY_URL: ""
+          # Residential HTTP proxy (Webshare/Smartproxy) — bypasses SB's WAF
+          # by routing through an ISP IP.  Empty string = direct mode.
+          SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
         run: |
           set -eo pipefail
           if [ -z "$SLACK_WEBHOOK_URL" ]; then echo "⚠️ SLACK_WEBHOOK_URL not set — alerts will be skipped"; fi
@@ -80,6 +83,7 @@ jobs:
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           SB_PROXY_URL: ${{ secrets.SB_PROXY_URL }}
+          SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
         run: |
           set -eo pipefail
           python -c "import src.historical_stats; import src.window_grader; print('Historical imports OK')"
