@@ -45,6 +45,12 @@ COLUMN_MAP = {
 # Levels to include (everything else is excluded)
 INCLUDED_LEVELS = {"Pro", "NCAA", "HS"}
 
+# MLB IDs to always exclude (retired clients still on the master sheet, etc.)
+# Why: Forrest Wall is retired but appeared with Iowa Cubs; keep him off the dashboard.
+EXCLUDED_MLB_IDS = {
+    657088,  # Forrest Wall — retired
+}
+
 # ---------------------------------------------------------------------------
 # Performance grade thresholds
 # ---------------------------------------------------------------------------

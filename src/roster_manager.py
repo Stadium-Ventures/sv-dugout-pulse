@@ -16,7 +16,14 @@ from typing import Optional
 
 import requests
 
-from .config import COLUMN_MAP, INCLUDED_LEVELS, RECRUITS_URL, ROSTER_CACHE_PATH, ROSTER_URL
+from .config import (
+    COLUMN_MAP,
+    EXCLUDED_MLB_IDS,
+    INCLUDED_LEVELS,
+    RECRUITS_URL,
+    ROSTER_CACHE_PATH,
+    ROSTER_URL,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -82,14 +89,21 @@ def filter_roster(rows: list[dict]) -> list[dict]:
     Returns normalized player dicts.
     """
     filtered = []
+    excluded = 0
     for raw in rows:
         level = raw.get("Level", "").strip()
         if level not in INCLUDED_LEVELS:
             continue
-        filtered.append(normalize_player(raw))
+        player = normalize_player(raw)
+        if player.get("mlb_id") in EXCLUDED_MLB_IDS:
+            excluded += 1
+            continue
+        filtered.append(player)
 
     logger.info(
-        "Filtered roster: %d players (kept Pro/NCAA/HS)", len(filtered)
+        "Filtered roster: %d players (kept Pro/NCAA/HS, excluded %d by MLB ID)",
+        len(filtered),
+        excluded,
     )
     return filtered
 
@@ -162,6 +176,7 @@ def _load_roster_cache() -> list[dict] | None:
             logger.warning("Roster cache is %.1f h old — too stale to use", age_h)
             return None
         players = data.get("players", [])
+        players = [p for p in players if p.get("mlb_id") not in EXCLUDED_MLB_IDS]
         logger.info("Loaded roster cache (%d players, %.1f h old)", len(players), age_h)
         return players
     except Exception:
