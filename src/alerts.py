@@ -36,6 +36,11 @@ logger = logging.getLogger(__name__)
 # Webhook URL — MUST be set via environment variable (GitHub secret)
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 
+# Feature flag: pitcher-removed Slack alerts are muted for now. Detection in
+# stats_engine.py still populates stats["pitcher_removed"], so flipping this
+# back to True re-enables notifications without any other code changes.
+ALERT_PITCHER_REMOVED = False
+
 # Persistent alert state loaded from disk: {"date|player:type": value, ...}
 _sent_alerts: dict = {}
 
@@ -263,11 +268,13 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
             _mark_sent(game_date, name, "entered", game_number=game_number)
 
     # --- Alert: Pitcher removed from game ---
-    # Fires once per game when another pitcher enters after ours. Gated on the
-    # "entered" alert having already fired, so we don't retroactively page on
-    # games the cron never observed live.
+    # Muted via ALERT_PITCHER_REMOVED. Detection still runs upstream — flip
+    # the flag to re-enable. Fires once per game when another pitcher enters
+    # after ours. Gated on the "entered" alert having already fired so we
+    # don't retroactively page on games the cron never observed live.
     entered_key = _alert_key(game_date, name, "entered", game_number)
-    if (is_pitching and stats.get("pitcher_removed")
+    if (ALERT_PITCHER_REMOVED
+            and is_pitching and stats.get("pitcher_removed")
             and entered_key in _sent_alerts
             and not _already_sent(game_date, name, "pitcher_removed", game_number=game_number)):
         if send_slack_message(
