@@ -262,6 +262,20 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
         ):
             _mark_sent(game_date, name, "entered", game_number=game_number)
 
+    # --- Alert: Pitcher removed from game ---
+    # Fires once per game when another pitcher enters after ours. Gated on the
+    # "entered" alert having already fired, so we don't retroactively page on
+    # games the cron never observed live.
+    entered_key = _alert_key(game_date, name, "entered", game_number)
+    if (is_pitching and stats.get("pitcher_removed")
+            and entered_key in _sent_alerts
+            and not _already_sent(game_date, name, "pitcher_removed", game_number=game_number)):
+        if send_slack_message(
+            f"🚑 *{name}* ({tier_label}) has been taken out of the game{gm_label}\n"
+            f"_{team}_ — {summary} — {game_context}{box_link}"
+        ):
+            _mark_sent(game_date, name, "pitcher_removed", game_number=game_number)
+
     # --- Alert: Pitcher strikeouts (value-aware: re-alerts at 5, 8, 10) ---
     try:
         strikeouts = int(stats.get("strikeouts", 0))

@@ -1777,6 +1777,13 @@ class ProStatsFetcher:
         if _is_pitcher_pos(position):
             result["is_pitcher_line"] = True
             pitchers = box.get(f"{game['side']}Pitchers", [])
+            # Pitchers array is in appearance order. If our pitcher is not the
+            # last entry, another pitcher entered after them → they were removed.
+            last_pitcher_id = None
+            for p in reversed(pitchers):
+                if isinstance(p, dict) and p.get("personId"):
+                    last_pitcher_id = p.get("personId")
+                    break
             for entry in pitchers:
                 if isinstance(entry, dict) and entry.get("personId") == player_id:
                     found_in_box = True
@@ -1785,6 +1792,8 @@ class ProStatsFetcher:
                         result.update(self._parse_pitcher_line(entry))
                     else:
                         result["stats_summary"] = "On the mound"
+                    if last_pitcher_id and last_pitcher_id != player_id:
+                        result["pitcher_removed"] = True
                     break
         else:
             batters = box.get(f"{game['side']}Batters", [])
@@ -1796,12 +1805,19 @@ class ProStatsFetcher:
                     order_str = entry.get("battingOrder", "")
                     if ab + bb > 0:
                         result.update(self._parse_batter_line(entry))
-                        # Check if this starter was later replaced
+                        # Check if this starter was later replaced. MLB's
+                        # battingOrder is slot*100 + sub_number: starter = "800",
+                        # first sub in slot 8 = "801". Match on the leading slot
+                        # digit rather than exact string.
                         if order_str and not entry.get("substitution", False):
-                            was_replaced = any(
+                            try:
+                                slot = int(order_str) // 100
+                            except (ValueError, TypeError):
+                                slot = None
+                            was_replaced = slot is not None and any(
                                 isinstance(b, dict)
-                                and b.get("battingOrder") == order_str
                                 and b.get("substitution", False)
+                                and (int(b.get("battingOrder") or 0) // 100) == slot
                                 for b in batters
                             )
                             if was_replaced and result.get("stats_summary"):
@@ -2297,23 +2313,39 @@ class NCAAComScraper(BaseSchoolScraper):
             if target_team_id is not None and str(tb.get("teamId")) != str(target_team_id):
                 continue
 
-            # Collect all last-name matches for disambiguation
+            team_players = tb.get("playerStats", [])
+
+            # Collect all last-name matches for disambiguation. Keep the
+            # player's index in the team list so we can later detect if another
+            # pitcher entered after ours (playerStats is in appearance order).
             candidates = []
-            for ps in tb.get("playerStats", []):
+            for idx, ps in enumerate(team_players):
                 last_name = ps.get("lastName", "")
                 if _names_match(player_last, last_name):
-                    candidates.append(ps)
+                    candidates.append((idx, ps))
 
             # First-name disambiguation when multiple players share a last name
             if len(candidates) > 1 and player_first:
                 narrowed = [
-                    ps for ps in candidates
+                    (i, ps) for i, ps in candidates
                     if ps.get("firstName", "").lower().startswith(player_first[:3])
                 ]
                 if narrowed:
                     candidates = narrowed
 
-            for ps in candidates:
+            def _pitcher_removed_after(index: int) -> bool:
+                for later in team_players[index + 1:]:
+                    lp = later.get("pitcherStats")
+                    if not lp:
+                        continue
+                    try:
+                        if float(lp.get("inningsPitched", 0) or 0) > 0:
+                            return True
+                    except (ValueError, TypeError):
+                        pass
+                return False
+
+            for idx, ps in candidates:
                 pitcher = ps.get("pitcherStats")
                 batter = ps.get("batterStats")
 
@@ -2325,6 +2357,8 @@ class NCAAComScraper(BaseSchoolScraper):
                     if p_ip > 0:
                         result = self._parse_pitching(pitcher)
                         result["_player_found"] = True
+                        if _pitcher_removed_after(idx):
+                            result["pitcher_removed"] = True
                         return result
                     if b_ab > 0 or b_bb > 0:
                         result = self._parse_batting(batter)
@@ -2336,6 +2370,8 @@ class NCAAComScraper(BaseSchoolScraper):
                 if pitcher:
                     result = self._parse_pitching(pitcher)
                     result["_player_found"] = True
+                    if _pitcher_removed_after(idx):
+                        result["pitcher_removed"] = True
                     return result
                 if batter:
                     ab = int(batter.get("atBats", 0) or 0)
@@ -3166,6 +3202,26 @@ class D1BaseballScraper(BaseSchoolScraper):
                                        "walks_allowed": bb, "strikeouts": k,
                                        "stats_summary": ", ".join(parts),
                                        "_player_found": True, "is_pitcher_line": True}
+                    # Walk subsequent rows in the same pitching table — if
+                    # another pitcher with non-zero IP follows, our pitcher
+                    # was relieved.
+                    ip_col_idx = None
+                    for i, hdr in enumerate(headers):
+                        if hdr == "IP":
+                            ip_col_idx = i
+                            break
+                    if ip_col_idx is not None:
+                        for later_row in row.find_next_siblings("tr"):
+                            lc = [c.get_text(strip=True) for c in later_row.select("td")]
+                            if len(lc) <= ip_col_idx:
+                                continue
+                            try:
+                                later_ip = float(lc[ip_col_idx] or "0")
+                            except (ValueError, TypeError):
+                                later_ip = 0.0
+                            if later_ip > 0:
+                                pitching_result["pitcher_removed"] = True
+                                break
 
         if is_two_way and batting_result and pitching_result:
             bat_sum = batting_result.get("stats_summary", "")
@@ -3391,9 +3447,20 @@ class D1BaseballScraper(BaseSchoolScraper):
 
                 pitching_result = None
                 pitching = pg.get("Pitching", {})
-                for v in (pitching.get("Values") or []):
+                pitching_values = pitching.get("Values") or []
+                for idx, v in enumerate(pitching_values):
                     if player_last in _strip_accents(v.get("Name", "")).lower():
                         pitching_result = self._parse_sidearm_pitching_json(v)
+                        # Any later pitcher with non-zero IP means ours was relieved.
+                        if pitching_result is not None:
+                            for later in pitching_values[idx + 1:]:
+                                try:
+                                    later_ip = float(str(_stat_str(later, "ip", "0")) or "0")
+                                except (ValueError, TypeError):
+                                    later_ip = 0.0
+                                if later_ip > 0:
+                                    pitching_result["pitcher_removed"] = True
+                                    break
                         break
 
                 if is_two_way and batting_result and pitching_result:
@@ -4139,7 +4206,8 @@ class ESPNScraper(BaseSchoolScraper):
                 labels = [lb.upper() for lb in stat_group.get("labels", [])]
                 is_pitching = "IP" in labels
 
-                for athlete_entry in stat_group.get("athletes", []):
+                athletes = stat_group.get("athletes", [])
+                for idx, athlete_entry in enumerate(athletes):
                     athlete = athlete_entry.get("athlete", {})
                     display_name = athlete.get("displayName", "")
 
@@ -4151,7 +4219,24 @@ class ESPNScraper(BaseSchoolScraper):
                                 stat_map[label] = stat_values[i]
 
                         if is_pitching:
-                            return self._parse_pitching(stat_map)
+                            parsed = self._parse_pitching(stat_map)
+                            # Pitching athletes list is in appearance order —
+                            # if a later entry has IP > 0, another pitcher
+                            # entered after us.
+                            ip_idx = labels.index("IP") if "IP" in labels else None
+                            if ip_idx is not None:
+                                for later in athletes[idx + 1:]:
+                                    lvals = later.get("stats", [])
+                                    if ip_idx >= len(lvals):
+                                        continue
+                                    try:
+                                        lip = float(lvals[ip_idx] or "0")
+                                    except (ValueError, TypeError):
+                                        lip = 0.0
+                                    if lip > 0:
+                                        parsed["pitcher_removed"] = True
+                                        break
+                            return parsed
                         return self._parse_batting(stat_map)
         return None
 
