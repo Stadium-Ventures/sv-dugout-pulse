@@ -271,7 +271,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
             and entered_key in _sent_alerts
             and not _already_sent(game_date, name, "pitcher_removed", game_number=game_number)):
         if send_slack_message(
-            f"🚑 *{name}* ({tier_label}) has been taken out of the game{gm_label}\n"
+            f"*{name}* ({tier_label}) has been taken out of the game{gm_label}\n"
             f"_{team}_ — {summary} — {game_context}{box_link}"
         ):
             _mark_sent(game_date, name, "pitcher_removed", game_number=game_number)
@@ -338,7 +338,7 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     if is_hitter and "(pulled)" in summary:
         if not _already_sent(game_date, name, "pulled", game_number=game_number):
             if send_slack_message(
-                f"🚑 *{name}* ({tier_label}) was pulled from the game{gm_label}\n"
+                f"*{name}* ({tier_label}) has been taken out of the game{gm_label}\n"
                 f"_{team}_ — {summary} — {game_context}{box_link}"
             ):
                 _mark_sent(game_date, name, "pulled", game_number=game_number)
