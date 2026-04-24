@@ -1803,31 +1803,39 @@ class ProStatsFetcher:
                     ab = int(entry.get("ab", 0))
                     bb = int(entry.get("bb", 0))
                     order_str = entry.get("battingOrder", "")
+                    # Check if this starter was later replaced. MLB's
+                    # battingOrder is slot*100 + sub_number: starter = "800",
+                    # first sub in slot 8 = "801". Match on the leading slot
+                    # digit rather than exact string. Applies whether or not
+                    # our player actually batted — a starter pulled before a
+                    # PA (e.g. defensive replacement after an injury) is still
+                    # a pull we want to alert on.
+                    was_replaced = False
+                    if order_str and not entry.get("substitution", False):
+                        try:
+                            slot = int(order_str) // 100
+                        except (ValueError, TypeError):
+                            slot = None
+                        was_replaced = slot is not None and any(
+                            isinstance(b, dict)
+                            and b.get("substitution", False)
+                            and (int(b.get("battingOrder") or 0) // 100) == slot
+                            for b in batters
+                        )
+
                     if ab + bb > 0:
                         result.update(self._parse_batter_line(entry))
-                        # Check if this starter was later replaced. MLB's
-                        # battingOrder is slot*100 + sub_number: starter = "800",
-                        # first sub in slot 8 = "801". Match on the leading slot
-                        # digit rather than exact string.
-                        if order_str and not entry.get("substitution", False):
-                            try:
-                                slot = int(order_str) // 100
-                            except (ValueError, TypeError):
-                                slot = None
-                            was_replaced = slot is not None and any(
-                                isinstance(b, dict)
-                                and b.get("substitution", False)
-                                and (int(b.get("battingOrder") or 0) // 100) == slot
-                                for b in batters
-                            )
-                            if was_replaced and result.get("stats_summary"):
-                                result["stats_summary"] += " (pulled)"
+                        if was_replaced and result.get("stats_summary"):
+                            result["stats_summary"] += " (pulled)"
                     else:
                         # In lineup but no plate appearance yet
                         pos = entry.get("position", "")
                         is_sub = entry.get("substitution", False)
                         if is_sub:
                             result["stats_summary"] = f"Entered game ({pos})" if pos else "Entered game"
+                        elif was_replaced:
+                            # Starter was pulled before recording a PA
+                            result["stats_summary"] = f"Started — 0 PA ({pos}) (pulled)" if pos else "Started — 0 PA (pulled)"
                         elif result.get("game_status") == "Final":
                             result["stats_summary"] = f"Started — 0 PA ({pos})" if pos else "Started — 0 PA"
                         elif order_str and order_str.isdigit():
