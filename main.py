@@ -208,10 +208,17 @@ def _count_pro_recent(player: dict, cutoff: str) -> int:
 
 
 def _append_to_ncaa_game_log(player: dict, stats: dict):
-    """Queue a single NCAA game result for batched write."""
+    """Queue a single NCAA game result for batched write.
+
+    Live entries with real stats are also logged so a later run that
+    can't reach the live box can carry these forward instead of falling
+    back to "not in lineup" — the dedup logic at flush time keeps the
+    fullest snapshot of any (date, opponent, game_number).
+    """
     if player.get("level") != "NCAA":
         return
-    if stats.get("game_status") != "Final":
+    status = stats.get("game_status")
+    if status not in ("Final", "Live"):
         return
     game_date = stats.get("game_date")
     if not game_date:
@@ -220,6 +227,10 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
     # Skip DNP players (game was Final but player didn't appear)
     summary = stats.get("stats_summary", "")
     if "DNP" in summary or "No game data" in summary:
+        return
+    # During Live games, only log if we actually have stats — the
+    # all-zero check below catches "in lineup, no PAs yet" cases.
+    if status == "Live" and "not in lineup" in summary.lower():
         return
 
     game_date = _normalize_date(game_date)
@@ -267,10 +278,13 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
 
     box_url = stats.get("box_score_url", "")
     game_number = stats.get("game_number") or 0
+    is_pitcher_line = bool(is_pitcher)
 
     with _ncaa_log_lock:
-        _ncaa_log_pending.append((key, game_date, opponent, entry_stats, box_url, game_number))
-    logger.debug("NCAA game log: queued %s on %s (gm %s)", key, game_date, game_number)
+        _ncaa_log_pending.append(
+            (key, game_date, opponent, entry_stats, box_url, game_number, status, is_pitcher_line)
+        )
+    logger.debug("NCAA game log: queued %s on %s (gm %s, %s)", key, game_date, game_number, status)
 
 
 def _flush_ncaa_game_log():
@@ -303,12 +317,21 @@ def _flush_ncaa_game_log():
         log[key] = clean
         seen_by_key[key] = seen
 
+    now_iso = datetime.now(timezone.utc).isoformat()
+
     added = 0
     updated = 0
-    for key, game_date, opponent, entry_stats, box_url, game_number in _ncaa_log_pending:
+    for key, game_date, opponent, entry_stats, box_url, game_number, status, is_pitcher_line in _ncaa_log_pending:
         seen = seen_by_key.get(key, set())
 
-        entry = {"date": game_date, "opponent": opponent, "stats": entry_stats}
+        entry = {
+            "date": game_date,
+            "opponent": opponent,
+            "stats": entry_stats,
+            "captured_at": now_iso,
+            "captured_status": status,  # "Live" or "Final"
+            "is_pitcher_line": is_pitcher_line,
+        }
         if box_url:
             entry["box_score_url"] = box_url
         if game_number:
@@ -334,11 +357,19 @@ def _flush_ncaa_game_log():
                     # Count non-zero fields as a measure of data completeness
                     old_nonzero = sum(1 for v in old_s.values() if v and v != "0")
                     new_nonzero = sum(1 for v in entry_stats.values() if v and v != "0")
-                    if new_nonzero > old_nonzero:
+                    # Final always wins over Live for the same game (it's the
+                    # authoritative source); for same-status comparisons, more
+                    # non-zero fields wins.
+                    old_status = existing.get("captured_status", "Final")
+                    final_wins = (status == "Final" and old_status == "Live")
+                    if final_wins or new_nonzero > old_nonzero:
                         existing["stats"] = entry_stats
+                        existing["captured_at"] = now_iso
+                        existing["captured_status"] = status
+                        existing["is_pitcher_line"] = is_pitcher_line
                         updated += 1
-                        logger.info("NCAA game log: updated %s on %s (non-zero fields %d→%d)",
-                                    key, game_date, old_nonzero, new_nonzero)
+                        logger.info("NCAA game log: updated %s on %s (non-zero fields %d→%d, %s→%s)",
+                                    key, game_date, old_nonzero, new_nonzero, old_status, status)
                     # Backfill box_score_url if missing
                     if box_url and not existing.get("box_score_url"):
                         existing["box_score_url"] = box_url
@@ -445,6 +476,9 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "grade_reason": analysis.get("grade_reason", ""),
         "social_search_url": analysis["social_search_url"],
         "data_source": stats.get("data_source", ""),
+        "fetch_diagnostic": stats.get("fetch_diagnostic"),
+        "stats_captured_at": stats.get("stats_captured_at"),
+        "stats_captured_status": stats.get("stats_captured_status"),
         "is_client": player.get("is_client", True),
         "tags": {
             "draft_class": player.get("draft_class", ""),
@@ -750,6 +784,10 @@ def _load_live_stats_cache(today_str: str) -> dict[str, list[dict]]:
     (which rarely has NCAA box-score stats), we lose the player's stats for
     that cycle.  This cache lets us carry forward the previous good data
     instead of showing 'not in lineup'.
+
+    Each cached entry has ``_prev_generated_at`` attached so a downstream
+    carry-forward can stamp ``stats_captured_at`` honestly when the
+    previous entry didn't already have one set.
     """
     cache: dict[str, list[dict]] = {}
     if not os.path.exists(OUTPUT_PATH):
@@ -758,6 +796,7 @@ def _load_live_stats_cache(today_str: str) -> dict[str, list[dict]]:
         with open(OUTPUT_PATH) as f:
             raw = json.load(f)
         players = raw.get("players", raw) if isinstance(raw, dict) else raw
+        prev_generated_at = raw.get("generated_at") if isinstance(raw, dict) else None
         for p in players:
             if p.get("game_status") != "Live":
                 continue
@@ -767,6 +806,7 @@ def _load_live_stats_cache(today_str: str) -> dict[str, list[dict]]:
                 continue
             if not _entry_has_real_stats(p):
                 continue
+            p["_prev_generated_at"] = prev_generated_at
             key = f"{p['player_name']}|{p['team']}"
             cache.setdefault(key, []).append(p)
         if cache:
@@ -914,6 +954,17 @@ def run_live():
                         patched["game_context"] = fresh["game_context"]
                     if fresh.get("game_status"):
                         patched["game_status"] = fresh["game_status"]
+                    # Stamp stats_captured_at so the dashboard can render
+                    # "as of HH:MM". Prefer an existing value (chained carry-forward)
+                    # over the previous run's generated_at (first carry).
+                    if not patched.get("stats_captured_at"):
+                        patched["stats_captured_at"] = patched.pop("_prev_generated_at", None)
+                    else:
+                        patched.pop("_prev_generated_at", None)
+                    # Keep the new fetch's diagnostic so the trace shows
+                    # *this* run's failure, not the cached run's success.
+                    if fresh.get("fetch_diagnostic") is not None:
+                        patched["fetch_diagnostic"] = fresh["fetch_diagnostic"]
                     carried.append(patched)
                 logger.info(
                     "%s | Live stats carry-forward: kept previous %s (new fetch had no stats via %s)",
@@ -1110,15 +1161,128 @@ def _stable_sort_key(p: dict) -> tuple:
     )
 
 
+_BLOCKED_OUTCOME_RE = re.compile(r"block|403|waf", re.IGNORECASE)
+
+
+def _summarize_run_health(pulse: list[dict]) -> dict:
+    """Aggregate per-player fetch_diagnostic into a run-level health summary.
+
+    Returns a dict with counts of blocked / stale / no-data outcomes per
+    source, plus client-only counts for higher-priority signal. The banner
+    in the dashboard reads this; the rolling history page reads the same.
+    """
+    by_source: dict[str, dict[str, int]] = {}
+    blocked_clients: list[str] = []
+    carry_forward_clients: list[str] = []
+    fallback_clients: list[str] = []
+    total_clients = 0
+
+    for p in pulse:
+        is_client = bool(p.get("is_client"))
+        if is_client:
+            total_clients += 1
+            if p.get("stats_captured_at"):
+                carry_forward_clients.append(p.get("player_name", "?"))
+            summary = (p.get("stats_summary") or "").lower()
+            if (("not in lineup" in summary or "hasn't pitched" in summary
+                    or summary == "game in progress" or summary.startswith("did not play"))
+                    and not p.get("stats_captured_at")):
+                fallback_clients.append(p.get("player_name", "?"))
+
+        diag = p.get("fetch_diagnostic")
+        if not diag:
+            continue
+        seen_blocked_for_player = False
+        for entry in diag:
+            src = entry.get("source") or "?"
+            outcome = entry.get("outcome") or "?"
+            bucket = by_source.setdefault(src, {})
+            bucket[outcome] = bucket.get(outcome, 0) + 1
+            if not seen_blocked_for_player and _BLOCKED_OUTCOME_RE.search(outcome):
+                seen_blocked_for_player = True
+                if is_client:
+                    blocked_clients.append(p.get("player_name", "?"))
+
+    blocked_sources = sorted({
+        src for src, outcomes in by_source.items()
+        if any(_BLOCKED_OUTCOME_RE.search(o) for o in outcomes)
+    })
+    blocked_total = sum(
+        n for outcomes in by_source.values()
+        for o, n in outcomes.items() if _BLOCKED_OUTCOME_RE.search(o)
+    )
+
+    severity = "ok"
+    if blocked_clients:
+        severity = "warning" if len(blocked_clients) < 5 else "critical"
+    elif fallback_clients and total_clients and len(fallback_clients) >= max(3, total_clients // 5):
+        severity = "warning"
+
+    return {
+        "severity": severity,
+        "by_source": by_source,
+        "blocked_sources": blocked_sources,
+        "blocked_event_count": blocked_total,
+        "blocked_clients": blocked_clients,
+        "carry_forward_clients": carry_forward_clients,
+        "fallback_clients": fallback_clients,
+        "total_clients": total_clients,
+    }
+
+
+_HEALTH_HISTORY_PATH = os.path.join(
+    os.path.dirname(__file__), "data", "fetch_health_history.json"
+)
+_HEALTH_HISTORY_MAX_HOURS = 48
+
+
+def _append_health_history(generated_at: str, health: dict) -> None:
+    """Persist a slim run-level health snapshot for the diagnostics page."""
+    try:
+        history = []
+        if os.path.exists(_HEALTH_HISTORY_PATH):
+            with open(_HEALTH_HISTORY_PATH) as f:
+                history = json.load(f)
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=_HEALTH_HISTORY_MAX_HOURS)
+        history = [
+            h for h in history
+            if h.get("generated_at") and datetime.fromisoformat(h["generated_at"]) >= cutoff
+        ]
+        history.append({
+            "generated_at": generated_at,
+            "severity": health.get("severity"),
+            "blocked_sources": health.get("blocked_sources", []),
+            "blocked_event_count": health.get("blocked_event_count", 0),
+            "blocked_clients": health.get("blocked_clients", []),
+            "carry_forward_clients": health.get("carry_forward_clients", []),
+            "fallback_clients": health.get("fallback_clients", []),
+            "total_clients": health.get("total_clients", 0),
+            "by_source": health.get("by_source", {}),
+        })
+        _atomic_json_write(_HEALTH_HISTORY_PATH, history, indent=2, ensure_ascii=False)
+    except Exception:
+        logger.warning("Failed to append fetch health history — non-fatal")
+
+
 def write_output(pulse: list[dict]):
     """Write the pulse list to data/current_pulse.json with generated_at envelope."""
     # Stable sort so concurrent runs produce identical line positions (see _stable_sort_key).
     pulse = sorted(pulse, key=_stable_sort_key)
+    generated_at = datetime.now(timezone.utc).isoformat()
+    health = _summarize_run_health(pulse)
     envelope = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": generated_at,
         "players": pulse,
+        "health": health,
     }
     _atomic_json_write(OUTPUT_PATH, envelope, indent=2, ensure_ascii=False)
+    _append_health_history(generated_at, health)
+    if health["severity"] != "ok":
+        logger.warning(
+            "Run health: %s — blocked sources=%s, blocked clients=%d, fallback clients=%d",
+            health["severity"], health["blocked_sources"],
+            len(health["blocked_clients"]), len(health["fallback_clients"]),
+        )
     logger.info("Wrote %d entries to %s", len(pulse), OUTPUT_PATH)
 
 

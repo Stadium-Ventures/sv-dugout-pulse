@@ -746,6 +746,7 @@ def empty_stats() -> dict:
         "game_time": None,  # Scheduled start time (e.g., "7:05 PM ET")
         "next_game": None,  # Dict with date, opponent, time for next game
         "game_date": None,  # ISO date string of the actual game (YYYY-MM-DD)
+        "fetch_diagnostic": None,  # list of {source, outcome} when waterfall ran
         "is_pitcher_line": False,
         # Raw fields used by the analyzer
         "hits": 0,
@@ -1987,10 +1988,26 @@ _SCRAPER_SOURCE_LABELS = {
     "SidearmScraper": "Sidearm",
 }
 
+# Diagnostic-trace labels distinguish NCAA.com from NCAA.org so the trace
+# is unambiguous; the public data_source label keeps the simpler "NCAA".
+_SCRAPER_DIAGNOSTIC_LABELS = {
+    "D1BaseballScraper": "D1Baseball",
+    "ESPNScraper": "ESPN",
+    "NCAAComScraper": "NCAA.com",
+    "NCAAOrgScraper": "NCAA.org",
+    "StatBroadcastScraper": "StatBroadcast",
+    "SidearmScraper": "Sidearm",
+}
+
 
 def _scraper_source_label(scraper) -> str:
     """Return a human-readable data source label for a scraper instance."""
     return _SCRAPER_SOURCE_LABELS.get(scraper.__class__.__name__, scraper.__class__.__name__)
+
+
+def _scraper_diagnostic_label(scraper) -> str:
+    """Return a per-source label used in the fetch_diagnostic trace."""
+    return _SCRAPER_DIAGNOSTIC_LABELS.get(scraper.__class__.__name__, scraper.__class__.__name__)
 
 
 class BaseSchoolScraper(abc.ABC):
@@ -2538,6 +2555,10 @@ class D1BaseballScraper(BaseSchoolScraper):
         self._refresh_today()
         is_two_way = (position == "Two-Way")
         first_context = None
+        # Per-call list of inner sub-fetch outcomes (StatBroadcast / Sidearm)
+        # surfaced via _d1b_inner_attempts so the waterfall can include them
+        # in fetch_diagnostic when D1Baseball returns "Game in progress" / DNP.
+        inner_attempts: list[dict] = []
         try:
             tiles = self._find_all_game_tiles(team, yesterday_only=yesterday_only)
             if not tiles:
@@ -2583,10 +2604,15 @@ class D1BaseballScraper(BaseSchoolScraper):
                     break
 
                 if "statbroadcast.com" in box_url or "statb.us" in box_url:
+                    sb_event_id_match = re.search(r"[?&]id=(\d+)", box_url)
+                    sb_event_id = sb_event_id_match.group(1) if sb_event_id_match else None
+                    sb_was_poisoned = bool(_sb_event_cache.get(sb_event_id, {}).get("poisoned")) if sb_event_id else False
                     player_stats = self._parse_statbroadcast_box_score(
                         player_name, box_url, is_home=tile_info.get("is_home"),
                         is_two_way=is_two_way,
                     )
+                    sb_is_poisoned = bool(_sb_event_cache.get(sb_event_id, {}).get("poisoned")) if sb_event_id else False
+                    sb_blocked = sb_is_poisoned and not sb_was_poisoned
                     if player_stats is not None:
                         # StatBroadcast is the authoritative source for game state —
                         # correct the D1Baseball tile's potentially lagging status.
@@ -2602,11 +2628,16 @@ class D1BaseballScraper(BaseSchoolScraper):
                         elif sb_inning and context.get("game_status") == "Live":
                             context["game_context"] = f"{away} {a_s}, {home} {hs} | {sb_inning}"
                         if player_stats and player_stats.get("_player_found"):
-                            # Player was found — merge stats and return
+                            inner_attempts.append({"source": "StatBroadcast", "outcome": "found player"})
                             context.update(player_stats)
+                            context["_d1b_inner_attempts"] = inner_attempts
                             return context
-                        # Player not found (DNP) — game state corrected above,
-                        # fall through to the DNP path below.
+                        # Player not found (DNP) — game state corrected above.
+                        inner_attempts.append({"source": "StatBroadcast", "outcome": "player not in box"})
+                    elif sb_blocked:
+                        inner_attempts.append({"source": "StatBroadcast", "outcome": "blocked (Cloudflare 403)"})
+                    else:
+                        inner_attempts.append({"source": "StatBroadcast", "outcome": "fetch failed"})
                 else:
                     sidearm_folder = _SCHOOL_LOOKUP.get(team, {}).get("sidearm_folder", "")
                     player_stats = self._parse_sidearm_box_score(
@@ -2614,8 +2645,11 @@ class D1BaseballScraper(BaseSchoolScraper):
                         is_two_way=is_two_way, sidearm_folder=sidearm_folder,
                     )
                     if player_stats:
+                        inner_attempts.append({"source": "Sidearm", "outcome": "found player"})
                         context.update(player_stats)
+                        context["_d1b_inner_attempts"] = inner_attempts
                         return context
+                    inner_attempts.append({"source": "Sidearm", "outcome": "player not in box"})
 
             # Player not found in any game — return game context
             if first_context is not None:
@@ -2627,6 +2661,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     first_context["stats_summary"] = "Game in progress"
                 elif status == "Final":
                     first_context["stats_summary"] = "Did Not Play"
+                first_context["_d1b_inner_attempts"] = inner_attempts
                 return first_context
 
             return None
@@ -2635,6 +2670,7 @@ class D1BaseballScraper(BaseSchoolScraper):
             if first_context is not None:
                 if first_context.get("game_status") == "Live":
                     first_context["stats_summary"] = "Game in progress"
+                first_context["_d1b_inner_attempts"] = inner_attempts
                 return first_context
             return None
 
@@ -4405,11 +4441,24 @@ class NCAAStatsFetcher:
 
         scrapers = self._school_scrapers.get(team, self._default_chain)
         best_context = None
+        attempts: list[dict] = []
+
+        def _flush_inner(res: dict) -> None:
+            """Lift D1Baseball's per-tile sub-fetches (StatBroadcast/Sidearm) into attempts."""
+            inner = res.pop("_d1b_inner_attempts", None) if isinstance(res, dict) else None
+            if inner:
+                attempts.extend(inner)
 
         for scraper in scrapers:
+            label = _scraper_source_label(scraper)
+            diag_label = _scraper_diagnostic_label(scraper)
             try:
                 result = scraper.fetch_stats(name, team, yesterday_only=yesterday_only, position=position)
                 if result is None:
+                    if isinstance(scraper, NCAAOrgScraper):
+                        attempts.append({"source": diag_label, "outcome": "not implemented"})
+                    else:
+                        attempts.append({"source": diag_label, "outcome": "no game found"})
                     continue
 
                 if self._has_player_stats(result):
@@ -4419,6 +4468,8 @@ class NCAAStatsFetcher:
                             and not result.get("game_time")
                             and best_context is None):
                         best_context = result
+                        attempts.append({"source": diag_label, "outcome": "scheduled (no game_time)"})
+                        _flush_inner(result)
                         logger.info(
                             "%s found scheduled game for %s @ %s but no game_time — trying next for time",
                             scraper.__class__.__name__, name, team,
@@ -4431,6 +4482,8 @@ class NCAAStatsFetcher:
                     if (result.get("is_yesterday")
                             and best_context is not None
                             and not best_context.get("is_yesterday")):
+                        attempts.append({"source": diag_label, "outcome": "stale (yesterday)"})
+                        _flush_inner(result)
                         logger.info(
                             "%s returned yesterday result for %s @ %s — ignoring (best_context is today's %s)",
                             scraper.__class__.__name__, name, team,
@@ -4447,6 +4500,8 @@ class NCAAStatsFetcher:
                         # overwrite stats_summary — it may already be "Did Not Play".
                         if result.get("game_time") and not best_context.get("game_time"):
                             best_context["game_time"] = result["game_time"]
+                        attempts.append({"source": diag_label, "outcome": "scheduled (ignored)"})
+                        _flush_inner(result)
                         logger.info(
                             "%s returned Scheduled for %s @ %s — ignoring (best_context is %s)",
                             scraper.__class__.__name__, name, team,
@@ -4469,12 +4524,17 @@ class NCAAStatsFetcher:
                             result["game_time"] = best_context["game_time"]
                             if "Game at" in best_context.get("stats_summary", ""):
                                 result["stats_summary"] = best_context["stats_summary"]
-                    result["data_source"] = _scraper_source_label(scraper)
+                    attempts.append({"source": diag_label, "outcome": "found stats"})
+                    _flush_inner(result)
+                    result["data_source"] = label
+                    result["fetch_diagnostic"] = attempts
                     return result
 
                 if best_context is None:
                     best_context = result
-                    best_context["data_source"] = _scraper_source_label(scraper)
+                    best_context["data_source"] = label
+                    attempts.append({"source": diag_label, "outcome": "found game, no player"})
+                    _flush_inner(result)
                     logger.info(
                         "%s found game for %s @ %s but no player stats — trying next scraper",
                         scraper.__class__.__name__, name, team,
@@ -4488,6 +4548,8 @@ class NCAAStatsFetcher:
                     # Preserve D1Baseball's URL (StatBroadcast) over ESPN's
                     if best_context.get("box_score_url"):
                         result["box_score_url"] = best_context["box_score_url"]
+                    attempts.append({"source": diag_label, "outcome": "found game, no player"})
+                    _flush_inner(result)
                     best_context = result
                 elif best_context is not None and not self._has_player_stats(result):
                     # Allow a later scraper to supply a more specific lineup status
@@ -4496,11 +4558,14 @@ class NCAAStatsFetcher:
                     if (r_sum and r_sum != "No game data"
                             and best_context.get("stats_summary") == "Game in progress"):
                         best_context["stats_summary"] = r_sum
+                    attempts.append({"source": diag_label, "outcome": "found game, no player"})
+                    _flush_inner(result)
                     logger.info(
                         "%s upgraded game_time for %s @ %s",
                         scraper.__class__.__name__, name, team,
                     )
             except Exception:
+                attempts.append({"source": diag_label, "outcome": "error"})
                 logger.exception(
                     "Scraper %s crashed for %s @ %s",
                     scraper.__class__.__name__,
@@ -4525,8 +4590,39 @@ class NCAAStatsFetcher:
             if fallback:
                 best_context.update(fallback)
                 best_context["data_source"] = "game log"
+                attempts.append({"source": "game log", "outcome": "found stats"})
                 logger.info("Game log fallback: used cached stats for %s @ %s", name, team)
 
+        # Live game log fallback: live scrapers couldn't locate the player
+        # but an earlier run (this game or a prior pitch in this game)
+        # logged stats — carry those forward instead of "not in lineup".
+        if (best_context is not None
+                and best_context.get("game_status") == "Live"
+                and not self._has_player_stats(best_context)):
+            fallback = self._game_log_fallback(
+                name, team,
+                best_context.get("game_date", ""),
+                best_context.get("game_context", ""),
+                player.get("position", ""),
+            )
+            if fallback:
+                # Preserve live game state (status/context/inning) — only lift
+                # the stat line and the captured_at metadata.
+                live_status = best_context.get("game_status")
+                live_context = best_context.get("game_context")
+                best_context.update(fallback)
+                best_context["game_status"] = live_status
+                if live_context:
+                    best_context["game_context"] = live_context
+                best_context["data_source"] = "game log (live)"
+                attempts.append({"source": "game log", "outcome": "found stats (live carry-forward)"})
+                logger.info(
+                    "Live game log fallback: carried stats for %s @ %s captured at %s",
+                    name, team, fallback.get("stats_captured_at"),
+                )
+
+        if best_context is not None:
+            best_context["fetch_diagnostic"] = attempts
         return best_context  # may be None
 
     @staticmethod
@@ -4540,10 +4636,12 @@ class NCAAStatsFetcher:
         """Return stats from the game log if today's game is already cached.
 
         Triggers when all live scrapers return 'Did Not Play' for a Final game
-        that we know the player appeared in — e.g. when Imperva blocks the box
-        score page on a later run after an earlier run succeeded.
+        OR when a Live game's sources are blocked and we have an earlier
+        snapshot of today's stats in the log — better than "not in lineup".
 
         Matches on date + opponent name (extracted from game_context).
+        Includes ``stats_captured_at`` so the caller can render an "as of"
+        timestamp signaling the data is from an earlier capture.
         """
         if not game_date:
             return None
@@ -4575,7 +4673,11 @@ class NCAAStatsFetcher:
             if not stats:
                 continue
 
-            is_pitcher = _is_pitcher_pos(position) or "ip" in stats
+            captured_at = entry.get("captured_at")
+            captured_status = entry.get("captured_status")
+            is_pitcher = entry.get("is_pitcher_line")
+            if is_pitcher is None:
+                is_pitcher = _is_pitcher_pos(position) or "ip" in stats
             if is_pitcher:
                 ip_val = float(stats.get("ip", "0") or "0")
                 outs = round(ip_val * 3)
@@ -4601,6 +4703,8 @@ class NCAAStatsFetcher:
                     "hits_allowed": h,
                     "quality_start": qs,
                     "_player_found": True,
+                    "stats_captured_at": captured_at,
+                    "stats_captured_status": captured_status,
                 }
             else:
                 ab  = int(stats.get("ab", 0))
@@ -4629,6 +4733,8 @@ class NCAAStatsFetcher:
                     "walks": bb,
                     "strikeouts": k,
                     "_player_found": True,
+                    "stats_captured_at": captured_at,
+                    "stats_captured_status": captured_status,
                 }
         return None
 

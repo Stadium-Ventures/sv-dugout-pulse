@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>SV Dugout Pulse — Source Health</title>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --card: #11161f;
+    --card-border: #1f2735;
+    --text: #e8eaed;
+    --text-dim: #7d8590;
+    --warning: #fbbf24;
+    --critical: #f87171;
+    --ok: #34d399;
+  }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    margin: 0; padding: 1.2rem;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.4rem; margin: 0 0 0.3rem 0; }
+  .subhead { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 1.2rem; }
+  .subhead a { color: var(--text-dim); text-decoration: underline; text-underline-offset: 2px; }
+  .summary {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .summary-row { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.85rem; }
+  .summary-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+  .summary-label { color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .summary-value { font-weight: 600; font-size: 1rem; }
+  .summary-value.warning { color: var(--warning); }
+  .summary-value.critical { color: var(--critical); }
+  .summary-value.ok { color: var(--ok); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    font-size: 0.82rem;
+  }
+  th, td {
+    text-align: left; padding: 0.5rem 0.7rem;
+    border-bottom: 1px solid var(--card-border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--card);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+  }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .pill.ok { background: rgba(52, 211, 153, 0.15); color: var(--ok); border: 1px solid rgba(52, 211, 153, 0.3); }
+  .pill.warning { background: rgba(251, 191, 36, 0.15); color: var(--warning); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .pill.critical { background: rgba(248, 113, 113, 0.15); color: var(--critical); border: 1px solid rgba(248, 113, 113, 0.3); }
+  .src-list { color: var(--text-dim); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .blocked-src { color: var(--critical); font-weight: 600; }
+  .empty { padding: 2rem; text-align: center; color: var(--text-dim); }
+  .source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; }
+  .source-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    padding: 0.7rem 0.9rem; border-radius: 8px;
+  }
+  .source-card-name { font-weight: 600; margin-bottom: 0.3rem; }
+  .source-card-row { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.1rem 0; }
+  .source-card-row.blocked { color: var(--critical); }
+  h2 { font-size: 1rem; margin: 1.5rem 0 0.6rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Source health</h1>
+  <div class="subhead">
+    Rolling 48-hour history of scraper outcomes per run.
+    <a href="index.html">← Back to dashboard</a>
+  </div>
+  <div id="summary"></div>
+  <h2>Aggregated by source (last 48h)</h2>
+  <div id="sourceAgg"></div>
+  <h2>Per-run history</h2>
+  <table id="historyTable">
+    <thead>
+      <tr>
+        <th>Time (ET)</th>
+        <th>Status</th>
+        <th>Blocked sources</th>
+        <th>Blocked clients</th>
+        <th>Carry-fwd</th>
+        <th>Fallback</th>
+        <th>Block events</th>
+      </tr>
+    </thead>
+    <tbody id="historyBody"></tbody>
+  </table>
+</div>
+
+<script>
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString('en-US', {
+    month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+    timeZone: 'America/New_York', timeZoneName: 'short',
+  });
+}
+
+function renderSummary(history) {
+  const el = document.getElementById('summary');
+  if (!history.length) {
+    el.innerHTML = '<div class="empty">No history yet — first health snapshot will land on the next run.</div>';
+    return;
+  }
+  const latest = history[history.length - 1];
+  const blockedRuns = history.filter(h => (h.blocked_sources || []).length).length;
+  const pct = Math.round((blockedRuns / history.length) * 100);
+  const sevClass = latest.severity || 'ok';
+  el.innerHTML = `
+    <div class="summary">
+      <div class="summary-row">
+        <div class="summary-stat">
+          <span class="summary-label">Latest run</span>
+          <span class="summary-value">${esc(fmtTime(latest.generated_at))}</span>
+        </div>
+        <div class="summary-stat">
+          <span class="summary-label">Status</span>
+          <span class="summary-value ${sevClass}"><span class="pill ${sevClass}">${esc(latest.severity || 'ok')}</span></span>
+        </div>
+        <div class="summary-stat">
+          <span class="summary-label">Total runs (48h)</span>
+          <span class="summary-value">${history.length}</span>
+        </div>
+        <div class="summary-stat">
+          <span class="summary-label">Runs with blocks</span>
+          <span class="summary-value ${pct > 25 ? 'critical' : pct > 5 ? 'warning' : 'ok'}">${blockedRuns} (${pct}%)</span>
+        </div>
+        <div class="summary-stat">
+          <span class="summary-label">Blocked clients (latest)</span>
+          <span class="summary-value ${(latest.blocked_clients||[]).length ? 'critical' : 'ok'}">${(latest.blocked_clients||[]).length}</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderSourceAggregation(history) {
+  const el = document.getElementById('sourceAgg');
+  if (!history.length) { el.innerHTML = ''; return; }
+  // Aggregate by source × outcome across all runs
+  const agg = {};
+  for (const h of history) {
+    const bs = h.by_source || {};
+    for (const src of Object.keys(bs)) {
+      const target = agg[src] || (agg[src] = {});
+      for (const outcome of Object.keys(bs[src])) {
+        target[outcome] = (target[outcome] || 0) + bs[src][outcome];
+      }
+    }
+  }
+  const sources = Object.keys(agg).sort();
+  if (!sources.length) { el.innerHTML = '<div class="empty">No diagnostics yet.</div>'; return; }
+  const cards = sources.map(src => {
+    const outcomes = agg[src];
+    const total = Object.values(outcomes).reduce((a, b) => a + b, 0);
+    const rows = Object.keys(outcomes).sort().map(o => {
+      const blocked = /block|403|waf/i.test(o);
+      return `<div class="source-card-row${blocked ? ' blocked' : ''}"><span>${esc(o)}</span><span>${outcomes[o]}</span></div>`;
+    }).join('');
+    return `<div class="source-card">
+      <div class="source-card-name">${esc(src)} <span style="opacity:0.5;font-size:0.75rem;font-weight:400">${total} attempts</span></div>
+      ${rows}
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="source-grid">${cards}</div>`;
+}
+
+function renderHistoryTable(history) {
+  const tbody = document.getElementById('historyBody');
+  if (!history.length) {
+    tbody.innerHTML = '<tr><td colspan="7" class="empty">No history yet.</td></tr>';
+    return;
+  }
+  // Newest first
+  const reversed = history.slice().reverse();
+  tbody.innerHTML = reversed.map(h => {
+    const sev = h.severity || 'ok';
+    const sources = (h.blocked_sources || []).map(s => `<span class="blocked-src">${esc(s)}</span>`).join(', ') || '—';
+    const blockedClients = (h.blocked_clients || []);
+    const blockedClientsCell = blockedClients.length
+      ? `${blockedClients.length} <span class="src-list">(${esc(blockedClients.slice(0, 4).join(', '))}${blockedClients.length > 4 ? ` +${blockedClients.length - 4}` : ''})</span>`
+      : '0';
+    const carry = (h.carry_forward_clients || []).length;
+    const fallback = (h.fallback_clients || []).length;
+    return `<tr>
+      <td>${esc(fmtTime(h.generated_at))}</td>
+      <td><span class="pill ${sev}">${esc(sev)}</span></td>
+      <td>${sources}</td>
+      <td>${blockedClientsCell}</td>
+      <td>${carry}</td>
+      <td>${fallback}</td>
+      <td>${h.blocked_event_count || 0}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function load() {
+  let history = [];
+  try {
+    const resp = await fetch('data/fetch_health_history.json?t=' + Date.now());
+    if (resp.ok) history = await resp.json();
+  } catch (e) {
+    document.getElementById('summary').innerHTML = '<div class="empty">Could not load history.</div>';
+    return;
+  }
+  renderSummary(history);
+  renderSourceAggregation(history);
+  renderHistoryTable(history);
+}
+load();
+setInterval(load, 60000);
+</script>
+</body>
+</html>
