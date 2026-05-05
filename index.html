@@ -57,6 +57,29 @@
     font-size: 0.78rem;
     margin-top: 0.2rem;
   }
+  .header-nav {
+    margin-top: 0.6rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .header-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--card-border, #1f2735);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.02);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .header-nav a:hover {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.2);
+  }
 
   /* ---- Filters ---- */
   .filters {
@@ -899,6 +922,9 @@
     <div class="auto-refresh-dot"></div>
     <span>Auto-refreshing</span>
   </div>
+  <nav class="header-nav" aria-label="Secondary">
+    <a href="diagnostics.html">📊 Source health &amp; coverage</a>
+  </nav>
 </div>
 <div class="stale-banner" id="staleBanner"></div>
 <div class="time-tabs" role="tablist" aria-label="Time window">
