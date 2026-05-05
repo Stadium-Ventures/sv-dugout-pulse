@@ -733,6 +733,51 @@
     opacity: 0.6;
     margin-top: 0.15rem;
   }
+  /* ---- Run health banner ---- */
+  .health-banner {
+    margin: 0 auto 1rem auto;
+    max-width: 1200px;
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .health-banner.warning {
+    background: rgba(251, 191, 36, 0.10);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    color: #fde68a;
+  }
+  .health-banner.critical {
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    color: #fecaca;
+  }
+  .health-banner-icon { font-size: 1.05rem; line-height: 1; }
+  .health-banner-body { flex: 1; }
+  .health-banner-title { font-weight: 600; margin-bottom: 0.15rem; }
+  .health-banner-detail { opacity: 0.9; font-size: 0.78rem; }
+  .health-banner a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  /* ---- Stale-stats "as of" indicator ---- */
+  .stats-asof {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    letter-spacing: 0.02em;
+  }
   /* ---- Per-source fetch diagnostic (expandable) ---- */
   .fetch-diag {
     font-size: 0.7rem;
@@ -909,6 +954,8 @@
   <button class="clear-filters-btn" id="clearFiltersBtn" title="Reset all filters" style="display:none;">Clear filters</button>
 </div>
 
+<div id="healthBanner" style="display:none;"></div>
+
 <div class="grid" id="grid">
   <div class="loading-splash" id="loadingSplash">
     <div class="loading-spinner"></div>
@@ -939,6 +986,7 @@ const WINDOW_GRADE_CLASS = {
 
 let allPlayers = [];
 let dataGeneratedAt = null;
+let runHealth = null;
 let yesterdaySourceDate = null;
 let autoRefreshTimer = null;
 let filters = { roster:'client', level:'all', position:'all', status:'all', grade:'all', heartbeat:'all' };
@@ -1078,6 +1126,23 @@ function renderCard(p) {
   // and game_context already show the time.
   const gameTimeHtml = '';
 
+  // "As of HH:MM" badge — shown when stats were carried forward from an
+  // earlier capture (run-to-run cache OR game log) and the lag is more
+  // than 2 minutes. Honest signal to the user that this isn't fresh.
+  let statsAsofHtml = '';
+  if (p.stats_captured_at && dataGeneratedAt) {
+    const captured = new Date(p.stats_captured_at);
+    const generated = new Date(dataGeneratedAt);
+    const lagMin = Math.floor((generated - captured) / 60000);
+    if (lagMin >= 2) {
+      const captTime = captured.toLocaleTimeString('en-US', {
+        hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York'
+      });
+      const lagLabel = lagMin < 60 ? `${lagMin}m ago` : `${Math.floor(lagMin / 60)}h ago`;
+      statsAsofHtml = `<span class="stats-asof" title="Stats captured at ${esc(captTime)} ET — current run could not refresh">as of ${esc(captTime)} · ${esc(lagLabel)}</span>`;
+    }
+  }
+
   // Per-source diagnostic — only shown for fallback states (live game where
   // we couldn't locate the player, or DNP) so users can see *why* each
   // scraper didn't find the player instead of trusting "not in lineup" blindly.
@@ -1119,7 +1184,7 @@ function renderCard(p) {
       <div class="team-name">${esc(p.team)}</div>
       <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
       ${p.grade_reason ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
-      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${highlightStats(p.stats_summary)}</div>
+      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${highlightStats(p.stats_summary)}${statsAsofHtml}</div>
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
         : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
@@ -1421,10 +1486,53 @@ function sortWindowPlayers(players) {
   });
 }
 
+function renderHealthBanner() {
+  const el = document.getElementById('healthBanner');
+  if (!el) return;
+  const sev = runHealth && runHealth.severity;
+  if (!sev || sev === 'ok' || currentWindow !== 'today') {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  const blockedSrcs = (runHealth.blocked_sources || []);
+  const blockedClients = (runHealth.blocked_clients || []);
+  const carriedClients = (runHealth.carry_forward_clients || []);
+  const fallbackClients = (runHealth.fallback_clients || []);
+  let title = '';
+  let detailParts = [];
+  if (blockedSrcs.length) {
+    title = `${blockedSrcs.join(', ')} ${blockedSrcs.length === 1 ? 'is' : 'are'} blocked — live data may be incomplete`;
+  } else if (sev === 'warning') {
+    title = 'Several live games could not be located in any source';
+  } else {
+    title = 'Multiple sources failing — see fetch trace on affected cards';
+  }
+  if (blockedClients.length) {
+    detailParts.push(`${blockedClients.length} client${blockedClients.length === 1 ? '' : 's'} affected (${blockedClients.slice(0, 3).join(', ')}${blockedClients.length > 3 ? `, +${blockedClients.length - 3} more` : ''})`);
+  }
+  if (carriedClients.length) {
+    detailParts.push(`${carriedClients.length} carried forward from earlier capture`);
+  }
+  if (fallbackClients.length && !blockedClients.length) {
+    detailParts.push(`${fallbackClients.length} stuck on "not in lineup" / DNP`);
+  }
+  detailParts.push(`<a href="diagnostics.html">View source health history →</a>`);
+  el.style.display = 'block';
+  el.className = `health-banner ${sev}`;
+  el.innerHTML = `
+    <div class="health-banner-icon">${sev === 'critical' ? '⛔' : '⚠️'}</div>
+    <div class="health-banner-body">
+      <div class="health-banner-title">${esc(title)}</div>
+      <div class="health-banner-detail">${detailParts.join(' · ')}</div>
+    </div>`;
+}
+
 function render() {
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
   const noGameSection = document.getElementById('noGameSection');
+  renderHealthBanner();
 
   if (currentWindow === 'today') {
     const allFiltered = allPlayers.filter(matchesFilters);
@@ -1790,9 +1898,11 @@ function manageAutoRefresh() {
           if (Array.isArray(raw)) {
             allPlayers = _dedupPlayers(raw);
             dataGeneratedAt = null;
+            runHealth = null;
           } else {
             allPlayers = _dedupPlayers(raw.players || []);
             dataGeneratedAt = raw.generated_at || null;
+            runHealth = raw.health || null;
           }
           updateTimestamp();
           render();
@@ -1943,6 +2053,7 @@ async function refreshData() {
     if (currentWindow === 'today') {
       allPlayers = _dedupPlayers(Array.isArray(raw) ? raw : (raw.players || []));
       dataGeneratedAt = Array.isArray(raw) ? null : (raw.generated_at || null);
+      runHealth = Array.isArray(raw) ? null : (raw.health || null);
       updateTimestamp();
     } else if (currentWindow === 'yesterday') {
       windowData.yesterday = _dedupPlayers(raw.players || []);
@@ -1991,9 +2102,11 @@ async function fetchHeartbeat() {
     if (Array.isArray(raw)) {
       allPlayers = _dedupPlayers(raw);
       dataGeneratedAt = null;
+      runHealth = null;
     } else {
       allPlayers = _dedupPlayers(raw.players || []);
       dataGeneratedAt = raw.generated_at || null;
+      runHealth = raw.health || null;
     }
     updateTimestamp();
     render();

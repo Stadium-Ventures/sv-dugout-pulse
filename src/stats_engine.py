@@ -4593,6 +4593,34 @@ class NCAAStatsFetcher:
                 attempts.append({"source": "game log", "outcome": "found stats"})
                 logger.info("Game log fallback: used cached stats for %s @ %s", name, team)
 
+        # Live game log fallback: live scrapers couldn't locate the player
+        # but an earlier run (this game or a prior pitch in this game)
+        # logged stats — carry those forward instead of "not in lineup".
+        if (best_context is not None
+                and best_context.get("game_status") == "Live"
+                and not self._has_player_stats(best_context)):
+            fallback = self._game_log_fallback(
+                name, team,
+                best_context.get("game_date", ""),
+                best_context.get("game_context", ""),
+                player.get("position", ""),
+            )
+            if fallback:
+                # Preserve live game state (status/context/inning) — only lift
+                # the stat line and the captured_at metadata.
+                live_status = best_context.get("game_status")
+                live_context = best_context.get("game_context")
+                best_context.update(fallback)
+                best_context["game_status"] = live_status
+                if live_context:
+                    best_context["game_context"] = live_context
+                best_context["data_source"] = "game log (live)"
+                attempts.append({"source": "game log", "outcome": "found stats (live carry-forward)"})
+                logger.info(
+                    "Live game log fallback: carried stats for %s @ %s captured at %s",
+                    name, team, fallback.get("stats_captured_at"),
+                )
+
         if best_context is not None:
             best_context["fetch_diagnostic"] = attempts
         return best_context  # may be None
@@ -4608,10 +4636,12 @@ class NCAAStatsFetcher:
         """Return stats from the game log if today's game is already cached.
 
         Triggers when all live scrapers return 'Did Not Play' for a Final game
-        that we know the player appeared in — e.g. when Imperva blocks the box
-        score page on a later run after an earlier run succeeded.
+        OR when a Live game's sources are blocked and we have an earlier
+        snapshot of today's stats in the log — better than "not in lineup".
 
         Matches on date + opponent name (extracted from game_context).
+        Includes ``stats_captured_at`` so the caller can render an "as of"
+        timestamp signaling the data is from an earlier capture.
         """
         if not game_date:
             return None
@@ -4643,7 +4673,11 @@ class NCAAStatsFetcher:
             if not stats:
                 continue
 
-            is_pitcher = _is_pitcher_pos(position) or "ip" in stats
+            captured_at = entry.get("captured_at")
+            captured_status = entry.get("captured_status")
+            is_pitcher = entry.get("is_pitcher_line")
+            if is_pitcher is None:
+                is_pitcher = _is_pitcher_pos(position) or "ip" in stats
             if is_pitcher:
                 ip_val = float(stats.get("ip", "0") or "0")
                 outs = round(ip_val * 3)
@@ -4669,6 +4703,8 @@ class NCAAStatsFetcher:
                     "hits_allowed": h,
                     "quality_start": qs,
                     "_player_found": True,
+                    "stats_captured_at": captured_at,
+                    "stats_captured_status": captured_status,
                 }
             else:
                 ab  = int(stats.get("ab", 0))
@@ -4697,6 +4733,8 @@ class NCAAStatsFetcher:
                     "walks": bb,
                     "strikeouts": k,
                     "_player_found": True,
+                    "stats_captured_at": captured_at,
+                    "stats_captured_status": captured_status,
                 }
         return None
 
