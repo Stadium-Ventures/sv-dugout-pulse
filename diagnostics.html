@@ -82,6 +82,35 @@
   .source-card-row { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.1rem 0; }
   .source-card-row.blocked { color: var(--critical); }
   h2 { font-size: 1rem; margin: 1.5rem 0 0.6rem; }
+  .coverage-headline {
+    background: var(--card); border: 1px solid var(--card-border);
+    padding: 0.7rem 1rem; border-radius: 8px; margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+  }
+  .coverage-headline .pct { font-weight: 700; font-size: 1.15rem; }
+  .coverage-headline .pct.ok { color: var(--ok); }
+  .coverage-headline .pct.warning { color: var(--warning); }
+  .coverage-headline .pct.critical { color: var(--critical); }
+  .level-tag {
+    display: inline-block; font-size: 0.65rem; padding: 1px 6px; border-radius: 4px;
+    background: rgba(255,255,255,0.06); color: var(--text-dim); margin-left: 0.3rem;
+    font-weight: 500;
+  }
+  .status-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 0.4rem; vertical-align: middle;
+  }
+  .status-dot.ok { background: var(--ok); }
+  .status-dot.warning { background: var(--warning); }
+  .status-dot.critical { background: var(--critical); }
+  .bar {
+    display: inline-block; width: 80px; height: 6px;
+    background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden;
+    vertical-align: middle; margin-right: 0.5rem;
+  }
+  .bar-fill { height: 100%; background: var(--ok); }
+  .bar-fill.warning { background: var(--warning); }
+  .bar-fill.critical { background: var(--critical); }
 </style>
 </head>
 <body>
@@ -92,6 +121,13 @@
     <a href="index.html">← Back to dashboard</a>
   </div>
   <div id="summary"></div>
+
+  <h2>Today's live-stats coverage</h2>
+  <div id="todayCoverage"></div>
+
+  <h2>Per-player history (last 30 days)</h2>
+  <div id="playerHistory"></div>
+
   <h2>Aggregated by source (last 48h)</h2>
   <div id="sourceAgg"></div>
   <h2>Per-run history</h2>
@@ -225,18 +261,154 @@ function renderHistoryTable(history) {
   }).join('');
 }
 
-async function load() {
-  let history = [];
-  try {
-    const resp = await fetch('data/fetch_health_history.json?t=' + Date.now());
-    if (resp.ok) history = await resp.json();
-  } catch (e) {
-    document.getElementById('summary').innerHTML = '<div class="empty">Could not load history.</div>';
+function renderTodayCoverage(pulse) {
+  const el = document.getElementById('todayCoverage');
+  if (!pulse || !Array.isArray(pulse.players)) {
+    el.innerHTML = '<div class="empty">No pulse data available.</div>';
     return;
   }
-  renderSummary(history);
-  renderSourceAggregation(history);
-  renderHistoryTable(history);
+  // Only players who had a game today (game_status set and not "N/A")
+  const withGames = pulse.players.filter(p => {
+    const gs = (p.game_status || '').trim();
+    return gs && gs !== 'N/A';
+  });
+  if (!withGames.length) {
+    el.innerHTML = '<div class="empty">No players have games today yet.</div>';
+    return;
+  }
+  const blockedRe = /block|403|waf/i;
+  const enriched = withGames.map(p => {
+    const fd = p.fetch_diagnostic || [];
+    const outcomes = fd.map(d => d.outcome || '');
+    const sources = [...new Set(fd.map(d => d.source).filter(Boolean))];
+    const blocked = outcomes.some(o => blockedRe.test(o));
+    const captured = !!(p.data_source && !blocked);
+    let sev = 'ok';
+    if (blocked) sev = 'critical';
+    else if (!captured) sev = 'warning';
+    return {
+      name: p.player_name, team: p.team, level: p.level,
+      gameStatus: p.game_status, dataSource: p.data_source || '',
+      sources, captured, blocked, sev,
+    };
+  });
+  const captured = enriched.filter(p => p.captured).length;
+  const total = enriched.length;
+  const pct = Math.round((captured / total) * 100);
+  const pctClass = pct >= 90 ? 'ok' : pct >= 70 ? 'warning' : 'critical';
+
+  // Sort: failures first, then captured
+  enriched.sort((a, b) => {
+    if (a.captured !== b.captured) return a.captured ? 1 : -1;
+    return (a.name || '').localeCompare(b.name || '');
+  });
+
+  const rows = enriched.map(p => `
+    <tr>
+      <td><span class="status-dot ${p.sev}"></span>${esc(p.name || '—')}<span class="level-tag">${esc(p.level || '')}</span></td>
+      <td>${esc(p.team || '—')}</td>
+      <td>${esc(p.gameStatus || '—')}</td>
+      <td>${p.captured ? `<span class="pill ok">live</span>` : p.blocked ? `<span class="pill critical">blocked</span>` : `<span class="pill warning">no data</span>`}</td>
+      <td class="src-list">${esc(p.dataSource || (p.sources.length ? p.sources.join(' → ') : '—'))}</td>
+    </tr>`).join('');
+
+  el.innerHTML = `
+    <div class="coverage-headline">
+      <span class="pct ${pctClass}">${captured}/${total} (${pct}%)</span>
+      players with games today have live stats.
+    </div>
+    <table>
+      <thead><tr><th>Player</th><th>Team</th><th>Game</th><th>Status</th><th>Source</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function renderPlayerHistory(playerHist) {
+  const el = document.getElementById('playerHistory');
+  if (!Array.isArray(playerHist) || !playerHist.length) {
+    el.innerHTML = '<div class="empty">No history yet — first daily snapshot will appear after the next run.</div>';
+    return;
+  }
+  // Last 30 days
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 30);
+  const cutoffStr = cutoffDate.toISOString().slice(0, 10);
+  const recent = playerHist.filter(d => (d.date || '') >= cutoffStr);
+  if (!recent.length) {
+    el.innerHTML = '<div class="empty">No snapshots in the last 30 days yet.</div>';
+    return;
+  }
+  // Aggregate per player: days_with_game, days_captured, days_blocked
+  const agg = {};
+  for (const day of recent) {
+    for (const p of (day.players || [])) {
+      const key = `${p.name}|${p.team}`;
+      const a = agg[key] || (agg[key] = {
+        name: p.name, team: p.team, level: p.level,
+        days: 0, captured: 0, blocked: 0, lastDate: '',
+      });
+      a.days += 1;
+      if (p.captured) a.captured += 1;
+      if (p.blocked) a.blocked += 1;
+      if ((day.date || '') > a.lastDate) a.lastDate = day.date || '';
+    }
+  }
+  const players = Object.values(agg);
+  if (!players.length) {
+    el.innerHTML = '<div class="empty">No per-player coverage recorded yet.</div>';
+    return;
+  }
+  // Sort worst-first by capture rate, then most days
+  players.forEach(p => { p.rate = p.days ? p.captured / p.days : 0; });
+  players.sort((a, b) => a.rate - b.rate || b.days - a.days);
+
+  const totalDays = recent.length;
+  const allDays = players.reduce((s, p) => s + p.days, 0);
+  const allCaptured = players.reduce((s, p) => s + p.captured, 0);
+  const aggPct = allDays ? Math.round(100 * allCaptured / allDays) : 100;
+
+  const rows = players.map(p => {
+    const pctP = Math.round(p.rate * 100);
+    const sev = pctP >= 90 ? 'ok' : pctP >= 70 ? 'warning' : 'critical';
+    return `<tr>
+      <td><span class="status-dot ${sev}"></span>${esc(p.name || '—')}<span class="level-tag">${esc(p.level || '')}</span></td>
+      <td>${esc(p.team || '—')}</td>
+      <td><span class="bar"><span class="bar-fill ${sev}" style="width:${pctP}%"></span></span>${pctP}% (${p.captured}/${p.days})</td>
+      <td>${p.blocked || 0}</td>
+      <td>${esc(p.lastDate || '—')}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="coverage-headline">
+      <span class="pct ${aggPct >= 90 ? 'ok' : aggPct >= 70 ? 'warning' : 'critical'}">${aggPct}%</span>
+      overall capture rate across ${players.length} players over ${totalDays} day${totalDays === 1 ? '' : 's'}.
+    </div>
+    <table>
+      <thead><tr><th>Player</th><th>Team</th><th>Capture rate</th><th>Days blocked</th><th>Last seen</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+async function fetchJson(path) {
+  try {
+    const resp = await fetch(path + '?t=' + Date.now());
+    if (resp.ok) return await resp.json();
+  } catch (e) {}
+  return null;
+}
+
+async function load() {
+  const [history, pulse, playerHist] = await Promise.all([
+    fetchJson('data/fetch_health_history.json'),
+    fetchJson('data/current_pulse.json'),
+    fetchJson('data/player_health_history.json'),
+  ]);
+  renderSummary(history || []);
+  renderTodayCoverage(pulse);
+  renderPlayerHistory(playerHist || []);
+  renderSourceAggregation(history || []);
+  renderHistoryTable(history || []);
 }
 load();
 setInterval(load, 60000);

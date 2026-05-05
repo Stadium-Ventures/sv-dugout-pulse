@@ -93,6 +93,7 @@ SIDEARM_FOLDER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data"
 SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
 ROSTER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "roster_cache.json")
 HS_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "hs_game_log.json")
+PLAYER_HEALTH_HISTORY_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "player_health_history.json")
 
 # ---------------------------------------------------------------------------
 # High School Stats (Google Sheet export)

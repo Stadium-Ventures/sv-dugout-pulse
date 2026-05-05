@@ -28,6 +28,7 @@ from src.config import (
     HS_GAME_LOG_PATH,
     NCAA_GAME_LOG_PATH,
     OUTPUT_PATH,
+    PLAYER_HEALTH_HISTORY_PATH,
     WINDOW_7D_PATH,
     WINDOW_SEASON_PATH,
     YESTERDAY_PULSE_PATH,
@@ -1275,6 +1276,71 @@ def _append_health_history(generated_at: str, health: dict) -> None:
         logger.warning("Failed to append fetch health history — non-fatal")
 
 
+_PLAYER_HEALTH_RETENTION_DAYS = 90
+_BLOCKED_OUTCOME_RE = re.compile(r"block|403|waf", re.IGNORECASE)
+
+
+def _update_player_health_history(pulse: list[dict]) -> None:
+    """Snapshot per-player live-stats coverage for today (ET).
+
+    Writes one entry per ET date; subsequent runs the same day overwrite the
+    entry, so the last run of the day is the persisted snapshot. Capped at
+    `_PLAYER_HEALTH_RETENTION_DAYS` rolling days. Failures are non-fatal.
+    """
+    try:
+        et_now = datetime.now(ZoneInfo("America/New_York"))
+        today_et = et_now.strftime("%Y-%m-%d")
+
+        snapshot_players = []
+        for p in pulse:
+            game_status = (p.get("game_status") or "").strip()
+            # Only count players who had a game today. "N/A" or empty = no game.
+            if game_status in ("", "N/A"):
+                continue
+            data_source = (p.get("data_source") or "").strip()
+            fd = p.get("fetch_diagnostic") or []
+            outcomes = [(d.get("outcome") or "") for d in fd]
+            sources_tried = sorted({(d.get("source") or "") for d in fd if d.get("source")})
+            blocked = any(_BLOCKED_OUTCOME_RE.search(o) for o in outcomes)
+            captured = bool(data_source) and not blocked
+            snapshot_players.append({
+                "name": p.get("player_name"),
+                "team": p.get("team"),
+                "level": p.get("level"),
+                "tier": p.get("roster_priority"),
+                "game_status": game_status,
+                "captured": captured,
+                "blocked": blocked,
+                "source": data_source,
+                "sources_tried": sources_tried,
+            })
+
+        snapshot = {
+            "date": today_et,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "players": snapshot_players,
+        }
+
+        history = []
+        if os.path.exists(PLAYER_HEALTH_HISTORY_PATH):
+            try:
+                with open(PLAYER_HEALTH_HISTORY_PATH) as f:
+                    history = json.load(f)
+            except Exception:
+                history = []
+
+        # Replace today's row if it exists, then cap retention.
+        history = [h for h in history if h.get("date") != today_et]
+        cutoff = (et_now.date() - timedelta(days=_PLAYER_HEALTH_RETENTION_DAYS)).isoformat()
+        history = [h for h in history if (h.get("date") or "") >= cutoff]
+        history.append(snapshot)
+        history.sort(key=lambda h: h.get("date") or "")
+
+        _atomic_json_write(PLAYER_HEALTH_HISTORY_PATH, history, indent=2, ensure_ascii=False)
+    except Exception:
+        logger.warning("Failed to update player health history — non-fatal")
+
+
 def write_output(pulse: list[dict]):
     """Write the pulse list to data/current_pulse.json with generated_at envelope."""
     # Stable sort so concurrent runs produce identical line positions (see _stable_sort_key).
@@ -1288,6 +1354,7 @@ def write_output(pulse: list[dict]):
     }
     _atomic_json_write(OUTPUT_PATH, envelope, indent=2, ensure_ascii=False)
     _append_health_history(generated_at, health)
+    _update_player_health_history(pulse)
     if health["severity"] != "ok":
         logger.warning(
             "Run health: %s — blocked sources=%s, blocked clients=%d, fallback clients=%d",
