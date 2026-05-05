@@ -162,146 +162,258 @@ _sb_event_cache: dict = {}
 # ClientHello.  Plain `requests` (urllib3 / OpenSSL) gets a 403 "you have been
 # blocked" page; curl_cffi can impersonate Chrome's TLS stack and gets through.
 # Use a dedicated session for SB only — all other scrapers stay on `_http`.
-_sb_session = None  # type: ignore
 # Optional: route all stats.statbroadcast.com traffic through a Cloudflare
 # Worker proxy to bypass the IP-reputation 403s that Cloudflare serves to
 # GitHub Actions runners.  Set SB_PROXY_URL to the worker origin (no trailing
 # slash), e.g. "https://sv-sb-proxy.example.workers.dev".
 _SB_PROXY_URL = os.environ.get("SB_PROXY_URL", "").rstrip("/")
 
-# Optional: tunnel all StatBroadcast traffic through a residential HTTP proxy.
+# Residential HTTP proxy pool: SB_HTTP_PROXY (primary) + SB_HTTP_PROXY_2 (backup).
 # Datacenter egress (CF Workers, Fly, Deno, Actions runners) gets categorically
 # blocked by SB's Cloudflare WAF on ASN reputation.  Residential ISP IPs aren't
 # on those blocklists because blocking Comcast/Verizon would block real users.
-# Format: "http://user:pass@host:port" (Webshare, Smartproxy, etc.).
+# Format: "http://user:pass@host:port" (Webshare, IPRoyal, Smartproxy, etc.).
+# When the primary 403s mid-run, we mark it dead and rotate to the backup —
+# uncorrelated providers means a single CF flag doesn't take out everything.
 _SB_HTTP_PROXY = os.environ.get("SB_HTTP_PROXY", "").strip()
+_SB_HTTP_PROXY_2 = os.environ.get("SB_HTTP_PROXY_2", "").strip()
+_SB_HTTP_PROXY_POOL: list[str] = [p for p in (_SB_HTTP_PROXY, _SB_HTTP_PROXY_2) if p]
+
+# Per-run rotation state.  Each scheduled run is a fresh process so this resets
+# naturally — no cross-run persistence needed.
+_sb_dead_proxies: set = set()           # proxies that 403'd this run; skip them
+_sb_active_proxy: str = ""              # proxy currently in use (set by auth flow)
+_sb_proxy_stats: dict = {}              # proxy_label -> {"success": n, "blocked": n}
+_sb_sessions: dict = {}                 # proxy_url -> curl_cffi.Session (cached per-proxy)
+
+
+def _sb_proxy_label(proxy: str) -> str:
+    """Hostname-only label for a proxy URL — used in logs and diagnostics.
+
+    Strips credentials so the label is safe to surface in the pulse JSON.
+    """
+    if not proxy:
+        return "direct"
+    try:
+        from urllib.parse import urlparse
+        return urlparse(proxy).hostname or "?"
+    except Exception:
+        return "?"
+
+
+def _sb_record_proxy(proxy: str, blocked: bool) -> None:
+    """Increment per-proxy stat counters; surfaced via get_sb_proxy_stats()."""
+    label = _sb_proxy_label(proxy)
+    bucket = _sb_proxy_stats.setdefault(label, {"success": 0, "blocked": 0})
+    bucket["blocked" if blocked else "success"] += 1
+    if blocked:
+        _sb_dead_proxies.add(proxy)
+
+
+def get_sb_proxy_stats() -> dict:
+    """Snapshot of per-proxy success/block counts for this run.
+
+    Consumed by main.py's run-health summary so the diagnostics page can show
+    which residential provider is healthy vs blocked.
+    """
+    return {
+        "pool": [_sb_proxy_label(p) for p in _SB_HTTP_PROXY_POOL],
+        "active": _sb_proxy_label(_sb_active_proxy) if _sb_active_proxy else None,
+        "dead": sorted(_sb_proxy_label(p) for p in _sb_dead_proxies),
+        "stats": dict(_sb_proxy_stats),
+    }
+
 
 def _sb_url(url: str) -> str:
-    """Rewrite a stats.statbroadcast.com URL to go through the proxy if set."""
+    """Rewrite a stats.statbroadcast.com URL to go through the worker-rewrite proxy if set."""
     if not _SB_PROXY_URL:
         return url
     return url.replace("https://stats.statbroadcast.com", _SB_PROXY_URL, 1)
 
-def _get_sb_session():
-    global _sb_session
-    if _sb_session is None:
+
+def _get_sb_session(proxy: str | None = None):
+    """Return the curl_cffi session for a specific residential proxy.
+
+    Sessions are cached per-proxy so PoW cookies and TLS state don't get
+    clobbered when we rotate. ``proxy=None`` means "use the currently-active
+    proxy" — which is the common path once auth has settled on one.
+    """
+    if proxy is None:
+        proxy = _sb_active_proxy or (_SB_HTTP_PROXY_POOL[0] if _SB_HTTP_PROXY_POOL else "")
+
+    if proxy not in _sb_sessions:
         from curl_cffi import requests as _cr  # local import: optional dep
         kwargs = {"impersonate": "chrome120"}
-        if _SB_HTTP_PROXY:
-            kwargs["proxies"] = {"http": _SB_HTTP_PROXY, "https": _SB_HTTP_PROXY}
-            logger.info("StatBroadcast: routing through residential HTTP proxy")
-        _sb_session = _cr.Session(**kwargs)
-    return _sb_session
+        if proxy:
+            kwargs["proxies"] = {"http": proxy, "https": proxy}
+            logger.info("StatBroadcast: created session via residential proxy %s",
+                        _sb_proxy_label(proxy))
+        _sb_sessions[proxy] = _cr.Session(**kwargs)
+
+    return _sb_sessions[proxy]
 
 
 def _ensure_statbroadcast_auth(event_id: str = "1") -> None:
     """Solve the StatBroadcast PoW and extract per-event auth tokens.
 
-    After calling this, ``_sb_auth`` contains the tokens needed for API
-    requests and ``_http`` has the required cookies.
+    Tries each residential proxy in the pool in order; on a 403 / failed token
+    extract through proxy N, marks N dead for the rest of the run and falls
+    through to N+1.  Auth tokens come from the last-successful proxy, and
+    subsequent SB API calls reuse that proxy via _get_sb_session() with no arg.
 
     The XOR key (_sbk) and Caesar cipher rotation are **per-event** — each
     broadcast page load generates unique values.  We must load the broadcast
     page for each new event.  The PoW cookie persists across page loads.
     """
-    global _sb_last_page_load
+    global _sb_active_proxy
 
     if _sb_auth.get("ready") and _sb_auth.get("_sbe") == event_id:
         return
 
-    # Preserve PoW state across refreshes.
+    # Build the candidate list: pool members not yet marked dead this run.
+    # If the pool is empty (no env vars set), fall through to a single
+    # direct-mode attempt — preserves the legacy no-proxy code path.
+    candidates = [p for p in _SB_HTTP_PROXY_POOL if p not in _sb_dead_proxies]
+    if not _SB_HTTP_PROXY_POOL:
+        candidates = [""]
+
+    if not candidates:
+        logger.warning("StatBroadcast: all %d residential proxies dead this run — auth will fail",
+                       len(_SB_HTTP_PROXY_POOL))
+        return
+
+    for proxy in candidates:
+        _sb_active_proxy = proxy
+        try:
+            _try_sb_auth_inner(event_id, proxy)
+        except Exception:
+            logger.exception("StatBroadcast auth attempt via %s crashed",
+                             _sb_proxy_label(proxy))
+            _sb_auth.clear()
+
+        if _sb_auth.get("ready"):
+            _sb_record_proxy(proxy, blocked=False)
+            return
+
+        # This proxy didn't produce ready auth — mark dead and try next.
+        logger.warning("StatBroadcast auth via %s failed (event=%s) — rotating to next proxy",
+                       _sb_proxy_label(proxy), event_id)
+        _sb_record_proxy(proxy, blocked=True)
+        _sb_auth.clear()
+
+    logger.error("StatBroadcast auth failed across all %d proxies for event %s",
+                 len(candidates), event_id)
+
+
+def _try_sb_auth_inner(event_id: str, proxy: str) -> None:
+    """Single-proxy auth attempt.  Mutates _sb_auth in place; success is signalled
+    by _sb_auth["ready"] == True. Caller decides what to do on failure."""
+    global _sb_last_page_load
+
+    # Preserve PoW state across refreshes within the same proxy session.
     pow_solved = _sb_auth.get("_pow_solved", False)
     _sb_auth.clear()
     _sb_auth["_pow_solved"] = pow_solved
 
-    try:
-        # Throttle broadcast page loads to avoid rate-limiting.
-        elapsed = _time.time() - _sb_last_page_load
-        if elapsed < 0.5:
-            _time.sleep(0.5 - elapsed)
+    # Throttle broadcast page loads to avoid rate-limiting.
+    elapsed = _time.time() - _sb_last_page_load
+    if elapsed < 0.5:
+        _time.sleep(0.5 - elapsed)
 
-        # Step 1: fetch the broadcast page via curl_cffi (Chrome TLS impersonation
-        # — required to bypass Cloudflare's WAF, which 403s plain `requests`).
-        sb = _get_sb_session()
-        r = sb.get(
-            _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
-            timeout=25,
-        )
-        _sb_last_page_load = _time.time()
+    # Step 1: fetch the broadcast page via curl_cffi (Chrome TLS impersonation
+    # — required to bypass Cloudflare's WAF, which 403s plain `requests`).
+    sb = _get_sb_session(proxy)
+    r = sb.get(
+        _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
+        timeout=25,
+    )
+    _sb_last_page_load = _time.time()
 
-        # Step 1b: solve PoW challenge if present (only needed once per process).
-        if not _sb_auth.get("_pow_solved"):
-            m = re.search(r'var p="([a-f0-9]+)",d=(\d+)', r.text)
-            if m:
-                p_val, difficulty = m.group(1), int(m.group(2))
-                prefix = "0" * difficulty
-                logger.info("StatBroadcast PoW: difficulty=%d, solving...", difficulty)
-                for n in range(50_000_000):
-                    h = hashlib.sha256((p_val + str(n)).encode()).hexdigest()
-                    if h.startswith(prefix):
-                        # Cookie domain must match the host we're talking to.
-                        # When proxied, that's the proxy host, not statbroadcast.com.
-                        if _SB_PROXY_URL:
-                            from urllib.parse import urlparse
-                            _cookie_domain = urlparse(_SB_PROXY_URL).hostname or ""
-                        else:
-                            _cookie_domain = ".statbroadcast.com"
-                        sb.cookies.set("sb_pow", f"{p_val}:{n}",
-                                       domain=_cookie_domain, path="/")
-                        logger.info("StatBroadcast PoW solved (n=%d)", n)
-                        break
-                else:
-                    logger.warning("StatBroadcast PoW: exhausted search space")
-                    return
+    # If CF returned a hard 403, no point parsing — caller will rotate proxy.
+    if r.status_code == 403:
+        logger.info("StatBroadcast: 403 from %s on broadcast page (event=%s)",
+                    _sb_proxy_label(proxy), event_id)
+        return
 
-                # Reload broadcast page with PoW cookie to get auth tokens.
-                _time.sleep(0.3)
-                r = sb.get(
-                    _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
-                    timeout=25,
-                )
-                _sb_last_page_load = _time.time()
-            _sb_auth["_pow_solved"] = True
-
-        # Step 2: extract auth tokens from the page.
-        found_vars = []
-        missing_vars = []
-        for var in ("_sbk", "_sbc", "_sbcf", "_sbt", "_sbe", "_sbhn", "_sbs"):
-            vm = re.search(rf'window\.{var}\s*=\s*["\']([^"\']*)', r.text)
-            if vm:
-                _sb_auth[var] = vm.group(1)
-                found_vars.append(var)
+    # Step 1b: solve PoW challenge if present (only needed once per process).
+    if not _sb_auth.get("_pow_solved"):
+        m = re.search(r'var p="([a-f0-9]+)",d=(\d+)', r.text)
+        if m:
+            p_val, difficulty = m.group(1), int(m.group(2))
+            prefix = "0" * difficulty
+            logger.info("StatBroadcast PoW: difficulty=%d, solving...", difficulty)
+            for n in range(50_000_000):
+                h = hashlib.sha256((p_val + str(n)).encode()).hexdigest()
+                if h.startswith(prefix):
+                    # Cookie domain must match the host we're talking to.
+                    # When using the worker-rewrite proxy, that's the worker host.
+                    if _SB_PROXY_URL:
+                        from urllib.parse import urlparse
+                        _cookie_domain = urlparse(_SB_PROXY_URL).hostname or ""
+                    else:
+                        _cookie_domain = ".statbroadcast.com"
+                    sb.cookies.set("sb_pow", f"{p_val}:{n}",
+                                   domain=_cookie_domain, path="/")
+                    logger.info("StatBroadcast PoW solved (n=%d)", n)
+                    break
             else:
-                missing_vars.append(var)
-        if missing_vars:
-            logger.debug("StatBroadcast auth: missing vars %s (found %s) for event %s",
-                         missing_vars, found_vars, event_id)
+                logger.warning("StatBroadcast PoW: exhausted search space")
+                return
 
-        # Extract the custom decode function (_drf) and its rotation amount.
-        # StatBroadcast uses a Caesar cipher with a variable shift (not always
-        # ROT13).  The shift value is embedded in the function body as the
-        # constant added during character rotation, e.g.  (c - 97 + N) % 26.
-        drf_m = re.search(r"window\._drf\s*=\s*['\"](\w+)", r.text)
-        if drf_m:
-            _sb_auth["_drf"] = drf_m.group(1)
-            fn_pattern = re.compile(
-                rf"function\s+{re.escape(drf_m.group(1))}\s*\([^)]*\)\s*\{{",
+            # Reload broadcast page with PoW cookie to get auth tokens.
+            _time.sleep(0.3)
+            r = sb.get(
+                _sb_url(f"https://stats.statbroadcast.com/broadcast/?id={event_id}"),
+                timeout=25,
             )
-            fn_start = fn_pattern.search(r.text)
-            if fn_start:
-                body_start = fn_start.end()
-                rot_m = re.search(
-                    r"charCodeAt.*?\+\s*(\d+)\s*\)\s*%\s*26",
-                    r.text[body_start:body_start + 500],
-                )
-                if rot_m:
-                    _sb_auth["_rot"] = int(rot_m.group(1))
-                    logger.debug("StatBroadcast custom cipher: ROT%d", _sb_auth["_rot"])
+            _sb_last_page_load = _time.time()
+            if r.status_code == 403:
+                logger.info("StatBroadcast: 403 from %s on PoW reload (event=%s)",
+                            _sb_proxy_label(proxy), event_id)
+                return
+        _sb_auth["_pow_solved"] = True
 
+    # Step 2: extract auth tokens from the page.
+    found_vars = []
+    missing_vars = []
+    for var in ("_sbk", "_sbc", "_sbcf", "_sbt", "_sbe", "_sbhn", "_sbs"):
+        vm = re.search(rf'window\.{var}\s*=\s*["\']([^"\']*)', r.text)
+        if vm:
+            _sb_auth[var] = vm.group(1)
+            found_vars.append(var)
+        else:
+            missing_vars.append(var)
+    if missing_vars:
+        logger.debug("StatBroadcast auth: missing vars %s (found %s) for event %s via %s",
+                     missing_vars, found_vars, event_id, _sb_proxy_label(proxy))
+
+    # Extract the custom decode function (_drf) and its rotation amount.
+    # StatBroadcast uses a Caesar cipher with a variable shift (not always
+    # ROT13).  The shift value is embedded in the function body as the
+    # constant added during character rotation, e.g.  (c - 97 + N) % 26.
+    drf_m = re.search(r"window\._drf\s*=\s*['\"](\w+)", r.text)
+    if drf_m:
+        _sb_auth["_drf"] = drf_m.group(1)
+        fn_pattern = re.compile(
+            rf"function\s+{re.escape(drf_m.group(1))}\s*\([^)]*\)\s*\{{",
+        )
+        fn_start = fn_pattern.search(r.text)
+        if fn_start:
+            body_start = fn_start.end()
+            rot_m = re.search(
+                r"charCodeAt.*?\+\s*(\d+)\s*\)\s*%\s*26",
+                r.text[body_start:body_start + 500],
+            )
+            if rot_m:
+                _sb_auth["_rot"] = int(rot_m.group(1))
+                logger.debug("StatBroadcast custom cipher: ROT%d", _sb_auth["_rot"])
+
+    # Auth is "ready" only if we got the critical _sbk (XOR key) — without it
+    # response decode fails and the calling code can't get usable stats.
+    if _sb_auth.get("_sbk"):
         _sb_auth["ready"] = True
-        logger.debug("StatBroadcast auth ready (header=%s)", _sb_auth.get("_sbhn", "?"))
-    except Exception:
-        logger.exception("StatBroadcast auth setup failed")
+        logger.debug("StatBroadcast auth ready via %s (header=%s)",
+                     _sb_proxy_label(proxy), _sb_auth.get("_sbhn", "?"))
 
 
 def _sb_api_headers(referer: str) -> dict:
@@ -2979,12 +3091,17 @@ class D1BaseballScraper(BaseSchoolScraper):
                         # Poison this event on 403 — CF is blocking our
                         # egress IP for this event's origin.  Retrying won't
                         # help and just speeds up the WAF's escalation.
+                        # Also mark the active residential proxy dead so the
+                        # next event re-auths through the backup proxy.
                         status = getattr(getattr(_sb_exc, "response", None), "status_code", None)
                         if status == 403 or "403" in str(_sb_exc):
                             _sb_event_cache[event_id] = {
                                 **(cached or {}),
                                 "poisoned": True,
                             }
+                            if _sb_active_proxy:
+                                _sb_record_proxy(_sb_active_proxy, blocked=True)
+                                _sb_auth.clear()
                             raise
                         if _sb_attempt == 1:
                             raise
@@ -3044,6 +3161,9 @@ class D1BaseballScraper(BaseSchoolScraper):
                             status = getattr(getattr(_sb_exc, "response", None), "status_code", None)
                             if status == 403 or "403" in str(_sb_exc):
                                 cached["poisoned"] = True
+                                if _sb_active_proxy:
+                                    _sb_record_proxy(_sb_active_proxy, blocked=True)
+                                    _sb_auth.clear()
                                 raise
                             if _sb_attempt == 1:
                                 raise

@@ -1218,6 +1218,15 @@ def _summarize_run_health(pulse: list[dict]) -> dict:
     elif fallback_clients and total_clients and len(fallback_clients) >= max(3, total_clients // 5):
         severity = "warning"
 
+    # Per-proxy block stats from the SB residential pool — surfaces which
+    # provider (Webshare vs IPRoyal) carried the run vs got blocked.  Lets
+    # diagnostics.html show which residential proxy is healthy at a glance.
+    try:
+        from src.stats_engine import get_sb_proxy_stats
+        proxy_pool = get_sb_proxy_stats()
+    except Exception:
+        proxy_pool = {}
+
     return {
         "severity": severity,
         "by_source": by_source,
@@ -1227,6 +1236,7 @@ def _summarize_run_health(pulse: list[dict]) -> dict:
         "carry_forward_clients": carry_forward_clients,
         "fallback_clients": fallback_clients,
         "total_clients": total_clients,
+        "proxy_pool": proxy_pool,
     }
 
 
@@ -1258,6 +1268,7 @@ def _append_health_history(generated_at: str, health: dict) -> None:
             "fallback_clients": health.get("fallback_clients", []),
             "total_clients": health.get("total_clients", 0),
             "by_source": health.get("by_source", {}),
+            "proxy_pool": health.get("proxy_pool", {}),
         })
         _atomic_json_write(_HEALTH_HISTORY_PATH, history, indent=2, ensure_ascii=False)
     except Exception:
