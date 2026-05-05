@@ -445,6 +445,7 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         "grade_reason": analysis.get("grade_reason", ""),
         "social_search_url": analysis["social_search_url"],
         "data_source": stats.get("data_source", ""),
+        "fetch_diagnostic": stats.get("fetch_diagnostic"),
         "is_client": player.get("is_client", True),
         "tags": {
             "draft_class": player.get("draft_class", ""),

@@ -83,27 +83,49 @@ def normalize_player(raw: dict) -> dict:
     return player
 
 
+_COACH_TRUTHY = {"yes", "y", "true", "1", "x"}
+
+
+def _is_coach(raw: dict) -> bool:
+    """Coaches share the roster sheet but should never appear in Pulse.
+
+    Two signals: the dedicated "Is Coach" column (Yes/No) or a "Primary Position"
+    that contains "coach" (e.g. "Head Coach", "Assistant Coach"). Either is
+    sufficient — we don't grade coaches.
+    """
+    if (raw.get("Is Coach") or "").strip().lower() in _COACH_TRUTHY:
+        return True
+    if "coach" in (raw.get("Primary Position") or "").strip().lower():
+        return True
+    return False
+
+
 def filter_roster(rows: list[dict]) -> list[dict]:
     """
     Keep only players whose Level is in INCLUDED_LEVELS (Pro, NCAA).
     Returns normalized player dicts.
     """
     filtered = []
-    excluded = 0
+    excluded_id = 0
+    excluded_coach = 0
     for raw in rows:
         level = raw.get("Level", "").strip()
         if level not in INCLUDED_LEVELS:
             continue
+        if _is_coach(raw):
+            excluded_coach += 1
+            continue
         player = normalize_player(raw)
         if player.get("mlb_id") in EXCLUDED_MLB_IDS:
-            excluded += 1
+            excluded_id += 1
             continue
         filtered.append(player)
 
     logger.info(
-        "Filtered roster: %d players (kept Pro/NCAA/HS, excluded %d by MLB ID)",
+        "Filtered roster: %d players (kept Pro/NCAA/HS, excluded %d by MLB ID, %d coaches)",
         len(filtered),
-        excluded,
+        excluded_id,
+        excluded_coach,
     )
     return filtered
 
