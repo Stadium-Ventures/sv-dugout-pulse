@@ -801,38 +801,29 @@
     vertical-align: middle;
     letter-spacing: 0.02em;
   }
-  /* ---- Per-source fetch diagnostic (expandable) ---- */
-  .fetch-diag {
-    font-size: 0.7rem;
+  /* ---- Plain-English card status line (replaces old "Fetch trace") ---- */
+  .card-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    line-height: 1.3;
+    cursor: help;
+  }
+  .card-status-icon { flex-shrink: 0; font-size: 0.85rem; line-height: 1; margin-top: 0.05rem; }
+  .card-status-blocked {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.08);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+  }
+  .card-status-info {
     color: var(--text-dim);
-    opacity: 0.7;
-    margin-top: 0.2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .fetch-diag summary {
-    cursor: pointer;
-    list-style: none;
-    user-select: none;
-    color: #fbbf24;
-  }
-  .fetch-diag summary::-webkit-details-marker { display: none; }
-  .fetch-diag summary::before {
-    content: "▸ ";
-    display: inline-block;
-    transition: transform 0.1s;
-  }
-  .fetch-diag[open] summary::before { content: "▾ "; }
-  .fetch-diag ul {
-    margin: 0.25rem 0 0 0.6rem;
-    padding: 0;
-    list-style: none;
-  }
-  .fetch-diag li {
-    padding: 0.05rem 0;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  }
-  .fetch-diag .diag-source { color: var(--text-dim); }
-  .fetch-diag .diag-outcome { opacity: 0.85; }
-  .fetch-diag .diag-blocked { color: #f87171; font-weight: 600; }
 
   /* ---- XBH highlights in stats line ---- */
   .stat-highlight-hr {
@@ -1169,24 +1160,36 @@ function renderCard(p) {
     }
   }
 
-  // Per-source diagnostic — only shown for fallback states (live game where
-  // we couldn't locate the player, or DNP) so users can see *why* each
-  // scraper didn't find the player instead of trusting "not in lineup" blindly.
+  // Plain-English status line — surfaced when the card looks empty so a
+  // non-technical user knows whether it's our problem (blocked) or just no
+  // box-score entry (player not in lineup). Hover for raw per-source detail.
   const summaryLc = (p.stats_summary || '').toLowerCase();
   const isFallbackState =
     summaryLc.includes('not in lineup') ||
     summaryLc.includes("hasn't pitched") ||
     summaryLc === 'game in progress' ||
     summaryLc.startsWith('did not play');
-  const fetchDiagHtml = (isFallbackState && Array.isArray(p.fetch_diagnostic) && p.fetch_diagnostic.length)
-    ? `<details class="fetch-diag"><summary>Fetch trace</summary><ul>${
-        p.fetch_diagnostic.map(a => {
-          const blocked = /block|403|waf/i.test(a.outcome || '');
-          const cls = blocked ? 'diag-outcome diag-blocked' : 'diag-outcome';
-          return `<li><span class="diag-source">${esc(a.source || '?')}:</span> <span class="${cls}">${esc(a.outcome || '?')}</span></li>`;
-        }).join('')
-      }</ul></details>`
-    : '';
+  let fetchDiagHtml = '';
+  if (isFallbackState && Array.isArray(p.fetch_diagnostic) && p.fetch_diagnostic.length) {
+    const blockedRe = /block|403|waf/i;
+    const blockedSources = [...new Set(
+      p.fetch_diagnostic.filter(d => blockedRe.test(d.outcome || '')).map(d => d.source || 'unknown')
+    )];
+    const triedSources = [...new Set(p.fetch_diagnostic.map(d => d.source || 'unknown'))];
+    const techDetail = p.fetch_diagnostic
+      .map(d => `${d.source || '?'}: ${d.outcome || '?'}`).join(' · ');
+    if (blockedSources.length) {
+      fetchDiagHtml = `<div class="card-status card-status-blocked" title="${esc(techDetail)}">
+        <span class="card-status-icon">🚫</span>
+        <span>Couldn't reach live stats — ${esc(blockedSources.join(', '))} blocked us. Hover for detail.</span>
+      </div>`;
+    } else {
+      fetchDiagHtml = `<div class="card-status card-status-info" title="${esc(techDetail)}">
+        <span class="card-status-icon">ℹ️</span>
+        <span>Checked ${esc(triedSources.join(', '))} — player not in the box score. Hover for detail.</span>
+      </div>`;
+    }
+  }
 
   // Next game display when no game today
   const nextGameHtml = p.next_game && !isLive && !isScheduled && p.game_status !== 'Final'
