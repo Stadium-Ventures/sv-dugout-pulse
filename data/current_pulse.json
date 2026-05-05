@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-05T15:21:38.769411+00:00",
+  "generated_at": "2026-05-05T20:20:12.158231+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1170,9 +1170,9 @@
       "player_name": "Jack Cebert",
       "team": "Somerset Patriots",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 3, Reading Fightin Phils 0 | Bottom 1",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Somerset Patriots 12, Reading Fightin Phils 14 | Final",
+      "game_status": "Final",
       "game_time": "11:00 AM ET",
       "game_date": "2026-05-05",
       "is_yesterday": false,
@@ -1186,7 +1186,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818416",
       "player_profile_url": "https://www.mlb.com/player/701411",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Jack%20Cebert%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
@@ -1358,23 +1358,43 @@
       "player_name": "Mason Eckelman",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Miami OH vs Ohio State",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-05",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401852100",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "no game found"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "not implemented"
         }
       ],
       "stats_captured_at": null,
@@ -1544,10 +1564,10 @@
       "player_name": "Tanner Gordon",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "Game at 8:40 PM ET",
-      "game_context": "New York Mets vs Colorado Rockies | 8:40 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "8:40 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-06",
       "is_yesterday": false,
       "next_game": {
@@ -1555,12 +1575,12 @@
         "date_full": "2026-05-06",
         "opponent": "New York Mets",
         "home_away": "vs",
-        "time": "3:10 PM ET",
-        "display": "vs New York Mets - Wed 05/06 3:10 PM ET"
+        "time": "9:20 PM ET",
+        "display": "vs New York Mets - Wed 05/06 9:20 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/824362",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/685299",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Tanner%20Gordon%22%20Rockies&f=live",
       "data_source": "MLB Stats API",
@@ -1578,23 +1598,43 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
-      "game_context": "Michigan vs Xavier",
-      "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-05",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401851074",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "no game found"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "not implemented"
         }
       ],
       "stats_captured_at": null,
@@ -2325,9 +2365,9 @@
       "player_name": "Jake Munroe",
       "team": "Tri-City Dust Devils",
       "level": "Pro",
-      "stats_summary": "Game at 2:05 PM ET",
-      "game_context": "Tri-City Dust Devils vs Spokane Indians | 2:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "2-3, HR, RBI, 2 R, SB",
+      "game_context": "Tri-City Dust Devils 2, Spokane Indians 4 | Bottom 8",
+      "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-05",
       "is_yesterday": false,
@@ -2341,8 +2381,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819228",
       "player_profile_url": "https://www.mlb.com/player/827719",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "🔥 Standout",
+      "grade_reason": "Home run",
       "social_search_url": "https://x.com/search?q=%22Jake%20Munroe%22%20Angels&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2420,10 +2460,10 @@
       "player_name": "Michael Dattalo",
       "team": "FCL Cardinals",
       "level": "Pro",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "FCL Cardinals vs FCL Nationals | 12:00 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-05",
       "is_yesterday": false,
       "next_game": {
@@ -2434,9 +2474,9 @@
         "time": "12:00 PM ET",
         "display": "@ FCL Astros - Wed 05/06 12:00 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/844141",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/809633",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -2833,23 +2873,43 @@
       "player_name": "Lee Ellis",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Miami OH vs Ohio State",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-05",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401852100",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Ellis%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "no game found"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "not implemented"
         }
       ],
       "stats_captured_at": null,
@@ -3606,7 +3666,24 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 28
+        "found stats": 25,
+        "found game, no player": 3
+      },
+      "ESPN": {
+        "scheduled (ignored)": 2,
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "no game found": 3
+      },
+      "Sidearm": {
+        "no game found": 3
+      },
+      "StatBroadcast": {
+        "no game found": 3
+      },
+      "NCAA.org": {
+        "not implemented": 3
       }
     },
     "blocked_sources": [],
@@ -3616,6 +3693,15 @@
     "fallback_clients": [
       "Jack Cebert"
     ],
-    "total_clients": 83
+    "total_clients": 83,
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
   }
 }
