@@ -4,14 +4,14 @@ Real-time baseball player tracker for Stadium Ventures. Monitors MLB, MiLB, and 
 
 ## Live Dashboard
 
-**URL:** https://thomasmtrudeau-cell.github.io/sv-dugout-pulse
+**URL:** https://stadium-ventures.github.io/sv-dugout-pulse
 
 ## Quick Reference
 
 | Item | Value |
 |------|-------|
-| **Dashboard URL** | https://thomasmtrudeau-cell.github.io/sv-dugout-pulse |
-| **GitHub Repo** | https://github.com/thomasmtrudeau-cell/sv-dugout-pulse |
+| **Dashboard URL** | https://stadium-ventures.github.io/sv-dugout-pulse |
+| **GitHub Repo** | https://github.com/Stadium-Ventures/sv-dugout-pulse |
 | **Roster Source** | Google Sheet (published as CSV) |
 | **Slack Channel** | #dugout-pulse |
 | **Update Frequency** | Every 15 minutes during game hours |
@@ -67,7 +67,7 @@ If a school's data isn't populating, you may need to add their specific feed URL
 ## How to Edit Code
 
 ### Option 1: Edit directly on GitHub (simple changes)
-1. Go to https://github.com/thomasmtrudeau-cell/sv-dugout-pulse
+1. Go to https://github.com/Stadium-Ventures/sv-dugout-pulse
 2. Navigate to the file you want to edit
 3. Click the pencil icon (Edit)
 4. Make changes
