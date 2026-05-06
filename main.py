@@ -706,6 +706,21 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         existing.append(entry)
         existing_by_key[key] = entry
 
+    # Repair pass: any entry still flagged Live with _needs_refresh is one
+    # the post-game refetch failed to recover. Replace with a "stats
+    # unavailable" placeholder marked Final so the UI surfaces it instead
+    # of silently filtering it out.
+    unavailable = 0
+    for p in existing:
+        if p.get("_needs_refresh") and p.get("game_status") == "Live":
+            p["game_status"] = "Final"
+            p["stats_summary"] = "Stats unavailable — couldn't reach box score"
+            p["stats_unavailable"] = True
+            p["performance_grade"] = "No Data"
+            p["grade_reason"] = "Could not capture box score"
+            # Preserve fetch_diagnostic so hover-detail still works on the card.
+            unavailable += 1
+
     # Strip internal _needs_refresh flag before writing output
     for p in existing:
         p.pop("_needs_refresh", None)
@@ -718,7 +733,10 @@ def _fetch_yesterday_pass(all_players: list, fetcher: StatsFetcher, analyzer: Pe
         "players": existing,
     }
     _atomic_json_write(YESTERDAY_PULSE_PATH, envelope, indent=2, ensure_ascii=False)
-    logger.info("Yesterday pulse: %d total entries (%d added, %d upgraded)", len(existing), added, updated)
+    logger.info(
+        "Yesterday pulse: %d total entries (%d added, %d upgraded, %d marked unavailable)",
+        len(existing), added, updated, unavailable,
+    )
 
 
 def _load_locked_finals(today_str: str) -> dict[str, list[dict]]:
