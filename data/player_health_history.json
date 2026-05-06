@@ -766,7 +766,7 @@
   },
   {
     "date": "2026-05-06",
-    "updated_at": "2026-05-06T22:02:31.908017+00:00",
+    "updated_at": "2026-05-06T22:12:55.370224+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -923,12 +923,13 @@
         "team": "Georgia Southern",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "StatBroadcast"
         ]
       },
       {
@@ -947,12 +948,13 @@
         "team": "Mercer",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "StatBroadcast"
         ]
       },
       {
@@ -1069,12 +1071,17 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Cancelled",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {

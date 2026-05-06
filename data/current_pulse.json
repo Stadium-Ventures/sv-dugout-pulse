@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T22:02:31.900618+00:00",
+  "generated_at": "2026-05-06T22:12:55.362793+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2082,16 +2082,16 @@
       "player_name": "Bennett Edwards",
       "team": "Georgia Southern",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Mercer vs Georgia Southern",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Mercer 0, Georgia Southern 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-06",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853086",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631951",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bennett%20Edwards%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bennett%20Edwards%22%20Georgia%20Southern&f=live",
       "data_source": "D1Baseball",
@@ -2099,6 +2099,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2299,16 +2303,16 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Mercer vs Georgia Southern",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Mercer 0, Georgia Southern 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-06",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853086",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631951",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
       "data_source": "D1Baseball",
@@ -2316,6 +2320,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3418,23 +3426,43 @@
       "player_name": "Luke Fithian",
       "team": "Rutgers",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Rider vs Rutgers",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-06",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401852662",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Luke%20Fithian%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Luke%20Fithian%22%20Rutgers&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "no game found"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -4153,30 +4181,32 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 19,
-        "found stats": 10
+        "found game, no player": 20,
+        "found stats": 9
       },
       "Sidearm": {
         "player not in box": 17,
-        "no game found": 14,
+        "no game found": 15,
         "found player": 6
       },
       "ESPN": {
         "no game found": 17,
-        "found game, no player": 2
+        "found game, no player": 2,
+        "scheduled (ignored)": 1
       },
       "NCAA.com": {
         "found stats": 5,
         "found game, no player": 12,
-        "scheduled (ignored)": 2
+        "scheduled (ignored)": 2,
+        "no game found": 1
       },
       "StatBroadcast": {
-        "no game found": 14,
-        "found player": 1
+        "no game found": 15,
+        "found player": 3
       },
       "NCAA.org": {
         "found game, no player": 12,
-        "scheduled (ignored)": 2
+        "scheduled (ignored)": 3
       }
     },
     "blocked_sources": [],
@@ -4202,7 +4232,7 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
+          "success": 3,
           "blocked": 0
         }
       }
