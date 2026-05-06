@@ -2094,8 +2094,8 @@ class ProStatsFetcher:
 _SCRAPER_SOURCE_LABELS = {
     "D1BaseballScraper": "D1Baseball",
     "ESPNScraper": "ESPN",
-    "NCAAComScraper": "NCAA",
-    "NCAAOrgScraper": "NCAA",
+    "NCAAComScraper": "NCAA.com",
+    "NCAAOrgScraper": "NCAA.org",
     "StatBroadcastScraper": "StatBroadcast",
     "SidearmScraper": "Sidearm",
 }
