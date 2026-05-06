@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T22:47:29.866286+00:00",
+  "generated_at": "2026-05-06T23:02:20.063903+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -330,7 +330,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Boston Red Sox 0, Detroit Tigers 0 | Middle 1",
+      "game_context": "Boston Red Sox 0, Detroit Tigers 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "6:40 PM ET",
       "game_date": "2026-05-06",
@@ -752,7 +752,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clearwater Threshers 0, Daytona Tortugas 0 | Bottom 1",
+      "game_context": "Clearwater Threshers 0, Daytona Tortugas 1 | End 2",
       "game_status": "Live",
       "game_time": "6:35 PM ET",
       "game_date": "2026-05-06",
@@ -998,7 +998,7 @@
       "team": "Jupiter Hammerheads",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-06",
@@ -1344,9 +1344,9 @@
       "player_name": "Jack Cebert",
       "team": "Somerset Patriots",
       "level": "Pro",
-      "stats_summary": "Game at 6:45 PM ET",
-      "game_context": "Somerset Patriots vs Reading Fightin Phils | 6:45 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Somerset Patriots 3, Reading Fightin Phils 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "6:45 PM ET",
       "game_date": "2026-05-06",
       "is_yesterday": false,
@@ -1360,7 +1360,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818417",
       "player_profile_url": "https://www.mlb.com/player/701411",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Jack%20Cebert%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
@@ -2083,7 +2083,7 @@
       "team": "Georgia Southern",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Mercer 8, Georgia Southern 0 | Bottom 1",
+      "game_context": "Mercer 8, Georgia Southern 0 | Top 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-06",
@@ -2303,8 +2303,8 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "0-1, K",
-      "game_context": "Mercer 8, Georgia Southern 0 | Bottom 1",
+      "stats_summary": "0-2, 2 K",
+      "game_context": "Mercer 8, Georgia Southern 0 | Top 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-06",
@@ -2313,7 +2313,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631951",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -2401,7 +2401,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Florida Gulf Coast 1, Florida International 3 | Top 2",
+      "game_context": "Florida Gulf Coast 4, Florida International 4 | Top 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-06",
@@ -2868,7 +2868,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fredericksburg Nationals 0, Hill City Howlers 0 | Top 1",
+      "game_context": "Fredericksburg Nationals 0, Hill City Howlers 3 | Bottom 1",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-06",
@@ -4052,7 +4052,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-1, K",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-06",
@@ -4215,6 +4215,7 @@
     "fallback_clients": [
       "Garrett Whitlock",
       "Aaron Watson",
+      "Jack Cebert",
       "Najer Victor",
       "Ryan DeSanto"
     ],
@@ -4224,17 +4225,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 2,
+          "success": 3,
           "blocked": 0
         }
       }
