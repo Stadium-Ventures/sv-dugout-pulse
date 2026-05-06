@@ -779,6 +779,24 @@
     border: 1px solid rgba(248, 113, 113, 0.45);
     color: #fecaca;
   }
+  .health-banner.ok {
+    background: rgba(52, 211, 153, 0.08);
+    border: 1px solid rgba(52, 211, 153, 0.30);
+    color: #86efac;
+    padding: 0.4rem 0.75rem;
+  }
+  .health-banner.ok .health-banner-title { font-weight: 500; font-size: 0.78rem; margin: 0; }
+  .health-banner.ok .health-banner-icon { font-size: 0.85rem; }
+  .health-banner.recovery {
+    background: rgba(96, 165, 250, 0.10);
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    color: #bfdbfe;
+  }
+  .health-banner.info {
+    background: rgba(96, 165, 250, 0.08);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    color: #bfdbfe;
+  }
   .health-banner-icon { font-size: 1.05rem; line-height: 1; }
   .health-banner-body { flex: 1; }
   .health-banner-title { font-weight: 600; margin-bottom: 0.15rem; }
@@ -1529,46 +1547,171 @@ function sortWindowPlayers(players) {
   });
 }
 
-function renderHealthBanner() {
-  const el = document.getElementById('healthBanner');
-  if (!el) return;
+function _runFreshness() {
+  // Returns { minutes, label, stale } based on dataGeneratedAt vs now.
+  if (!dataGeneratedAt) return { minutes: null, label: '', stale: false };
+  const minutes = Math.floor((Date.now() - new Date(dataGeneratedAt)) / 60000);
+  const label = minutes < 1 ? 'just now'
+    : minutes < 60 ? `${minutes}m ago`
+    : minutes < 1440 ? `${Math.floor(minutes / 60)}h ago`
+    : 'a long time ago';
+  // Cron fires every 15 min during game hours; >25 min means at least one missed run.
+  const stale = minutes !== null && minutes >= 25;
+  return { minutes, label, stale };
+}
+
+function _renderTodayBanner(el) {
+  const fresh = _runFreshness();
   const sev = runHealth && runHealth.severity;
-  if (!sev || sev === 'ok' || currentWindow !== 'today') {
+  const blockedSrcs = (runHealth && runHealth.blocked_sources) || [];
+  const blockedClients = (runHealth && runHealth.blocked_clients) || [];
+  const carriedClients = (runHealth && runHealth.carry_forward_clients) || [];
+  const fallbackClients = (runHealth && runHealth.fallback_clients) || [];
+
+  // Stale run detected — overrides upstream severity since data isn't being refreshed.
+  if (fresh.stale) {
+    const mins = fresh.minutes;
+    const cls = mins >= 60 ? 'critical' : 'warning';
+    const icon = mins >= 60 ? '⛔' : '⏱️';
+    const title = mins >= 60
+      ? `No update in ${fresh.label} — pulse appears to be down`
+      : `Last update was ${fresh.label} — expected one every 15 min`;
+    el.style.display = 'block';
+    el.className = `health-banner ${cls}`;
+    el.innerHTML = `
+      <div class="health-banner-icon">${icon}</div>
+      <div class="health-banner-body">
+        <div class="health-banner-title">${esc(title)}</div>
+        <div class="health-banner-detail">Stats on the page may be outdated. <a href="diagnostics.html">Check source health →</a></div>
+      </div>`;
+    return;
+  }
+
+  // Active issue surfaced by main.py's run-health calculation.
+  if (sev === 'warning' || sev === 'critical') {
+    let title = '';
+    let detailParts = [];
+    if (blockedSrcs.length) {
+      title = `${blockedSrcs.join(', ')} ${blockedSrcs.length === 1 ? 'is' : 'are'} blocked — live data may be incomplete`;
+    } else if (sev === 'warning') {
+      title = 'Several live games could not be located in any source';
+    } else {
+      title = 'Multiple sources failing — see status line on affected cards';
+    }
+    if (blockedClients.length) {
+      detailParts.push(`${blockedClients.length} client${blockedClients.length === 1 ? '' : 's'} affected (${blockedClients.slice(0, 3).join(', ')}${blockedClients.length > 3 ? `, +${blockedClients.length - 3} more` : ''})`);
+    }
+    if (carriedClients.length) {
+      detailParts.push(`${carriedClients.length} carried forward from earlier capture`);
+    }
+    if (fallbackClients.length && !blockedClients.length) {
+      detailParts.push(`${fallbackClients.length} stuck on "not in lineup" / DNP`);
+    }
+    detailParts.push(`<a href="diagnostics.html">View source health history →</a>`);
+    el.style.display = 'block';
+    el.className = `health-banner ${sev}`;
+    el.innerHTML = `
+      <div class="health-banner-icon">${sev === 'critical' ? '⛔' : '⚠️'}</div>
+      <div class="health-banner-body">
+        <div class="health-banner-title">${esc(title)}</div>
+        <div class="health-banner-detail">${detailParts.join(' · ')}</div>
+      </div>`;
+    return;
+  }
+
+  // Pre-game state — Today tab loaded but nobody has played yet.  Look at
+  // the rendered list to find the earliest scheduled game so we can tell
+  // Kent when the night actually starts.
+  const todays = allPlayers.filter(p =>
+    p.game_status && p.game_status !== 'N/A' && !p.is_yesterday
+  );
+  const live = todays.filter(p => p.game_status === 'Live');
+  const final = todays.filter(p => p.game_status === 'Final');
+  const scheduled = todays.filter(p => p.game_status === 'Scheduled');
+
+  if (todays.length > 0 && live.length === 0 && final.length === 0 && scheduled.length > 0) {
+    // Earliest scheduled game_time across clients — group by team so we
+    // count distinct games rather than players.
+    const games = new Map();
+    for (const p of scheduled) {
+      const key = p.team || p.player_name;
+      if (!games.has(key)) games.set(key, p);
+    }
+    const earliest = scheduled
+      .map(p => p.game_time || '')
+      .filter(Boolean)
+      .sort()[0] || '';
+    const gameCount = games.size;
+    el.style.display = 'block';
+    el.className = 'health-banner info';
+    el.innerHTML = `
+      <div class="health-banner-icon">🌙</div>
+      <div class="health-banner-body">
+        <div class="health-banner-title">${gameCount} game${gameCount === 1 ? '' : 's'} on tonight${earliest ? ` — first pitch ${esc(earliest)}` : ''}</div>
+        <div class="health-banner-detail">Stats will populate as games go live. Last refresh: ${esc(fresh.label)}.</div>
+      </div>`;
+    return;
+  }
+
+  // Healthy — compact green pill with absolute + relative timestamp.
+  if (dataGeneratedAt) {
+    const gen = new Date(dataGeneratedAt);
+    const timeStr = gen.toLocaleTimeString('en-US', {
+      hour: 'numeric', minute: '2-digit',
+      timeZone: 'America/New_York', timeZoneName: 'short',
+    });
+    el.style.display = 'block';
+    el.className = 'health-banner ok';
+    el.innerHTML = `
+      <div class="health-banner-icon">🟢</div>
+      <div class="health-banner-body">
+        <div class="health-banner-title">Pulse is healthy — last update ${esc(timeStr)} (${esc(fresh.label)})</div>
+      </div>`;
+    return;
+  }
+
+  el.style.display = 'none';
+  el.innerHTML = '';
+}
+
+function _renderYesterdayBanner(el) {
+  // Yesterday tab: surface stats_unavailable players that the overnight
+  // repair pass couldn't recover.  Reassures Kent we're still trying.
+  const data = (windowData && windowData.yesterday) || [];
+  if (!Array.isArray(data) || !data.length) {
     el.style.display = 'none';
     el.innerHTML = '';
     return;
   }
-  const blockedSrcs = (runHealth.blocked_sources || []);
-  const blockedClients = (runHealth.blocked_clients || []);
-  const carriedClients = (runHealth.carry_forward_clients || []);
-  const fallbackClients = (runHealth.fallback_clients || []);
-  let title = '';
-  let detailParts = [];
-  if (blockedSrcs.length) {
-    title = `${blockedSrcs.join(', ')} ${blockedSrcs.length === 1 ? 'is' : 'are'} blocked — live data may be incomplete`;
-  } else if (sev === 'warning') {
-    title = 'Several live games could not be located in any source';
-  } else {
-    title = 'Multiple sources failing — see fetch trace on affected cards';
+  const stuck = data.filter(p => p.stats_unavailable);
+  if (!stuck.length) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
   }
-  if (blockedClients.length) {
-    detailParts.push(`${blockedClients.length} client${blockedClients.length === 1 ? '' : 's'} affected (${blockedClients.slice(0, 3).join(', ')}${blockedClients.length > 3 ? `, +${blockedClients.length - 3} more` : ''})`);
-  }
-  if (carriedClients.length) {
-    detailParts.push(`${carriedClients.length} carried forward from earlier capture`);
-  }
-  if (fallbackClients.length && !blockedClients.length) {
-    detailParts.push(`${fallbackClients.length} stuck on "not in lineup" / DNP`);
-  }
-  detailParts.push(`<a href="diagnostics.html">View source health history →</a>`);
+  const names = stuck.slice(0, 3).map(p => p.player_name).join(', ');
+  const more = stuck.length > 3 ? `, +${stuck.length - 3} more` : '';
   el.style.display = 'block';
-  el.className = `health-banner ${sev}`;
+  el.className = 'health-banner recovery';
   el.innerHTML = `
-    <div class="health-banner-icon">${sev === 'critical' ? '⛔' : '⚠️'}</div>
+    <div class="health-banner-icon">🔄</div>
     <div class="health-banner-body">
-      <div class="health-banner-title">${esc(title)}</div>
-      <div class="health-banner-detail">${detailParts.join(' · ')}</div>
+      <div class="health-banner-title">${stuck.length} player${stuck.length === 1 ? '' : 's'} couldn't capture last night — still retrying</div>
+      <div class="health-banner-detail">${esc(names)}${esc(more)} · We re-check every 15 min until the box score lands.</div>
     </div>`;
+}
+
+function renderHealthBanner() {
+  const el = document.getElementById('healthBanner');
+  if (!el) return;
+  if (currentWindow === 'today') {
+    _renderTodayBanner(el);
+  } else if (currentWindow === 'yesterday') {
+    _renderYesterdayBanner(el);
+  } else {
+    el.style.display = 'none';
+    el.innerHTML = '';
+  }
 }
 
 function render() {
