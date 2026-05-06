@@ -1168,7 +1168,8 @@ function renderCard(p) {
     summaryLc.includes('not in lineup') ||
     summaryLc.includes("hasn't pitched") ||
     summaryLc === 'game in progress' ||
-    summaryLc.startsWith('did not play');
+    summaryLc.startsWith('did not play') ||
+    summaryLc.startsWith('stats unavailable');
   let fetchDiagHtml = '';
   if (isFallbackState && Array.isArray(p.fetch_diagnostic) && p.fetch_diagnostic.length) {
     const blockedRe = /block|403|waf/i;
