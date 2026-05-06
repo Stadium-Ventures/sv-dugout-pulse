@@ -2205,27 +2205,675 @@ class StatBroadcastScraper(BaseSchoolScraper):
         return None
 
 
+# ===== NCAA.org (stats.ncaa.org) auth bypass =====
+# stats.ncaa.org sits behind Akamai Bot Manager with a Proof-of-Work
+# interstitial.  The PoW math is trivial integer arithmetic — much simpler
+# than StatBroadcast's SHA-256 brute force — but we need Chrome TLS to even
+# get the interstitial served (curl_cffi).  The resulting ak_bmsc cookie
+# persists for ~2 hours, so we cache the authed session at module level.
+#
+# Reuses the SB residential proxy pool — GH Actions IPs are also blocked
+# here, and the proxies are interchangeable.
+
+_NCAA_ORG_BASE = "https://stats.ncaa.org"
+_ncaa_org_session = None       # cached curl_cffi.Session, or None
+_ncaa_org_auth_at: float = 0.0  # epoch seconds when ak_bmsc was issued
+_NCAA_ORG_AUTH_TTL = 90 * 60   # 90 min — cookie is good for ~2h, leave margin
+_ncaa_org_proxy: str = ""      # proxy used for the active session
+_ncaa_org_dead_proxies: set = set()
+
+
+def _ncaa_org_session_alive() -> bool:
+    """True if we have an authed session that hasn't aged out."""
+    return (
+        _ncaa_org_session is not None
+        and _ncaa_org_auth_at > 0
+        and (_time.time() - _ncaa_org_auth_at) < _NCAA_ORG_AUTH_TTL
+    )
+
+
+def _solve_ncaa_akamai_pow(html: str) -> Optional[dict]:
+    """Parse the Akamai interstitial and return {bm-verify, pow} payload.
+
+    The interstitial contains JS like::
+
+        var bm = "<long base64-ish token>";
+        var i = 1234567;
+        var j = i + Number("89" + "01");
+
+    The challenge: solve ``j = i + int(s1 + s2)``.  The PoW value posted
+    back is the computed ``j``.
+
+    Returns the JSON payload to POST, or None if the page doesn't look like
+    an interstitial (e.g. we're already past it).
+    """
+    bm_match = re.search(r'(?:var\s+bm|"bm-verify")\s*[:=]\s*["\']([^"\']+)["\']', html)
+    i_match = re.search(r'var\s+i\s*=\s*(-?\d+)\s*[;,]', html)
+    j_match = re.search(
+        r'var\s+j\s*=\s*i\s*\+\s*Number\(\s*["\'](\d+)["\']\s*\+\s*["\'](\d+)["\']\s*\)',
+        html,
+    )
+    if not (bm_match and i_match and j_match):
+        return None
+    i_val = int(i_match.group(1))
+    s1, s2 = j_match.group(1), j_match.group(2)
+    j_val = i_val + int(s1 + s2)
+    return {"bm-verify": bm_match.group(1), "pow": j_val}
+
+
+def _get_ncaa_org_session(proxy: str | None = None):
+    """Return a curl_cffi session with Chrome TLS impersonation.
+
+    The interstitial requires curl_cffi — plain `requests` gets a
+    TLS-fingerprint block before the page even renders.
+    """
+    from curl_cffi import requests as _cr  # local import: optional dep
+
+    kwargs = {"impersonate": "chrome120"}
+    if proxy:
+        kwargs["proxies"] = {"http": proxy, "https": proxy}
+    return _cr.Session(**kwargs)
+
+
+def _try_ncaa_org_auth(proxy: str) -> bool:
+    """Single-proxy attempt to clear the Akamai interstitial.
+
+    On success, sets the module globals and returns True.  Caller decides
+    what to do on failure (rotate proxy or give up).
+    """
+    global _ncaa_org_session, _ncaa_org_auth_at, _ncaa_org_proxy
+    try:
+        sess = _get_ncaa_org_session(proxy)
+        # Hit the scoreboard — Akamai serves the interstitial on the first
+        # navigation, then any subsequent page load.  Use a benign URL.
+        warm_url = f"{_NCAA_ORG_BASE}/contests/livestream_scoreboards"
+        r = sess.get(warm_url, timeout=20)
+
+        # If the response already has the box-score scoreboard form, we're
+        # past the interstitial (rare — usually the first request is gated).
+        if "/contests/livestream_scoreboards" in r.text and "<title>NCAA Statistics" in r.text:
+            _ncaa_org_session = sess
+            _ncaa_org_auth_at = _time.time()
+            _ncaa_org_proxy = proxy
+            logger.info("NCAA.org: passed without PoW via %s",
+                        _sb_proxy_label(proxy))
+            return True
+
+        payload = _solve_ncaa_akamai_pow(r.text)
+        if not payload:
+            logger.info("NCAA.org: no interstitial recognized via %s "
+                        "(status=%d, len=%d) — site layout may have changed",
+                        _sb_proxy_label(proxy), r.status_code, len(r.text))
+            return False
+
+        verify = sess.post(
+            f"{_NCAA_ORG_BASE}/_sec/verify?provider=interstitial",
+            json=payload,
+            headers={"Content-Type": "application/json", "Accept": "*/*"},
+            timeout=15,
+        )
+        if verify.status_code >= 400:
+            logger.info("NCAA.org: PoW verify rejected via %s (status=%d)",
+                        _sb_proxy_label(proxy), verify.status_code)
+            return False
+
+        # Re-fetch the warm URL to confirm the ak_bmsc cookie now grants access.
+        r2 = sess.get(warm_url, timeout=20)
+        if r2.status_code != 200 or "<title>NCAA Statistics" not in r2.text:
+            logger.info("NCAA.org: post-PoW page didn't render via %s (status=%d, len=%d)",
+                        _sb_proxy_label(proxy), r2.status_code, len(r2.text))
+            return False
+
+        _ncaa_org_session = sess
+        _ncaa_org_auth_at = _time.time()
+        _ncaa_org_proxy = proxy
+        logger.info("NCAA.org: PoW solved via %s — session cached",
+                    _sb_proxy_label(proxy))
+        return True
+    except Exception:
+        logger.exception("NCAA.org auth crashed via %s", _sb_proxy_label(proxy))
+        return False
+
+
+def _ensure_ncaa_org_auth() -> bool:
+    """Get a working NCAA.org session, rotating across the proxy pool.
+
+    Returns True if we have an authed session ready to use; False if every
+    available proxy got blocked.
+    """
+    if _ncaa_org_session_alive():
+        return True
+
+    candidates = [p for p in _SB_HTTP_PROXY_POOL if p not in _ncaa_org_dead_proxies]
+    if not _SB_HTTP_PROXY_POOL:
+        candidates = [""]  # direct mode (local dev / spike)
+
+    for proxy in candidates:
+        if _try_ncaa_org_auth(proxy):
+            return True
+        _ncaa_org_dead_proxies.add(proxy)
+        logger.warning("NCAA.org: %s blocked — rotating",
+                       _sb_proxy_label(proxy))
+
+    logger.error("NCAA.org: all proxies blocked, scraper unavailable this run")
+    return False
+
+
+def _ncaa_org_get(path: str) -> Optional[str]:
+    """GET a stats.ncaa.org path through the cached session.
+
+    Returns response text on 200, or None on failure (logs once).  If the
+    cookie expired mid-run, automatically re-auths once.
+    """
+    if not _ensure_ncaa_org_auth():
+        return None
+    url = f"{_NCAA_ORG_BASE}{path}" if path.startswith("/") else path
+    try:
+        r = _ncaa_org_session.get(url, timeout=20)
+    except Exception:
+        logger.info("NCAA.org GET crashed: %s", path)
+        return None
+
+    # If we hit the interstitial again (cookie aged out), re-auth and retry.
+    if r.status_code != 200 or _solve_ncaa_akamai_pow(r.text) is not None:
+        logger.info("NCAA.org GET %s returned %d — re-authing", path, r.status_code)
+        # Force re-auth on next call
+        global _ncaa_org_auth_at
+        _ncaa_org_auth_at = 0.0
+        if not _ensure_ncaa_org_auth():
+            return None
+        try:
+            r = _ncaa_org_session.get(url, timeout=20)
+        except Exception:
+            return None
+        if r.status_code != 200:
+            return None
+
+    return r.text
+
+
+# ===== School → NCAA org_id lookup =====
+# Maps roster team name → NCAA team_id (the integer in /teams/<id> URLs).
+# The team_id changes each season because NCAA.org generates a fresh one
+# tied to the academic year.  But for *scoreboard lookups* we don't actually
+# need it — the scoreboard query is keyed only on date/sport/division and
+# we match teams by their visible name.  So this table is intentionally
+# limited to schools where the visible name on stats.ncaa.org diverges from
+# what the rest of the pipeline knows them as.  Most teams don't need an
+# entry; _team_matches falls back to fuzzy matching by school_lookup names.
+#
+# Format: roster team name -> NCAA scoreboard display name.
+# Add entries here only when fuzzy matching fails.
+_NCAA_ORG_TEAM_NAMES: dict[str, str] = {
+    # "Roster Name": "Stats.ncaa.org display name",
+}
+
+
+# ===== Box score column index map =====
+# stats.ncaa.org box score header order (Hitting):
+#   #, Name, P, R, AB, H, 2B, 3B, TB, HR, RBI, BB, HBP, SF, SH, K, OPP/DP,
+#   CS, Picked, SB, IBB, KL
+# (Pitching):
+#   #, Name, P, IP, H, R, ER, BB, SO, BF, 2B-A, 3B-A, Bk, HR-A, WP, HB,
+#   IBB, Inh-Run, Inh-Run-Score, SHA, SFA, KL, TUER, pickoffs
+# We parse by header text, not column index, because some pages reorder
+# columns when stats categories are toggled in the UI.
+
+
 class NCAAOrgScraper(BaseSchoolScraper):
     """
     Fallback scraper: stats.ncaa.org box scores.
-    This is the least reliable but widest-coverage option.
+
+    Coverage: every D1/D2/D3 baseball program — NCAA's authoritative source.
+    Reliability: gated by Akamai Bot Manager PoW interstitial, which we
+    solve via _ensure_ncaa_org_auth().  Latency is higher than NCAA.com
+    (HTML parsing instead of JSON), so this sits last in the fallback chain.
     """
 
-    BASE_URL = "https://stats.ncaa.org"
+    BASE_URL = _NCAA_ORG_BASE
+    SPORT_CODE = "MBA"
+    DIVISION = "1"
 
-    def fetch_stats(self, player_name: str, team: str, yesterday_only: bool = False, position: str = "") -> Optional[dict]:
+    def __init__(self):
+        # Cache scoreboard responses per (date, sport) key — reused across all
+        # players in the run.  Each main.py invocation is a fresh process.
+        self._scoreboard_cache: dict[str, list[dict]] = {}
+        self._boxscore_cache: dict[str, dict] = {}
+        self._today = _today_et()
+
+    def _refresh_today(self):
+        current = _today_et()
+        if current != self._today:
+            self._today = current
+            self._scoreboard_cache.clear()
+            self._boxscore_cache.clear()
+
+    # --- public entry point ---
+
+    def fetch_stats(self, player_name: str, team: str,
+                    yesterday_only: bool = False, position: str = "") -> Optional[dict]:
+        self._refresh_today()
         try:
-            # stats.ncaa.org requires team lookup -> schedule -> boxscore
-            # This is a structural placeholder — the site changes frequently
-            logger.info(
-                "NCAA.org scraper called for %s @ %s — not yet fully implemented",
-                player_name,
-                team,
-            )
+            games = self._find_all_games(team, yesterday_only=yesterday_only)
+            if not games:
+                logger.debug("NCAA.org: no game found for %s (yesterday_only=%s)",
+                             team, yesterday_only)
+                return None
+
+            first_context = None
+            for game in games:
+                ctx = self._build_context(game)
+                if first_context is None:
+                    first_context = ctx
+                if game.get("state") == "pre":
+                    continue
+                box = self._get_boxscore(game["contest_id"])
+                if not box:
+                    continue
+                stats = self._find_player(player_name, game["team_side"], box, position)
+                if stats:
+                    ctx.update(stats)
+                    return ctx
+
+            # Player not found in any game — return context with appropriate stub.
+            if first_context is not None:
+                status = first_context.get("game_status", "")
+                if status == "Live":
+                    if _is_pitcher_pos(position):
+                        first_context["stats_summary"] = "Game in progress — hasn't pitched"
+                    else:
+                        first_context["stats_summary"] = "Game in progress — not in lineup"
+                elif status == "Final":
+                    first_context["stats_summary"] = "Did Not Play"
+                return first_context
             return None
         except Exception:
-            logger.info("NCAA.org fetch failed for %s @ %s", player_name, team)
+            logger.exception("NCAA.org fetch failed for %s @ %s", player_name, team)
             return None
+
+    # --- scoreboard ---
+
+    def _scoreboard_path(self, game_date: date) -> str:
+        academic_year = _ncaa_academic_year(game_date)
+        date_str = game_date.strftime("%m/%d/%Y")
+        from urllib.parse import quote
+        return (
+            f"/contests/livestream_scoreboards"
+            f"?sport_code={self.SPORT_CODE}"
+            f"&academic_year={academic_year}"
+            f"&division={self.DIVISION}"
+            f"&game_date={quote(date_str, safe='')}"
+        )
+
+    def _get_scoreboard(self, game_date: date) -> list[dict]:
+        key = game_date.isoformat()
+        if key in self._scoreboard_cache:
+            return self._scoreboard_cache[key]
+        html = _ncaa_org_get(self._scoreboard_path(game_date))
+        if not html:
+            self._scoreboard_cache[key] = []
+            return []
+        games = self._parse_scoreboard(html)
+        self._scoreboard_cache[key] = games
+        return games
+
+    @staticmethod
+    def _parse_scoreboard(html: str) -> list[dict]:
+        """Parse the scoreboard HTML into a list of contest dicts.
+
+        Each contest is rendered as a card containing two ``<tr id="contest_NNN">``
+        team rows + a Box Score link row.  We pair the two team rows by
+        contest_id and pull team names from the alt text of the logo image
+        (the ``<a target="TEAMS_WIN">`` text contains the W-L record after
+        the name, which is messier to parse).
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        contests: dict[str, dict] = {}
+
+        for tr in soup.find_all("tr", id=re.compile(r"^contest_\d+$")):
+            cid = tr["id"].replace("contest_", "")
+            entry = contests.setdefault(cid, {
+                "contest_id": cid,
+                "teams": [],  # filled in row order: away first, home second
+            })
+
+            logo = tr.find("img", class_="logo_image")
+            name = (logo.get("alt") or "").strip() if logo else ""
+
+            # Score is in the totalcol div: <div id="score_NNN" class="...">N</div>
+            score_div = tr.find("div", id=re.compile(r"^score_\d+$"))
+            score = score_div.get_text(strip=True) if score_div else ""
+
+            # Winner highlight class — "winner_background" indicates the
+            # winning side.  Used to derive Final state if no explicit status.
+            winner = bool(tr.find(class_="winner_background"))
+
+            entry["teams"].append({
+                "name": name,
+                "score": score,
+                "winner": winner,
+            })
+
+            # Box score link is in a sibling row right after each contest pair.
+            # Grab it once when we see contest_id for the first time.
+            if "box_score_url" not in entry:
+                # The next "tr" after the second team-row is the box score row.
+                # Just search forward in the parent table.
+                pass
+
+        # Now sweep all box score links keyed by contest_id.
+        for a in soup.find_all("a", href=re.compile(r"^/contests/\d+/box_score")):
+            href = a["href"]
+            m = re.search(r"/contests/(\d+)/box_score", href)
+            if not m:
+                continue
+            cid = m.group(1)
+            if cid in contests:
+                contests[cid]["box_score_url"] = href
+
+        out = []
+        for cid, c in contests.items():
+            if len(c["teams"]) != 2:
+                continue
+            away, home = c["teams"][0], c["teams"][1]
+            try:
+                away_score = int(away["score"]) if away["score"] else 0
+                home_score = int(home["score"]) if home["score"] else 0
+                state = "final" if (away["winner"] or home["winner"]) else "pre"
+                if state == "pre" and (away_score or home_score):
+                    state = "live"
+            except ValueError:
+                state, away_score, home_score = "pre", 0, 0
+            out.append({
+                "contest_id": cid,
+                "home_name": home["name"],
+                "away_name": away["name"],
+                "home_score": home_score,
+                "away_score": away_score,
+                "state": state,
+                "box_score_url": c.get("box_score_url", f"/contests/{cid}/box_score"),
+            })
+        return out
+
+    def _find_all_games(self, team: str, yesterday_only: bool = False) -> list[dict]:
+        team_lower = team.lower()
+        today = self._today
+        yesterday = today - timedelta(days=1)
+        dates = (yesterday,) if yesterday_only else (today, yesterday)
+
+        results = []
+        seen = set()
+        for d in dates:
+            is_yesterday = (d == yesterday)
+            games = self._get_scoreboard(d)
+            # Two-pass match: exact, then substring with qualifier guard.
+            for exact in (True, False):
+                for g in games:
+                    state = g["state"]
+                    if yesterday_only and state != "final":
+                        continue
+                    if is_yesterday and state not in ("final", "live"):
+                        continue
+                    for side in ("home", "away"):
+                        names = [g[f"{side}_name"]]
+                        if _school_name_matches(team_lower, names, exact):
+                            cid = g["contest_id"]
+                            if cid in seen:
+                                continue
+                            seen.add(cid)
+                            opp = g["away_name"] if side == "home" else g["home_name"]
+                            results.append({
+                                "contest_id": cid,
+                                "team_side": side,
+                                "opponent": opp,
+                                "home_name": g["home_name"],
+                                "away_name": g["away_name"],
+                                "home_score": g["home_score"],
+                                "away_score": g["away_score"],
+                                "state": state,
+                                "is_yesterday": is_yesterday,
+                                "game_date": d,
+                                "box_score_url": g["box_score_url"],
+                            })
+        return results
+
+    # --- box score ---
+
+    def _get_boxscore(self, contest_id: str) -> Optional[dict]:
+        if contest_id in self._boxscore_cache:
+            return self._boxscore_cache[contest_id]
+        html = _ncaa_org_get(f"/contests/{contest_id}/individual_stats")
+        if not html:
+            return None
+        parsed = self._parse_boxscore(html)
+        self._boxscore_cache[contest_id] = parsed
+        return parsed
+
+    @staticmethod
+    def _parse_boxscore(html: str) -> dict:
+        """Parse the individual_stats page into structured per-team rosters.
+
+        Returns::
+            {
+                "teams": [
+                    {"name": "Clemson", "side": "away" | "home" | "?",
+                     "hitters": [<row>...], "pitchers": [<row>...]},
+                    ...
+                ]
+            }
+
+        Each row is a dict mapping header text → raw cell text.  The first
+        team rendered on the page is the away team (NCAA convention on the
+        scoreboard); we don't actually rely on side here — the caller
+        matches by team name from the scoreboard context.
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        teams_by_name: dict[str, dict] = {}
+
+        # Each section is a div.card whose header contains an anchor
+        # linking to /teams/<id> with the team name as link text, followed
+        # by literal " Hitting" or " Pitching".  The header also contains
+        # a "Period Stats" toggle link, so we can't match on full text;
+        # we extract from just the first inner col/div.
+        for card in soup.find_all("div", class_="card"):
+            header = card.find("div", class_="card-header")
+            if not header:
+                continue
+            link = header.find("a", href=re.compile(r"^/teams/\d+"))
+            if not link:
+                continue
+            team_name = link.get_text(" ", strip=True)
+            # The text after the team link tells us hitting vs pitching.
+            tail = ""
+            for sib in link.next_siblings:
+                if isinstance(sib, str):
+                    tail += sib
+                else:
+                    tail += sib.get_text(" ", strip=True)
+            tail = tail.strip().lower()
+            if "hitting" in tail.split()[:3]:
+                kind = "hitters"
+            elif "pitching" in tail.split()[:3]:
+                kind = "pitchers"
+            else:
+                continue
+
+            table = card.find("table", class_="dataTable")
+            if not table:
+                continue
+            headers = [th.get_text(" ", strip=True) for th in
+                       table.find("thead").find_all("th")]
+            rows = []
+            for tr in table.find("tbody").find_all("tr"):
+                cells = tr.find_all("td")
+                if len(cells) != len(headers):
+                    continue
+                row = {}
+                for h, c in zip(headers, cells):
+                    a = c.find("a")
+                    if a is not None and h.lower() == "name":
+                        row[h] = a.get_text(" ", strip=True)
+                    else:
+                        row[h] = c.get_text(" ", strip=True)
+                rows.append(row)
+
+            entry = teams_by_name.setdefault(team_name, {
+                "name": team_name, "hitters": [], "pitchers": [],
+            })
+            entry[kind] = rows
+
+        return {"teams": list(teams_by_name.values())}
+
+    def _find_player(self, player_name: str, team_side: str, box: dict,
+                     position: str) -> Optional[dict]:
+        """Locate the player in the parsed box score and return parsed stats."""
+        last = player_name.split()[-1]
+        first = player_name.split()[0].lower() if len(player_name.split()) > 1 else ""
+
+        # NCAA.org doesn't tag teams with home/away on the box score page —
+        # match by team_name across both teams in the box.
+        for tdata in box.get("teams", []):
+            for kind in ("pitchers", "hitters"):
+                rows = tdata.get(kind, [])
+                # Collect last-name candidates; first-name disambiguate.
+                candidates = []
+                for row in rows:
+                    name_cell = row.get("Name", "")
+                    if _names_match(last, name_cell.split()[-1] if name_cell else ""):
+                        candidates.append(row)
+                if len(candidates) > 1 and first:
+                    narrowed = [
+                        r for r in candidates
+                        if r.get("Name", "").split()[0].lower().startswith(first[:3])
+                    ]
+                    if narrowed:
+                        candidates = narrowed
+                for row in candidates:
+                    if kind == "pitchers":
+                        return self._parse_pitching_row(row)
+                    return self._parse_batting_row(row)
+        return None
+
+    @staticmethod
+    def _parse_batting_row(row: dict) -> dict:
+        def n(key, default=0):
+            try:
+                return int(row.get(key, default) or default)
+            except (ValueError, TypeError):
+                return default
+
+        ab = n("AB")
+        h = n("H")
+        bb = n("BB")
+        # Skip players listed but didn't actually appear (no AB and no BB).
+        if ab == 0 and bb == 0:
+            return {"_player_found": True}
+
+        hr = n("HR")
+        rbi = n("RBI")
+        r = n("R")
+        sb = n("SB")
+        k = n("K")
+
+        parts = [f"{h}-{ab}"]
+        if hr:
+            parts.append(_fmt(hr, "HR"))
+        if rbi:
+            parts.append(_fmt(rbi, "RBI"))
+        if r:
+            parts.append(_fmt(r, "R"))
+        if sb:
+            parts.append(_fmt(sb, "SB"))
+        if bb:
+            parts.append(_fmt(bb, "BB"))
+        if k:
+            parts.append(_fmt(k, "K"))
+
+        return {
+            "_player_found": True,
+            "stats_summary": ", ".join(parts),
+            "hits": h,
+            "at_bats": ab,
+            "home_runs": hr,
+            "rbi": rbi,
+            "runs": r,
+            "stolen_bases": sb,
+            "walks": bb,
+            "strikeouts": k,
+        }
+
+    @staticmethod
+    def _parse_pitching_row(row: dict) -> dict:
+        ip_str = (row.get("IP") or "0").strip()
+        try:
+            ip = float(ip_str)
+        except ValueError:
+            ip = 0.0
+
+        def n(key, default=0):
+            try:
+                return int(row.get(key, default) or default)
+            except (ValueError, TypeError):
+                return default
+
+        h = n("H")
+        er = n("ER")
+        k = n("SO")
+        bb = n("BB")
+
+        parts = [f"{ip_str} IP"]
+        if h:
+            parts.append(f"{h} H")
+        parts.append(f"{er} ER")
+        parts.append(f"{k} K")
+        if bb:
+            parts.append(f"{bb} BB")
+
+        return {
+            "_player_found": True,
+            "stats_summary": ", ".join(parts),
+            "is_pitcher_line": True,
+            "ip": ip,
+            "earned_runs": er,
+            "strikeouts": k,
+            "walks_allowed": bb,
+            "hits_allowed": h,
+            "quality_start": ip >= 6.0 and er <= 3,
+        }
+
+    # --- context ---
+
+    def _build_context(self, game: dict) -> dict:
+        result = empty_stats()
+        state = game["state"]
+        home, away = game["home_name"], game["away_name"]
+        hs, a_s = game["home_score"], game["away_score"]
+        if state == "final":
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | Final"
+            result["game_status"] = "Final"
+        elif state == "live":
+            result["game_context"] = f"{away} {a_s}, {home} {hs} | Live"
+            result["game_status"] = "Live"
+        elif state == "pre":
+            result["game_context"] = f"{away} vs {home}"
+            result["game_status"] = "Scheduled"
+            result["stats_summary"] = "Game today"
+        else:
+            result["game_context"] = f"{away} vs {home} | {state}"
+            result["game_status"] = state
+
+        gd = game.get("game_date")
+        if gd:
+            result["game_date"] = gd.isoformat()
+        if game.get("is_yesterday"):
+            result["is_yesterday"] = True
+        return result
+
+
+def _ncaa_academic_year(d: date) -> int:
+    """NCAA academic year ends in spring — May 2026 = academic_year 2026.
+    Aug 2026 = academic_year 2027.  Boundary: month >= 8 → year+1."""
+    return d.year + 1 if d.month >= 8 else d.year
 
 
 class NCAAComScraper(BaseSchoolScraper):
@@ -4575,10 +5223,7 @@ class NCAAStatsFetcher:
             try:
                 result = scraper.fetch_stats(name, team, yesterday_only=yesterday_only, position=position)
                 if result is None:
-                    if isinstance(scraper, NCAAOrgScraper):
-                        attempts.append({"source": diag_label, "outcome": "not implemented"})
-                    else:
-                        attempts.append({"source": diag_label, "outcome": "no game found"})
+                    attempts.append({"source": diag_label, "outcome": "no game found"})
                     continue
 
                 if self._has_player_stats(result):
