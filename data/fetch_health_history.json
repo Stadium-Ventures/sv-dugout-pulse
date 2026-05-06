@@ -690,5 +690,54 @@
       "dead": [],
       "stats": {}
     }
+  },
+  {
+    "generated_at": "2026-05-06T14:32:28.928596+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Alex Kranzler"
+    ],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 17,
+        "found stats": 12
+      },
+      "Sidearm": {
+        "player not in box": 17,
+        "no game found": 13,
+        "found player": 6
+      },
+      "ESPN": {
+        "no game found": 17
+      },
+      "NCAA.com": {
+        "found stats": 4,
+        "found game, no player": 12,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "no game found": 13
+      },
+      "NCAA.org": {
+        "not implemented": 13
+      },
+      "game log": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
   }
 ]
