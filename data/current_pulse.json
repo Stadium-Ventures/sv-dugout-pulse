@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T21:47:39.479955+00:00",
+  "generated_at": "2026-05-06T22:02:31.900618+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -997,7 +997,7 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (SS)",
       "game_context": "Palm Beach Cardinals vs Jupiter Hammerheads | 6:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:30 PM ET",
@@ -4023,7 +4023,7 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (2B)",
       "game_context": "Palm Beach Cardinals vs Jupiter Hammerheads | 6:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:30 PM ET",
@@ -4192,10 +4192,16 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
