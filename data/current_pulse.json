@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T22:17:32.567372+00:00",
+  "generated_at": "2026-05-06T22:32:19.104387+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -627,7 +627,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -886,7 +886,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1159,7 +1159,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1839,7 +1839,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1902,7 +1902,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2083,7 +2083,7 @@
       "team": "Georgia Southern",
       "level": "NCAA",
       "stats_summary": "In lineup",
-      "game_context": "Mercer 0, Georgia Southern 0 | Top 1",
+      "game_context": "Mercer 5, Georgia Southern 0 | Top 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-06",
@@ -2233,7 +2233,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2303,8 +2303,8 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Mercer 0, Georgia Southern 0 | Top 1",
+      "stats_summary": "0-1, K",
+      "game_context": "Mercer 5, Georgia Southern 0 | Top 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-06",
@@ -2313,7 +2313,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631951",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -2401,7 +2401,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "In lineup",
-      "game_context": "Florida Gulf Coast 0, Florida International 0 | Top 1",
+      "game_context": "Florida Gulf Coast 1, Florida International 3 | Bottom 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-06",
@@ -2544,7 +2544,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2634,7 +2634,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3225,7 +3225,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3281,7 +3281,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3367,7 +3367,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3462,7 +3462,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3525,7 +3525,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3696,7 +3696,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -4204,8 +4204,8 @@
         "found player": 3
       },
       "NCAA.org": {
-        "found game, no player": 12,
-        "scheduled (ignored)": 3
+        "found game, no player": 1,
+        "no game found": 14
       }
     },
     "blocked_sources": [],
@@ -4227,11 +4227,11 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
+          "success": 3,
           "blocked": 0
         }
       }
