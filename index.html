@@ -314,6 +314,7 @@
   .grade-flag { background: rgba(234,179,8,0.15); color: #fde047; }
   .grade-scheduled { background: rgba(59,130,246,0.15); color: #93c5fd; }
   .grade-nodata { background: rgba(63,63,70,0.2); color: #71717a; }
+  .grade-unavailable { background: rgba(234,179,8,0.12); color: #fbbf24; border: 1px solid rgba(234,179,8,0.3); }
 
   .grade-reason {
     font-size: 0.75rem;
@@ -1117,7 +1118,9 @@ function heartbeatHtml(playerName, isClient) {
 
 function renderCard(p) {
   const gk = gradeKey(p.performance_grade);
-  const gc = GRADE_CLASS[gk] || 'grade-nodata';
+  // "Stats unavailable" cards (we never got a box score) get an amber pill so
+  // they're visually distinct from real DNPs (which are gray, deliberate).
+  const gc = p.stats_unavailable ? 'grade-unavailable' : (GRADE_CLASS[gk] || 'grade-nodata');
   const isLive = p.game_status === 'Live';
   const isScheduled = p.game_status === 'Scheduled';
   const isClient = p.is_client !== false;
@@ -1179,10 +1182,20 @@ function renderCard(p) {
     const triedSources = [...new Set(p.fetch_diagnostic.map(d => d.source || 'unknown'))];
     const techDetail = p.fetch_diagnostic
       .map(d => `${d.source || '?'}: ${d.outcome || '?'}`).join(' · ');
+    // Recovery-plan tail tells Kent what we're doing about it. The Yesterday
+    // view promises a morning retry; live cards keep retrying every run.
+    const recoveryTail = p.stats_unavailable
+      ? ' We’ll keep retrying through tomorrow morning.'
+      : ' Retrying every run.';
     if (blockedSources.length) {
       fetchDiagHtml = `<div class="card-status card-status-blocked" title="${esc(techDetail)}">
         <span class="card-status-icon">🚫</span>
-        <span>Couldn't reach live stats — ${esc(blockedSources.join(', '))} blocked us. Hover for detail.</span>
+        <span>Couldn't reach live stats — ${esc(blockedSources.join(', '))} blocked us.${recoveryTail} Hover for detail.</span>
+      </div>`;
+    } else if (p.stats_unavailable) {
+      fetchDiagHtml = `<div class="card-status card-status-blocked" title="${esc(techDetail)}">
+        <span class="card-status-icon">⚠️</span>
+        <span>Box score never posted to ${esc(triedSources.join(', '))}.${recoveryTail} Hover for detail.</span>
       </div>`;
     } else {
       fetchDiagHtml = `<div class="card-status card-status-info" title="${esc(techDetail)}">
@@ -1212,7 +1225,7 @@ function renderCard(p) {
         <span class="badge badge-tier-dim">T${pri}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="grade-bar ${gc}">${esc(p.performance_grade)}</div>
+      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : p.performance_grade)}</div>
       ${p.grade_reason ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
       <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${highlightStats(p.stats_summary)}${statsAsofHtml}</div>
       ${p.game_context ? (p.box_score_url
