@@ -5361,5 +5361,40 @@
       "dead": [],
       "stats": {}
     }
+  },
+  {
+    "generated_at": "2026-05-07T09:46:18.061855+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 7,
+        "found game, no player": 1
+      },
+      "Sidearm": {
+        "found player": 2,
+        "player not in box": 1
+      },
+      "ESPN": {
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
   }
 ]
