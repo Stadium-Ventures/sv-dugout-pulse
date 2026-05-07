@@ -2253,15 +2253,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Cole%20Cleveland%22%20FIU&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "Sidearm",
-          "outcome": "found player"
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3888,10 +3896,18 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 8
+        "found stats": 7,
+        "found game, no player": 1
       },
       "Sidearm": {
-        "found player": 3
+        "found player": 2,
+        "player not in box": 1
+      },
+      "ESPN": {
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "found stats": 1
       }
     },
     "blocked_sources": [],
