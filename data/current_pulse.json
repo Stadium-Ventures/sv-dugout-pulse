@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T10:02:41.408649+00:00",
+  "generated_at": "2026-05-07T10:16:59.593356+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2253,23 +2253,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Cole%20Cleveland%22%20FIU&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "Sidearm",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3896,18 +3888,10 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 7,
-        "found game, no player": 1
+        "found stats": 8
       },
       "Sidearm": {
-        "found player": 2,
-        "player not in box": 1
-      },
-      "ESPN": {
-        "no game found": 1
-      },
-      "NCAA.com": {
-        "found stats": 1
+        "found player": 3
       }
     },
     "blocked_sources": [],
