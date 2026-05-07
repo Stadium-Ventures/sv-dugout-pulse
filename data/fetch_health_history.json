@@ -1,48 +1,5 @@
 [
   {
-    "generated_at": "2026-05-05T20:20:12.158231+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Jack Cebert"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 25,
-        "found game, no player": 3
-      },
-      "ESPN": {
-        "scheduled (ignored)": 2,
-        "found game, no player": 1
-      },
-      "NCAA.com": {
-        "no game found": 3
-      },
-      "Sidearm": {
-        "no game found": 3
-      },
-      "StatBroadcast": {
-        "no game found": 3
-      },
-      "NCAA.org": {
-        "not implemented": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-05T23:31:07.075397+00:00",
     "severity": "warning",
     "blocked_sources": [],
@@ -6536,6 +6493,35 @@
   },
   {
     "generated_at": "2026-05-07T20:16:32.049866+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Tanner Gordon"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 8
+      },
+      "Sidearm": {
+        "found player": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-07T20:32:01.010514+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
