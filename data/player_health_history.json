@@ -766,8 +766,19 @@
   },
   {
     "date": "2026-05-06",
-    "updated_at": "2026-05-07T00:32:47.691590+00:00",
+    "updated_at": "2026-05-07T00:47:40.360725+00:00",
     "players": [
+      {
+        "name": "Chase Petty",
+        "team": "Louisville Bats",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
       {
         "name": "Dax Kilby",
         "team": "Tampa Tarpons",
@@ -879,6 +890,24 @@
         "sources_tried": []
       },
       {
+        "name": "Tyler Howe",
+        "team": "North Carolina",
+        "level": "NCAA",
+        "tier": null,
+        "game_status": "Cancelled",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
+      },
+      {
         "name": "Austin Amaral",
         "team": "Wilmington Blue Rocks",
         "level": "Pro",
@@ -935,12 +964,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "game log (live)",
         "sources_tried": [
           "D1Baseball",
-          "StatBroadcast"
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast",
+          "game log"
         ]
       },
       {
@@ -1055,6 +1089,94 @@
           "Sidearm",
           "StatBroadcast"
         ]
+      },
+      {
+        "name": "Caden Powell",
+        "team": "Asheville Tourists",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Cancelled",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "David Hagaman",
+        "team": "Hillsboro Hops",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Scheduled",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Jason Schiavone",
+        "team": "Asheville Tourists",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Cancelled",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Joseph Sullivan",
+        "team": "Corpus Christi Hooks",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Lucas Spence",
+        "team": "Corpus Christi Hooks",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Nick Potter",
+        "team": "Fayetteville Woodpeckers",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Ryan Weingartner",
+        "team": "Palm Beach Cardinals",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Live",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Will Bush",
+        "team": "Corpus Christi Hooks",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
       }
     ]
   }
