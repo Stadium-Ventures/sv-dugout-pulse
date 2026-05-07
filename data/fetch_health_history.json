@@ -1,22 +1,5 @@
 [
   {
-    "generated_at": "2026-05-05T15:21:38.769411+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Jack Cebert"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 28
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-05T20:20:12.158231+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -5949,6 +5932,33 @@
   },
   {
     "generated_at": "2026-05-07T15:17:04.157048+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 8
+      },
+      "Sidearm": {
+        "found player": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-07T15:32:07.453344+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
