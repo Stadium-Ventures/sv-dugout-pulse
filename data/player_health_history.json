@@ -1183,7 +1183,7 @@
   },
   {
     "date": "2026-05-07",
-    "updated_at": "2026-05-07T23:31:58.938714+00:00",
+    "updated_at": "2026-05-07T23:46:54.900903+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -1257,8 +1257,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1268,6 +1268,17 @@
           "Sidearm",
           "StatBroadcast"
         ]
+      },
+      {
+        "name": "Cade Doughty",
+        "team": "New Hampshire Fisher Cats",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
       },
       {
         "name": "Cade Doughty",
@@ -1362,7 +1373,7 @@
         "team": "Arkansas Travelers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1374,8 +1385,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1392,8 +1403,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1453,7 +1464,7 @@
         "team": "Salt Lake Bees",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
