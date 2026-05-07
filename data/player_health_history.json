@@ -1183,7 +1183,7 @@
   },
   {
     "date": "2026-05-07",
-    "updated_at": "2026-05-07T23:18:37.869554+00:00",
+    "updated_at": "2026-05-07T23:31:58.938714+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -1257,8 +1257,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1340,6 +1340,17 @@
         "team": "Wilmington Blue Rocks",
         "level": "Pro",
         "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Austin Amaral",
+        "team": "Wilmington Blue Rocks",
+        "level": "Pro",
+        "tier": null,
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
@@ -1363,8 +1374,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1381,8 +1392,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",

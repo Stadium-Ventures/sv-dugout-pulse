@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T23:18:37.857803+00:00",
+  "generated_at": "2026-05-07T23:31:58.926651+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -170,7 +170,7 @@
       "team": "Louisville Bats",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Nashville Sounds 0, Louisville Bats 0 | Top 1",
+      "game_context": "Nashville Sounds 0, Louisville Bats 2 | Bottom 1",
       "game_status": "Live",
       "game_time": "4:40 PM ET",
       "game_date": "2026-05-07",
@@ -259,7 +259,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tampa Tarpons 1, Fort Myers Mighty Mussels 0 | Middle 1",
+      "game_context": "Tampa Tarpons 1, Fort Myers Mighty Mussels 0 | Top 2",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-07",
@@ -320,7 +320,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tampa Bay Rays 0, Boston Red Sox 0 | Bottom 1",
+      "game_context": "Tampa Bay Rays 1, Boston Red Sox 0 | Top 2",
       "game_status": "Live",
       "game_time": "7:10 PM ET",
       "game_date": "2026-05-07",
@@ -774,7 +774,7 @@
       "team": "Northwestern State",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Northwestern State 0, McNeese 0 | End 1",
+      "game_context": "Northwestern State 0, McNeese 0 | Top 2",
       "game_status": "Live",
       "game_time": "7:00 PM ET",
       "game_date": "2026-05-07",
@@ -793,7 +793,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1244,7 +1244,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 0, Reading Fightin Phils 0 | End 2",
+      "game_context": "Somerset Patriots 5, Reading Fightin Phils 0 | Top 3",
       "game_status": "Live",
       "game_time": "6:45 PM ET",
       "game_date": "2026-05-07",
@@ -1339,7 +1339,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Lansing Lugnuts 0, South Bend Cubs 0 | Bottom 1",
+      "game_context": "Lansing Lugnuts 0, South Bend Cubs 2 | End 1",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-07",
@@ -1813,6 +1813,41 @@
       "player_name": "Austin Amaral",
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
+      "stats_summary": "Did Not Play",
+      "game_context": "Wilmington Blue Rocks 5, Hub City Spartanburgers 7 | Final",
+      "game_status": "Final",
+      "game_time": "5:00 PM ET",
+      "game_date": "2026-05-07",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Fri 05/08",
+        "date_full": "2026-05-08",
+        "opponent": "Hub City Spartanburgers",
+        "home_away": "@",
+        "time": "7:05 PM ET",
+        "display": "@ Hub City Spartanburgers - Fri 05/08 7:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/822104",
+      "player_profile_url": "https://www.mlb.com/player/694544",
+      "performance_grade": "— DNP",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
+      "data_source": "MLB Stats API",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 3
+      },
+      "game_number": 1
+    },
+    {
+      "player_name": "Austin Amaral",
+      "team": "Wilmington Blue Rocks",
+      "level": "Pro",
       "stats_summary": "Game at 5:05 PM ET",
       "game_context": "Wilmington Blue Rocks vs Hub City Spartanburgers | 5:05 PM ET",
       "game_status": "Scheduled",
@@ -2028,7 +2063,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Nicholls 0, Southeastern Louisiana 0 | Bottom 1",
+      "game_context": "Nicholls 1, Southeastern Louisiana 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "7:00 PM ET",
       "game_date": "2026-05-07",
@@ -2047,7 +2082,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2181,7 +2216,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Nicholls 0, Southeastern Louisiana 0 | Bottom 1",
+      "game_context": "Nicholls 1, Southeastern Louisiana 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "7:00 PM ET",
       "game_date": "2026-05-07",
@@ -2200,7 +2235,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2307,7 +2342,7 @@
       "team": "Akron RubberDucks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Akron RubberDucks 0, Richmond Flying Squirrels 0 | Bottom 1",
+      "game_context": "Akron RubberDucks 0, Richmond Flying Squirrels 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-07",
@@ -2782,7 +2817,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tampa Tarpons 1, Fort Myers Mighty Mussels 0 | Bottom 1",
+      "game_context": "Tampa Tarpons 1, Fort Myers Mighty Mussels 0 | Top 2",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-07",
@@ -3221,7 +3256,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Nicholls 0, Southeastern Louisiana 0 | Bottom 1",
+      "game_context": "Nicholls 1, Southeastern Louisiana 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "7:00 PM ET",
       "game_date": "2026-05-07",
@@ -3240,7 +3275,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3716,7 +3751,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilson Warbirds 2, Fayetteville Woodpeckers 0 | Bottom 3",
+      "game_context": "Wilson Warbirds 2, Fayetteville Woodpeckers 0 | Bottom 4",
       "game_status": "Live",
       "game_time": "6:35 PM ET",
       "game_date": "2026-05-07",
@@ -3919,8 +3954,9 @@
         "found stats": 4
       },
       "StatBroadcast": {
-        "player not in box": 4,
-        "no game found": 4
+        "blocked (Cloudflare 403)": 3,
+        "no game found": 4,
+        "fetch failed": 1
       },
       "ESPN": {
         "no game found": 4
@@ -3939,10 +3975,10 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 2,
+    "blocked_event_count": 3,
     "blocked_clients": [
       "Brady St. Pierre",
-      "Truitt Webb"
+      "Brooks Wright"
     ],
     "carry_forward_clients": [],
     "fallback_clients": [
@@ -3951,6 +3987,7 @@
       "Jack Cebert",
       "Justin Riemer",
       "Tanner Gordon",
+      "Austin Amaral",
       "Brady St. Pierre",
       "Brooks Wright",
       "Davis Sharpe",
@@ -3958,18 +3995,25 @@
       "Xavier Kolhosser",
       "Truitt Webb"
     ],
-    "total_clients": 83,
+    "total_clients": 84,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 3
         }
       }
     }
