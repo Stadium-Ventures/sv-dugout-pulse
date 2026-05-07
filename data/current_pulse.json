@@ -3912,7 +3912,7 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
         "found game, no player": 4,
@@ -3936,9 +3936,14 @@
         "scheduled (ignored)": 4
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Brady St. Pierre",
+      "Truitt Webb"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
