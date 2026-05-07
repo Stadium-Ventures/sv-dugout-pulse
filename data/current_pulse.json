@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T01:47:15.465667+00:00",
+  "generated_at": "2026-05-07T02:02:39.167440+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -269,7 +269,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tampa Tarpons 3, Fort Myers Mighty Mussels 3 | Top 8",
+      "game_context": "Tampa Tarpons 4, Fort Myers Mighty Mussels 3 | End 8",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-06",
@@ -1736,7 +1736,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "New York Mets 1, Colorado Rockies 0 | Bottom 2",
+      "game_context": "New York Mets 1, Colorado Rockies 0 | Top 3",
       "game_status": "Live",
       "game_time": "9:20 PM ET",
       "game_date": "2026-05-07",
@@ -2495,9 +2495,9 @@
       "player_name": "Davis Sharpe",
       "team": "Akron RubberDucks",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Akron RubberDucks 4, Richmond Flying Squirrels 2 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Akron RubberDucks 4, Richmond Flying Squirrels 5 | Final",
+      "game_status": "Final",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-06",
       "is_yesterday": false,
@@ -2511,7 +2511,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818345",
       "player_profile_url": "https://www.mlb.com/player/681571",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Davis%20Sharpe%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -2737,7 +2737,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Tri-City Dust Devils 0, Spokane Indians 0 | Bottom 1",
+      "game_context": "Tri-City Dust Devils 0, Spokane Indians 2 | Top 2",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-07",
@@ -2771,7 +2771,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 0, Visalia Rawhide 0 | Bottom 1",
+      "game_context": "Stockton Ports 0, Visalia Rawhide 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-07",
@@ -3045,9 +3045,9 @@
       "player_name": "Xavier Kolhosser",
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
-      "stats_summary": "No game data",
-      "game_context": "Tampa Tarpons vs Fort Myers Mighty Mussels | Player challenge",
-      "game_status": "Player challenge",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Tampa Tarpons 4, Fort Myers Mighty Mussels 3 | End 8",
+      "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-06",
       "is_yesterday": false,
@@ -4265,7 +4265,8 @@
       "Davis Sharpe",
       "Kade Brown",
       "Najer Victor",
-      "Ryan DeSanto"
+      "Ryan DeSanto",
+      "Xavier Kolhosser"
     ],
     "total_clients": 83,
     "proxy_pool": {
@@ -4273,21 +4274,9 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
-        }
-      }
+      "active": null,
+      "dead": [],
+      "stats": {}
     }
   }
 }
