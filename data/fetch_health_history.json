@@ -2957,5 +2957,80 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-07T00:32:47.684226+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Bennett Edwards"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Aaron Watson",
+      "Jack Cebert",
+      "Davis Sharpe",
+      "Najer Victor",
+      "Ryan DeSanto",
+      "Xavier Kolhosser"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 17,
+        "found stats": 6
+      },
+      "Sidearm": {
+        "player not in box": 14,
+        "no game found": 12,
+        "found player": 4
+      },
+      "ESPN": {
+        "no game found": 14,
+        "found stats": 1,
+        "found game, no player": 2
+      },
+      "NCAA.com": {
+        "found stats": 4,
+        "found game, no player": 10,
+        "scheduled (ignored)": 1,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "no game found": 12,
+        "blocked (Cloudflare 403)": 1,
+        "found player": 2
+      },
+      "NCAA.org": {
+        "found game, no player": 10,
+        "scheduled (ignored)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 2
+        }
+      }
+    }
   }
 ]
