@@ -6839,5 +6839,64 @@
       "dead": [],
       "stats": {}
     }
+  },
+  {
+    "generated_at": "2026-05-07T23:18:37.857803+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Jack Cebert",
+      "Justin Riemer",
+      "Tanner Gordon",
+      "Brady St. Pierre",
+      "Brooks Wright",
+      "Davis Sharpe",
+      "Michael Dattalo",
+      "Xavier Kolhosser",
+      "Truitt Webb"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 4,
+        "found stats": 4
+      },
+      "StatBroadcast": {
+        "player not in box": 4,
+        "no game found": 4
+      },
+      "ESPN": {
+        "no game found": 4
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 4
+      },
+      "Sidearm": {
+        "no game found": 4,
+        "found player": 3
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 4
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
