@@ -7034,5 +7034,85 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-08T00:16:38.145659+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 4,
+    "blocked_clients": [
+      "Brady St. Pierre",
+      "Brooks Wright",
+      "Lucas Steele"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Tanner Gordon",
+      "Austin Amaral",
+      "Austin Amaral",
+      "Blake Rambusch",
+      "Brady St. Pierre",
+      "Brooks Wright",
+      "Davis Sharpe",
+      "Michael Dattalo",
+      "Najer Victor",
+      "Xavier Kolhosser",
+      "Lucas Steele",
+      "Truitt Webb"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 5,
+        "found stats": 3
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 4,
+        "no game found": 5,
+        "fetch failed": 1
+      },
+      "ESPN": {
+        "no game found": 4,
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 5
+      },
+      "Sidearm": {
+        "no game found": 5,
+        "found player": 3
+      },
+      "NCAA.org": {
+        "no game found": 5
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 4
+        }
+      }
+    }
   }
 ]

@@ -1183,7 +1183,7 @@
   },
   {
     "date": "2026-05-07",
-    "updated_at": "2026-05-08T00:01:58.996440+00:00",
+    "updated_at": "2026-05-08T00:16:38.158371+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -1318,7 +1318,7 @@
         "team": "Lansing Lugnuts",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Delayed",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1329,7 +1329,7 @@
         "team": "Albuquerque Isotopes",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1403,8 +1403,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1508,12 +1508,17 @@
         "team": "Auburn",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
