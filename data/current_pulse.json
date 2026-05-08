@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T20:16:55.668225+00:00",
+  "generated_at": "2026-05-08T20:32:08.930870+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2157,16 +2157,16 @@
       "player_name": "Cole Cleveland",
       "team": "FIU",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Middle Tennessee vs Florida International",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Middle Tennessee 0, Florida International 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853757",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631807",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cole%20Cleveland%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cole%20Cleveland%22%20FIU&f=live",
       "data_source": "D1Baseball",
@@ -2174,6 +2174,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3121,8 +3125,8 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "0-1, SB, BB",
-      "game_context": "Saint Louis 0, Fordham 0 | Top 5",
+      "stats_summary": "0-2, SB, BB",
+      "game_context": "Saint Louis 0, Fordham 0 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -3130,8 +3134,8 @@
       "next_game": null,
       "box_score_url": "https://fordhamsports.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Taylor%20Kirk%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Stolen base",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3310,7 +3314,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Hillsboro Hops 0, Everett AquaSox 5 | Bottom 5",
+      "game_context": "Hillsboro Hops 0, Everett AquaSox 7 | End 5",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-08",
@@ -3722,7 +3726,8 @@
       },
       "StatBroadcast": {
         "player not in box": 3,
-        "no game found": 3
+        "no game found": 3,
+        "found player": 1
       },
       "ESPN": {
         "scheduled (ignored)": 3
@@ -3755,7 +3760,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 3,
           "blocked": 0
         }
       }
