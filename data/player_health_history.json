@@ -1183,7 +1183,7 @@
   },
   {
     "date": "2026-05-07",
-    "updated_at": "2026-05-08T01:46:44.825417+00:00",
+    "updated_at": "2026-05-08T02:01:48.233106+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -1201,7 +1201,7 @@
         "team": "Louisville Bats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1223,7 +1223,7 @@
         "team": "Boston Red Sox",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1256,7 +1256,7 @@
         "team": "Northwestern State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -1416,7 +1416,7 @@
         "team": "Akron RubberDucks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1504,14 +1504,17 @@
         "team": "Auburn",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -1610,7 +1613,7 @@
         "team": "Fayetteville Woodpeckers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
