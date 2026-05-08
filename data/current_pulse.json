@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T20:02:04.089933+00:00",
+  "generated_at": "2026-05-08T20:16:55.668225+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -64,23 +64,47 @@
       "player_name": "Bruce Littleton",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Southern Miss vs James Madison",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Southern Miss 0, James Madison 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853162",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=647723",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -2568,23 +2592,47 @@
       "player_name": "Sam Mitchell",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Southern Miss vs James Madison",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Southern Miss 0, James Madison 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853162",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=647723",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3074,7 +3122,7 @@
       "team": "Fordham",
       "level": "NCAA",
       "stats_summary": "0-1, SB, BB",
-      "game_context": "Saint Louis 0, Fordham 0 | Top 4",
+      "game_context": "Saint Louis 0, Fordham 0 | Top 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -3262,7 +3310,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Hillsboro Hops 0, Everett AquaSox 2 | Bottom 4",
+      "game_context": "Hillsboro Hops 0, Everett AquaSox 5 | Bottom 5",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-08",
@@ -3669,32 +3717,34 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 44,
-        "found game, no player": 1
+        "found stats": 42,
+        "found game, no player": 3
       },
       "StatBroadcast": {
-        "player not in box": 1,
-        "no game found": 1
+        "player not in box": 3,
+        "no game found": 3
       },
       "ESPN": {
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 3
       },
       "NCAA.com": {
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 3
       },
       "Sidearm": {
-        "no game found": 1,
+        "no game found": 3,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 3
       }
     },
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Sam Mitchell"
+    ],
     "total_clients": 84,
     "proxy_pool": {
       "pool": [
@@ -3705,7 +3755,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 2,
           "blocked": 0
         }
       }
