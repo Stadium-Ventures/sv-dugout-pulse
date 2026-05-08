@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T21:01:55.948463+00:00",
+  "generated_at": "2026-05-08T21:17:03.495149+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1742,23 +1742,47 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "USC Upstate vs Presbyterian",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Did Not Play",
+      "game_context": "USC Upstate 2, Presbyterian 1 | Final",
+      "game_status": "Final",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=651097",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1868,7 +1892,7 @@
       "player_name": "Blake Rambusch",
       "team": "Arkansas Travelers",
       "level": "Pro",
-      "stats_summary": "Game at 6:05 PM ET",
+      "stats_summary": "In lineup — batting 9th (LF)",
       "game_context": "Tulsa Drillers vs Arkansas Travelers | 6:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:05 PM ET",
@@ -3125,8 +3149,8 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "0-2, SB, BB",
-      "game_context": "Saint Louis 0, Fordham 0 | Bottom 8",
+      "stats_summary": "0-3, SB, BB",
+      "game_context": "Saint Louis 0, Fordham 0 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -3135,7 +3159,7 @@
       "box_score_url": "https://fordhamsports.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Taylor%20Kirk%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-2",
+      "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3314,7 +3338,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Hillsboro Hops 1, Everett AquaSox 7 | Middle 7",
+      "game_context": "Hillsboro Hops 1, Everett AquaSox 8 | Middle 8",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-08",
@@ -3721,26 +3745,28 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 42,
-        "found game, no player": 3
+        "found stats": 41,
+        "found game, no player": 4
       },
       "StatBroadcast": {
         "player not in box": 3,
-        "no game found": 3,
+        "no game found": 4,
+        "fetch failed": 1,
         "found player": 1
       },
       "ESPN": {
-        "scheduled (ignored)": 3
+        "scheduled (ignored)": 3,
+        "no game found": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 3
+        "scheduled (ignored)": 4
       },
       "Sidearm": {
-        "no game found": 3,
+        "no game found": 4,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 3
+        "scheduled (ignored)": 4
       }
     },
     "blocked_sources": [],
@@ -3756,11 +3782,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
           "success": 3,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 1,
           "blocked": 0
         }
       }
