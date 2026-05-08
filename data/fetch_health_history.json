@@ -1,54 +1,5 @@
 [
   {
-    "generated_at": "2026-05-06T13:17:20.965124+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [
-      "Alex Kranzler"
-    ],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 17,
-        "found stats": 12
-      },
-      "Sidearm": {
-        "player not in box": 17,
-        "no game found": 13,
-        "found player": 6
-      },
-      "ESPN": {
-        "no game found": 17
-      },
-      "NCAA.com": {
-        "found stats": 4,
-        "found game, no player": 12,
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "no game found": 13
-      },
-      "NCAA.org": {
-        "not implemented": 13
-      },
-      "game log": {
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-06T13:32:33.120071+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -9580,6 +9531,30 @@
   },
   {
     "generated_at": "2026-05-08T13:16:55.888173+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 46
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-08T13:32:03.972248+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
