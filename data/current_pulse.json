@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T06:19:41.428542+00:00",
+  "generated_at": "2026-05-08T06:31:45.897233+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -813,7 +813,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2137,7 +2137,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3123,7 +3123,7 @@
       "game_date": "2026-05-07",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633261",
+      "box_score_url": "https://hailstate.com/boxscore.aspx?id=27416",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
       "performance_grade": "— DNP",
       "grade_reason": "",
@@ -3135,7 +3135,7 @@
           "outcome": "found game, no player"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "player not in box"
         },
         {
@@ -3156,7 +3156,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3973,7 +3973,7 @@
         "found stats": 5
       },
       "Sidearm": {
-        "player not in box": 2,
+        "player not in box": 3,
         "no game found": 3,
         "found player": 3
       },
@@ -3986,11 +3986,10 @@
       },
       "StatBroadcast": {
         "no game found": 3,
-        "found player": 2,
-        "player not in box": 1
+        "found player": 2
       },
       "NCAA.org": {
-        "found game, no player": 3
+        "no game found": 3
       }
     },
     "blocked_sources": [],
@@ -4025,14 +4024,9 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
+      "active": null,
       "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
+      "stats": {}
     }
   }
 }
