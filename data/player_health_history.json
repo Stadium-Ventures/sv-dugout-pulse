@@ -1667,7 +1667,7 @@
   },
   {
     "date": "2026-05-08",
-    "updated_at": "2026-05-08T16:01:57.832928+00:00",
+    "updated_at": "2026-05-08T16:17:04.305383+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -2092,13 +2092,11 @@
         "team": "Georgia Southern",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
+        "game_status": "Live",
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Blake Rambusch",
@@ -2371,12 +2369,13 @@
         "team": "Saint Josephs",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "Sidearm"
         ]
       },
       {
