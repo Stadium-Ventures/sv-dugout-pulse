@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T21:46:48.828821+00:00",
+  "generated_at": "2026-05-08T22:02:05.864218+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -428,16 +428,16 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Game at 6:30 PM",
-      "game_context": "Kentucky vs Florida",
-      "game_status": "Scheduled",
-      "game_time": "6:30 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Kentucky 0, Florida 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847242",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631763",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
       "data_source": "D1Baseball",
@@ -445,6 +445,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -514,23 +518,47 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Florida State vs Clemson",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game in progress",
+      "game_context": "Florida State 0, Clemson 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847844",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631145",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -987,23 +1015,47 @@
       "player_name": "Dane Moehler",
       "team": "Clemson",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Florida State vs Clemson",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "0.0 IP",
+      "game_context": "Florida State 0, Clemson 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847844",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631145",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Dane%20Moehler%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dane%20Moehler%22%20Clemson&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1279,7 +1331,7 @@
       "player_name": "Justin Riemer",
       "team": "Lansing Lugnuts",
       "level": "Pro",
-      "stats_summary": "Game at 7:05 PM ET",
+      "stats_summary": "In lineup — batting 5th (2B)",
       "game_context": "Lansing Lugnuts vs South Bend Cubs | 7:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:05 PM ET",
@@ -1337,7 +1389,7 @@
         },
         {
           "source": "ESPN",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         },
         {
           "source": "NCAA.com",
@@ -1483,7 +1535,7 @@
       "team": "South Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Alabama 0, South Carolina 0 | Bottom 1",
+      "game_context": "Alabama 4, South Carolina 0 | Top 2",
       "game_status": "Live",
       "game_time": "5:30 PM ET",
       "game_date": "2026-05-08",
@@ -1670,16 +1722,16 @@
       "player_name": "Tyler Howe",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Pittsburgh vs North Carolina",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Pittsburgh 0, North Carolina 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848159",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=649242",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Tyler%20Howe%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Tyler%20Howe%22%20North%20Carolina&f=live",
       "data_source": "D1Baseball",
@@ -1687,6 +1739,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1703,7 +1759,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 0, South Carolina 0 | Bottom 1",
+      "game_context": "Alabama 4, South Carolina 0 | Top 2",
       "game_status": "Live",
       "game_time": "5:30 PM ET",
       "game_date": "2026-05-08",
@@ -1790,47 +1846,23 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "USC Upstate 2, Presbyterian 1 | Final",
-      "game_status": "Final",
-      "game_time": "6:00 PM ET",
+      "stats_summary": "Game at 6:00 PM",
+      "game_context": "USC Upstate vs Presbyterian",
+      "game_status": "Scheduled",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=651097",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "fetch failed"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2043,7 +2075,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Alabama 0, South Carolina 0 | Bottom 1",
+      "game_context": "Alabama 4, South Carolina 0 | Top 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -2390,7 +2422,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 0, South Carolina 0 | Bottom 1",
+      "game_context": "Alabama 4, South Carolina 0 | Top 2",
       "game_status": "Live",
       "game_time": "5:30 PM ET",
       "game_date": "2026-05-08",
@@ -2907,7 +2939,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "1-1",
-      "game_context": "Alabama 0, South Carolina 0 | Bottom 1",
+      "game_context": "Alabama 4, South Carolina 0 | Top 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -3074,23 +3106,47 @@
       "player_name": "Lee Sowers",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Pittsburgh vs North Carolina",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game in progress",
+      "game_context": "Pittsburgh 0, North Carolina 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-08",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848159",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=649242",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Sowers%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lee%20Sowers%22%20North%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3325,7 +3381,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 0, South Carolina 0 | Bottom 1",
+      "game_context": "Alabama 4, South Carolina 0 | Top 2",
       "game_status": "Live",
       "game_time": "5:30 PM ET",
       "game_date": "2026-05-08",
@@ -3502,7 +3558,7 @@
       "player_name": "Jason Schiavone",
       "team": "Asheville Tourists",
       "level": "Pro",
-      "stats_summary": "Game at 6:35 PM ET",
+      "stats_summary": "In lineup — batting 4th (C)",
       "game_context": "Rome Emperors vs Asheville Tourists | 6:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:35 PM ET",
@@ -3849,29 +3905,27 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 37,
-        "found game, no player": 8
+        "found stats": 35,
+        "found game, no player": 10
       },
       "StatBroadcast": {
-        "player not in box": 7,
-        "no game found": 8,
-        "fetch failed": 1,
-        "found player": 3
+        "player not in box": 9,
+        "no game found": 10,
+        "found player": 6
       },
       "ESPN": {
-        "scheduled (ignored)": 3,
-        "found game, no player": 4,
-        "no game found": 1
+        "scheduled (ignored)": 5,
+        "found game, no player": 5
       },
       "NCAA.com": {
-        "scheduled (ignored)": 8
+        "scheduled (ignored)": 10
       },
       "Sidearm": {
-        "no game found": 8,
+        "no game found": 10,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 8
+        "scheduled (ignored)": 10
       }
     },
     "blocked_sources": [],
@@ -3879,10 +3933,12 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Myles Bailey",
       "Riley Goodman",
       "Will Rhine",
       "Evan Taylor",
       "Sam Mitchell",
+      "Lee Sowers",
       "Zack Johnson"
     ],
     "total_clients": 84,
@@ -3895,7 +3951,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 8,
+          "success": 13,
           "blocked": 0
         }
       }
