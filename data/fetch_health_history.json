@@ -1,127 +1,5 @@
 [
   {
-    "generated_at": "2026-05-06T22:02:31.900618+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Najer Victor"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 19,
-        "found stats": 10
-      },
-      "Sidearm": {
-        "player not in box": 17,
-        "no game found": 14,
-        "found player": 6
-      },
-      "ESPN": {
-        "no game found": 17,
-        "found game, no player": 2
-      },
-      "NCAA.com": {
-        "found stats": 5,
-        "found game, no player": 12,
-        "scheduled (ignored)": 2
-      },
-      "StatBroadcast": {
-        "no game found": 14,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "found game, no player": 12,
-        "scheduled (ignored)": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
-    "generated_at": "2026-05-06T22:12:55.362793+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Najer Victor"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 20,
-        "found stats": 9
-      },
-      "Sidearm": {
-        "player not in box": 17,
-        "no game found": 15,
-        "found player": 6
-      },
-      "ESPN": {
-        "no game found": 17,
-        "found game, no player": 2,
-        "scheduled (ignored)": 1
-      },
-      "NCAA.com": {
-        "found stats": 5,
-        "found game, no player": 12,
-        "scheduled (ignored)": 2,
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "no game found": 15,
-        "found player": 3
-      },
-      "NCAA.org": {
-        "found game, no player": 12,
-        "scheduled (ignored)": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-06T22:17:32.567372+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -9122,6 +9000,72 @@
       "stats": {
         "p.webshare.io": {
           "success": 13,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-08T22:16:43.369834+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Myles Bailey",
+      "Cade Doughty",
+      "Mason Eckelman",
+      "Riley Goodman",
+      "Will Rhine",
+      "Evan Taylor",
+      "Sam Mitchell",
+      "Lee Ellis",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Zack Johnson"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 31,
+        "found game, no player": 13,
+        "scheduled (no game_time)": 1
+      },
+      "StatBroadcast": {
+        "player not in box": 11,
+        "no game found": 13,
+        "found player": 9
+      },
+      "ESPN": {
+        "found game, no player": 11,
+        "scheduled (ignored)": 2,
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 13,
+        "found stats": 1
+      },
+      "Sidearm": {
+        "no game found": 13,
+        "player not in box": 2,
+        "found player": 2
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 13
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 18,
           "blocked": 0
         }
       }
