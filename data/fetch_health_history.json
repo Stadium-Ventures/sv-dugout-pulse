@@ -1,59 +1,5 @@
 [
   {
-    "generated_at": "2026-05-06T19:02:23.459599+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [
-      "Alex Kranzler"
-    ],
-    "fallback_clients": [
-      "Najer Victor"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 19,
-        "found stats": 10
-      },
-      "Sidearm": {
-        "player not in box": 17,
-        "no game found": 15,
-        "found player": 6
-      },
-      "ESPN": {
-        "no game found": 17,
-        "found game, no player": 2
-      },
-      "NCAA.com": {
-        "found stats": 4,
-        "found game, no player": 12,
-        "scheduled (ignored)": 2,
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "no game found": 15
-      },
-      "NCAA.org": {
-        "found game, no player": 13,
-        "no game found": 2
-      },
-      "game log": {
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-06T19:17:38.207828+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -9211,6 +9157,33 @@
           "blocked": 0
         }
       }
+    }
+  },
+  {
+    "generated_at": "2026-05-08T19:17:00.875284+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 45
+      },
+      "Sidearm": {
+        "found player": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
     }
   }
 ]
