@@ -2747,7 +2747,7 @@
   },
   {
     "date": "2026-05-09",
-    "updated_at": "2026-05-09T18:02:18.260438+00:00",
+    "updated_at": "2026-05-09T18:17:26.570549+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -2780,12 +2780,17 @@
         "team": "Coastal Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -2876,7 +2881,7 @@
         "team": "ACL Reds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -3187,12 +3192,13 @@
         "team": "Georgia Southern",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "StatBroadcast"
         ]
       },
       {
@@ -3251,12 +3257,13 @@
         "team": "Mercer",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "StatBroadcast"
         ]
       },
       {
