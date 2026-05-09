@@ -1667,7 +1667,7 @@
   },
   {
     "date": "2026-05-08",
-    "updated_at": "2026-05-09T02:01:37.161102+00:00",
+    "updated_at": "2026-05-09T02:16:38.466963+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -1707,7 +1707,7 @@
         "team": "Coastal Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -1758,7 +1758,7 @@
         "team": "Cincinnati",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "ESPN",
@@ -1785,12 +1785,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -1800,8 +1799,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1846,7 +1845,7 @@
         "team": "Northwestern State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -2303,7 +2302,7 @@
         "team": "Akron RubberDucks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
