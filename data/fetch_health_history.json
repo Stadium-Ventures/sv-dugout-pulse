@@ -1,32 +1,5 @@
 [
   {
-    "generated_at": "2026-05-07T16:24:43.864560+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 8
-      },
-      "Sidearm": {
-        "found player": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-07T16:31:59.267935+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -10540,6 +10513,57 @@
   },
   {
     "generated_at": "2026-05-09T16:16:52.087151+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Michael Dattalo",
+      "Lee Sowers"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 44,
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "found player": 1,
+        "player not in box": 1,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "found player": 2,
+        "no game found": 1
+      },
+      "ESPN": {
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 1
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-09T16:31:56.084100+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
