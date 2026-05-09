@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T16:38:52.021275+00:00",
+  "generated_at": "2026-05-09T16:46:53.925150+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1599,7 +1599,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "In lineup",
-      "game_context": "Pittsburgh 0, North Carolina 0 | Bottom 2",
+      "game_context": "Pittsburgh 1, North Carolina 0 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2411,7 +2411,7 @@
       "team": "FCL Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Cardinals 9, FCL Mets 4 | Bottom 8",
+      "game_context": "FCL Cardinals 9, FCL Mets 4 | Top 9",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-09",
@@ -2776,17 +2776,21 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Duke%20McCarron%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "7 strikeouts with good command",
+      "grade_reason": "More walks (3) than strikeouts (0)",
       "social_search_url": "https://x.com/search?q=%22Duke%20McCarron%22%20Saint%20Josephs&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "no game found"
         },
         {
-          "source": "Sidearm",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2899,7 +2903,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Pittsburgh 0, North Carolina 0 | Bottom 2",
+      "game_context": "Pittsburgh 1, North Carolina 0 | Bottom 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-09",
@@ -3096,15 +3100,19 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "no game found"
         },
         {
-          "source": "Sidearm",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3716,7 +3724,8 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 44,
+        "found stats": 42,
+        "no game found": 2,
         "found game, no player": 1
       },
       "StatBroadcast": {
@@ -3724,15 +3733,16 @@
         "player not in box": 1,
         "no game found": 1
       },
-      "Sidearm": {
-        "found player": 2,
-        "no game found": 1
-      },
       "ESPN": {
+        "no game found": 2,
         "found game, no player": 1
       },
       "NCAA.com": {
+        "found stats": 2,
         "scheduled (ignored)": 1
+      },
+      "Sidearm": {
+        "no game found": 1
       },
       "NCAA.org": {
         "scheduled (ignored)": 1
