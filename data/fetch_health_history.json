@@ -1,76 +1,5 @@
 [
   {
-    "generated_at": "2026-05-07T07:17:24.693717+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 2,
-    "blocked_clients": [
-      "Braydon Kersey",
-      "Cole Cleveland"
-    ],
-    "carry_forward_clients": [
-      "Cole Cleveland"
-    ],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Aaron Watson",
-      "Jack Cebert",
-      "Tanner Gordon",
-      "Davis Sharpe",
-      "Kade Brown",
-      "Najer Victor",
-      "Ryan DeSanto",
-      "Xavier Kolhosser"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 23,
-        "found stats": 6
-      },
-      "Sidearm": {
-        "player not in box": 17,
-        "no game found": 16,
-        "found player": 6
-      },
-      "ESPN": {
-        "no game found": 17,
-        "found game, no player": 4,
-        "found stats": 2
-      },
-      "NCAA.com": {
-        "found stats": 5,
-        "found game, no player": 12,
-        "no game found": 3,
-        "scheduled (ignored)": 1
-      },
-      "StatBroadcast": {
-        "no game found": 16,
-        "fetch failed": 1,
-        "blocked (Cloudflare 403)": 2
-      },
-      "NCAA.org": {
-        "found game, no player": 12,
-        "scheduled (ignored)": 4
-      },
-      "game log": {
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-07T07:32:31.285418+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -9936,6 +9865,102 @@
   },
   {
     "generated_at": "2026-05-09T07:17:10.173596+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 8,
+    "blocked_clients": [
+      "Aiden Robbins",
+      "Caleb Daniel",
+      "Ben Tryon",
+      "Braydon Kersey",
+      "Cole Cleveland",
+      "Tanner Chun"
+    ],
+    "carry_forward_clients": [
+      "Ben Tryon",
+      "Braydon Kersey"
+    ],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Dax Kilby",
+      "Myles Bailey",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Carter Johnson",
+      "Riley Goodman",
+      "Tanner Gordon",
+      "Will Rhine",
+      "Alex Kranzler",
+      "Austin Amaral",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Jake Munroe",
+      "Kade Brown",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Zack Johnson"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 28,
+        "found stats": 16,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 8,
+        "player not in box": 17,
+        "no game found": 21,
+        "found player": 9,
+        "fetch failed": 2
+      },
+      "ESPN": {
+        "found stats": 8,
+        "found game, no player": 18,
+        "no game found": 3
+      },
+      "NCAA.com": {
+        "no game found": 21
+      },
+      "Sidearm": {
+        "no game found": 21,
+        "found player": 7,
+        "player not in box": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 18,
+        "scheduled (ignored)": 2,
+        "no game found": 1
+      },
+      "game log": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 16,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-09T07:23:37.301021+00:00",
     "severity": "critical",
     "blocked_sources": [
       "StatBroadcast"
