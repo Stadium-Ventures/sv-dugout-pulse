@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T19:32:37.082200+00:00",
+  "generated_at": "2026-05-09T19:47:08.828930+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -64,23 +64,47 @@
       "player_name": "Bruce Littleton",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
-      "game_context": "Southern Miss vs James Madison",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Southern Miss 0, James Madison 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "4:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853163",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=647724",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -97,7 +121,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Old Dominion 3, Coastal Carolina 3 | Bottom 4",
+      "game_context": "Old Dominion 4, Coastal Carolina 3 | Top 5",
       "game_status": "Live",
       "game_time": "TBA",
       "game_date": "2026-05-09",
@@ -655,7 +679,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Reds 2, ACL Royals 7 | Top 4",
+      "game_context": "ACL Reds 5, ACL Royals 8 | End 4",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-09",
@@ -689,7 +713,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 0, Georgia Tech 1 | Bottom 2",
+      "game_context": "Duke 0, Georgia Tech 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -772,7 +796,7 @@
       "team": "Northwestern State",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Northwestern State 0, McNeese 6 | Bottom 2",
+      "game_context": "Northwestern State 0, McNeese 7 | Bottom 3",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -862,7 +886,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Duke 0, Georgia Tech 1 | Bottom 2",
+      "game_context": "Duke 0, Georgia Tech 1 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1559,7 +1583,7 @@
       "team": "South Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Alabama 9, South Carolina 5 | Top 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -1783,7 +1807,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 9, South Carolina 5 | Top 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -1802,7 +1826,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -1964,8 +1988,8 @@
       "player_name": "Bennett Edwards",
       "team": "Georgia Southern",
       "level": "NCAA",
-      "stats_summary": "0-1, BB",
-      "game_context": "Georgia State 4, Georgia Southern 3 | Bottom 5",
+      "stats_summary": "0-2, BB",
+      "game_context": "Georgia State 4, Georgia Southern 3 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1973,8 +1997,8 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631954",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bennett%20Edwards%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Reached base early",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Bennett%20Edwards%22%20Georgia%20Southern&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -2067,7 +2091,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Alabama 9, South Carolina 5 | Top 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2161,8 +2185,8 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "0-1, R, BB",
-      "game_context": "VMI 0, Mercer 4 | Bottom 5",
+      "stats_summary": "0-1, R, 2 BB",
+      "game_context": "VMI 0, Mercer 5 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2171,7 +2195,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633061",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "Reached base early",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -2262,7 +2286,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "In lineup",
-      "game_context": "Middle Tennessee 2, Florida International 0 | Bottom 2",
+      "game_context": "Middle Tennessee 2, Florida International 4 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2359,7 +2383,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 6, Baylor 0 | Bottom 1",
+      "game_context": "UCF 6, Baylor 0 | Top 2",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -2442,7 +2466,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 9, South Carolina 5 | Top 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -2715,7 +2739,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Guardians 9, ACL Brewers 0 | Bottom 5",
+      "game_context": "ACL Guardians 9, ACL Brewers 2 | Bottom 6",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-09",
@@ -2748,23 +2772,47 @@
       "player_name": "Sam Mitchell",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
-      "game_context": "Southern Miss vs James Madison",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Southern Miss 0, James Madison 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "4:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853163",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=647724",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -2970,8 +3018,8 @@
       "player_name": "Bryce Fowler",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "2-4, 2 R, 2B",
-      "game_context": "Alabama 9, South Carolina 5 | Top 8",
+      "stats_summary": "2-5, 2 R, 2B",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -3043,7 +3091,7 @@
       "team": "Duke",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 0, Georgia Tech 1 | Bottom 2",
+      "game_context": "Duke 0, Georgia Tech 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -3287,7 +3335,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 6, Baylor 0 | Bottom 1",
+      "game_context": "UCF 6, Baylor 0 | Top 2",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -3472,7 +3520,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 9, South Carolina 5 | Top 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -4032,30 +4080,31 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 32,
-        "found game, no player": 13
+        "found stats": 30,
+        "found game, no player": 15
       },
       "StatBroadcast": {
-        "player not in box": 13,
-        "no game found": 13,
-        "found player": 8
+        "player not in box": 14,
+        "no game found": 15,
+        "found player": 8,
+        "fetch failed": 1
       },
       "ESPN": {
+        "scheduled (ignored)": 3,
         "found game, no player": 11,
-        "no game found": 1,
-        "scheduled (ignored)": 1
+        "no game found": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 11,
+        "scheduled (ignored)": 13,
         "stale (yesterday)": 1,
         "found game, no player": 1
       },
       "Sidearm": {
-        "no game found": 13,
+        "no game found": 15,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 11,
+        "scheduled (ignored)": 13,
         "stale (yesterday)": 1,
         "found game, no player": 1
       }
@@ -4075,6 +4124,7 @@
       "Evan Taylor",
       "Michael Dattalo",
       "Ryan DeSanto",
+      "Sam Mitchell",
       "Eamon McDermott",
       "Lee Sowers",
       "Michael Gillen",
@@ -4086,11 +4136,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 19,
+          "success": 4,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 18,
           "blocked": 0
         }
       }
