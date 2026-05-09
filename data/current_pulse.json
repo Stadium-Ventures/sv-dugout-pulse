@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T17:02:22.902269+00:00",
+  "generated_at": "2026-05-09T17:17:39.134963+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1434,23 +1434,47 @@
       "player_name": "Riley Goodman",
       "team": "South Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Alabama vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Alabama 1, South Carolina 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1599,7 +1623,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "0-1, K",
-      "game_context": "Pittsburgh 1, North Carolina 1 | Bottom 3",
+      "game_context": "Pittsburgh 1, North Carolina 3 | Top 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1634,23 +1658,47 @@
       "player_name": "Will Rhine",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Alabama vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Alabama 1, South Carolina 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Will%20Rhine%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Will%20Rhine%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1890,23 +1938,27 @@
       "player_name": "Brady Neal",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Alabama vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "0-1",
+      "game_context": "Alabama 1, South Carolina 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brady%20Neal%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Brady%20Neal%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2229,23 +2281,47 @@
       "player_name": "Evan Taylor",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Alabama vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Alabama 1, South Carolina 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Evan%20Taylor%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Evan%20Taylor%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -2734,23 +2810,27 @@
       "player_name": "Bryce Fowler",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Alabama vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "1-1, R",
+      "game_context": "Alabama 1, South Carolina 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bryce%20Fowler%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Bryce%20Fowler%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2899,7 +2979,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Pittsburgh 1, North Carolina 1 | Bottom 3",
+      "game_context": "Pittsburgh 1, North Carolina 3 | Top 4",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-09",
@@ -3179,23 +3259,47 @@
       "player_name": "Zack Johnson",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Alabama vs South Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Alabama 1, South Carolina 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Zack%20Johnson%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Zack%20Johnson%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3716,26 +3820,26 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 44,
-        "found game, no player": 1
+        "found stats": 40,
+        "found game, no player": 5
       },
       "StatBroadcast": {
-        "found player": 1,
-        "player not in box": 1,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "found player": 2,
-        "no game found": 1
+        "player not in box": 5,
+        "no game found": 5,
+        "found player": 3
       },
       "ESPN": {
-        "found game, no player": 1
+        "found game, no player": 5
       },
       "NCAA.com": {
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 5
+      },
+      "Sidearm": {
+        "no game found": 5,
+        "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 5
       }
     },
     "blocked_sources": [],
@@ -3743,8 +3847,12 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Riley Goodman",
+      "Will Rhine",
+      "Evan Taylor",
       "Michael Dattalo",
-      "Lee Sowers"
+      "Lee Sowers",
+      "Zack Johnson"
     ],
     "total_clients": 84,
     "proxy_pool": {
@@ -3756,7 +3864,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 6,
           "blocked": 0
         }
       }
