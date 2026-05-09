@@ -2747,7 +2747,7 @@
   },
   {
     "date": "2026-05-09",
-    "updated_at": "2026-05-09T22:47:08.235465+00:00",
+    "updated_at": "2026-05-09T23:02:08.520208+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -2757,10 +2757,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "StatBroadcast"
         ]
       },
       {
@@ -2768,7 +2768,7 @@
         "team": "Southern Miss",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -3017,7 +3017,7 @@
         "team": "Somerset Patriots",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -3042,7 +3042,7 @@
         "team": "Lansing Lugnuts",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -3477,7 +3477,7 @@
         "team": "Southern Miss",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -3614,7 +3614,7 @@
         "team": "Auburn",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -3628,12 +3628,17 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
