@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T21:02:17.575778+00:00",
+  "generated_at": "2026-05-09T21:17:02.043429+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -65,7 +65,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 1, James Madison 0 | Top 4",
+      "game_context": "Southern Miss 6, James Madison 0 | Top 5",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-09",
@@ -104,7 +104,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -120,16 +120,16 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Old Dominion 6, Coastal Carolina 3 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Old Dominion 6, Coastal Carolina 3 | Final",
+      "game_status": "Final",
       "game_time": "TBA",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=649199",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cam%20Flukey%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
       "data_source": "D1Baseball",
@@ -359,23 +359,27 @@
       "player_name": "Jackson Smith",
       "team": "Cincinnati",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
-      "game_context": "Cincinnati vs Kansas State",
-      "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "stats_summary": "0-1",
+      "game_context": "Cincinnati 0, Kansas State 0 | Top 2",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848651",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632540",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Jackson%20Smith%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Jackson%20Smith%22%20Cincinnati&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -452,23 +456,47 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
-      "game_context": "Kentucky vs Florida",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "stats_summary": "Game in progress",
+      "game_context": "Kentucky 0, Florida 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847243",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631764",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -713,7 +741,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 1, Georgia Tech 13 | Bottom 5",
+      "game_context": "Duke 1, Georgia Tech 15 | Top 6",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -752,7 +780,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -796,7 +824,7 @@
       "team": "Northwestern State",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Northwestern State 0, McNeese 9 | Top 8",
+      "game_context": "Northwestern State 0, McNeese 9 | Top 9",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -835,7 +863,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -885,8 +913,8 @@
       "player_name": "Caleb Daniel",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Duke 1, Georgia Tech 13 | Bottom 5",
+      "stats_summary": "In lineup",
+      "game_context": "Duke 1, Georgia Tech 15 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -901,31 +929,11 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "stale (yesterday)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -968,7 +976,7 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "Game at 6:00 PM ET",
+      "stats_summary": "In lineup — batting 1st (2B)",
       "game_context": "Palm Beach Cardinals vs Jupiter Hammerheads | 6:00 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:00 PM ET",
@@ -1170,7 +1178,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "California 1, Virginia 0 | Top 5",
+      "game_context": "California 1, Virginia 0 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1209,7 +1217,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1341,7 +1349,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "0-2, K",
-      "game_context": "California 1, Virginia 0 | Top 5",
+      "game_context": "California 1, Virginia 0 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1404,7 +1412,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Lansing Lugnuts 6, South Bend Cubs 0 | Bottom 3",
+      "game_context": "Lansing Lugnuts 6, South Bend Cubs 3 | Top 4",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-09",
@@ -1438,7 +1446,7 @@
       "team": "Marshall",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UL Monroe 2, Marshall 6 | Bottom 2",
+      "game_context": "UL Monroe 2, Marshall 7 | Top 3",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-09",
@@ -1477,7 +1485,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1520,17 +1528,17 @@
       "player_name": "Mason Eckelman",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Michigan State 0, Ohio State 0 | Top 1",
+      "stats_summary": "2-3, RBI",
+      "game_context": "Michigan State 7, Ohio State 4 | Bottom 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634228",
+      "box_score_url": "https://ohiostatebuckeyes.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "2 hits",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -1539,7 +1547,7 @@
           "outcome": "found stats"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "found player"
         }
       ],
@@ -1746,23 +1754,47 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game at 4:05 PM",
-      "game_context": "Michigan vs Minnesota",
-      "game_status": "Scheduled",
-      "game_time": "4:05 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Michigan 1, Minnesota 5 | Top 4",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401851076",
+      "box_score_url": "https://gophersports.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1854,7 +1886,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1898,23 +1930,47 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
-      "game_context": "USC Upstate vs Presbyterian",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "USC Upstate 3, Presbyterian 1 | Top 5",
+      "game_status": "Live",
+      "game_time": "4:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=651098",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1931,7 +1987,7 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 1, Hub City Spartanburgers 2 | End 1",
+      "game_context": "Wilmington Blue Rocks 2, Hub City Spartanburgers 2 | End 2",
       "game_status": "Live",
       "game_time": "4:35 PM ET",
       "game_date": "2026-05-09",
@@ -1964,16 +2020,16 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
-      "game_context": "Dallas Baptist vs Western Kentucky",
-      "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Dallas Baptist 0, Western Kentucky 0 | Top 2",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853490",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636745",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
       "data_source": "D1Baseball",
@@ -1981,6 +2037,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1996,9 +2056,9 @@
       "player_name": "Bennett Edwards",
       "team": "Georgia Southern",
       "level": "NCAA",
-      "stats_summary": "0-3, R, BB",
-      "game_context": "Georgia State 5, Georgia Southern 5 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "0-3, 2 R, 2 BB",
+      "game_context": "Georgia State 5, Georgia Southern 6 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
@@ -2033,8 +2093,8 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "In lineup — batting 9th (LF)",
-      "game_context": "Tulsa Drillers vs Arkansas Travelers | 5:05 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Tulsa Drillers 0, Arkansas Travelers 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
@@ -2048,7 +2108,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/817581",
       "player_profile_url": "https://www.mlb.com/player/800683",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Blake%20Rambusch%22%20Mariners&f=live",
       "data_source": "MLB Stats API",
@@ -2293,8 +2353,8 @@
       "player_name": "Cole Cleveland",
       "team": "FIU",
       "level": "NCAA",
-      "stats_summary": "0-1, R, HBP, K",
-      "game_context": "Middle Tennessee 4, Florida International 5 | Top 7",
+      "stats_summary": "0-2, R, HBP, 2 K",
+      "game_context": "Middle Tennessee 4, Florida International 5 | Top 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2302,8 +2362,8 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631808",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cole%20Cleveland%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Reached base early",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Cole%20Cleveland%22%20FIU&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -2391,7 +2451,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 14, Baylor 1 | Middle 5",
+      "game_context": "UCF 14, Baylor 2 | Top 6",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -2430,7 +2490,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2513,7 +2573,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2781,7 +2841,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 1, James Madison 0 | Top 4",
+      "game_context": "Southern Miss 6, James Madison 0 | Top 5",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-09",
@@ -2820,7 +2880,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3099,7 +3159,7 @@
       "team": "Duke",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 1, Georgia Tech 13 | Bottom 5",
+      "game_context": "Duke 1, Georgia Tech 15 | Top 6",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -3138,7 +3198,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3186,17 +3246,17 @@
       "player_name": "Lee Ellis",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Michigan State 0, Ohio State 0 | Top 1",
+      "stats_summary": "1-3, HR, RBI, R, SB, K",
+      "game_context": "Michigan State 7, Ohio State 4 | Bottom 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634228",
+      "box_score_url": "https://ohiostatebuckeyes.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Ellis%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "🔥 Standout",
+      "grade_reason": "Home run",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3205,7 +3265,7 @@
           "outcome": "found stats"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "found player"
         }
       ],
@@ -3262,7 +3322,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3279,7 +3339,7 @@
       "team": "Auburn",
       "level": "NCAA",
       "stats_summary": "0-1, 1 R, 1 BB, 1 K",
-      "game_context": "Auburn 2, Mississippi State 0 | Top 3",
+      "game_context": "Auburn 3, Mississippi State 0 | Top 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -3318,7 +3378,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "no game found"
         },
         {
           "source": "game log",
@@ -3371,7 +3431,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 14, Baylor 1 | Middle 5",
+      "game_context": "UCF 14, Baylor 2 | Top 6",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -3410,7 +3470,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3595,7 +3655,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3950,7 +4010,7 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "Game at 6:00 PM ET",
+      "stats_summary": "In lineup — batting 1st (SS)",
       "game_context": "Palm Beach Cardinals vs Jupiter Hammerheads | 6:00 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:00 PM ET",
@@ -4116,31 +4176,31 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 29,
-        "found game, no player": 16
+        "found stats": 27,
+        "found game, no player": 18
       },
       "StatBroadcast": {
-        "player not in box": 16,
-        "no game found": 16,
-        "found player": 10
+        "player not in box": 17,
+        "no game found": 18,
+        "found player": 11
       },
       "ESPN": {
-        "found game, no player": 15,
-        "no game found": 1
+        "found game, no player": 16,
+        "no game found": 2
       },
       "NCAA.com": {
-        "scheduled (ignored)": 9,
-        "stale (yesterday)": 3,
+        "scheduled (ignored)": 10,
+        "stale (yesterday)": 4,
         "found game, no player": 4
       },
       "Sidearm": {
-        "no game found": 16,
-        "found player": 2
+        "no game found": 18,
+        "found player": 4,
+        "player not in box": 1
       },
       "NCAA.org": {
-        "scheduled (ignored)": 9,
-        "stale (yesterday)": 3,
-        "found game, no player": 4
+        "no game found": 17,
+        "scheduled (ignored)": 1
       },
       "game log": {
         "found stats (live carry-forward)": 1
@@ -4154,11 +4214,12 @@
     ],
     "fallback_clients": [
       "Cam Flukey",
+      "Kyle Jones",
       "Aaron Watson",
       "Adam McKelvey",
-      "Caleb Daniel",
       "Henry Zatkowski",
       "Justin Riemer",
+      "Ty Finkbeiner",
       "Will Rhine",
       "Austin Amaral",
       "Drew Bellis",
@@ -4183,11 +4244,11 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 21,
+          "success": 24,
           "blocked": 0
         }
       }
