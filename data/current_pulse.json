@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T19:47:08.828930+00:00",
+  "generated_at": "2026-05-09T20:02:36.363678+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -121,7 +121,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Old Dominion 4, Coastal Carolina 3 | Top 5",
+      "game_context": "Old Dominion 4, Coastal Carolina 3 | Top 6",
       "game_status": "Live",
       "game_time": "TBA",
       "game_date": "2026-05-09",
@@ -325,10 +325,10 @@
       "player_name": "Garrett Whitlock",
       "team": "Boston Red Sox",
       "level": "Pro",
-      "stats_summary": "Game at 4:10 PM ET",
-      "game_context": "Tampa Bay Rays vs Boston Red Sox | 4:10 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "4:10 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": {
@@ -339,9 +339,9 @@
         "time": "1:35 PM ET",
         "display": "vs Tampa Bay Rays - Sun 05/10 1:35 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/824766",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/676477",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Garrett%20Whitlock%22%20Sox&f=live",
       "data_source": "MLB Stats API",
@@ -679,7 +679,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Reds 5, ACL Royals 8 | End 4",
+      "game_context": "ACL Reds 5, ACL Royals 8 | Bottom 5",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-09",
@@ -713,7 +713,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 0, Georgia Tech 1 | Bottom 3",
+      "game_context": "Duke 0, Georgia Tech 4 | Top 4",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -796,7 +796,7 @@
       "team": "Northwestern State",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Northwestern State 0, McNeese 7 | Bottom 3",
+      "game_context": "Northwestern State 0, McNeese 7 | Bottom 4",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -886,7 +886,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Duke 0, Georgia Tech 1 | Bottom 3",
+      "game_context": "Duke 0, Georgia Tech 4 | Top 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1582,47 +1582,27 @@
       "player_name": "Riley Goodman",
       "team": "South Carolina",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
+      "stats_summary": "1.0 IP, 2 K",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 9",
       "game_status": "Live",
-      "game_time": "1:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Scoreless in 1 IP",
       "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1807,7 +1787,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 9",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -1826,7 +1806,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1989,7 +1969,7 @@
       "team": "Georgia Southern",
       "level": "NCAA",
       "stats_summary": "0-2, BB",
-      "game_context": "Georgia State 4, Georgia Southern 3 | Top 6",
+      "game_context": "Georgia State 5, Georgia Southern 3 | Top 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2091,7 +2071,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2186,7 +2166,7 @@
       "team": "Mercer",
       "level": "NCAA",
       "stats_summary": "0-1, R, 2 BB",
-      "game_context": "VMI 0, Mercer 5 | Top 6",
+      "game_context": "VMI 1, Mercer 5 | Top 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2286,7 +2266,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "In lineup",
-      "game_context": "Middle Tennessee 2, Florida International 4 | Bottom 2",
+      "game_context": "Middle Tennessee 2, Florida International 5 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2383,7 +2363,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 6, Baylor 0 | Top 2",
+      "game_context": "UCF 7, Baylor 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -2466,7 +2446,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 9",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -2739,7 +2719,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Guardians 9, ACL Brewers 2 | Bottom 6",
+      "game_context": "ACL Guardians 9, ACL Brewers 2 | End 7",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-09",
@@ -3019,7 +2999,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "2-5, 2 R, 2B",
-      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -3091,7 +3071,7 @@
       "team": "Duke",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 0, Georgia Tech 1 | Bottom 3",
+      "game_context": "Duke 0, Georgia Tech 4 | Top 4",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -3335,7 +3315,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 6, Baylor 0 | Top 2",
+      "game_context": "UCF 7, Baylor 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
@@ -3520,7 +3500,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 9, South Carolina 5 | Bottom 8",
+      "game_context": "Alabama 9, South Carolina 5 | Bottom 9",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -4080,31 +4060,30 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 30,
-        "found game, no player": 15
+        "found stats": 31,
+        "found game, no player": 14
       },
       "StatBroadcast": {
         "player not in box": 14,
-        "no game found": 15,
-        "found player": 8,
-        "fetch failed": 1
+        "no game found": 14,
+        "found player": 9
       },
       "ESPN": {
         "scheduled (ignored)": 3,
-        "found game, no player": 11,
+        "found game, no player": 10,
         "no game found": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 13,
+        "scheduled (ignored)": 12,
         "stale (yesterday)": 1,
         "found game, no player": 1
       },
       "Sidearm": {
-        "no game found": 15,
+        "no game found": 14,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 13,
+        "scheduled (ignored)": 12,
         "stale (yesterday)": 1,
         "found game, no player": 1
       }
@@ -4118,7 +4097,6 @@
       "Aaron Watson",
       "Adam McKelvey",
       "Caleb Daniel",
-      "Riley Goodman",
       "Will Rhine",
       "Drew Bellis",
       "Evan Taylor",
@@ -4136,17 +4114,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 4,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 18,
+          "success": 22,
           "blocked": 0
         }
       }
