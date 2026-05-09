@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T02:46:55.324697+00:00",
+  "generated_at": "2026-05-09T03:01:49.957126+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -148,7 +148,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -435,7 +435,7 @@
       "team": "ACL Dodgers",
       "level": "Pro",
       "stats_summary": "0-0, R, SB, 3 BB",
-      "game_context": "ACL Rockies 4, ACL Dodgers 2 | Top 6",
+      "game_context": "ACL Rockies 5, ACL Dodgers 3 | End 6",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-09",
@@ -468,8 +468,8 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "0-2, K",
-      "game_context": "Kentucky 4, Florida 1 | Inn 5",
+      "stats_summary": "0-3, K",
+      "game_context": "Kentucky 4, Florida 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -478,21 +478,17 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631763",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-2",
+      "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -780,7 +776,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1687,7 +1683,7 @@
       "team": "Sacramento State",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Sacramento State 4, California Baptist 5 | Top 6",
+      "game_context": "Sacramento State 4, California Baptist 5 | Top 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -1939,7 +1935,7 @@
       "team": "Vanderbilt",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Vanderbilt 1, Missouri 0 | Top 3",
+      "game_context": "Vanderbilt 1, Missouri 0 | Top 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -2403,7 +2399,7 @@
       "team": "USF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "South Florida 12, Tulane 6 | Top 9",
+      "game_context": "South Florida 16, Tulane 6 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -2651,7 +2647,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2805,7 +2801,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tri-City Dust Devils 0, Spokane Indians 0 | Middle 5",
+      "game_context": "Tri-City Dust Devils 0, Spokane Indians 0 | Top 6",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
@@ -2839,7 +2835,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 1, Visalia Rawhide 6 | Bottom 4",
+      "game_context": "Stockton Ports 3, Visalia Rawhide 8 | Top 5",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
@@ -2933,8 +2929,8 @@
       "player_name": "Najer Victor",
       "team": "Salt Lake Bees",
       "level": "Pro",
-      "stats_summary": "0.1 IP, 0 ER, 1 K",
-      "game_context": "Salt Lake Bees 7, Oklahoma City Comets 3 | Top 8",
+      "stats_summary": "1.0 IP, 0 ER, 3 K",
+      "game_context": "Salt Lake Bees 7, Oklahoma City Comets 3 | Bottom 8",
       "game_status": "Live",
       "game_time": "8:05 PM ET",
       "game_date": "2026-05-09",
@@ -2950,7 +2946,7 @@
       "box_score_url": "https://www.mlb.com/gameday/815228",
       "player_profile_url": "https://www.mlb.com/player/695402",
       "performance_grade": "✅ Good",
-      "grade_reason": "Scoreless in 0.1 IP",
+      "grade_reason": "3 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Najer%20Victor%22%20Angels&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2967,9 +2963,9 @@
       "player_name": "Ryan DeSanto",
       "team": "ACL Guardians",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Guardians 0, ACL White Sox 1 | Bottom 6",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "ACL Guardians 0, ACL White Sox 1 | Final",
+      "game_status": "Final",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
@@ -2983,7 +2979,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844351",
       "player_profile_url": "https://www.mlb.com/player/823756",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ryan%20DeSanto%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -3058,7 +3054,7 @@
       "team": "Tulane",
       "level": "NCAA",
       "stats_summary": "0-3, BB",
-      "game_context": "South Florida 12, Tulane 6 | Inn 8",
+      "game_context": "South Florida 16, Tulane 6 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -3186,7 +3182,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "0-1, BB, K",
-      "game_context": "Vancouver Canadians 1, Eugene Emeralds 1 | Top 5",
+      "game_context": "Vancouver Canadians 1, Eugene Emeralds 1 | Bottom 6",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
@@ -3352,7 +3348,7 @@
       "team": "Sacramento State",
       "level": "NCAA",
       "stats_summary": "0.0 IP",
-      "game_context": "Sacramento State 4, California Baptist 5 | Top 6",
+      "game_context": "Sacramento State 4, California Baptist 5 | Top 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -3500,7 +3496,7 @@
       "team": "Auburn",
       "level": "NCAA",
       "stats_summary": "0-1, R, 2 BB, K",
-      "game_context": "Auburn 4, Mississippi St 2 | Inn 6",
+      "game_context": "Auburn 4, Mississippi St 2 | Inn 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -3635,7 +3631,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4005,8 +4001,8 @@
       "player_name": "Joseph Sullivan",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "1-4, HR, RBI, R, K",
-      "game_context": "Corpus Christi Hooks 8, Springfield Cardinals 8 | Top 7",
+      "stats_summary": "1-5, HR, RBI, R, 2 K",
+      "game_context": "Corpus Christi Hooks 10, Springfield Cardinals 8 | End 7",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-08",
@@ -4094,7 +4090,7 @@
       "team": "FCL Astros",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Corpus Christi Hooks 8, Springfield Cardinals 8 | Top 7",
+      "game_context": "Corpus Christi Hooks 10, Springfield Cardinals 8 | Bottom 7",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-08",
@@ -4223,7 +4219,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "1-2, K",
-      "game_context": "Vancouver Canadians 1, Eugene Emeralds 1 | Top 5",
+      "game_context": "Vancouver Canadians 1, Eugene Emeralds 1 | Bottom 6",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
@@ -4284,7 +4280,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Corpus Christi Hooks 8, Springfield Cardinals 8 | Top 7",
+      "game_context": "Corpus Christi Hooks 10, Springfield Cardinals 8 | End 7",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-08",
@@ -4318,17 +4314,18 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 35,
-        "found stats": 10
+        "found game, no player": 34,
+        "found stats": 11
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 22,
-        "fetch failed": 10,
+        "blocked (Cloudflare 403)": 21,
+        "fetch failed": 9,
         "no game found": 25,
-        "found player": 5
+        "player not in box": 1,
+        "found player": 6
       },
       "ESPN": {
-        "found stats": 10,
+        "found stats": 9,
         "found game, no player": 18,
         "no game found": 7
       },
@@ -4340,8 +4337,8 @@
         "found player": 5
       },
       "NCAA.org": {
-        "found game, no player": 13,
-        "scheduled (ignored)": 9,
+        "found game, no player": 15,
+        "scheduled (ignored)": 7,
         "no game found": 1,
         "stale (yesterday)": 2
       },
@@ -4352,12 +4349,11 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 22,
+    "blocked_event_count": 21,
     "blocked_clients": [
       "Aiden Robbins",
-      "Cam Flukey",
-      "Kyle Jones",
       "Myles Bailey",
+      "Adam McKelvey",
       "Caleb Daniel",
       "Riley Goodman",
       "Sam Harry",
@@ -4418,12 +4414,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 2,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 16
+          "blocked": 14
         }
       }
     }

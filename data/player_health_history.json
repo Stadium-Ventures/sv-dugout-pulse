@@ -1667,7 +1667,7 @@
   },
   {
     "date": "2026-05-08",
-    "updated_at": "2026-05-09T02:46:55.340562+00:00",
+    "updated_at": "2026-05-09T03:01:49.972243+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -1708,8 +1708,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -1785,12 +1785,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -1829,8 +1828,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -2394,7 +2393,7 @@
         "team": "ACL Guardians",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
