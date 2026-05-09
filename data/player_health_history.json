@@ -1667,7 +1667,7 @@
   },
   {
     "date": "2026-05-08",
-    "updated_at": "2026-05-08T23:46:58.056741+00:00",
+    "updated_at": "2026-05-09T00:02:45.934520+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -1797,14 +1797,17 @@
         "team": "Florida State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -1812,7 +1815,7 @@
         "team": "ACL Reds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed Start",
+        "game_status": "Cancelled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -1898,10 +1901,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "StatBroadcast"
         ]
       },
       {
@@ -2161,7 +2164,7 @@
         "team": "Arkansas Travelers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
