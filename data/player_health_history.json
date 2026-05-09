@@ -2747,7 +2747,7 @@
   },
   {
     "date": "2026-05-09",
-    "updated_at": "2026-05-09T22:39:14.181913+00:00",
+    "updated_at": "2026-05-09T22:47:08.235465+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -2757,10 +2757,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -3187,11 +3187,22 @@
         "sources_tried": []
       },
       {
+        "name": "Alex Kranzler",
+        "team": "Vanderbilt",
+        "level": "NCAA",
+        "tier": null,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": false,
+        "source": "",
+        "sources_tried": []
+      },
+      {
         "name": "Andrew Kummer",
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -3209,7 +3220,7 @@
         "team": "Wilmington Blue Rocks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -3472,10 +3483,6 @@
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -3610,15 +3617,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "game log (live)",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast",
-          "game log"
+          "StatBroadcast"
         ]
       },
       {
