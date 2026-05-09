@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T18:47:32.963728+00:00",
+  "generated_at": "2026-05-09T19:02:38.467547+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -97,7 +97,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Old Dominion 3, Coastal Carolina 1 | Bottom 2",
+      "game_context": "Old Dominion 3, Coastal Carolina 1 | Top 3",
       "game_status": "Live",
       "game_time": "TBA",
       "game_date": "2026-05-09",
@@ -655,7 +655,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Reds 2, ACL Royals 2 | Bottom 2",
+      "game_context": "ACL Reds 2, ACL Royals 5 | End 2",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-09",
@@ -747,23 +747,47 @@
       "player_name": "Brody Trosclair",
       "team": "Northwestern State",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
-      "game_context": "Northwestern State vs McNeese",
-      "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Northwestern State 0, McNeese 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "3:00 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632941",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brody%20Trosclair%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Brody%20Trosclair%22%20Northwestern%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1487,7 +1511,7 @@
       "team": "South Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Alabama 7, South Carolina 4 | Top 5",
+      "game_context": "Alabama 9, South Carolina 4 | Top 6",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -1675,7 +1699,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "1-3, HR, 2 RBI, R, BB, K",
-      "game_context": "Pittsburgh 2, North Carolina 11 | Bottom 8",
+      "game_context": "Pittsburgh 2, North Carolina 12 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1711,7 +1735,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 7, South Carolina 4 | Top 5",
+      "game_context": "Alabama 9, South Carolina 4 | Top 6",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -1893,7 +1917,7 @@
       "team": "Georgia Southern",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Georgia State 3, Georgia Southern 0 | Top 3",
+      "game_context": "Georgia State 3, Georgia Southern 0 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -1995,7 +2019,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Alabama 7, South Carolina 4 | Top 5",
+      "game_context": "Alabama 9, South Carolina 4 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2090,7 +2114,7 @@
       "team": "Mercer",
       "level": "NCAA",
       "stats_summary": "0-0, R, BB",
-      "game_context": "VMI 0, Mercer 2 | Top 3",
+      "game_context": "VMI 0, Mercer 3 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2346,7 +2370,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 7, South Carolina 4 | Top 5",
+      "game_context": "Alabama 9, South Carolina 4 | Top 6",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -2619,7 +2643,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Guardians 5, ACL Brewers 0 | Top 3",
+      "game_context": "ACL Guardians 9, ACL Brewers 0 | Bottom 3",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-09",
@@ -2874,8 +2898,8 @@
       "player_name": "Bryce Fowler",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "1-3, R",
-      "game_context": "Alabama 7, South Carolina 4 | Top 5",
+      "stats_summary": "2-4, 2 R, 2B",
+      "game_context": "Alabama 9, South Carolina 4 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-09",
@@ -2883,8 +2907,8 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=628714",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bryce%20Fowler%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "1-for-3",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Extra-base hit (double)",
       "social_search_url": "https://x.com/search?q=%22Bryce%20Fowler%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3047,7 +3071,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Pittsburgh 2, North Carolina 11 | Bottom 8",
+      "game_context": "Pittsburgh 2, North Carolina 12 | Bottom 8",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-09",
@@ -3328,7 +3352,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Alabama 7, South Carolina 4 | Top 5",
+      "game_context": "Alabama 9, South Carolina 4 | Top 6",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-09",
@@ -3888,27 +3912,28 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 38,
-        "found game, no player": 7
+        "found stats": 37,
+        "found game, no player": 8
       },
       "StatBroadcast": {
-        "player not in box": 7,
-        "no game found": 7,
+        "player not in box": 8,
+        "no game found": 8,
         "found player": 8
       },
       "ESPN": {
         "found game, no player": 6,
+        "no game found": 1,
         "scheduled (ignored)": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 7
+        "scheduled (ignored)": 8
       },
       "Sidearm": {
-        "no game found": 7,
+        "no game found": 8,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 7
+        "scheduled (ignored)": 8
       }
     },
     "blocked_sources": [],
@@ -3936,7 +3961,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 14,
+          "success": 15,
           "blocked": 0
         }
       }
