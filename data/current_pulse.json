@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T05:46:42.244002+00:00",
+  "generated_at": "2026-05-09T06:02:14.944805+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1915,26 +1915,22 @@
       "team": "Vanderbilt",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Vanderbilt 7, Missouri 7 | Top 9",
+      "game_context": "Vanderbilt 7, Missouri 7 | Inn 9",
       "game_status": "Live",
       "game_time": null,
-      "game_date": "2026-05-08",
+      "game_date": "2026-05-09",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "http://stats.statbroadcast.com/broadcast/?id=654500",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847464",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "no game found"
         },
         {
           "source": "ESPN",
@@ -2239,11 +2235,11 @@
       "player_name": "Brady St. Pierre",
       "team": "SE Louisiana",
       "level": "NCAA",
-      "stats_summary": "Game cancelled",
+      "stats_summary": "No game data",
       "game_context": "",
-      "game_status": "Cancelled",
+      "game_status": "N/A",
       "game_time": null,
-      "game_date": "2026-05-08",
+      "game_date": null,
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
@@ -2256,6 +2252,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found game, no player"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2434,43 +2434,27 @@
       "player_name": "Brooks Wright",
       "team": "SE Louisiana",
       "level": "NCAA",
-      "stats_summary": "Game cancelled",
+      "stats_summary": "No game data",
       "game_context": "",
-      "game_status": "Cancelled",
+      "game_status": "N/A",
       "game_time": null,
-      "game_date": "2026-05-08",
+      "game_date": null,
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brooks%20Wright%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Brooks%20Wright%22%20SE%20Louisiana&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "no game found"
+          "outcome": "found stats"
         },
         {
           "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3666,43 +3650,27 @@
       "player_name": "Truitt Webb",
       "team": "SE Louisiana",
       "level": "NCAA",
-      "stats_summary": "Game cancelled",
+      "stats_summary": "No game data",
       "game_context": "",
-      "game_status": "Cancelled",
+      "game_status": "N/A",
       "game_time": null,
-      "game_date": "2026-05-08",
+      "game_date": null,
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Truitt%20Webb%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "",
+      "grade_reason": "Scoreless in 2 IP",
       "social_search_url": "https://x.com/search?q=%22Truitt%20Webb%22%20SE%20Louisiana&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "no game found"
+          "outcome": "found stats"
         },
         {
           "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -4270,33 +4238,34 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 31,
-        "found stats": 14
+        "found game, no player": 28,
+        "found stats": 16,
+        "no game found": 1
       },
       "StatBroadcast": {
         "blocked (Cloudflare 403)": 8,
-        "player not in box": 18,
-        "no game found": 23,
+        "player not in box": 17,
+        "no game found": 21,
         "found player": 9,
         "fetch failed": 2
       },
       "ESPN": {
         "found stats": 8,
         "found game, no player": 18,
-        "no game found": 5
+        "no game found": 3
       },
       "NCAA.com": {
-        "no game found": 23
+        "no game found": 21
       },
       "Sidearm": {
-        "no game found": 23,
-        "found player": 5
+        "no game found": 21,
+        "found player": 7,
+        "player not in box": 1
       },
       "NCAA.org": {
         "found game, no player": 18,
         "scheduled (ignored)": 2,
-        "no game found": 1,
-        "stale (yesterday)": 2
+        "no game found": 1
       },
       "game log": {
         "found stats": 2
@@ -4354,7 +4323,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 17,
+          "success": 16,
           "blocked": 0
         }
       }
