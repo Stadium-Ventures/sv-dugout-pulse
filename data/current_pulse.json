@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T04:01:59.264144+00:00",
+  "generated_at": "2026-05-09T04:16:58.465744+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -468,8 +468,8 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "0-4, BB, K",
-      "game_context": "Kentucky 6, Florida 2 | Bottom 8",
+      "stats_summary": "0-4, R, BB, K",
+      "game_context": "Kentucky 6, Florida 6 | Bottom 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -1915,7 +1915,7 @@
       "team": "Vanderbilt",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Vanderbilt 5, Missouri 1 | Top 7",
+      "game_context": "Vanderbilt 6, Missouri 1 | Top 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-08",
@@ -2815,7 +2815,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 4, Visalia Rawhide 13 | Top 8",
+      "game_context": "Stockton Ports 6, Visalia Rawhide 13 | Bottom 8",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
@@ -3162,8 +3162,8 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "0-3, BB, 2 K",
-      "game_context": "Vancouver Canadians 4, Eugene Emeralds 1 | End 8",
-      "game_status": "Live",
+      "game_context": "Vancouver Canadians 4, Eugene Emeralds 2 | Final",
+      "game_status": "Final",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
@@ -4175,8 +4175,8 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "1-4, K",
-      "game_context": "Vancouver Canadians 4, Eugene Emeralds 1 | End 8",
-      "game_status": "Live",
+      "game_context": "Vancouver Canadians 4, Eugene Emeralds 2 | Final",
+      "game_status": "Final",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-09",
       "is_yesterday": false,
@@ -4350,11 +4350,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 19,
+          "success": 2,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 16,
           "blocked": 0
         }
       }
