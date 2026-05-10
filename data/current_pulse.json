@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T05:47:09.913505+00:00",
+  "generated_at": "2026-05-10T06:02:03.372166+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -3165,21 +3165,17 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Duke%20McCarron%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "More walks (3) than strikeouts (0)",
+      "grade_reason": "7 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Duke%20McCarron%22%20Saint%20Josephs&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "no game found"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
           "outcome": "found stats"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3593,19 +3589,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "no game found"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
           "outcome": "found stats"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -4261,9 +4253,8 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 21,
-        "found game, no player": 22,
-        "no game found": 2
+        "found stats": 23,
+        "found game, no player": 22
       },
       "StatBroadcast": {
         "found player": 19,
@@ -4273,17 +4264,16 @@
       "Sidearm": {
         "player not in box": 14,
         "no game found": 22,
-        "found player": 2
+        "found player": 4
       },
       "ESPN": {
         "found game, no player": 16,
-        "no game found": 8
+        "no game found": 6
       },
       "NCAA.com": {
         "found game, no player": 14,
         "stale (yesterday)": 5,
-        "no game found": 3,
-        "found stats": 2
+        "no game found": 3
       },
       "NCAA.org": {
         "found game, no player": 13,
