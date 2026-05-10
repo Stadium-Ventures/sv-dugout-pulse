@@ -1,53 +1,5 @@
 [
   {
-    "generated_at": "2026-05-08T10:02:45.077807+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 46
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
-    "generated_at": "2026-05-08T10:16:49.263374+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 46
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-08T10:31:45.404631+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12289,6 +12241,48 @@
   },
   {
     "generated_at": "2026-05-10T10:02:26.731082+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 45,
+        "found game, no player": 1
+      },
+      "Sidearm": {
+        "player not in box": 1,
+        "no game found": 1,
+        "found player": 2
+      },
+      "ESPN": {
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-10T10:17:25.445638+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
