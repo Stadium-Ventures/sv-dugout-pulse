@@ -1,43 +1,5 @@
 [
   {
-    "generated_at": "2026-05-08T18:17:10.724484+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 45
-      },
-      "Sidearm": {
-        "found player": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-08T18:31:59.256850+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -13181,6 +13143,93 @@
       "stats": {
         "p.webshare.io": {
           "success": 28,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-10T18:17:23.593684+00:00",
+    "severity": "warning",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Kyle Jones",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Henry Zatkowski",
+      "Riley Goodman",
+      "Tanner Gordon",
+      "Will Rhine",
+      "Alex Kranzler",
+      "Brady Neal",
+      "Brady St. Pierre",
+      "Brisen Tweedy",
+      "Brooks Wright",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Michael Dattalo",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Ethan Lay",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Truitt Webb",
+      "Zack Johnson"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 20,
+        "found game, no player": 26
+      },
+      "StatBroadcast": {
+        "found player": 12,
+        "player not in box": 21,
+        "no game found": 26
+      },
+      "ESPN": {
+        "found game, no player": 19,
+        "no game found": 7
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 19,
+        "found game, no player": 1,
+        "stale (yesterday)": 3,
+        "no game found": 3
+      },
+      "Sidearm": {
+        "no game found": 26,
+        "player not in box": 5,
+        "found player": 5
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 18,
+        "found game, no player": 2,
+        "stale (yesterday)": 6
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 32,
           "blocked": 0
         }
       }
