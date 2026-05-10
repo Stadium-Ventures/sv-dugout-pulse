@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-05-10T16:40:45.840174+00:00",
+  "generated_at": "2026-05-10T16:47:13.096346+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
-      "stats_summary": "0-1",
-      "game_context": "Texas 4, Tennessee 0 | End 1",
+      "stats_summary": "0-2",
+      "game_context": "Texas 4, Tennessee 4 | Inn 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635479",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847607",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "scheduled (no game_time)"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -245,7 +245,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 2 | Bottom 2",
+      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 3 | Bottom 2",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-10",
@@ -340,7 +340,7 @@
       "team": "Cincinnati",
       "level": "NCAA",
       "stats_summary": "0-1, K",
-      "game_context": "Cincinnati 0, Kansas State 0 | Bottom 2",
+      "game_context": "Cincinnati 2, Kansas State 0 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -437,7 +437,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Kentucky 5, Florida 9 | Bottom 8",
+      "game_context": "Kentucky 5, Florida 9 | Top 9",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
@@ -928,8 +928,8 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 1st (3B)",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Middle 1",
+      "stats_summary": "0-1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | End 1",
       "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-10",
@@ -945,7 +945,7 @@
       "box_score_url": "https://www.mlb.com/gameday/820544",
       "player_profile_url": "https://www.mlb.com/player/815793",
       "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Carter%20Johnson%22%20Marlins&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2217,7 +2217,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "0-1, K",
-      "game_context": "Middle Tennessee 0, Florida International 3 | Bottom 2",
+      "game_context": "Middle Tennessee 0, Florida International 3 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -2554,7 +2554,7 @@
       "team": "FCL Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Middle 1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | End 1",
       "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-10",
@@ -2587,10 +2587,10 @@
       "player_name": "Najer Victor",
       "team": "Salt Lake Bees",
       "level": "Pro",
-      "stats_summary": "Game at 3:05 PM ET",
-      "game_context": "Salt Lake Bees vs Oklahoma City Comets | 3:05 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "3:05 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": {
@@ -2601,9 +2601,9 @@
         "time": "8:35 PM ET",
         "display": "vs El Paso Chihuahuas - Tue 05/12 8:35 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/815232",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/695402",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Najer%20Victor%22%20Angels&f=live",
       "data_source": "MLB Stats API",
@@ -2771,7 +2771,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 2 | Bottom 2",
+      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 3 | Bottom 2",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-10",
@@ -3192,7 +3192,7 @@
       "team": "Fordham",
       "level": "NCAA",
       "stats_summary": "2-3, R",
-      "game_context": "Saint Louis 6, Fordham 2 | Top 6",
+      "game_context": "Saint Louis 6, Fordham 2 | Top 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -3658,7 +3658,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-1, K",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Top 2",
       "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-10",
@@ -3787,19 +3787,21 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 40,
-        "found game, no player": 6
-      },
-      "StatBroadcast": {
-        "found player": 3,
-        "player not in box": 4,
-        "no game found": 6,
-        "fetch failed": 1
+        "scheduled (no game_time)": 1,
+        "found game, no player": 6,
+        "found stats": 39
       },
       "ESPN": {
+        "found stats": 1,
         "found game, no player": 3,
         "no game found": 2,
         "scheduled (ignored)": 1
+      },
+      "StatBroadcast": {
+        "player not in box": 4,
+        "no game found": 6,
+        "found player": 2,
+        "fetch failed": 1
       },
       "NCAA.com": {
         "scheduled (ignored)": 5,
@@ -3837,7 +3839,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 7,
+          "success": 6,
           "blocked": 0
         }
       }
