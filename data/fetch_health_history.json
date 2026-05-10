@@ -1,29 +1,5 @@
 [
   {
-    "generated_at": "2026-05-08T14:46:55.687617+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 46
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-08T15:02:06.035928+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12664,6 +12640,60 @@
       "stats": {
         "p.webshare.io": {
           "success": 1,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-10T14:47:22.262175+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Kyle Jones"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 44,
+        "found game, no player": 2
+      },
+      "StatBroadcast": {
+        "player not in box": 1,
+        "no game found": 2,
+        "found player": 1
+      },
+      "ESPN": {
+        "found game, no player": 1,
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 1,
+        "found game, no player": 1
+      },
+      "Sidearm": {
+        "no game found": 2,
+        "player not in box": 1,
+        "found player": 2
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 1,
+        "found game, no player": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
           "blocked": 0
         }
       }

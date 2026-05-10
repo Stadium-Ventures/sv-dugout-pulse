@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:32:23.190014+00:00",
+  "generated_at": "2026-05-10T14:47:22.262175+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -405,7 +405,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Kentucky 1, Florida 3 | Top 2",
+      "game_context": "Kentucky 1, Florida 3 | Bottom 2",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
@@ -2136,16 +2136,16 @@
       "player_name": "Cole Cleveland",
       "team": "FIU",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "Middle Tennessee vs Florida International",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Middle Tennessee 0, Florida International 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853759",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631809",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cole%20Cleveland%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cole%20Cleveland%22%20FIU&f=live",
       "data_source": "D1Baseball",
@@ -2153,6 +2153,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3680,7 +3684,8 @@
       },
       "StatBroadcast": {
         "player not in box": 1,
-        "no game found": 2
+        "no game found": 2,
+        "found player": 1
       },
       "ESPN": {
         "found game, no player": 1,
@@ -3717,7 +3722,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 2,
           "blocked": 0
         }
       }
