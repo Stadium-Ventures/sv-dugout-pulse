@@ -3795,7 +3795,7 @@
   },
   {
     "date": "2026-05-10",
-    "updated_at": "2026-05-10T19:02:10.183246+00:00",
+    "updated_at": "2026-05-10T19:17:12.908044+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -3924,12 +3924,17 @@
         "team": "Florida State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -3937,7 +3942,7 @@
         "team": "ACL Reds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -4006,12 +4011,17 @@
         "team": "Clemson",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -4137,7 +4147,7 @@
         "team": "Albuquerque Isotopes",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -4227,17 +4237,14 @@
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
@@ -4381,7 +4388,7 @@
         "team": "FIU",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
