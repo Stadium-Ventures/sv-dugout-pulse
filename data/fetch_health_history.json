@@ -12886,5 +12886,66 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-10T16:40:45.840174+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Kyle Jones",
+      "Michael Dattalo",
+      "Sam Mitchell",
+      "Xavier Kolhosser"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 40,
+        "found game, no player": 6
+      },
+      "StatBroadcast": {
+        "found player": 3,
+        "player not in box": 4,
+        "no game found": 6,
+        "fetch failed": 1
+      },
+      "ESPN": {
+        "found game, no player": 3,
+        "no game found": 2,
+        "scheduled (ignored)": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 5,
+        "found game, no player": 1
+      },
+      "Sidearm": {
+        "no game found": 6,
+        "player not in box": 1,
+        "found player": 3
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 3,
+        "found game, no player": 1,
+        "stale (yesterday)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 7,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
