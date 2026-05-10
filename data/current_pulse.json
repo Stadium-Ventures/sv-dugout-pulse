@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-10T16:17:33.754328+00:00",
+  "generated_at": "2026-05-10T16:32:21.144492+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Texas 0, Tennessee 0 | Top 1",
+      "game_context": "Texas 4, Tennessee 0 | Bottom 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -69,7 +69,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 0, James Madison 0 | Bottom 1",
+      "game_context": "Southern Miss 1, James Madison 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-10",
@@ -245,7 +245,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 0 | Bottom 1",
+      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 2 | Bottom 1",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-10",
@@ -340,7 +340,7 @@
       "team": "Cincinnati",
       "level": "NCAA",
       "stats_summary": "0-1, K",
-      "game_context": "Cincinnati 0, Kansas State 0 | Bottom 1",
+      "game_context": "Cincinnati 0, Kansas State 0 | Top 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -437,7 +437,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Kentucky 5, Florida 7 | Top 7",
+      "game_context": "Kentucky 5, Florida 9 | Bottom 7",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
@@ -1798,23 +1798,47 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "USC Upstate vs Presbyterian",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Did Not Play",
+      "game_context": "USC Upstate 7, Presbyterian 1 | Final",
+      "game_status": "Final",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=651099",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -2193,7 +2217,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "In lineup",
-      "game_context": "Middle Tennessee 0, Florida International 0 | Bottom 1",
+      "game_context": "Middle Tennessee 0, Florida International 3 | Top 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -2632,7 +2656,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 0, James Madison 0 | Bottom 1",
+      "game_context": "Southern Miss 1, James Madison 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-10",
@@ -2747,7 +2771,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 0 | Bottom 1",
+      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 2 | End 1",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-10",
@@ -3167,8 +3191,8 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "1-2, R",
-      "game_context": "Saint Louis 5, Fordham 2 | Top 5",
+      "stats_summary": "2-3, R",
+      "game_context": "Saint Louis 6, Fordham 2 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -3177,7 +3201,7 @@
       "box_score_url": "https://fordhamsports.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Taylor%20Kirk%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "Productive game",
+      "grade_reason": "2 hits",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3763,30 +3787,31 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 41,
-        "found game, no player": 5
+        "found stats": 40,
+        "found game, no player": 6
       },
       "StatBroadcast": {
         "found player": 3,
         "player not in box": 4,
-        "no game found": 5
+        "no game found": 6,
+        "fetch failed": 1
       },
       "ESPN": {
         "found game, no player": 3,
-        "no game found": 1,
+        "no game found": 2,
         "scheduled (ignored)": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 4,
+        "scheduled (ignored)": 5,
         "found game, no player": 1
       },
       "Sidearm": {
-        "no game found": 5,
+        "no game found": 6,
         "player not in box": 1,
         "found player": 3
       },
       "NCAA.org": {
-        "scheduled (ignored)": 2,
+        "scheduled (ignored)": 3,
         "found game, no player": 1,
         "stale (yesterday)": 2
       }
@@ -3811,7 +3836,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 6,
+          "success": 7,
           "blocked": 0
         }
       }
