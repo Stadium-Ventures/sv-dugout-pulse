@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-05-10T15:47:36.177901+00:00",
+  "generated_at": "2026-05-10T16:02:33.753510+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "Texas vs Tennessee",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Texas 0, Tennessee 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847607",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635479",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
       "data_source": "D1Baseball",
@@ -22,6 +22,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -152,7 +156,7 @@
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
-      "stats_summary": "Game at 1:05 PM ET",
+      "stats_summary": "On the mound",
       "game_context": "Nashville Sounds vs Louisville Bats | 1:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "1:05 PM ET",
@@ -429,7 +433,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Kentucky 5, Florida 7 | Top 5",
+      "game_context": "Kentucky 5, Florida 7 | Bottom 5",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
@@ -920,7 +924,7 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "Game at 12:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (3B)",
       "game_context": "Palm Beach Cardinals vs Jupiter Hammerheads | 12:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "12:30 PM ET",
@@ -3160,7 +3164,7 @@
       "team": "Fordham",
       "level": "NCAA",
       "stats_summary": "1-2, R",
-      "game_context": "Saint Louis 5, Fordham 1 | Bottom 2",
+      "game_context": "Saint Louis 5, Fordham 1 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -3625,7 +3629,7 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "Game at 12:30 PM ET",
+      "stats_summary": "In lineup — batting 3rd (SS)",
       "game_context": "Palm Beach Cardinals vs Jupiter Hammerheads | 12:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "12:30 PM ET",
@@ -3759,9 +3763,9 @@
         "found game, no player": 5
       },
       "StatBroadcast": {
+        "found player": 2,
         "player not in box": 4,
-        "no game found": 5,
-        "found player": 1
+        "no game found": 5
       },
       "ESPN": {
         "scheduled (ignored)": 3,
@@ -3801,7 +3805,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 4,
+          "success": 5,
           "blocked": 0
         }
       }
