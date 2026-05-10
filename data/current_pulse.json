@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:02:24.820712+00:00",
+  "generated_at": "2026-05-10T14:17:25.870515+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -404,23 +404,47 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Game at 10:00 AM",
-      "game_context": "Kentucky vs Florida",
-      "game_status": "Scheduled",
-      "game_time": "10:00 AM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Kentucky 1, Florida 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847244",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631765",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3651,24 +3675,28 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 45,
-        "found game, no player": 1
+        "found stats": 44,
+        "found game, no player": 2
       },
-      "Sidearm": {
+      "StatBroadcast": {
         "player not in box": 1,
-        "no game found": 1,
-        "found player": 2
+        "no game found": 2
       },
       "ESPN": {
+        "found game, no player": 1,
         "no game found": 1
       },
       "NCAA.com": {
+        "scheduled (ignored)": 1,
         "found game, no player": 1
       },
-      "StatBroadcast": {
-        "no game found": 1
+      "Sidearm": {
+        "no game found": 2,
+        "player not in box": 1,
+        "found player": 2
       },
       "NCAA.org": {
+        "scheduled (ignored)": 1,
         "found game, no player": 1
       }
     },
@@ -3676,16 +3704,23 @@
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Kyle Jones"
+    ],
     "total_clients": 83,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": null,
+      "active": "p.webshare.io",
       "dead": [],
-      "stats": {}
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 0
+        }
+      }
     }
   }
 }
