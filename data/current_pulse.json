@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T23:17:38.137363+00:00",
+  "generated_at": "2026-05-10T23:35:26.003457+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -407,7 +407,7 @@
       "team": "ACL Dodgers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Ontario Tower Buzzers 2, Rancho Cucamonga Quakes 10 | Bottom 7",
+      "game_context": "Ontario Tower Buzzers 2, Rancho Cucamonga Quakes 10 | Bottom 8",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-10",
@@ -1347,7 +1347,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 0, Reading Fightin Phils 4 | Top 8",
+      "game_context": "Somerset Patriots 1, Reading Fightin Phils 6 | End 8",
       "game_status": "Live",
       "game_time": "5:15 PM ET",
       "game_date": "2026-05-10",
@@ -1480,7 +1480,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "UL Monroe 7, Marshall 5 | Final",
       "game_status": "Final",
-      "game_time": "1:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
@@ -1505,7 +1505,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         },
         {
           "source": "Sidearm",
@@ -2856,9 +2856,9 @@
       "player_name": "Kade Brown",
       "team": "Stockton Ports",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 6, Visalia Rawhide 8 | Bottom 8",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Stockton Ports 6, Visalia Rawhide 8 | Final",
+      "game_status": "Final",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
@@ -2872,7 +2872,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820934",
       "player_profile_url": "https://www.mlb.com/player/824044",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
       "data_source": "MLB Stats API",
@@ -3944,7 +3944,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Hillsboro Hops 3, Everett AquaSox 0 | Top 1",
+      "game_context": "Hillsboro Hops 3, Everett AquaSox 0 | Top 2",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-10",
@@ -4188,7 +4188,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 6 | End 6",
+      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 7 | End 7",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -4364,8 +4364,8 @@
         "no game found": 7
       },
       "NCAA.com": {
-        "found game, no player": 20,
-        "scheduled (ignored)": 3,
+        "found game, no player": 21,
+        "scheduled (ignored)": 2,
         "stale (yesterday)": 2,
         "no game found": 3
       },
@@ -4427,11 +4427,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 21,
+          "success": 5,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 16,
           "blocked": 0
         }
       }
