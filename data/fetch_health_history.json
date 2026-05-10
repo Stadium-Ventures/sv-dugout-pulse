@@ -1,29 +1,5 @@
 [
   {
-    "generated_at": "2026-05-08T11:31:42.916747+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 46
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-08T11:46:55.727301+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12331,6 +12307,48 @@
   },
   {
     "generated_at": "2026-05-10T11:16:55.874446+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 45,
+        "found game, no player": 1
+      },
+      "Sidearm": {
+        "player not in box": 1,
+        "no game found": 1,
+        "found player": 2
+      },
+      "ESPN": {
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-10T11:32:17.455952+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
