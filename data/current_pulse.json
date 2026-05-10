@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T23:02:23.776534+00:00",
+  "generated_at": "2026-05-10T23:17:38.137363+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -407,7 +407,7 @@
       "team": "ACL Dodgers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Ontario Tower Buzzers 2, Rancho Cucamonga Quakes 10 | Bottom 6",
+      "game_context": "Ontario Tower Buzzers 2, Rancho Cucamonga Quakes 10 | Bottom 7",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-10",
@@ -843,11 +843,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Brody%20Trosclair%22%20Northwestern%20State&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1343,7 +1347,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 0, Reading Fightin Phils 3 | Bottom 7",
+      "game_context": "Somerset Patriots 0, Reading Fightin Phils 4 | Top 8",
       "game_status": "Live",
       "game_time": "5:15 PM ET",
       "game_date": "2026-05-10",
@@ -2066,9 +2070,9 @@
       "player_name": "Austin Amaral",
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 9, Hub City Spartanburgers 3 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Wilmington Blue Rocks 9, Hub City Spartanburgers 3 | Final",
+      "game_status": "Final",
       "game_time": "4:35 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
@@ -2082,7 +2086,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/822105",
       "player_profile_url": "https://www.mlb.com/player/694544",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
       "data_source": "MLB Stats API",
@@ -2155,19 +2159,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Bennett%20Edwards%22%20Georgia%20Southern&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "no game found"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
           "outcome": "found stats"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2857,7 +2857,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 6, Visalia Rawhide 8 | Top 8",
+      "game_context": "Stockton Ports 6, Visalia Rawhide 8 | Bottom 8",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -3548,19 +3548,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "no game found"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
           "outcome": "found stats"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3947,9 +3943,9 @@
       "player_name": "David Hagaman",
       "team": "Hillsboro Hops",
       "level": "Pro",
-      "stats_summary": "Game at 7:05 PM ET",
-      "game_context": "Hillsboro Hops vs Everett AquaSox | 7:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Hillsboro Hops 3, Everett AquaSox 0 | Top 1",
+      "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
@@ -3963,7 +3959,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819352",
       "player_profile_url": "https://www.mlb.com/player/701908",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22David%20Hagaman%22%20Diamondbacks&f=live",
       "data_source": "MLB Stats API",
@@ -4192,7 +4188,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 6 | Top 6",
+      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 6 | End 6",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -4355,9 +4351,8 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 16,
-        "found game, no player": 27,
-        "no game found": 3
+        "found stats": 18,
+        "found game, no player": 28
       },
       "StatBroadcast": {
         "found player": 13,
@@ -4366,19 +4361,18 @@
       },
       "ESPN": {
         "found game, no player": 21,
-        "no game found": 9
+        "no game found": 7
       },
       "NCAA.com": {
         "found game, no player": 20,
         "scheduled (ignored)": 3,
         "stale (yesterday)": 2,
-        "found stats": 2,
         "no game found": 3
       },
       "Sidearm": {
         "no game found": 28,
-        "found player": 3,
-        "player not in box": 2
+        "player not in box": 3,
+        "found player": 5
       },
       "NCAA.org": {
         "found game, no player": 18,
