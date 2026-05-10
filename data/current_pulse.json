@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T15:02:24.351599+00:00",
+  "generated_at": "2026-05-10T15:17:17.825313+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -429,7 +429,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Kentucky 1, Florida 3 | Bottom 3",
+      "game_context": "Kentucky 2, Florida 3 | Top 4",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
@@ -3135,23 +3135,47 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "Game at 11:00 AM",
-      "game_context": "Saint Louis vs Fordham",
-      "game_status": "Scheduled",
-      "game_time": "11:00 AM",
+      "stats_summary": "Game in progress",
+      "game_context": "Saint Louis 5, Fordham 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "11:00 AM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://fordhamsports.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Taylor%20Kirk%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3727,30 +3751,30 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 42,
-        "found game, no player": 4
+        "found stats": 41,
+        "found game, no player": 5
       },
       "StatBroadcast": {
         "player not in box": 3,
-        "no game found": 4,
+        "no game found": 5,
         "found player": 1
       },
       "ESPN": {
         "scheduled (ignored)": 2,
         "found game, no player": 1,
-        "no game found": 1
+        "no game found": 2
       },
       "NCAA.com": {
-        "scheduled (ignored)": 3,
+        "scheduled (ignored)": 4,
         "found game, no player": 1
       },
       "Sidearm": {
-        "no game found": 4,
-        "player not in box": 1,
+        "no game found": 5,
+        "player not in box": 2,
         "found player": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 2,
+        "scheduled (ignored)": 3,
         "found game, no player": 1,
         "stale (yesterday)": 1
       }
@@ -3761,7 +3785,8 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Kyle Jones",
-      "Sam Mitchell"
+      "Sam Mitchell",
+      "Taylor Kirk"
     ],
     "total_clients": 83,
     "proxy_pool": {
