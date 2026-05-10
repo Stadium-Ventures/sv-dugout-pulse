@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T21:47:34.970226+00:00",
+  "generated_at": "2026-05-10T22:04:42.357291+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -88,7 +88,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -407,7 +407,7 @@
       "team": "ACL Dodgers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Ontario Tower Buzzers 0, Rancho Cucamonga Quakes 4 | Top 3",
+      "game_context": "Ontario Tower Buzzers 1, Rancho Cucamonga Quakes 4 | Top 4",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-10",
@@ -551,7 +551,7 @@
       "team": "Florida State",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Florida State 6, Clemson 2 | Bottom 8",
+      "game_context": "Florida State 6, Clemson 3 | Top 9",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-10",
@@ -570,7 +570,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -768,7 +768,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1100,7 +1100,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Florida State 6, Clemson 2 | Bottom 8",
+      "game_context": "Florida State 6, Clemson 3 | Top 9",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-10",
@@ -1119,7 +1119,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1229,7 +1229,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1347,7 +1347,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 0, Reading Fightin Phils 1 | Bottom 2",
+      "game_context": "Somerset Patriots 0, Reading Fightin Phils 3 | Middle 3",
       "game_status": "Live",
       "game_time": "5:15 PM ET",
       "game_date": "2026-05-10",
@@ -1497,7 +1497,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1670,7 +1670,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1706,55 +1706,31 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "2-5, 1 RBI, 2 R, 1 BB, 1 K",
-      "game_context": "Sacramento State 19, California Baptist 2 | Top 9",
-      "game_status": "Live",
-      "game_time": "3:00 PM ET",
+      "stats_summary": "2-5, RBI, 2 R, BB, K, 2B",
+      "game_context": "Sacramento State 19, California Baptist 2 | Final",
+      "game_status": "Final",
+      "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630972",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "Reached base 3 times",
+      "grade_reason": "Extra-base hit (double)",
       "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
-      "data_source": "game log (live)",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "game log",
-          "outcome": "found stats (live carry-forward)"
+          "outcome": "found player"
         }
       ],
-      "stats_captured_at": "2026-05-10T21:34:19.534286+00:00",
-      "stats_captured_status": "Live",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2028",
@@ -1767,7 +1743,7 @@
       "team": "Albuquerque Isotopes",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Albuquerque Isotopes 4, Sugar Land Space Cowboys 4 | Top 8",
+      "game_context": "Albuquerque Isotopes 5, Sugar Land Space Cowboys 4 | Bottom 8",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-10",
@@ -1946,7 +1922,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2002,7 +1978,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2058,7 +2034,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2095,7 +2071,7 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 2, Hub City Spartanburgers 0 | Top 6",
+      "game_context": "Wilmington Blue Rocks 2, Hub City Spartanburgers 1 | Top 7",
       "game_status": "Live",
       "game_time": "4:35 PM ET",
       "game_date": "2026-05-10",
@@ -2297,7 +2273,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2451,7 +2427,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "South Florida 5, Tulane 9 | Final",
       "game_status": "Final",
-      "game_time": "2:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
@@ -2468,7 +2444,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2476,7 +2452,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         },
         {
           "source": "Sidearm",
@@ -2673,7 +2649,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2756,7 +2732,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2847,7 +2823,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "0-2, BB",
-      "game_context": "Tri-City Dust Devils 3, Spokane Indians 8 | Bottom 6",
+      "game_context": "Tri-City Dust Devils 3, Spokane Indians 8 | Middle 7",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -2881,7 +2857,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 0, Visalia Rawhide 4 | Bottom 3",
+      "game_context": "Stockton Ports 3, Visalia Rawhide 4 | Top 4",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -3063,7 +3039,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3224,7 +3200,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Vancouver Canadians 2, Eugene Emeralds 8 | Bottom 5",
+      "game_context": "Vancouver Canadians 2, Eugene Emeralds 12 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -3369,7 +3345,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3405,16 +3381,16 @@
       "player_name": "Ethan Lay",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Sacramento State 19, California Baptist 2 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Sacramento State 19, California Baptist 2 | Final",
+      "game_status": "Final",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630972",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ethan%20Lay%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ethan%20Lay%22%20Sacramento%20State&f=live",
       "data_source": "D1Baseball",
@@ -3425,7 +3401,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3445,7 +3421,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3517,7 +3493,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3616,7 +3592,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3672,7 +3648,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3870,7 +3846,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4212,7 +4188,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilson Warbirds 1, Fayetteville Woodpeckers 5 | Bottom 2",
+      "game_context": "Wilson Warbirds 3, Fayetteville Woodpeckers 5 | Top 3",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -4279,8 +4255,8 @@
       "player_name": "Trevor Cohen",
       "team": "Eugene Emeralds",
       "level": "Pro",
-      "stats_summary": "1-2, RBI, 2 R, BB",
-      "game_context": "Vancouver Canadians 2, Eugene Emeralds 9 | Bottom 5",
+      "stats_summary": "1-3, RBI, 2 R, BB",
+      "game_context": "Vancouver Canadians 2, Eugene Emeralds 12 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -4372,63 +4348,42 @@
     }
   ],
   "health": {
-    "severity": "critical",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 17,
-        "found game, no player": 29
+        "found stats": 18,
+        "found game, no player": 28
       },
       "StatBroadcast": {
-        "found player": 12,
-        "fetch failed": 9,
-        "no game found": 29,
-        "player not in box": 1,
-        "blocked (Cloudflare 403)": 13
+        "found player": 13,
+        "player not in box": 22,
+        "no game found": 28
       },
       "ESPN": {
         "found game, no player": 21,
-        "no game found": 8
+        "no game found": 7
       },
       "NCAA.com": {
-        "found game, no player": 15,
-        "scheduled (ignored)": 9,
+        "found game, no player": 16,
+        "scheduled (ignored)": 7,
         "stale (yesterday)": 2,
         "no game found": 3
       },
       "Sidearm": {
-        "no game found": 29,
+        "no game found": 28,
         "player not in box": 3,
         "found player": 5
       },
       "NCAA.org": {
-        "found game, no player": 14,
-        "scheduled (ignored)": 10,
+        "found game, no player": 15,
+        "scheduled (ignored)": 8,
         "stale (yesterday)": 5
-      },
-      "game log": {
-        "found stats (live carry-forward)": 1
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 13,
-    "blocked_clients": [
-      "Myles Bailey",
-      "Adam McKelvey",
-      "Henry Zatkowski",
-      "Riley Goodman",
-      "Sam Harry",
-      "Alex Kranzler",
-      "Brisen Tweedy",
-      "Drew Bellis",
-      "Sam Mitchell",
-      "Lee Sowers",
-      "Luke Fithian"
-    ],
-    "carry_forward_clients": [
-      "Sam Harry"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
       "Garrett Whitlock",
@@ -4472,19 +4427,12 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 14
+          "success": 22,
+          "blocked": 0
         }
       }
     }

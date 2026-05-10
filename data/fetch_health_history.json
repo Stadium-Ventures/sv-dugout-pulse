@@ -1,62 +1,5 @@
 [
   {
-    "generated_at": "2026-05-08T22:02:05.864218+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Myles Bailey",
-      "Riley Goodman",
-      "Will Rhine",
-      "Evan Taylor",
-      "Sam Mitchell",
-      "Lee Sowers",
-      "Zack Johnson"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 35,
-        "found game, no player": 10
-      },
-      "StatBroadcast": {
-        "player not in box": 9,
-        "no game found": 10,
-        "found player": 6
-      },
-      "ESPN": {
-        "scheduled (ignored)": 5,
-        "found game, no player": 5
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 10
-      },
-      "Sidearm": {
-        "no game found": 10,
-        "found player": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 10
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 13,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-08T22:18:32.526828+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -13977,6 +13920,97 @@
         "geo.iproyal.com": {
           "success": 0,
           "blocked": 14
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-10T22:04:42.357291+00:00",
+    "severity": "warning",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Kellon Lindsey",
+      "Kyle Jones",
+      "Myles Bailey",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Henry Zatkowski",
+      "Jack Cebert",
+      "Riley Goodman",
+      "Sterlin Thompson",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Alex Kranzler",
+      "Austin Amaral",
+      "Brady Neal",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Kade Brown",
+      "Michael Dattalo",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Brennan Orf",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Ethan Lay",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Zack Johnson"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 18,
+        "found game, no player": 28
+      },
+      "StatBroadcast": {
+        "found player": 13,
+        "player not in box": 22,
+        "no game found": 28
+      },
+      "ESPN": {
+        "found game, no player": 21,
+        "no game found": 7
+      },
+      "NCAA.com": {
+        "found game, no player": 16,
+        "scheduled (ignored)": 7,
+        "stale (yesterday)": 2,
+        "no game found": 3
+      },
+      "Sidearm": {
+        "no game found": 28,
+        "player not in box": 3,
+        "found player": 5
+      },
+      "NCAA.org": {
+        "found game, no player": 15,
+        "scheduled (ignored)": 8,
+        "stale (yesterday)": 5
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 22,
+          "blocked": 0
         }
       }
     }
