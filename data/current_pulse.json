@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T22:39:49.034940+00:00",
+  "generated_at": "2026-05-10T22:50:02.325970+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -407,7 +407,7 @@
       "team": "ACL Dodgers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Ontario Tower Buzzers 2, Rancho Cucamonga Quakes 8 | Middle 5",
+      "game_context": "Ontario Tower Buzzers 2, Rancho Cucamonga Quakes 9 | End 5",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-10",
@@ -1347,7 +1347,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 0, Reading Fightin Phils 3 | Top 6",
+      "game_context": "Somerset Patriots 0, Reading Fightin Phils 3 | Bottom 6",
       "game_status": "Live",
       "game_time": "5:15 PM ET",
       "game_date": "2026-05-10",
@@ -2071,7 +2071,7 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 6, Hub City Spartanburgers 3 | Top 8",
+      "game_context": "Wilmington Blue Rocks 6, Hub City Spartanburgers 3 | End 8",
       "game_status": "Live",
       "game_time": "4:35 PM ET",
       "game_date": "2026-05-10",
@@ -2823,8 +2823,8 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "0-3, BB",
-      "game_context": "Tri-City Dust Devils 3, Spokane Indians 8 | Middle 9",
-      "game_status": "Live",
+      "game_context": "Tri-City Dust Devils 3, Spokane Indians 8 | Final",
+      "game_status": "Final",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
@@ -2857,7 +2857,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 3, Visalia Rawhide 7 | Top 6",
+      "game_context": "Stockton Ports 3, Visalia Rawhide 7 | Top 7",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -3200,7 +3200,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Vancouver Canadians 4, Eugene Emeralds 13 | Bottom 8",
+      "game_context": "Vancouver Canadians 4, Eugene Emeralds 13 | Top 9",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -4188,7 +4188,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 5 | Top 5",
+      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 5 | Bottom 5",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -4255,8 +4255,8 @@
       "player_name": "Trevor Cohen",
       "team": "Eugene Emeralds",
       "level": "Pro",
-      "stats_summary": "1-4, RBI, 2 R, BB",
-      "game_context": "Vancouver Canadians 4, Eugene Emeralds 13 | Bottom 8",
+      "stats_summary": "1-5, RBI, 2 R, BB",
+      "game_context": "Vancouver Canadians 4, Eugene Emeralds 13 | Top 9",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -4272,7 +4272,7 @@
       "box_score_url": "https://www.mlb.com/gameday/819422",
       "player_profile_url": "https://www.mlb.com/player/701906",
       "performance_grade": "😐 Routine",
-      "grade_reason": "1-for-4",
+      "grade_reason": "1-for-5",
       "social_search_url": "https://x.com/search?q=%22Trevor%20Cohen%22%20Giants&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -4427,11 +4427,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 21,
+          "success": 5,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 16,
           "blocked": 0
         }
       }
