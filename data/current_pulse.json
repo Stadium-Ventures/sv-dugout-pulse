@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-05-10T16:47:13.096346+00:00",
+  "generated_at": "2026-05-10T17:02:31.472038+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
       "stats_summary": "0-2",
-      "game_context": "Texas 4, Tennessee 4 | Inn 2",
+      "game_context": "Texas 5, Tennessee 4 | Top 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847607",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635479",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "scheduled (no game_time)"
+          "outcome": "found stats"
         },
         {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -69,7 +69,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 1, James Madison 0 | Bottom 3",
+      "game_context": "Southern Miss 1, James Madison 0 | Top 5",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-10",
@@ -245,7 +245,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 3 | Bottom 2",
+      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 3 | Top 4",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-10",
@@ -339,8 +339,8 @@
       "player_name": "Jackson Smith",
       "team": "Cincinnati",
       "level": "NCAA",
-      "stats_summary": "0-1, K",
-      "game_context": "Cincinnati 2, Kansas State 0 | Bottom 2",
+      "stats_summary": "0-2, K",
+      "game_context": "Cincinnati 2, Kansas State 0 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -349,7 +349,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632541",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Jackson%20Smith%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Jackson%20Smith%22%20Cincinnati&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -436,16 +436,16 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Kentucky 5, Florida 9 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Kentucky 6, Florida 9 | Final",
+      "game_status": "Final",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631765",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
       "data_source": "D1Baseball",
@@ -929,7 +929,7 @@
       "team": "Jupiter Hammerheads",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | End 1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-10",
@@ -1798,47 +1798,23 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "USC Upstate 7, Presbyterian 1 | Final",
-      "game_status": "Final",
-      "game_time": "1:00 PM ET",
+      "stats_summary": "Game at 1:00 PM",
+      "game_context": "USC Upstate vs Presbyterian",
+      "game_status": "Scheduled",
+      "game_time": "1:00 PM",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=651099",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "fetch failed"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2217,7 +2193,7 @@
       "team": "FIU",
       "level": "NCAA",
       "stats_summary": "0-1, K",
-      "game_context": "Middle Tennessee 0, Florida International 3 | Bottom 3",
+      "game_context": "Middle Tennessee 0, Florida International 5 | Top 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -2554,7 +2530,7 @@
       "team": "FCL Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | End 1",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-10",
@@ -2656,7 +2632,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Southern Miss 1, James Madison 0 | Bottom 3",
+      "game_context": "Southern Miss 1, James Madison 0 | Top 5",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-10",
@@ -2771,7 +2747,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 3 | Bottom 2",
+      "game_context": "Tampa Tarpons 0, Fort Myers Mighty Mussels 3 | Top 4",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-10",
@@ -3191,8 +3167,8 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "2-3, R",
-      "game_context": "Saint Louis 6, Fordham 2 | Top 7",
+      "stats_summary": "2-4, RBI, R",
+      "game_context": "Saint Louis 6, Fordham 2 | Bottom 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-10",
@@ -3345,7 +3321,7 @@
       "player_name": "Caden Powell",
       "team": "Asheville Tourists",
       "level": "Pro",
-      "stats_summary": "Game at 1:05 PM ET",
+      "stats_summary": "In lineup — batting 7th (LF)",
       "game_context": "Rome Emperors vs Asheville Tourists | 1:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "1:05 PM ET",
@@ -3440,7 +3416,7 @@
       "player_name": "Jason Schiavone",
       "team": "Asheville Tourists",
       "level": "Pro",
-      "stats_summary": "Game at 1:05 PM ET",
+      "stats_summary": "In lineup — batting 2nd (C)",
       "game_context": "Rome Emperors vs Asheville Tourists | 1:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "1:05 PM ET",
@@ -3658,7 +3634,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-1, K",
-      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Top 2",
+      "game_context": "Palm Beach Cardinals 0, Jupiter Hammerheads 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-10",
@@ -3787,33 +3763,30 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "scheduled (no game_time)": 1,
-        "found game, no player": 6,
-        "found stats": 39
-      },
-      "ESPN": {
-        "found stats": 1,
-        "found game, no player": 3,
-        "no game found": 2,
-        "scheduled (ignored)": 1
+        "found stats": 41,
+        "found game, no player": 5
       },
       "StatBroadcast": {
+        "found player": 3,
         "player not in box": 4,
-        "no game found": 6,
-        "found player": 2,
-        "fetch failed": 1
+        "no game found": 5
+      },
+      "ESPN": {
+        "found game, no player": 3,
+        "no game found": 1,
+        "scheduled (ignored)": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 5,
+        "scheduled (ignored)": 4,
         "found game, no player": 1
       },
       "Sidearm": {
-        "no game found": 6,
+        "no game found": 5,
         "player not in box": 1,
         "found player": 3
       },
       "NCAA.org": {
-        "scheduled (ignored)": 3,
+        "scheduled (ignored)": 2,
         "found game, no player": 1,
         "stale (yesterday)": 2
       }
