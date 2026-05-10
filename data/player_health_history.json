@@ -3795,7 +3795,7 @@
   },
   {
     "date": "2026-05-10",
-    "updated_at": "2026-05-10T19:47:42.110496+00:00",
+    "updated_at": "2026-05-10T20:02:22.009470+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -3848,7 +3848,7 @@
         "team": "Louisville Bats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -3924,14 +3924,17 @@
         "team": "Florida State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -3968,7 +3971,7 @@
         "team": "New Hampshire Fisher Cats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -3993,7 +3996,7 @@
         "team": "Jupiter Hammerheads",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -4004,14 +4007,17 @@
         "team": "Clemson",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -4019,7 +4025,7 @@
         "team": "Virginia",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -4048,7 +4054,7 @@
         "team": "Virginia",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -4073,9 +4079,9 @@
         "team": "Marshall",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Final",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -4124,12 +4130,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "game log (live)",
         "sources_tried": [
           "D1Baseball",
-          "StatBroadcast"
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast",
+          "game log"
         ]
       },
       {
@@ -4180,9 +4191,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -4227,14 +4239,17 @@
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -4328,7 +4343,7 @@
         "team": "Mercer",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -4343,8 +4358,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -4461,7 +4476,7 @@
         "team": "FCL Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -4495,8 +4510,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -4513,11 +4528,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -4581,8 +4597,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -4631,8 +4647,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -4649,8 +4665,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
