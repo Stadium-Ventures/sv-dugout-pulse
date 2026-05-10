@@ -3795,7 +3795,7 @@
   },
   {
     "date": "2026-05-10",
-    "updated_at": "2026-05-10T18:17:23.612372+00:00",
+    "updated_at": "2026-05-10T18:32:28.758590+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -4159,12 +4159,17 @@
         "team": "Michigan",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -4776,7 +4781,7 @@
         "team": "FCL Astros",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
