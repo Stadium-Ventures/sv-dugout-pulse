@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T22:19:55.293748+00:00",
+  "generated_at": "2026-05-10T22:34:50.294708+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -407,7 +407,7 @@
       "team": "ACL Dodgers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Ontario Tower Buzzers 1, Rancho Cucamonga Quakes 7 | Bottom 4",
+      "game_context": "Ontario Tower Buzzers 1, Rancho Cucamonga Quakes 8 | Top 5",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-10",
@@ -550,23 +550,27 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM ET",
-      "game_context": "Florida St. vs Clemson",
-      "game_status": "Scheduled",
+      "stats_summary": "Did Not Play",
+      "game_context": "Florida State 6, Clemson 3 | Final",
+      "game_status": "Final",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847846",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631147",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "scheduled (no game_time)"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -574,7 +578,19 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1083,23 +1099,27 @@
       "player_name": "Dane Moehler",
       "team": "Clemson",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM ET",
-      "game_context": "Florida St. vs Clemson",
-      "game_status": "Scheduled",
+      "stats_summary": "Did Not Play",
+      "game_context": "Florida State 6, Clemson 3 | Final",
+      "game_status": "Final",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847846",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631147",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Dane%20Moehler%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dane%20Moehler%22%20Clemson&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "scheduled (no game_time)"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1107,7 +1127,19 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1315,7 +1347,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 0, Reading Fightin Phils 3 | Top 4",
+      "game_context": "Somerset Patriots 0, Reading Fightin Phils 3 | Bottom 5",
       "game_status": "Live",
       "game_time": "5:15 PM ET",
       "game_date": "2026-05-10",
@@ -1710,9 +1742,9 @@
       "player_name": "Sterlin Thompson",
       "team": "Albuquerque Isotopes",
       "level": "Pro",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Albuquerque Isotopes 5, Sugar Land Space Cowboys 4 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Albuquerque Isotopes 5, Sugar Land Space Cowboys 4 | Final",
+      "game_status": "Final",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
@@ -1726,7 +1758,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/814857",
       "player_profile_url": "https://www.mlb.com/player/694514",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sterlin%20Thompson%22%20Rockies&f=live",
       "data_source": "MLB Stats API",
@@ -1966,7 +1998,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2039,7 +2071,7 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 6, Hub City Spartanburgers 1 | Bottom 7",
+      "game_context": "Wilmington Blue Rocks 6, Hub City Spartanburgers 3 | Bottom 7",
       "game_status": "Live",
       "game_time": "4:35 PM ET",
       "game_date": "2026-05-10",
@@ -2152,8 +2184,8 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "1-3, RBI, R, SB",
-      "game_context": "Tulsa Drillers vs Arkansas Travelers | Delayed",
-      "game_status": "Delayed",
+      "game_context": "Tulsa Drillers 6, Arkansas Travelers 8 | Final",
+      "game_status": "Final",
       "game_time": "2:35 PM ET",
       "game_date": "2026-05-10",
       "is_yesterday": false,
@@ -2791,7 +2823,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "0-3, BB",
-      "game_context": "Tri-City Dust Devils 3, Spokane Indians 8 | Top 8",
+      "game_context": "Tri-City Dust Devils 3, Spokane Indians 8 | Top 9",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -2825,7 +2857,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 3, Visalia Rawhide 5 | Middle 5",
+      "game_context": "Stockton Ports 3, Visalia Rawhide 7 | Top 6",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -3168,7 +3200,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Vancouver Canadians 2, Eugene Emeralds 12 | Bottom 7",
+      "game_context": "Vancouver Canadians 4, Eugene Emeralds 12 | Bottom 8",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -4156,7 +4188,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 5 | End 3",
+      "game_context": "Wilson Warbirds 5, Fayetteville Woodpeckers 5 | End 4",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-10",
@@ -4224,7 +4256,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "1-4, RBI, 2 R, BB",
-      "game_context": "Vancouver Canadians 2, Eugene Emeralds 12 | End 7",
+      "game_context": "Vancouver Canadians 4, Eugene Emeralds 12 | Bottom 8",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-10",
@@ -4320,13 +4352,12 @@
     "by_source": {
       "D1Baseball": {
         "found stats": 18,
-        "found game, no player": 26,
-        "scheduled (no game_time)": 2
+        "found game, no player": 28
       },
       "StatBroadcast": {
         "found player": 13,
-        "player not in box": 20,
-        "no game found": 26
+        "player not in box": 22,
+        "no game found": 28
       },
       "ESPN": {
         "found game, no player": 21,
@@ -4334,20 +4365,19 @@
       },
       "NCAA.com": {
         "found game, no player": 16,
-        "found stats": 2,
-        "scheduled (ignored)": 5,
+        "scheduled (ignored)": 7,
         "stale (yesterday)": 2,
         "no game found": 3
       },
       "Sidearm": {
-        "no game found": 26,
+        "no game found": 28,
         "player not in box": 3,
         "found player": 5
       },
       "NCAA.org": {
-        "found game, no player": 17,
-        "stale (yesterday)": 5,
-        "scheduled (ignored)": 4
+        "found game, no player": 18,
+        "scheduled (ignored)": 5,
+        "stale (yesterday)": 5
       }
     },
     "blocked_sources": [],
@@ -4359,6 +4389,7 @@
       "Garrett Whitlock",
       "Kellon Lindsey",
       "Kyle Jones",
+      "Myles Bailey",
       "Aaron Watson",
       "Adam McKelvey",
       "Cade Doughty",
@@ -4400,7 +4431,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 19,
+          "success": 21,
           "blocked": 0
         }
       }
