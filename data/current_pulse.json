@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T16:48:01.133842+00:00",
+  "generated_at": "2026-05-11T17:02:19.830723+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2973,7 +2973,7 @@
           "outcome": "found game, no player"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "player not in box"
         },
         {
@@ -3249,8 +3249,8 @@
       "player_name": "Michael Dattalo",
       "team": "FCL Cardinals",
       "level": "Pro",
-      "stats_summary": "0-1",
-      "game_context": "FCL Cardinals 0, FCL Nationals 0 | Top 3",
+      "stats_summary": "0-2",
+      "game_context": "FCL Cardinals 0, FCL Nationals 0 | Bottom 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-11",
@@ -3266,7 +3266,7 @@
       "box_score_url": "https://www.mlb.com/gameday/844144",
       "player_profile_url": "https://www.mlb.com/player/809633",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -4034,7 +4034,7 @@
           "outcome": "found game, no player"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "player not in box"
         },
         {
@@ -4405,17 +4405,24 @@
     },
     {
       "player_name": "Richard Fitts",
-      "team": "St Louis Cardinals",
+      "team": "Memphis Redbirds",
       "level": "Pro",
-      "stats_summary": "No game scheduled",
+      "stats_summary": "Next: vs Jacksonville Jumbo Shrimp - Tue 05/12 7:45 PM ET",
       "game_context": "",
       "game_status": "N/A",
       "game_time": null,
       "game_date": null,
       "is_yesterday": false,
-      "next_game": null,
+      "next_game": {
+        "date": "Tue 05/12",
+        "date_full": "2026-05-12",
+        "opponent": "Jacksonville Jumbo Shrimp",
+        "home_away": "vs",
+        "time": "7:45 PM ET",
+        "display": "vs Jacksonville Jumbo Shrimp - Tue 05/12 7:45 PM ET"
+      },
       "box_score_url": null,
-      "player_profile_url": "https://www.mlb.com/player/687786",
+      "player_profile_url": "https://www.mlb.com/player/690916",
       "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Richard%20Fitts%22%20Cardinals&f=live",
@@ -4501,7 +4508,7 @@
         "no game found": 1
       },
       "Sidearm": {
-        "player not in box": 23,
+        "player not in box": 25,
         "no game found": 25,
         "found player": 7
       },
@@ -4514,7 +4521,7 @@
       },
       "StatBroadcast": {
         "no game found": 25,
-        "player not in box": 7,
+        "player not in box": 5,
         "found player": 1
       },
       "NCAA.org": {
@@ -4537,7 +4544,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 5,
+          "success": 1,
           "blocked": 0
         }
       }
