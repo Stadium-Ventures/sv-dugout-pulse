@@ -1,64 +1,5 @@
 [
   {
-    "generated_at": "2026-05-09T18:32:22.078307+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Aaron Watson",
-      "Riley Goodman",
-      "Will Rhine",
-      "Evan Taylor",
-      "Michael Dattalo",
-      "Ryan DeSanto",
-      "Lee Sowers",
-      "Zack Johnson"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 38,
-        "found game, no player": 7
-      },
-      "StatBroadcast": {
-        "player not in box": 7,
-        "no game found": 7,
-        "found player": 8
-      },
-      "ESPN": {
-        "found game, no player": 6,
-        "scheduled (ignored)": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 7
-      },
-      "Sidearm": {
-        "no game found": 7,
-        "found player": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 7
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 14,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-09T18:47:32.963728+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -14109,6 +14050,58 @@
   },
   {
     "generated_at": "2026-05-11T18:17:45.652464+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 30,
+        "found stats": 8,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 25,
+        "no game found": 25,
+        "found player": 7
+      },
+      "ESPN": {
+        "no game found": 31
+      },
+      "NCAA.com": {
+        "found stats": 6,
+        "found game, no player": 25
+      },
+      "StatBroadcast": {
+        "no game found": 25,
+        "player not in box": 5,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 24,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-11T18:32:40.727027+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
