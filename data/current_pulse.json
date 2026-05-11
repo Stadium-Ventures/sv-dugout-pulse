@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T22:02:11.386173+00:00",
+  "generated_at": "2026-05-11T22:17:51.878177+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -96,7 +96,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -213,7 +213,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -353,7 +353,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -680,7 +680,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1009,7 +1009,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1372,7 +1372,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1489,7 +1489,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1978,7 +1978,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2221,7 +2221,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2318,7 +2318,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2381,7 +2381,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2640,7 +2640,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2800,7 +2800,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2994,7 +2994,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3084,7 +3084,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3398,7 +3398,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3662,7 +3662,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3725,7 +3725,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3781,7 +3781,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3895,7 +3895,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3992,7 +3992,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4055,7 +4055,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4249,7 +4249,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4525,8 +4525,7 @@
         "found player": 1
       },
       "NCAA.org": {
-        "no game found": 23,
-        "found game, no player": 1,
+        "found game, no player": 24,
         "found stats": 1
       }
     },
@@ -4541,16 +4540,10 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
