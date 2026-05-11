@@ -1201,14 +1201,18 @@ function renderCard(p) {
     const techDetail = p.fetch_diagnostic
       .map(d => `${d.source || '?'}: ${d.outcome || '?'}`).join(' · ');
     // Recovery-plan tail tells Kent what we're doing about it. The Yesterday
-    // view promises a morning retry; live cards keep retrying every run.
+    // view points at the overnight backfill (3 AM + 5 AM ET, when StatBroadcast
+    // is least loaded); live cards retry every 15 min until games end and
+    // then fall through to the overnight backfill if still blocked.
     const recoveryTail = p.stats_unavailable
-      ? ' We’ll keep retrying through tomorrow morning.'
-      : ' Retrying every run.';
+      ? ' Auto-retry overnight at ~3 AM and ~5 AM ET when StatBroadcast load drops.'
+      : ' Auto-retry every 15 min; if still blocked at game end, overnight backfill picks it up at ~3 AM ET.';
     if (blockedSources.length) {
+      // Both residential proxies failed for this event (the "blocked (Cloudflare 403)"
+      // outcome only fires after the backup proxy also 403s and the event is poisoned).
       fetchDiagHtml = `<div class="card-status card-status-blocked" title="${esc(techDetail)}">
         <span class="card-status-icon">🚫</span>
-        <span>Couldn't reach live stats — ${esc(blockedSources.join(', '))} blocked us.${recoveryTail} Hover for detail.</span>
+        <span>${esc(blockedSources.join(', '))} blocked our request (both residential proxies hit Cloudflare WAF).${recoveryTail} Hover for detail.</span>
       </div>`;
     } else if (p.stats_unavailable) {
       fetchDiagHtml = `<div class="card-status card-status-blocked" title="${esc(techDetail)}">
@@ -1606,6 +1610,10 @@ function _renderTodayBanner(el) {
     }
     if (fallbackClients.length && !blockedClients.length) {
       detailParts.push(`${fallbackClients.length} stuck on "not in lineup" / DNP`);
+    }
+    // Tell Kent what happens next, not just what's broken.
+    if (blockedSrcs.length || blockedClients.length) {
+      detailParts.push(`Auto-retry every 15 min during games; overnight backfill at ~3 AM ET catches anything still blocked`);
     }
     detailParts.push(`<a href="diagnostics.html">View source health history →</a>`);
     el.style.display = 'block';
