@@ -14102,5 +14102,69 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-11T20:02:30.469481+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Riley Goodman",
+      "Will Rhine"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 31,
+        "found stats": 7,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 25,
+        "no game found": 25,
+        "found player": 7
+      },
+      "ESPN": {
+        "no game found": 32
+      },
+      "NCAA.com": {
+        "found stats": 7,
+        "found game, no player": 25
+      },
+      "StatBroadcast": {
+        "no game found": 25,
+        "blocked (Cloudflare 403)": 2,
+        "fetch failed": 4
+      },
+      "NCAA.org": {
+        "found game, no player": 24,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 2
+        }
+      }
+    }
   }
 ]
