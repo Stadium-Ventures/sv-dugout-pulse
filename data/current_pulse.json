@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T00:34:50.351079+00:00",
+  "generated_at": "2026-05-11T00:50:03.234244+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2345,7 +2345,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -2516,7 +2516,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3309,7 +3309,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3783,7 +3783,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3944,7 +3944,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Hillsboro Hops 6, Everett AquaSox 3 | Bottom 5",
+      "game_context": "Hillsboro Hops 6, Everett AquaSox 3 | Bottom 6",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-10",
@@ -4374,9 +4374,9 @@
         "no game found": 3
       },
       "NCAA.org": {
-        "found game, no player": 19,
+        "found game, no player": 20,
         "stale (yesterday)": 5,
-        "no game found": 4
+        "scheduled (ignored)": 3
       }
     },
     "blocked_sources": [],
