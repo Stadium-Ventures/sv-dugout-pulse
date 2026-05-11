@@ -1,39 +1,5 @@
 [
   {
-    "generated_at": "2026-05-09T14:47:17.495296+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Michael Dattalo"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 45
-      },
-      "Sidearm": {
-        "found player": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-09T15:02:31.115235+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -14072,6 +14038,58 @@
   },
   {
     "generated_at": "2026-05-11T14:32:36.840192+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 30,
+        "found stats": 8,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 23,
+        "no game found": 25,
+        "found player": 7
+      },
+      "ESPN": {
+        "no game found": 31
+      },
+      "NCAA.com": {
+        "found stats": 6,
+        "found game, no player": 25
+      },
+      "StatBroadcast": {
+        "no game found": 25,
+        "player not in box": 7,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 24,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 5,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-11T14:47:21.169954+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
