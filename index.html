@@ -953,7 +953,7 @@
   <div class="filter-group" data-filter="roster">
     <button class="filter-btn" data-value="all">All</button>
     <button class="filter-btn active" data-value="client">Clients</button>
-    <button class="filter-btn" data-value="following">Following</button>
+    <button class="filter-btn" data-value="following">Recruits</button>
   </div>
   <div class="filter-group" data-filter="level">
     <button class="filter-btn active" data-value="all">All</button>
@@ -1242,7 +1242,7 @@ function renderCard(p) {
         ${heartbeatHtml(p.player_name, isClient)}
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         ${p.split_squad ? '<span class="badge badge-gm">SS</span>' : p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
-        <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
+        <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
         <span class="badge badge-tier-dim">T${pri}</span>
       </div>
@@ -1497,7 +1497,7 @@ function renderWindowCard(p) {
           ? `<a class="player-name" href="${esc(profileUrl, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
           : `<span class="player-name">${esc(p.player_name)}</span>`}
         ${heartbeatHtml(p.player_name, isClient)}
-        <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Following'}</span>
+        <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
