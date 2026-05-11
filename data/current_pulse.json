@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T12:17:12.501312+00:00",
+  "generated_at": "2026-05-11T12:32:12.317660+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -24,7 +24,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-6",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -40,18 +40,6 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "no game found"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
         }
       ],
@@ -4558,25 +4546,24 @@
       },
       "Sidearm": {
         "player not in box": 23,
-        "no game found": 26,
+        "no game found": 25,
         "found player": 9
       },
       "ESPN": {
         "no game found": 30
       },
       "NCAA.com": {
-        "no game found": 1,
-        "found game, no player": 25,
-        "found stats": 4
+        "found stats": 5,
+        "found game, no player": 25
       },
       "StatBroadcast": {
-        "no game found": 26,
+        "no game found": 25,
         "player not in box": 7,
         "found player": 1
       },
       "NCAA.org": {
-        "found stats": 2,
-        "found game, no player": 24
+        "found game, no player": 24,
+        "found stats": 1
       }
     },
     "blocked_sources": [],
@@ -4590,17 +4577,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 4,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 1,
+          "success": 5,
           "blocked": 0
         }
       }
