@@ -10,6 +10,11 @@ on:
     - cron: "0 11 * * *"
     # Yesterday cleanup — just after 4 AM ET day boundary
     - cron: "15 9 * * *"       # 4:15 AM ET — rotate yesterday after day flip
+    # Overnight backfill — recover yesterday entries that got Cloudflare-blocked
+    # during peak game hours. Two attempts in the dead zone between the last
+    # live run (2:45 AM ET) and the morning historical pass (6 AM ET).
+    - cron: "0 7 * * *"        # 3:00 AM ET — first backfill attempt
+    - cron: "0 9 * * *"        # 5:00 AM ET — second backfill attempt
     # Live updates every 15 minutes during game hours
     - cron: "*/15 14-23 * * *"  # 2pm-11:45pm UTC (10am-7:45pm ET)
     - cron: "*/15 0-6 * * *"   # 12am-6:45am UTC (8pm-2:45am ET)
@@ -23,6 +28,7 @@ on:
         options:
           - live
           - historical
+          - backfill
           - both
 
 jobs:
@@ -51,6 +57,8 @@ jobs:
           # Use the cron expression that triggered the run (reliable, unlike clock time)
           elif [ "${{ github.event.schedule }}" = "0 11 * * *" ]; then
             echo "mode=historical" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event.schedule }}" = "0 7 * * *" ] || [ "${{ github.event.schedule }}" = "0 9 * * *" ]; then
+            echo "mode=backfill" >> $GITHUB_OUTPUT
           else
             echo "mode=live" >> $GITHUB_OUTPUT
           fi
@@ -78,6 +86,21 @@ jobs:
           if [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
           python -c "import src.config; import src.roster_manager; import src.stats_engine; import src.performance_analyzer; import src.alerts; print('All imports OK')"
           python main.py 2>&1 | tee /dev/stderr
+
+      - name: Run overnight backfill
+        if: steps.mode.outputs.mode == 'backfill'
+        env:
+          ROSTER_URL: ${{ secrets.ROSTER_URL }}
+          RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
+          SB_PROXY_URL: ""
+          SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
+          SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+        run: |
+          set -eo pipefail
+          if [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
+          python main.py --backfill 2>&1 | tee /dev/stderr
 
       - name: Run historical aggregation
         if: steps.mode.outputs.mode == 'historical' || steps.mode.outputs.mode == 'both'

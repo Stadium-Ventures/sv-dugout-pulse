@@ -1453,6 +1453,101 @@ def write_output(pulse: list[dict]):
     logger.info("Wrote %d entries to %s", len(pulse), OUTPUT_PATH)
 
 
+def _read_yesterday_capture_state() -> dict:
+    """Snapshot which yesterday-game client entries have real stats.
+
+    Returns {dedup_key: bool_captured}. Used to diff before/after backfill so
+    we can post a Slack summary of which players were rescued from a previous
+    Cloudflare/StatBroadcast block.
+    """
+    state: dict = {}
+    if not os.path.exists(YESTERDAY_PULSE_PATH):
+        return state
+    try:
+        with open(YESTERDAY_PULSE_PATH) as f:
+            data = json.load(f)
+        for p in data.get("players", []):
+            if not p.get("is_client"):
+                continue
+            key = (p.get("player_name", "?"), p.get("game_number") or 0)
+            state[key] = {
+                "captured": _entry_has_real_stats(p),
+                "team": p.get("team", "?"),
+            }
+    except Exception:
+        logger.warning("Failed to read yesterday_pulse for capture snapshot")
+    return state
+
+
+def _slack_backfill_summary(pre: dict, post: dict) -> None:
+    """Slack a one-line summary of what the overnight backfill rescued."""
+    rescued = []
+    for key, post_entry in post.items():
+        pre_entry = pre.get(key)
+        if not post_entry["captured"]:
+            continue
+        if pre_entry is None or not pre_entry["captured"]:
+            rescued.append((key[0], post_entry["team"]))
+
+    if not rescued:
+        logger.info("Overnight backfill: nothing new rescued")
+        return
+
+    from src.alerts import send_slack_message
+    sample = ", ".join(f"{n} ({t})" for n, t in rescued[:5])
+    extra = f" +{len(rescued) - 5}" if len(rescued) > 5 else ""
+    send_slack_message(
+        f"🌙 Overnight backfill rescued *{len(rescued)}* client game(s): {sample}{extra}"
+    )
+
+
+def run_backfill():
+    """Lean overnight pass to recover yesterday's blocked entries.
+
+    Runs in the post-game dead zone (~2:45 AM – 10 AM ET) when StatBroadcast's
+    Cloudflare WAF is least loaded — previously-blocked Final box scores have
+    their best shot at coming through. Skips all today-game work, live alerts,
+    and historical aggregation; only refreshes yesterday and the game log.
+    """
+    logger.info("Starting overnight backfill run")
+
+    _rotate_yesterday()
+
+    all_players = get_all_players()
+    if not all_players:
+        logger.error("No players found — aborting")
+        sys.exit(1)
+
+    # HS sheet refresh — keeps the HS game log in step with the sheet so the
+    # L7 recompute below sees fresh manual entries.
+    try:
+        from src.hs_stats import HSSheetParser, HSGameLog
+        hs_parser = HSSheetParser()
+        hs_parsed = hs_parser.parse_all()
+        if hs_parsed:
+            hs_log = HSGameLog()
+            hs_log.update_from_sheet(hs_parsed)
+    except Exception:
+        logger.exception("HS sheet refresh failed in run_backfill — continuing")
+
+    pre_state = _read_yesterday_capture_state()
+    pre_uncaptured = sum(1 for v in pre_state.values() if not v["captured"])
+    logger.info(
+        "Backfill: %d client entries already captured, %d still uncaptured before retry",
+        sum(1 for v in pre_state.values() if v["captured"]),
+        pre_uncaptured,
+    )
+
+    fetcher = StatsFetcher()
+    analyzer = PerformanceAnalyzer()
+    _fetch_yesterday_pass(all_players, fetcher, analyzer)
+    _flush_ncaa_game_log()
+    _refresh_ncaa_l7(all_players)
+
+    post_state = _read_yesterday_capture_state()
+    _slack_backfill_summary(pre_state, post_state)
+
+
 def run_historical():
     """Aggregate historical stats: 7D (Pro + NCAA + HS) + Season (everyone)."""
     logger.info("Starting historical stats aggregation")
@@ -1548,12 +1643,19 @@ def main():
         action="store_true",
         help="Aggregate historical stats (7D Pro + Season) instead of live stats",
     )
+    parser.add_argument(
+        "--backfill",
+        action="store_true",
+        help="Overnight retry of yesterday's blocked entries — no today-game work",
+    )
     args = parser.parse_args()
 
     if args.mock:
         run_mock()
     elif args.historical:
         run_historical()
+    elif args.backfill:
+        run_backfill()
     else:
         run_live()
 
