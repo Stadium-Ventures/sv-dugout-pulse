@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T11:32:40.941066+00:00",
+  "generated_at": "2026-05-11T11:50:04.431970+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -24,7 +24,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-6",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -52,15 +52,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-10T19:47:42.072371+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -4579,19 +4575,14 @@
         "found player": 1
       },
       "NCAA.org": {
-        "found game, no player": 25,
-        "found stats": 1
-      },
-      "game log": {
-        "found stats": 1
+        "found stats": 2,
+        "found game, no player": 24
       }
     },
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
-    "carry_forward_clients": [
-      "Aiden Robbins"
-    ],
+    "carry_forward_clients": [],
     "fallback_clients": [],
     "total_clients": 83,
     "proxy_pool": {
@@ -4599,17 +4590,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 4,
+          "success": 5,
           "blocked": 0
         }
       }
