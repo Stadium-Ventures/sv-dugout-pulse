@@ -13742,5 +13742,69 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-11T08:02:17.257570+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Aiden Robbins"
+    ],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 30,
+        "found stats": 10
+      },
+      "Sidearm": {
+        "player not in box": 23,
+        "no game found": 26,
+        "found player": 9
+      },
+      "ESPN": {
+        "no game found": 30
+      },
+      "NCAA.com": {
+        "no game found": 1,
+        "found game, no player": 25,
+        "found stats": 4
+      },
+      "StatBroadcast": {
+        "no game found": 26,
+        "player not in box": 5,
+        "fetch failed": 2,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 25,
+        "found stats": 1
+      },
+      "game log": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 4,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
