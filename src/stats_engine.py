@@ -924,19 +924,23 @@ class ProStatsFetcher:
         and return a stats dict. Also fetches next game info.
         """
         self._refresh_today()
-        team = player.get("team", "")
         name = player.get("player_name", "")
-        affiliate = player.get("affiliate", "")
-
-        if not team or team == "Unsigned":
-            logger.debug("Skipping %s — unsigned / no team", name)
-            return empty_stats()
 
         try:
             mlb_id = player.get("mlb_id")
             player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
                 logger.info("Player not found in MLB lookup: %s", name)
+                return empty_stats()
+
+            # Override sheet team/affiliate with MLB API truth before any
+            # schedule search. Sheet values are unreliable; API is canonical.
+            self._apply_api_team_to_player(player, player_id)
+            team = player.get("team", "")
+            affiliate = player.get("affiliate", "")
+
+            if not team or team == "Unsigned":
+                logger.debug("Skipping %s — unsigned / no team after API resolve", name)
                 return empty_stats()
 
             game = self._find_todays_game(player_id, team, affiliate=affiliate)
@@ -975,19 +979,21 @@ class ProStatsFetcher:
         exist, each result gets a ``game_number`` field (1, 2, ...).
         """
         self._refresh_today()
-        team = player.get("team", "")
         name = player.get("player_name", "")
-        affiliate = player.get("affiliate", "")
-
-        if not team or team == "Unsigned":
-            logger.debug("Skipping %s — unsigned / no team", name)
-            return [empty_stats()]
 
         try:
             mlb_id = player.get("mlb_id")
             player_id = self._resolve_player_id(name, mlb_id)
             if player_id is None:
                 logger.info("Player not found in MLB lookup: %s", name)
+                return [empty_stats()]
+
+            self._apply_api_team_to_player(player, player_id)
+            team = player.get("team", "")
+            affiliate = player.get("affiliate", "")
+
+            if not team or team == "Unsigned":
+                logger.debug("Skipping %s — unsigned / no team after API resolve", name)
                 return [empty_stats()]
 
             games = self._find_all_todays_games(player_id, team, affiliate=affiliate)
@@ -1047,12 +1053,7 @@ class ProStatsFetcher:
         game, and extracts boxscore stats if the game is Final.
         """
         self._refresh_today()
-        team = player.get("team", "")
         name = player.get("player_name", "")
-        affiliate = player.get("affiliate", "")
-
-        if not team or team == "Unsigned":
-            return None
 
         try:
             mlb_id = player.get("mlb_id")
@@ -1060,15 +1061,19 @@ class ProStatsFetcher:
             if player_id is None:
                 return None
 
+            self._apply_api_team_to_player(player, player_id)
+            team = player.get("team", "")
+            affiliate = player.get("affiliate", "")
+
+            if not team or team == "Unsigned":
+                return None
+
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
-            # Prefer API's current team (handles promotions/demotions)
-            api_team_id = self._player_team_cache.get(player_id)
-            if api_team_id:
-                api_info = self._resolve_team(api_team_id)
-                search_team = api_info["name"] if api_info["name"] else (affiliate or team)
-            else:
-                search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
+            # affiliate is now the API current-team name (set by
+            # _apply_api_team_to_player); fall through to org-level team if
+            # the API only returned an MLB top-level entry.
+            search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
             team_lower = search_team.lower()
 
             game = self._find_game_on_date(player_id, team_lower, yesterday_str)
@@ -1103,12 +1108,7 @@ class ProStatsFetcher:
         based on the game's position in the team's full schedule.
         """
         self._refresh_today()
-        team = player.get("team", "")
         name = player.get("player_name", "")
-        affiliate = player.get("affiliate", "")
-
-        if not team or team == "Unsigned":
-            return []
 
         try:
             mlb_id = player.get("mlb_id")
@@ -1116,15 +1116,16 @@ class ProStatsFetcher:
             if player_id is None:
                 return []
 
+            self._apply_api_team_to_player(player, player_id)
+            team = player.get("team", "")
+            affiliate = player.get("affiliate", "")
+
+            if not team or team == "Unsigned":
+                return []
+
             yesterday = self._today - timedelta(days=1)
             yesterday_str = yesterday.strftime("%m/%d/%Y")
-            # Prefer API's current team (handles promotions/demotions)
-            api_team_id = self._player_team_cache.get(player_id)
-            if api_team_id:
-                api_info = self._resolve_team(api_team_id)
-                search_team = api_info["name"] if api_info["name"] else (affiliate or team)
-            else:
-                search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
+            search_team = affiliate if affiliate and affiliate.lower() != team.lower() else team
             team_lower = search_team.lower()
 
             # Get all games the player appeared in yesterday
@@ -1341,6 +1342,36 @@ class ProStatsFetcher:
         if team_name:
             result["api_current_team"] = team_name
         return result
+
+    def _apply_api_team_to_player(self, player: dict, player_id: int) -> None:
+        """Overwrite player['team'] and player['affiliate'] with MLB API truth.
+
+        Defensive backup for ``roster_manager._enrich_pro_team_from_api``,
+        which runs at sheet load and is the primary path. This method covers
+        the case where the upfront enrichment failed (network blip, missing
+        mlb_id at load time, etc.) — we get a second chance to resolve once
+        the player_id is in hand. No-op if the upfront pass already applied.
+        """
+        if player.get("_api_team_applied"):
+            return
+        api_team_id = self._player_team_cache.get(player_id)
+        if not api_team_id:
+            return
+        info = self._resolve_team(api_team_id)
+        api_name = info.get("name", "")
+        if not api_name:
+            return
+        is_mlb = info.get("sport_id") == 1
+        api_org = info.get("parent_name") or api_name if not is_mlb else api_name
+        sheet_team = (player.get("team") or "").strip()
+        if sheet_team and sheet_team.lower() != api_org.lower():
+            logger.warning(
+                "Sheet roster drift (late-resolve) for %s (id=%d): sheet org=%r API org=%r — using API",
+                player.get("player_name"), player_id, sheet_team, api_org,
+            )
+        player["team"] = api_org
+        player["affiliate"] = api_name
+        player["_api_team_applied"] = True
 
     def _resolve_team(self, team_id: int) -> dict:
         """Fetch and cache team details (name, sport level, parent org)."""

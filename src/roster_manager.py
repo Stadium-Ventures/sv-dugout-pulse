@@ -206,15 +206,109 @@ def _load_roster_cache() -> list[dict] | None:
         return None
 
 
+_MLB_API_BASE = "https://statsapi.mlb.com/api/v1"
+
+
+def _enrich_pro_team_from_api(players: list[dict]) -> None:
+    """Replace sheet team/affiliate with MLB API truth for Pro players.
+
+    Mutates each Pro player dict in place. The Google Sheet's Org/Affiliate
+    columns are unreliable (manual data entry, lag on promotions/trades);
+    the MLB Stats API's ``currentTeam`` is canonical. Players without an
+    ``mlb_id`` keep sheet values — they can't be resolved via API.
+
+    After this runs, every downstream consumer (live fetcher, historical
+    aggregator, alerts, dashboard) reads API-correct team data without
+    needing its own API lookup.
+
+    Failures (timeout, network blip, MLB API outage) leave the sheet values
+    intact rather than blanking them — degraded mode is "show the sheet,"
+    not "show nothing." A single shared Session reuses TCP connections so
+    the per-player cost is small.
+    """
+    pro_players = [p for p in players if p.get("level") == "Pro" and p.get("mlb_id")]
+    if not pro_players:
+        return
+    team_cache: dict[int, dict] = {}
+    session = requests.Session()
+    enriched = 0
+    drifted = 0
+    for player in pro_players:
+        mlb_id = player["mlb_id"]
+        try:
+            resp = session.get(
+                f"{_MLB_API_BASE}/people/{mlb_id}?hydrate=currentTeam",
+                timeout=8,
+            )
+            resp.raise_for_status()
+            people = resp.json().get("people", [])
+            ct = people[0].get("currentTeam", {}) if people else {}
+            team_id = ct.get("id") if isinstance(ct, dict) else None
+            if not team_id:
+                continue
+            if team_id not in team_cache:
+                t_resp = session.get(
+                    f"{_MLB_API_BASE}/teams/{team_id}", timeout=8,
+                )
+                t_resp.raise_for_status()
+                t_list = t_resp.json().get("teams", [])
+                if not t_list:
+                    continue
+                t = t_list[0]
+                team_cache[team_id] = {
+                    "name": t.get("name", ""),
+                    "sport_id": t.get("sport", {}).get("id", 1),
+                    "parent_name": t.get("parentOrgName", ""),
+                }
+            info = team_cache[team_id]
+            api_name = info["name"]
+            if not api_name:
+                continue
+            is_mlb = info["sport_id"] == 1
+            api_org = info["parent_name"] if not is_mlb and info["parent_name"] else api_name
+            sheet_team = (player.get("team") or "").strip()
+            sheet_affiliate = (player.get("affiliate") or "").strip()
+            if sheet_team and sheet_team.lower() != api_org.lower():
+                logger.warning(
+                    "Sheet roster drift for %s (id=%d): sheet org=%r API org=%r — using API",
+                    player.get("player_name"), mlb_id, sheet_team, api_org,
+                )
+                drifted += 1
+            elif sheet_affiliate and sheet_affiliate.lower() != api_name.lower():
+                logger.info(
+                    "Sheet affiliate drift for %s (id=%d): sheet=%r API=%r — using API",
+                    player.get("player_name"), mlb_id, sheet_affiliate, api_name,
+                )
+                drifted += 1
+            player["team"] = api_org
+            player["affiliate"] = api_name
+            player["_api_team_applied"] = True
+            enriched += 1
+        except Exception as exc:
+            logger.debug(
+                "MLB API enrichment failed for %s (id=%s): %s — keeping sheet values",
+                player.get("player_name"), mlb_id, exc,
+            )
+    logger.info(
+        "MLB API enrichment: %d/%d Pro players resolved, %d sheet drifts logged",
+        enriched, len(pro_players), drifted,
+    )
+
+
 def get_all_players() -> list[dict]:
     """
     Fetch both clients and recruits, combined.
     Falls back to cached roster if Google Sheets is unreachable.
+
+    Pro players have their team/affiliate overwritten from the MLB Stats API
+    after sheet load — the sheet is the source of identity (name + mlb_id),
+    but the API is the source of truth for current org and current affiliate.
     """
     try:
         clients = get_active_roster()
         recruits = get_recruits()
         players = clients + recruits
+        _enrich_pro_team_from_api(players)
         _save_roster_cache(players)
         return players
     except Exception:
