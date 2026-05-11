@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T08:02:17.257570+00:00",
+  "generated_at": "2026-05-11T08:17:24.296839+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2072,7 +2072,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2450,7 +2450,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4575,8 +4575,7 @@
       },
       "StatBroadcast": {
         "no game found": 26,
-        "player not in box": 5,
-        "fetch failed": 2,
+        "player not in box": 7,
         "found player": 1
       },
       "NCAA.org": {
@@ -4600,17 +4599,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 4,
+          "success": 5,
           "blocked": 0
         }
       }
