@@ -1,51 +1,5 @@
 [
   {
-    "generated_at": "2026-05-09T10:17:11.521103+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 42,
-        "found game, no player": 3
-      },
-      "Sidearm": {
-        "found player": 3,
-        "no game found": 3
-      },
-      "ESPN": {
-        "no game found": 3
-      },
-      "NCAA.com": {
-        "no game found": 3
-      },
-      "StatBroadcast": {
-        "no game found": 3
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-09T10:32:21.381574+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -13820,6 +13774,63 @@
         "no game found": 1,
         "found game, no player": 25,
         "found stats": 5
+      },
+      "StatBroadcast": {
+        "no game found": 26,
+        "player not in box": 7,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 25,
+        "found stats": 1
+      },
+      "game log": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 5,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-11T10:17:25.758551+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Aiden Robbins"
+    ],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 30,
+        "found stats": 10
+      },
+      "Sidearm": {
+        "player not in box": 23,
+        "no game found": 26,
+        "found player": 9
+      },
+      "ESPN": {
+        "no game found": 30
+      },
+      "NCAA.com": {
+        "no game found": 1,
+        "found game, no player": 25,
+        "found stats": 4
       },
       "StatBroadcast": {
         "no game found": 26,
