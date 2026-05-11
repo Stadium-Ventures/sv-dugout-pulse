@@ -401,8 +401,38 @@ def _build_profile_url(player: dict, stats: dict) -> str | None:
     return None
 
 
+# NCAA D1 single-game HR record is 4 (set multiple times). Anything above this is
+# almost certainly a parser bug — clamp aggressively and log so we can debug.
+_MAX_SINGLE_GAME_HR = 4
+
+
+def _patch_summary_stat(summary: str, label: str, old_val: int, new_val: int) -> str:
+    """Replace an `{old_val} {label}` token in stats_summary with the clamped value.
+
+    Used by _sanitize_stats so the human-readable summary stays consistent with the
+    numeric fields after a clamp. Without this, the alert headline reads from
+    stats.home_runs (clamped) while the body reads stats_summary (unclamped) and
+    the two disagree — exactly the "4 HRs!" / "9 HR" Tiroly incident on 2026-05-11.
+    """
+    if not summary or old_val == new_val:
+        return summary
+    if new_val == 0:
+        # Drop the segment entirely (with its leading comma+space if present)
+        return re.sub(rf"(?:, )?{old_val} {label}(?=,|$)", "", summary)
+    return summary.replace(f"{old_val} {label}", f"{new_val} {label}")
+
+
 def _sanitize_stats(stats: dict) -> dict:
-    """Clamp impossible stat values to prevent garbage data from reaching output."""
+    """Clamp impossible stat values to prevent garbage data from reaching output.
+
+    When a value is clamped, stats_summary is patched in-place so the rendered
+    string stays consistent with the numeric fields. The parser builds
+    stats_summary from raw values before this function runs, so any clamp here
+    must also rewrite the summary or downstream consumers (Slack alerts, the
+    diagnostics dashboard) will display the pre-clamp value.
+    """
+    summary = stats.get("stats_summary", "") or ""
+
     # Non-negative integer fields
     for key in ("hits", "at_bats", "home_runs", "rbi", "runs", "walks",
                 "strikeouts", "doubles", "triples", "stolen_bases",
@@ -432,16 +462,44 @@ def _sanitize_stats(stats: dict) -> dict:
             ip = 27.0
         stats["ip"] = ip
 
-    # Relational: hits <= at_bats, hr <= hits
+    # Relational: hits <= at_bats, hr <= min(hits, NCAA single-game max).
+    # When we clamp, also rewrite stats_summary so the human-facing string
+    # matches the numeric fields.
     ab = stats.get("at_bats", 0)
     h = stats.get("hits", 0)
     hr = stats.get("home_runs", 0)
+
     if ab > 0 and h > ab:
         logger.warning("hits(%d) > at_bats(%d) — clamping hits", h, ab)
+        # Batter summaries lead with "{h}-{ab}" — rebuild that segment.
+        summary = re.sub(rf"^{h}-{ab}", f"{ab}-{ab}", summary)
         stats["hits"] = ab
+        h = ab
+
+    if hr > _MAX_SINGLE_GAME_HR:
+        # Implausible — almost always a parser bug (wrong column / season total
+        # leaking into a per-game field). Log loudly with full context so we
+        # can find the root cause.
+        logger.error(
+            "Implausible home_runs=%d (max %d/game) for player=%r team=%r "
+            "raw_stats=%s — clamping to %d",
+            hr, _MAX_SINGLE_GAME_HR,
+            stats.get("_player_name"), stats.get("_team"),
+            {k: v for k, v in stats.items() if not k.startswith("_") and k != "stats_summary"},
+            min(h, _MAX_SINGLE_GAME_HR),
+        )
+        new_hr = min(h, _MAX_SINGLE_GAME_HR) if h > 0 else 0
+        summary = _patch_summary_stat(summary, "HR", hr, new_hr)
+        stats["home_runs"] = new_hr
+        hr = new_hr
+
     if h > 0 and hr > h:
         logger.warning("home_runs(%d) > hits(%d) — clamping HR", hr, h)
-        stats["home_runs"] = stats.get("hits", h)
+        summary = _patch_summary_stat(summary, "HR", hr, h)
+        stats["home_runs"] = h
+
+    if summary != stats.get("stats_summary"):
+        stats["stats_summary"] = summary
 
     return stats
 
@@ -1195,11 +1253,18 @@ def _summarize_run_health(pulse: list[dict]) -> dict:
     carry_forward_clients: list[str] = []
     fallback_clients: list[str] = []
     total_clients = 0
+    # A "today game" is a client whose game record is from a current run (not
+    # the yesterday-rollover bucket) AND is either in progress or already
+    # finalized. We use this to gate fallback-based warnings: at 2am with no
+    # games anywhere, a high fallback ratio is structural, not a failure.
+    clients_with_today_game = 0
 
     for p in pulse:
         is_client = bool(p.get("is_client"))
         if is_client:
             total_clients += 1
+            if not p.get("is_yesterday") and p.get("game_status") in ("Live", "Final"):
+                clients_with_today_game += 1
             if p.get("stats_captured_at"):
                 carry_forward_clients.append(p.get("player_name", "?"))
             summary = (p.get("stats_summary") or "").lower()
@@ -1234,7 +1299,13 @@ def _summarize_run_health(pulse: list[dict]) -> dict:
     severity = "ok"
     if blocked_clients:
         severity = "warning" if len(blocked_clients) < 5 else "critical"
-    elif fallback_clients and total_clients and len(fallback_clients) >= max(3, total_clients // 5):
+    elif (fallback_clients and total_clients
+            and len(fallback_clients) >= max(3, total_clients // 5)
+            and clients_with_today_game > 0):
+        # Only escalate fallback-based warnings when there are actually games
+        # happening today. Overnight, every roster player without a scheduled
+        # game looks like "fallback" and floods the dashboard with structural
+        # noise.
         severity = "warning"
 
     # Per-proxy block stats from the SB residential pool — surfaces which
