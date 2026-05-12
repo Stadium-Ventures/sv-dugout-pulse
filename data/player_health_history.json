@@ -4891,7 +4891,7 @@
   },
   {
     "date": "2026-05-12",
-    "updated_at": "2026-05-12T23:16:49.476845+00:00",
+    "updated_at": "2026-05-12T23:32:02.350211+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -4917,8 +4917,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -4969,7 +4969,7 @@
         "team": "Tampa Tarpons",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed Start",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -5043,8 +5043,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -5248,7 +5248,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed Start",
+        "game_status": "Cancelled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -5588,10 +5588,10 @@
         "team": "Fordham",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Canceled",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "NCAA.org",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
