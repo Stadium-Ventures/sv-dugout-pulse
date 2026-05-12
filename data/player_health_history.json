@@ -4891,7 +4891,7 @@
   },
   {
     "date": "2026-05-12",
-    "updated_at": "2026-05-12T21:47:03.942965+00:00",
+    "updated_at": "2026-05-12T22:02:12.655935+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -4992,7 +4992,7 @@
       },
       {
         "name": "Kellon Lindsey",
-        "team": "ACL Dodgers",
+        "team": "Ontario Tower Buzzers",
         "level": "Pro",
         "tier": null,
         "game_status": "Scheduled",
@@ -5076,7 +5076,7 @@
         "team": "Jupiter Hammerheads",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Cancelled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -5173,10 +5173,10 @@
       },
       {
         "name": "Lucas Spence",
-        "team": "FCL Astros",
+        "team": "Corpus Christi Hooks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Final",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -5297,12 +5297,14 @@
         "team": "Georgia Southern",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -5322,15 +5324,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
