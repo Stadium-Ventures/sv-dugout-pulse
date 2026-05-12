@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T20:20:18.378651+00:00",
+  "generated_at": "2026-05-12T20:31:33.315147+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1168,16 +1168,16 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Richmond 6, Virginia 13 | Bottom 8",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Richmond 6, Virginia 18 | Final",
+      "game_status": "Final",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-12",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636362",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
       "data_source": "D1Baseball",
@@ -1346,9 +1346,9 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "0-2, 2 R, 3 BB",
-      "game_context": "Richmond 6, Virginia 13 | Bottom 8",
-      "game_status": "Live",
+      "stats_summary": "0-2, RBI, 3 R, 3 BB, HBP",
+      "game_context": "Richmond 6, Virginia 18 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-12",
       "is_yesterday": false,
@@ -1820,7 +1820,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Michigan 0, Kent State 0 | Top 1",
+      "game_context": "Michigan 0, Kent State 0 | Top 2",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-12",
@@ -2600,9 +2600,9 @@
       "player_name": "Kade Brown",
       "team": "Stockton Ports",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 9, Stockton Ports 4 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Inland Empire 66ers 9, Stockton Ports 4 | Final",
+      "game_status": "Final",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-12",
       "is_yesterday": false,
@@ -2616,7 +2616,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/821013",
       "player_profile_url": "https://www.mlb.com/player/824044",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
       "data_source": "MLB Stats API",
@@ -3689,10 +3689,16 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
