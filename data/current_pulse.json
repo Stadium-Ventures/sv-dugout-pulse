@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T17:02:16.158484+00:00",
+  "generated_at": "2026-05-12T17:17:04.375607+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -606,7 +606,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fayetteville Woodpeckers 1, Delmarva Shorebirds 1 | Top 7",
+      "game_context": "Fayetteville Woodpeckers 2, Delmarva Shorebirds 2 | Bottom 7",
       "game_status": "Live",
       "game_time": "11:05 AM ET",
       "game_date": "2026-05-12",
@@ -1168,23 +1168,47 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Richmond vs Virginia",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Richmond 0, Virginia 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-12",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848487",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636362",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1322,16 +1346,16 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Richmond vs Virginia",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Richmond 0, Virginia 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-12",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848487",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636362",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Joe%20Tiroly%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
       "data_source": "D1Baseball",
@@ -1339,6 +1363,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1477,7 +1505,7 @@
       "team": "FCL Astros",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Astros 6, FCL Cardinals 1 | Middle 4",
+      "game_context": "FCL Astros 6, FCL Cardinals 1 | Top 5",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-12",
@@ -2025,8 +2053,8 @@
       "player_name": "Blake Rambusch",
       "team": "Arkansas Travelers",
       "level": "Pro",
-      "stats_summary": "1-1",
-      "game_context": "Arkansas Travelers 1, Northwest Arkansas Naturals 1 | Bottom 3",
+      "stats_summary": "1-2, K",
+      "game_context": "Arkansas Travelers 1, Northwest Arkansas Naturals 1 | Bottom 4",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-12",
@@ -2610,7 +2638,7 @@
       "team": "FCL Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Astros 6, FCL Cardinals 1 | Middle 4",
+      "game_context": "FCL Astros 6, FCL Cardinals 1 | Top 5",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-12",
@@ -3595,23 +3623,28 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 20,
-        "no game found": 2
+        "found stats": 19,
+        "no game found": 2,
+        "found game, no player": 1
       },
       "ESPN": {
         "found stats": 1,
-        "found game, no player": 1
+        "found game, no player": 2
+      },
+      "StatBroadcast": {
+        "player not in box": 1,
+        "no game found": 2,
+        "found player": 1
       },
       "NCAA.com": {
+        "scheduled (ignored)": 1,
         "no game found": 1
       },
       "Sidearm": {
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "no game found": 1
+        "no game found": 2
       },
       "NCAA.org": {
+        "scheduled (ignored)": 1,
         "found stats": 1
       }
     },
@@ -3620,6 +3653,7 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Henry Zatkowski",
       "Michael Dattalo"
     ],
     "total_clients": 83,
@@ -3628,9 +3662,14 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": null,
+      "active": "p.webshare.io",
       "dead": [],
-      "stats": {}
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 0
+        }
+      }
     }
   }
 }
