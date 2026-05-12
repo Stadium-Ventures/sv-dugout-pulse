@@ -203,7 +203,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1043,7 +1043,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2431,7 +2431,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3977,6 +3977,7 @@
       "Riley Goodman",
       "Bennett Edwards",
       "Boston Torres",
+      "Braydon Kersey",
       "Eamon McDermott",
       "Lee Sowers",
       "Lucas Steele"
@@ -4012,12 +4013,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 10
+          "success": 1,
+          "blocked": 9
         }
       }
     }
