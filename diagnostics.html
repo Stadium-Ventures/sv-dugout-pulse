@@ -130,6 +130,10 @@
 
   <h2>Aggregated by source (last 48h)</h2>
   <div id="sourceAgg"></div>
+
+  <h2>Residential proxy pool (last 48h)</h2>
+  <div id="proxyPool"></div>
+
   <h2>Per-run history</h2>
   <table id="historyTable">
     <thead>
@@ -230,6 +234,70 @@ function renderSourceAggregation(history) {
     </div>`;
   }).join('');
   el.innerHTML = `<div class="source-grid">${cards}</div>`;
+}
+
+function renderProxyPool(history) {
+  const el = document.getElementById('proxyPool');
+  if (!history.length) { el.innerHTML = ''; return; }
+
+  // Aggregate success/blocked counts per proxy label across all runs in 48h.
+  // The current active/dead state comes from the most recent record only —
+  // dead proxies recover between runs, so the latest state is what matters.
+  const totals = {};
+  for (const h of history) {
+    const stats = (h.proxy_pool || {}).stats || {};
+    for (const label of Object.keys(stats)) {
+      const t = totals[label] || (totals[label] = { success: 0, blocked: 0 });
+      t.success += stats[label].success || 0;
+      t.blocked += stats[label].blocked || 0;
+    }
+  }
+  // history is oldest-first; take the last record for current active/dead state.
+  const latest = (history[history.length - 1] || {}).proxy_pool || {};
+  if (!latest || !(latest.pool || []).length) {
+    el.innerHTML = '<div class="empty">No residential proxy data captured yet.</div>';
+    return;
+  }
+
+  const activeLabel = latest.active || null;
+  const deadSet = new Set(latest.dead || []);
+  // Render in pool order so primary stays first.
+  const rows = (latest.pool || []).map(label => {
+    const t = totals[label] || { success: 0, blocked: 0 };
+    const total = t.success + t.blocked;
+    const blockPct = total ? Math.round((t.blocked / total) * 100) : 0;
+    let stateLabel, stateClass;
+    if (deadSet.has(label)) {
+      stateLabel = 'dead this run'; stateClass = 'critical';
+    } else if (label === activeLabel) {
+      stateLabel = 'active'; stateClass = 'ok';
+    } else {
+      stateLabel = 'standby'; stateClass = 'ok';
+    }
+    const barClass = blockPct >= 25 ? 'critical' : blockPct >= 5 ? 'warning' : 'ok';
+    return `<div class="source-card">
+      <div class="source-card-name">
+        ${esc(label)}
+        <span class="pill ${stateClass}">${stateLabel}</span>
+      </div>
+      <div class="source-card-row"><span>success</span><span>${t.success}</span></div>
+      <div class="source-card-row${blockPct >= 5 ? ' blocked' : ''}">
+        <span>blocked (403)</span><span>${t.blocked} (${blockPct}%)</span>
+      </div>
+      <div class="bar"><div class="bar-fill ${barClass}" style="width:${blockPct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  // Headline: were both proxies dead at any point in the 48h?
+  const everDoublyDead = history.some(h => {
+    const pp = h.proxy_pool || {};
+    return (pp.pool || []).length && (pp.dead || []).length === (pp.pool || []).length;
+  });
+  const headline = everDoublyDead
+    ? '<div class="summary-row"><span class="summary-label">⚠️ Both proxies dead in at least one run during this window — backup didn\'t save the run.</span></div>'
+    : '';
+
+  el.innerHTML = `${headline}<div class="source-grid">${rows}</div>`;
 }
 
 function renderHistoryTable(history) {
@@ -408,6 +476,7 @@ async function load() {
   renderTodayCoverage(pulse);
   renderPlayerHistory(playerHist || []);
   renderSourceAggregation(history || []);
+  renderProxyPool(history || []);
   renderHistoryTable(history || []);
 }
 load();

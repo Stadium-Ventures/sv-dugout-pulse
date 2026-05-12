@@ -1025,6 +1025,9 @@ let dataGeneratedAt = null;
 let runHealth = null;
 let yesterdaySourceDate = null;
 let autoRefreshTimer = null;
+// Distinguishes "data still loading" from "data loaded, zero filter matches".
+// Prevents the false "No players match" empty state during the initial fetch.
+let dataLoaded = false;
 let filters = { roster:'client', level:'all', position:'all', status:'all', grade:'all', heartbeat:'all' };
 let searchQuery = '';
 let heartbeatData = new Map();
@@ -1741,7 +1744,13 @@ function render() {
     if (sorted.length === 0 && noGamePlayers.length === 0) {
       grid.innerHTML = '';
       empty.style.display = 'block';
-      empty.textContent = 'No players match the current filters.';
+      // Before the first successful fetch, allPlayers is [] and filters
+      // would naturally produce zero matches — that's loading state, not an
+      // empty-result state. Keep the splash language so it's clear DP is
+      // working, not broken.
+      empty.textContent = dataLoaded
+        ? 'No players match the current filters.'
+        : 'Loading player data…';
       noGameSection.style.display = 'none';
     } else {
       empty.style.display = 'none';
@@ -2091,10 +2100,12 @@ function manageAutoRefresh() {
         if (raw) {
           if (Array.isArray(raw)) {
             allPlayers = _dedupPlayers(raw);
+      dataLoaded = true;
             dataGeneratedAt = null;
             runHealth = null;
           } else {
             allPlayers = _dedupPlayers(raw.players || []);
+      dataLoaded = true;
             dataGeneratedAt = raw.generated_at || null;
             runHealth = raw.health || null;
           }
@@ -2246,6 +2257,7 @@ async function refreshData() {
   if (raw) {
     if (currentWindow === 'today') {
       allPlayers = _dedupPlayers(Array.isArray(raw) ? raw : (raw.players || []));
+      dataLoaded = true;
       dataGeneratedAt = Array.isArray(raw) ? null : (raw.generated_at || null);
       runHealth = Array.isArray(raw) ? null : (raw.health || null);
       updateTimestamp();
@@ -2295,10 +2307,12 @@ async function fetchHeartbeat() {
   if (raw) {
     if (Array.isArray(raw)) {
       allPlayers = _dedupPlayers(raw);
+      dataLoaded = true;
       dataGeneratedAt = null;
       runHealth = null;
     } else {
       allPlayers = _dedupPlayers(raw.players || []);
+      dataLoaded = true;
       dataGeneratedAt = raw.generated_at || null;
       runHealth = raw.health || null;
     }

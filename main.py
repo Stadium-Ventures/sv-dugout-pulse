@@ -1501,6 +1501,91 @@ def _slack_backfill_summary(pre: dict, post: dict) -> None:
     )
 
 
+_STUCK_CLIENT_DAYS = 3
+
+
+def _check_stuck_clients(stuck_days: int = _STUCK_CLIENT_DAYS) -> None:
+    """Slack-ping clients who've gone N days with no successful capture.
+
+    Reads ``player_health_history.json`` (which only contains players with
+    a non-N/A game_status, so absence from a date already means "no game
+    that day"). For each client name, looks at the last *stuck_days* daily
+    snapshots: if the player had games on at least 2 of those days and was
+    never captured, they're stuck.
+
+    Dedupe is per-ET-day via the existing sent_alerts mechanism, so you'll
+    see at most one ping per stuck player per day. If they recover, the
+    ping goes away naturally.
+    """
+    try:
+        if not os.path.exists(PLAYER_HEALTH_HISTORY_PATH):
+            return
+        with open(PLAYER_HEALTH_HISTORY_PATH) as f:
+            history = json.load(f)
+    except Exception:
+        logger.debug("Could not read player health history for stuck-client check")
+        return
+
+    if not history or len(history) < 2:
+        return
+
+    history.sort(key=lambda h: h.get("date") or "")
+    recent = history[-stuck_days:]
+
+    by_player: dict[str, list[tuple[str, dict]]] = {}
+    for snap in recent:
+        for p in snap.get("players", []):
+            name = p.get("name")
+            if not name:
+                continue
+            by_player.setdefault(name, []).append((snap.get("date"), p))
+
+    today_et = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d")
+
+    from src.alerts import _already_sent, _mark_sent, save_sent_alerts, send_slack_message
+
+    sent_count = 0
+    for name, entries in by_player.items():
+        # Require at least 2 game-days to call it "stuck" — a single missed
+        # game is just one bad fetch, not a pattern.
+        if len(entries) < 2:
+            continue
+        if any(p.get("captured") for _, p in entries):
+            continue
+        latest = entries[-1][1]
+        # Only ping for clients (roster_priority < 99 — recruits sit at 99).
+        tier = latest.get("tier")
+        if tier is None or tier >= 99:
+            continue
+        if _already_sent(today_et, name, "stuck"):
+            continue
+
+        # Walk older history (before the stuck window) to find last capture date.
+        last_seen = "—"
+        for snap in history[:-stuck_days][::-1]:
+            for p in snap.get("players", []):
+                if p.get("name") == name and p.get("captured"):
+                    last_seen = snap.get("date") or "—"
+                    break
+            if last_seen != "—":
+                break
+
+        team = latest.get("team", "?")
+        sources_tried = latest.get("sources_tried") or []
+        sources_str = f" Tried: {', '.join(sources_tried)}." if sources_tried else ""
+        ok = send_slack_message(
+            f"🔁 *{name}* ({team}) — stuck {len(entries)}/{stuck_days} days with no capture. "
+            f"Last successful: {last_seen}.{sources_str}"
+        )
+        if ok:
+            _mark_sent(today_et, name, "stuck")
+            sent_count += 1
+
+    if sent_count:
+        save_sent_alerts()
+        logger.info("Pinged %d stuck client(s)", sent_count)
+
+
 def run_backfill():
     """Lean overnight pass to recover yesterday's blocked entries.
 
@@ -1546,6 +1631,11 @@ def run_backfill():
 
     post_state = _read_yesterday_capture_state()
     _slack_backfill_summary(pre_state, post_state)
+
+    # After the night's rescue attempts, surface clients who've been stuck
+    # multiple days so they don't rot unseen. One ping per stuck player per
+    # ET day; auto-clears once they recover.
+    _check_stuck_clients()
 
 
 def run_historical():
