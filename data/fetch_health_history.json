@@ -1,209 +1,5 @@
 [
   {
-    "generated_at": "2026-05-10T07:47:27.400954+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Dax Kilby",
-      "Kellon Lindsey",
-      "Kyle Jones",
-      "Myles Bailey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Henry Zatkowski",
-      "Jack Cebert",
-      "Justin Riemer",
-      "Ty Finkbeiner",
-      "Will Rhine",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Michael Dattalo",
-      "Najer Victor",
-      "Ryan DeSanto",
-      "Xavier Kolhosser",
-      "Eamon McDermott",
-      "Ethan Lay",
-      "Lee Sowers",
-      "Luke Fithian",
-      "Michael Gillen",
-      "Zack Johnson"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 23,
-        "found game, no player": 22
-      },
-      "StatBroadcast": {
-        "found player": 19,
-        "no game found": 22,
-        "player not in box": 5
-      },
-      "Sidearm": {
-        "player not in box": 14,
-        "no game found": 22,
-        "found player": 4
-      },
-      "ESPN": {
-        "found game, no player": 16,
-        "no game found": 6
-      },
-      "NCAA.com": {
-        "found game, no player": 14,
-        "stale (yesterday)": 5,
-        "no game found": 3
-      },
-      "NCAA.org": {
-        "found game, no player": 13,
-        "stale (yesterday)": 6,
-        "no game found": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 3,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
-    "generated_at": "2026-05-10T07:50:14.745024+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Dax Kilby",
-      "Kellon Lindsey",
-      "Kyle Jones",
-      "Myles Bailey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Henry Zatkowski",
-      "Jack Cebert",
-      "Justin Riemer",
-      "Ty Finkbeiner",
-      "Will Rhine",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Michael Dattalo",
-      "Najer Victor",
-      "Ryan DeSanto",
-      "Xavier Kolhosser",
-      "Eamon McDermott",
-      "Ethan Lay",
-      "Lee Sowers",
-      "Luke Fithian",
-      "Michael Gillen",
-      "Zack Johnson"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 23,
-        "found game, no player": 22
-      },
-      "StatBroadcast": {
-        "found player": 19,
-        "no game found": 22,
-        "player not in box": 5
-      },
-      "Sidearm": {
-        "player not in box": 14,
-        "no game found": 22,
-        "found player": 4
-      },
-      "ESPN": {
-        "found game, no player": 16,
-        "no game found": 6
-      },
-      "NCAA.com": {
-        "found game, no player": 14,
-        "stale (yesterday)": 5,
-        "no game found": 3
-      },
-      "NCAA.org": {
-        "found game, no player": 13,
-        "stale (yesterday)": 6,
-        "no game found": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 3,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
-    "generated_at": "2026-05-10T08:01:59.015549+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 45,
-        "found game, no player": 1
-      },
-      "Sidearm": {
-        "player not in box": 1,
-        "no game found": 1,
-        "found player": 2
-      },
-      "ESPN": {
-        "no game found": 1
-      },
-      "NCAA.com": {
-        "found game, no player": 1
-      },
-      "StatBroadcast": {
-        "no game found": 1
-      },
-      "NCAA.org": {
-        "found game, no player": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-10T08:17:28.035920+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12996,6 +12792,47 @@
           "blocked": 0
         }
       }
+    }
+  },
+  {
+    "generated_at": "2026-05-12T08:02:16.096643+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 20,
+        "no game found": 2
+      },
+      "ESPN": {
+        "found stats": 1,
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "no game found": 1
+      },
+      "Sidearm": {
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
     }
   }
 ]
