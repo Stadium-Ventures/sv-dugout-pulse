@@ -1,63 +1,5 @@
 [
   {
-    "generated_at": "2026-05-10T15:17:17.825313+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Kyle Jones",
-      "Sam Mitchell",
-      "Taylor Kirk"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 41,
-        "found game, no player": 5
-      },
-      "StatBroadcast": {
-        "player not in box": 3,
-        "no game found": 5,
-        "found player": 1
-      },
-      "ESPN": {
-        "scheduled (ignored)": 2,
-        "found game, no player": 1,
-        "no game found": 2
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 4,
-        "found game, no player": 1
-      },
-      "Sidearm": {
-        "no game found": 5,
-        "player not in box": 2,
-        "found player": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 3,
-        "found game, no player": 1,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 3,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-10T15:32:29.966812+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12759,6 +12701,47 @@
   },
   {
     "generated_at": "2026-05-12T15:16:53.422011+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 20,
+        "no game found": 2
+      },
+      "ESPN": {
+        "found stats": 1,
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "no game found": 1
+      },
+      "Sidearm": {
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-12T15:32:07.936948+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
