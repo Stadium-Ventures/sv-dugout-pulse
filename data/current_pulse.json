@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T19:47:00.732101+00:00",
+  "generated_at": "2026-05-12T20:02:10.721716+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1169,7 +1169,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Richmond 6, Virginia 12 | Top 7",
+      "game_context": "Richmond 6, Virginia 13 | Bottom 7",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-12",
@@ -1188,7 +1188,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -1346,8 +1346,8 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "0-1, 2 R, 3 BB",
-      "game_context": "Richmond 6, Virginia 12 | Top 7",
+      "stats_summary": "0-2, 2 R, 3 BB",
+      "game_context": "Richmond 6, Virginia 13 | Inn 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-12",
@@ -1358,15 +1358,19 @@
       "performance_grade": "✅ Good",
       "grade_reason": "3 walks",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2577,7 +2581,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 6, Stockton Ports 3 | Top 7",
+      "game_context": "Inland Empire 66ers 8, Stockton Ports 3 | Top 8",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-12",
@@ -3620,21 +3624,21 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 19,
+        "found stats": 18,
         "no game found": 2,
-        "found game, no player": 1
+        "found game, no player": 2
       },
       "ESPN": {
-        "found stats": 1,
+        "found stats": 2,
         "found game, no player": 2
       },
       "StatBroadcast": {
-        "player not in box": 1,
+        "fetch failed": 1,
         "no game found": 2,
-        "found player": 1
+        "blocked (Cloudflare 403)": 1
       },
       "NCAA.com": {
         "scheduled (ignored)": 1,
@@ -3648,9 +3652,13 @@
         "found stats": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Joe Tiroly"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Henry Zatkowski",
@@ -3663,12 +3671,19 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 2
         }
       }
     }

@@ -1,98 +1,5 @@
 [
   {
-    "generated_at": "2026-05-10T19:47:42.091314+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Kyle Jones",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Henry Zatkowski",
-      "Riley Goodman",
-      "Sterlin Thompson",
-      "Tanner Gordon",
-      "Ty Finkbeiner",
-      "Will Rhine",
-      "Alex Kranzler",
-      "Brady Neal",
-      "Brisen Tweedy",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Michael Dattalo",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Xavier Kolhosser",
-      "Duke McCarron",
-      "Eamon McDermott",
-      "Ethan Lay",
-      "Lee Sowers",
-      "Luke Fithian",
-      "Michael Gillen",
-      "Zack Johnson"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 18,
-        "found game, no player": 25,
-        "scheduled (no game_time)": 3
-      },
-      "StatBroadcast": {
-        "found player": 13,
-        "player not in box": 19,
-        "no game found": 25
-      },
-      "ESPN": {
-        "found game, no player": 21,
-        "no game found": 7
-      },
-      "NCAA.com": {
-        "found game, no player": 4,
-        "found stats": 3,
-        "scheduled (ignored)": 16,
-        "stale (yesterday)": 2,
-        "no game found": 3
-      },
-      "Sidearm": {
-        "no game found": 25,
-        "player not in box": 3,
-        "found player": 5
-      },
-      "NCAA.org": {
-        "found game, no player": 3,
-        "scheduled (ignored)": 17,
-        "stale (yesterday)": 5
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 7,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 21,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-10T20:02:21.990173+00:00",
     "severity": "critical",
     "blocked_sources": [
@@ -12382,6 +12289,72 @@
         "p.webshare.io": {
           "success": 1,
           "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-12T20:02:10.721716+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Joe Tiroly"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Henry Zatkowski",
+      "Kade Brown",
+      "Michael Dattalo"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 18,
+        "no game found": 2,
+        "found game, no player": 2
+      },
+      "ESPN": {
+        "found stats": 2,
+        "found game, no player": 2
+      },
+      "StatBroadcast": {
+        "fetch failed": 1,
+        "no game found": 2,
+        "blocked (Cloudflare 403)": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 1,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "no game found": 2
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 1,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 2
         }
       }
     }
