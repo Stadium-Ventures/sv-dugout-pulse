@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T17:26:37.281679+00:00",
+  "generated_at": "2026-05-12T17:32:01.447463+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -606,7 +606,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fayetteville Woodpeckers 2, Delmarva Shorebirds 2 | Bottom 7",
+      "game_context": "Fayetteville Woodpeckers 2, Delmarva Shorebirds 3 | Top 8",
       "game_status": "Live",
       "game_time": "11:05 AM ET",
       "game_date": "2026-05-12",
@@ -1169,7 +1169,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Richmond 0, Virginia 0 | Bottom 1",
+      "game_context": "Richmond 1, Virginia 1 | Bottom 1",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-12",
@@ -1188,7 +1188,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -1346,8 +1346,8 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Richmond 0, Virginia 0 | Bottom 1",
+      "stats_summary": "0-0, BB",
+      "game_context": "Richmond 1, Virginia 1 | Inn 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-12",
@@ -1355,18 +1355,22 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636362",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Joe%20Tiroly%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1505,7 +1509,7 @@
       "team": "FCL Astros",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Astros 6, FCL Cardinals 1 | Top 6",
+      "game_context": "FCL Astros 7, FCL Cardinals 1 | Top 6",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-12",
@@ -2054,7 +2058,7 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "1-2, K",
-      "game_context": "Arkansas Travelers 2, Northwest Arkansas Naturals 1 | Top 5",
+      "game_context": "Arkansas Travelers 2, Northwest Arkansas Naturals 1 | Bottom 5",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-12",
@@ -2638,7 +2642,7 @@
       "team": "FCL Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Astros 6, FCL Cardinals 1 | Top 6",
+      "game_context": "FCL Astros 7, FCL Cardinals 1 | Top 6",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-12",
@@ -3620,21 +3624,21 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 19,
+        "found stats": 18,
         "no game found": 2,
-        "found game, no player": 1
+        "found game, no player": 2
       },
       "ESPN": {
-        "found stats": 1,
+        "found stats": 2,
         "found game, no player": 2
       },
       "StatBroadcast": {
-        "player not in box": 1,
+        "fetch failed": 1,
         "no game found": 2,
-        "found player": 1
+        "blocked (Cloudflare 403)": 1
       },
       "NCAA.com": {
         "scheduled (ignored)": 1,
@@ -3648,9 +3652,13 @@
         "found stats": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Joe Tiroly"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Henry Zatkowski",
@@ -3662,12 +3670,19 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 2
         }
       }
     }
