@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T21:02:10.951457+00:00",
+  "generated_at": "2026-05-12T21:17:15.168882+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1208,7 +1208,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1443,7 +1443,7 @@
       "player_name": "Justin Riemer",
       "team": "Lansing Lugnuts",
       "level": "Pro",
-      "stats_summary": "Game at 6:05 PM ET",
+      "stats_summary": "In lineup — batting 2nd (SS)",
       "game_context": "Quad Cities River Bandits vs Lansing Lugnuts | 6:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:05 PM ET",
@@ -1820,7 +1820,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Michigan 0, Kent State 2 | Top 3",
+      "game_context": "Michigan 0, Kent State 2 | Top 4",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-12",
@@ -3129,23 +3129,47 @@
       "player_name": "Lee Sowers",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "North Carolina vs UNC Wilmington",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game in progress",
+      "game_context": "North Carolina 0, UNC Wilmington 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-12",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848162",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633547",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Sowers%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lee%20Sowers%22%20North%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3671,29 +3695,30 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 17,
+        "found stats": 16,
         "no game found": 2,
-        "found game, no player": 3
+        "found game, no player": 4
       },
       "ESPN": {
         "found stats": 1,
         "found game, no player": 3,
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 2
       },
       "StatBroadcast": {
-        "player not in box": 2,
-        "no game found": 4,
+        "player not in box": 3,
+        "no game found": 5,
         "found player": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 3,
+        "scheduled (ignored)": 4,
         "no game found": 1
       },
       "Sidearm": {
-        "no game found": 4,
+        "no game found": 5,
         "player not in box": 1
       },
       "NCAA.org": {
+        "found game, no player": 1,
         "scheduled (ignored)": 3,
         "found stats": 1
       }
@@ -3707,7 +3732,8 @@
       "Ty Finkbeiner",
       "Boston Torres",
       "Kade Brown",
-      "Michael Dattalo"
+      "Michael Dattalo",
+      "Lee Sowers"
     ],
     "total_clients": 83,
     "proxy_pool": {
@@ -3715,11 +3741,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 3,
           "blocked": 0
         }
       }
