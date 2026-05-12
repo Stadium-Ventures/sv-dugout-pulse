@@ -4891,7 +4891,7 @@
   },
   {
     "date": "2026-05-12",
-    "updated_at": "2026-05-12T20:02:10.737944+00:00",
+    "updated_at": "2026-05-12T20:16:28.947566+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -5141,12 +5141,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -5258,12 +5257,17 @@
         "team": "Michigan",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {

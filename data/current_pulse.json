@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T20:02:10.721716+00:00",
+  "generated_at": "2026-05-12T20:16:28.930546+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1169,7 +1169,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Richmond 6, Virginia 13 | Bottom 7",
+      "game_context": "Richmond 6, Virginia 13 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-12",
@@ -1188,7 +1188,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1347,7 +1347,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "0-2, 2 R, 3 BB",
-      "game_context": "Richmond 6, Virginia 13 | Inn 7",
+      "game_context": "Richmond 6, Virginia 13 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-12",
@@ -1358,19 +1358,15 @@
       "performance_grade": "✅ Good",
       "grade_reason": "3 walks",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1823,23 +1819,47 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
-      "game_context": "Michigan vs Kent State",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Michigan 0, Kent State 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "4:00 PM ET",
       "game_date": "2026-05-12",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401871497",
+      "box_score_url": "https://kentstatesports.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -2581,7 +2601,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 8, Stockton Ports 3 | Top 8",
+      "game_context": "Inland Empire 66ers 9, Stockton Ports 4 | Top 9",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-12",
@@ -3624,7 +3644,7 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
         "found stats": 18,
@@ -3632,36 +3652,34 @@
         "found game, no player": 2
       },
       "ESPN": {
-        "found stats": 2,
-        "found game, no player": 2
+        "found stats": 1,
+        "found game, no player": 3
       },
       "StatBroadcast": {
-        "fetch failed": 1,
-        "no game found": 2,
-        "blocked (Cloudflare 403)": 1
+        "player not in box": 1,
+        "no game found": 3,
+        "found player": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 1,
+        "scheduled (ignored)": 2,
         "no game found": 1
       },
       "Sidearm": {
-        "no game found": 2
+        "no game found": 3,
+        "player not in box": 1
       },
       "NCAA.org": {
-        "scheduled (ignored)": 1,
+        "scheduled (ignored)": 2,
         "found stats": 1
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
-    "blocked_clients": [
-      "Joe Tiroly"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Henry Zatkowski",
+      "Ty Finkbeiner",
       "Kade Brown",
       "Michael Dattalo"
     ],
@@ -3671,19 +3689,12 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
+          "success": 1,
+          "blocked": 0
         }
       }
     }
