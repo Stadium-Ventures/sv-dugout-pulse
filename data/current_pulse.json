@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T01:47:08.566839+00:00",
+  "generated_at": "2026-05-12T02:02:44.209519+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -599,8 +599,8 @@
       "player_name": "Kellon Lindsey",
       "team": "ACL Dodgers",
       "level": "Pro",
-      "stats_summary": "0-1, K",
-      "game_context": "ACL Dodgers 0, ACL Giants 1 | Bottom 3",
+      "stats_summary": "0-1, BB, K",
+      "game_context": "ACL Dodgers 0, ACL Giants 1 | Top 4",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-12",
@@ -615,8 +615,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844576",
       "player_profile_url": "https://www.mlb.com/player/813916",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Reached base early",
       "social_search_url": "https://x.com/search?q=%22Kellon%20Lindsey%22%20Dodgers&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -929,7 +929,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Brewers 1, ACL Reds 1 | Top 3",
+      "game_context": "ACL Brewers 1, ACL Reds 1 | Top 4",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-12",
@@ -1958,7 +1958,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2298,7 +2298,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2620,7 +2620,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3064,7 +3064,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3317,8 +3317,8 @@
       "player_name": "Ryan DeSanto",
       "team": "ACL Guardians",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Athletics 0, ACL Guardians 1 | Bottom 3",
+      "stats_summary": "0.1 IP, 0 ER, 1 K",
+      "game_context": "ACL Athletics 0, ACL Guardians 2 | Top 4",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-12",
@@ -3333,8 +3333,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844556",
       "player_profile_url": "https://www.mlb.com/player/823756",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Scoreless in 0.1 IP",
       "social_search_url": "https://x.com/search?q=%22Ryan%20DeSanto%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -3598,15 +3598,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-5",
       "social_search_url": "https://x.com/search?q=%22Bryce%20Fowler%22%20Alabama&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -4229,7 +4237,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -4500,11 +4508,11 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 30,
-        "found stats": 8,
+        "found game, no player": 31,
+        "found stats": 7,
         "no game found": 1
       },
       "Sidearm": {
@@ -4513,29 +4521,33 @@
         "found player": 7
       },
       "ESPN": {
-        "no game found": 31
+        "no game found": 32
       },
       "NCAA.com": {
-        "found stats": 6,
+        "found stats": 7,
         "found game, no player": 25
       },
       "StatBroadcast": {
         "no game found": 25,
-        "player not in box": 5,
-        "found player": 1
+        "blocked (Cloudflare 403)": 2,
+        "fetch failed": 4
       },
       "NCAA.org": {
         "found game, no player": 24,
         "found stats": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Riley Goodman",
+      "Will Rhine"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
-      "Aaron Watson",
-      "Ryan DeSanto"
+      "Aaron Watson"
     ],
     "total_clients": 83,
     "proxy_pool": {
@@ -4545,6 +4557,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -4553,8 +4566,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 2
         }
       }
     }
