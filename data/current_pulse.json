@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-12T03:16:39.208571+00:00",
+  "generated_at": "2026-05-12T03:32:38.097004+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -599,8 +599,8 @@
       "player_name": "Kellon Lindsey",
       "team": "ACL Dodgers",
       "level": "Pro",
-      "stats_summary": "1-2, HR, 2 RBI, R, BB, K",
-      "game_context": "ACL Dodgers 5, ACL Giants 4 | Top 7",
+      "stats_summary": "2-3, HR, 3 RBI, 2 R, BB, K",
+      "game_context": "ACL Dodgers 9, ACL Giants 4 | Bottom 7",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-12",
@@ -616,7 +616,7 @@
       "box_score_url": "https://www.mlb.com/gameday/844576",
       "player_profile_url": "https://www.mlb.com/player/813916",
       "performance_grade": "🔥 Standout",
-      "grade_reason": "Home run",
+      "grade_reason": "Home run + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Kellon%20Lindsey%22%20Dodgers&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -928,8 +928,8 @@
       "player_name": "Aaron Watson",
       "team": "ACL Reds",
       "level": "Pro",
-      "stats_summary": "3.0 IP, 5 H, 1 ER, 5 K",
-      "game_context": "ACL Brewers 2, ACL Reds 4 | Bottom 7",
+      "stats_summary": "4.0 IP, 5 H, 1 ER, 6 K",
+      "game_context": "ACL Brewers 2, ACL Reds 7 | Bottom 8",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-12",
@@ -945,7 +945,7 @@
       "box_score_url": "https://www.mlb.com/gameday/844431",
       "player_profile_url": "https://www.mlb.com/player/826209",
       "performance_grade": "🔥 Standout",
-      "grade_reason": "Dominant — 5 K vs 0 BB with 1 ER",
+      "grade_reason": "Dominant — 6 K vs 0 BB with 1 ER",
       "social_search_url": "https://x.com/search?q=%22Aaron%20Watson%22%20Reds&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -4540,16 +4540,10 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
