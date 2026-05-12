@@ -1,64 +1,5 @@
 [
   {
-    "generated_at": "2026-05-10T16:17:33.754328+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Kyle Jones",
-      "Sam Mitchell",
-      "Xavier Kolhosser"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 41,
-        "found game, no player": 5
-      },
-      "StatBroadcast": {
-        "found player": 3,
-        "player not in box": 4,
-        "no game found": 5
-      },
-      "ESPN": {
-        "found game, no player": 3,
-        "no game found": 1,
-        "scheduled (ignored)": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 4,
-        "found game, no player": 1
-      },
-      "Sidearm": {
-        "no game found": 5,
-        "player not in box": 1,
-        "found player": 3
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 2,
-        "found game, no player": 1,
-        "stale (yesterday)": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 6,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-10T16:32:21.144492+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12696,6 +12637,49 @@
   },
   {
     "generated_at": "2026-05-12T16:17:09.025139+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Michael Dattalo"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 20,
+        "no game found": 2
+      },
+      "ESPN": {
+        "found stats": 1,
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "no game found": 1
+      },
+      "Sidearm": {
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-12T16:32:04.879823+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
