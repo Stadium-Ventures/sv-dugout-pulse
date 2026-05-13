@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T04:01:40.698628+00:00",
+  "generated_at": "2026-05-13T04:16:53.256799+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -183,7 +183,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -320,9 +320,9 @@
       "player_name": "David Hagaman",
       "team": "Hillsboro Hops",
       "level": "Pro",
-      "stats_summary": "3.0 IP, 8 H, 5 ER, 3 K, 3 BB, 2 HR",
-      "game_context": "Spokane Indians 7, Hillsboro Hops 3 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "3.0 IP, 8 H, 5 ER, 3 K, 3 BB, 2 HR, L",
+      "game_context": "Spokane Indians 7, Hillsboro Hops 3 | Final",
+      "game_status": "Final",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-13",
       "is_yesterday": false,
@@ -513,7 +513,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "San Jose Giants 2, Ontario Tower Buzzers 9 | Bottom 7",
+      "game_context": "San Jose Giants 2, Ontario Tower Buzzers 9 | Bottom 8",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-13",
@@ -837,7 +837,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1015,7 +1015,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1296,7 +1296,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1756,7 +1756,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1921,8 +1921,8 @@
       "player_name": "Trevor Cohen",
       "team": "Eugene Emeralds",
       "level": "Pro",
-      "stats_summary": "0-4, RBI, BB, 2 K",
-      "game_context": "Eugene Emeralds 15, Tri-City Dust Devils 4 | Bottom 8",
+      "stats_summary": "0-5, RBI, BB, 2 K",
+      "game_context": "Eugene Emeralds 17, Tri-City Dust Devils 4 | Bottom 9",
       "game_status": "Live",
       "game_time": "9:30 PM ET",
       "game_date": "2026-05-13",
@@ -1938,7 +1938,7 @@
       "box_score_url": "https://www.mlb.com/gameday/819158",
       "player_profile_url": "https://www.mlb.com/player/701906",
       "performance_grade": "🚩 Off Day",
-      "grade_reason": "Hitless in 4 at-bats",
+      "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Trevor%20Cohen%22%20Giants&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2747,7 +2747,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "1-3, HR, RBI, R, BB, K",
-      "game_context": "Eugene Emeralds 15, Tri-City Dust Devils 4 | Bottom 8",
+      "game_context": "Eugene Emeralds 17, Tri-City Dust Devils 4 | Bottom 9",
       "game_status": "Live",
       "game_time": "9:30 PM ET",
       "game_date": "2026-05-13",
@@ -2909,9 +2909,9 @@
       "player_name": "Ryan DeSanto",
       "team": "ACL Guardians",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Guardians 4, ACL Mariners 7 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "ACL Guardians 5, ACL Mariners 7 | Final",
+      "game_status": "Final",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-13",
       "is_yesterday": false,
@@ -2925,7 +2925,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844524",
       "player_profile_url": "https://www.mlb.com/player/823756",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ryan%20DeSanto%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -3100,7 +3100,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "0-2, K",
-      "game_context": "Everett AquaSox 4, Vancouver Canadians 2 | Bottom 6",
+      "game_context": "Everett AquaSox 4, Vancouver Canadians 2 | Top 7",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-13",
@@ -3917,10 +3917,11 @@
         "player not in box": 2
       },
       "StatBroadcast": {
-        "fetch failed": 6,
+        "player not in box": 4,
         "no game found": 12,
-        "blocked (Cloudflare 403)": 6,
-        "found player": 1
+        "blocked (Cloudflare 403)": 7,
+        "found player": 1,
+        "fetch failed": 1
       },
       "ESPN": {
         "found game, no player": 12,
@@ -3940,8 +3941,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 6,
+    "blocked_event_count": 7,
     "blocked_clients": [
+      "Henry Zatkowski",
       "Bennett Edwards",
       "Boston Torres",
       "Eamon McDermott",
@@ -3989,8 +3991,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 4
+          "success": 4,
+          "blocked": 5
         }
       }
     }
