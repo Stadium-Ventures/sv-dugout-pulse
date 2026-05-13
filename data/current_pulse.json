@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T22:17:24.097121+00:00",
+  "generated_at": "2026-05-13T22:31:54.393418+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -210,7 +210,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -365,7 +365,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Dunedin Blue Jays 5, Tampa Tarpons 2 | Bottom 4",
+      "game_context": "Dunedin Blue Jays 5, Tampa Tarpons 3 | Top 5",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-13",
@@ -885,7 +885,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1106,7 +1106,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1184,7 +1184,7 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "Game at 4:05 PM ET",
+      "stats_summary": "In lineup — batting 1st (2B)",
       "game_context": "Jupiter Hammerheads vs St. Lucie Mets | 4:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "4:05 PM ET",
@@ -1320,7 +1320,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1437,7 +1437,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1926,7 +1926,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1978,7 +1978,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-2",
-      "game_context": "Daytona Tortugas 0, Palm Beach Cardinals 6 | Top 3",
+      "game_context": "Daytona Tortugas 1, Palm Beach Cardinals 6 | Top 4",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-13",
@@ -2188,7 +2188,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3238,9 +3238,9 @@
       "player_name": "Xavier Kolhosser",
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
-      "game_context": "Fort Myers Mighty Mussels vs Bradenton Marauders | 6:30 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Fort Myers Mighty Mussels 0, Bradenton Marauders 0 | Top 1",
+      "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-13",
       "is_yesterday": false,
@@ -3254,7 +3254,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820882",
       "player_profile_url": "https://www.mlb.com/player/828492",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Xavier%20Kolhosser%22%20Twins&f=live",
       "data_source": "MLB Stats API",
@@ -3441,7 +3441,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3582,7 +3582,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4123,7 +4123,7 @@
         "no game found": 9
       },
       "NCAA.org": {
-        "no game found": 9
+        "found game, no player": 9
       }
     },
     "blocked_sources": [],
@@ -4133,7 +4133,8 @@
     "fallback_clients": [
       "Dax Kilby",
       "Cade Doughty",
-      "Jack Cebert"
+      "Jack Cebert",
+      "Xavier Kolhosser"
     ],
     "total_clients": 85,
     "proxy_pool": {
