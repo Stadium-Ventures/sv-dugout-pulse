@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T09:17:19.270071+00:00",
+  "generated_at": "2026-05-13T09:32:12.366098+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -3600,17 +3600,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Hitless in 4 at-bats with 3 strikeouts",
+      "grade_reason": "Hitless in 4 at-bats",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "Sidearm",
-          "outcome": "found player"
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -4081,21 +4089,21 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 6,
-        "found game, no player": 12,
+        "found stats": 5,
+        "found game, no player": 13,
         "no game found": 1
       },
       "Sidearm": {
-        "found player": 6,
-        "player not in box": 12,
+        "found player": 5,
+        "player not in box": 13,
         "no game found": 9
       },
       "ESPN": {
-        "no game found": 13
+        "no game found": 14
       },
       "NCAA.com": {
         "found game, no player": 7,
-        "found stats": 4,
+        "found stats": 5,
         "no game found": 2
       },
       "StatBroadcast": {
