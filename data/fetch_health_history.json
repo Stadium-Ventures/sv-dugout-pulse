@@ -1,57 +1,5 @@
 [
   {
-    "generated_at": "2026-05-11T21:02:31.652004+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 30,
-        "found stats": 8,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "player not in box": 25,
-        "no game found": 25,
-        "found player": 7
-      },
-      "ESPN": {
-        "no game found": 31
-      },
-      "NCAA.com": {
-        "found stats": 6,
-        "found game, no player": 25
-      },
-      "StatBroadcast": {
-        "no game found": 25,
-        "player not in box": 5,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "found game, no player": 24,
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-11T21:17:28.005492+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -11394,6 +11342,54 @@
       "Jack Cebert"
     ],
     "total_clients": 86,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 6,
+        "found game, no player": 12,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "found player": 6,
+        "player not in box": 12,
+        "no game found": 9
+      },
+      "ESPN": {
+        "no game found": 13
+      },
+      "NCAA.com": {
+        "found game, no player": 9,
+        "found stats": 4
+      },
+      "StatBroadcast": {
+        "no game found": 9
+      },
+      "NCAA.org": {
+        "no game found": 9
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-13T21:17:26.613323+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Cade Doughty",
+      "Jack Cebert"
+    ],
+    "total_clients": 85,
     "by_source": {
       "D1Baseball": {
         "found stats": 6,
