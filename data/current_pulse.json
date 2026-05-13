@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T19:32:22.312222+00:00",
+  "generated_at": "2026-05-13T19:46:53.262315+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -210,7 +210,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1942,8 +1942,8 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "0-1",
-      "game_context": "Daytona Tortugas 0, Palm Beach Cardinals 2 | Top 3",
+      "stats_summary": "0-2",
+      "game_context": "Daytona Tortugas 1, Palm Beach Cardinals 2 | Bottom 3",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-13",
@@ -1959,7 +1959,7 @@
       "box_score_url": "https://www.mlb.com/gameday/820415",
       "player_profile_url": "https://www.mlb.com/player/805550",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Ryan%20Weingartner%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -3041,7 +3041,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "1-1, R",
-      "game_context": "Daytona Tortugas 0, Palm Beach Cardinals 2 | Top 3",
+      "game_context": "Daytona Tortugas 1, Palm Beach Cardinals 2 | Bottom 3",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-13",
@@ -4043,7 +4043,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jacksonville Jumbo Shrimp 3, Memphis Redbirds 1 | Top 9",
+      "game_context": "Jacksonville Jumbo Shrimp 9, Memphis Redbirds 1 | Top 9",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-13",
@@ -4158,7 +4158,8 @@
         "no game found": 9
       },
       "NCAA.org": {
-        "found game, no player": 9
+        "no game found": 1,
+        "found game, no player": 8
       }
     },
     "blocked_sources": [],
