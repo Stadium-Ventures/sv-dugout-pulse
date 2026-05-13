@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T04:31:58.682812+00:00",
+  "generated_at": "2026-05-13T04:46:59.865430+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -183,7 +183,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -837,7 +837,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1015,7 +1015,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1756,7 +1756,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3100,7 +3100,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "0-3, 2 K",
-      "game_context": "Everett AquaSox 4, Vancouver Canadians 2 | Bottom 7",
+      "game_context": "Everett AquaSox 4, Vancouver Canadians 5 | Top 8",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-13",
@@ -3917,10 +3917,11 @@
         "player not in box": 2
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 10,
+        "player not in box": 4,
         "no game found": 12,
-        "fetch failed": 2,
-        "found player": 1
+        "blocked (Cloudflare 403)": 7,
+        "found player": 1,
+        "fetch failed": 1
       },
       "ESPN": {
         "found game, no player": 12,
@@ -3940,12 +3941,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 10,
+    "blocked_event_count": 7,
     "blocked_clients": [
-      "Cam Flukey",
-      "Caleb Daniel",
       "Henry Zatkowski",
-      "Riley Goodman",
       "Bennett Edwards",
       "Boston Torres",
       "Eamon McDermott",
@@ -3989,12 +3987,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 3,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 8
+          "blocked": 5
         }
       }
     }
