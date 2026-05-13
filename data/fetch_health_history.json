@@ -11910,5 +11910,84 @@
       "dead": [],
       "stats": {}
     }
+  },
+  {
+    "generated_at": "2026-05-13T07:47:14.850989+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 3,
+    "blocked_clients": [
+      "Bennett Edwards",
+      "Boston Torres",
+      "Lucas Steele"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Kellon Lindsey",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Henry Zatkowski",
+      "Jack Cebert",
+      "Riley Goodman",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Davis Sharpe",
+      "Kade Brown",
+      "Michael Dattalo",
+      "Najer Victor",
+      "Ryan DeSanto",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Peyton Glavine"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 5,
+        "found game, no player": 15,
+        "no game found": 2
+      },
+      "Sidearm": {
+        "found player": 4,
+        "player not in box": 9,
+        "no game found": 12
+      },
+      "ESPN": {
+        "found game, no player": 12,
+        "found stats": 5
+      },
+      "NCAA.com": {
+        "found game, no player": 7,
+        "no game found": 3,
+        "scheduled (ignored)": 2
+      },
+      "StatBroadcast": {
+        "no game found": 12,
+        "found player": 1,
+        "blocked (Cloudflare 403)": 3,
+        "fetch failed": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 8,
+        "scheduled (ignored)": 3,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
   }
 ]
