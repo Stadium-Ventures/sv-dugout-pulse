@@ -1,72 +1,5 @@
 [
   {
-    "generated_at": "2026-05-12T21:31:52.713267+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Henry Zatkowski",
-      "Ty Finkbeiner",
-      "Boston Torres",
-      "Kade Brown",
-      "Michael Dattalo",
-      "Lee Sowers"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 16,
-        "no game found": 2,
-        "found game, no player": 4
-      },
-      "ESPN": {
-        "found stats": 1,
-        "found game, no player": 3,
-        "scheduled (ignored)": 2
-      },
-      "StatBroadcast": {
-        "player not in box": 3,
-        "no game found": 5,
-        "found player": 1
-      },
-      "NCAA.com": {
-        "found game, no player": 1,
-        "scheduled (ignored)": 3,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "no game found": 5,
-        "player not in box": 1
-      },
-      "NCAA.org": {
-        "no game found": 4,
-        "scheduled (ignored)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-12T21:47:03.925647+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -10570,6 +10503,84 @@
   },
   {
     "generated_at": "2026-05-14T21:31:51.738174+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 5,
+    "blocked_clients": [
+      "Ben Tryon",
+      "Boston Torres",
+      "Braydon Kersey",
+      "Duke McCarron"
+    ],
+    "carry_forward_clients": [
+      "Duke McCarron"
+    ],
+    "fallback_clients": [
+      "Ben Tryon",
+      "Boston Torres",
+      "Braydon Kersey",
+      "Eamon McDermott"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 36,
+        "no game found": 1,
+        "found game, no player": 6,
+        "scheduled (no game_time)": 1
+      },
+      "ESPN": {
+        "found stats": 1,
+        "scheduled (ignored)": 4,
+        "no game found": 2,
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 5,
+        "no game found": 6,
+        "fetch failed": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 6,
+        "found stats": 1
+      },
+      "Sidearm": {
+        "no game found": 6,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "no game found": 6
+      },
+      "game log": {
+        "found stats (live carry-forward)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 6
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-14T21:38:59.958117+00:00",
     "severity": "warning",
     "blocked_sources": [
       "StatBroadcast"
