@@ -11410,5 +11410,60 @@
       "dead": [],
       "stats": {}
     }
+  },
+  {
+    "generated_at": "2026-05-14T01:17:28.303028+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Tanner Gordon",
+      "Austin Amaral",
+      "Blake Rambusch",
+      "Davis Sharpe",
+      "Najer Victor",
+      "Xavier Kolhosser",
+      "Peyton Glavine"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 6,
+        "found game, no player": 12,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "found player": 6,
+        "player not in box": 12,
+        "no game found": 9
+      },
+      "ESPN": {
+        "no game found": 13
+      },
+      "NCAA.com": {
+        "found game, no player": 9,
+        "found stats": 4
+      },
+      "StatBroadcast": {
+        "no game found": 9
+      },
+      "NCAA.org": {
+        "found game, no player": 9
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
   }
 ]
