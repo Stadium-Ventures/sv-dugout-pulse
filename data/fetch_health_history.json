@@ -10656,5 +10656,81 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-14T21:46:52.624796+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 5,
+    "blocked_clients": [
+      "Braydon Kersey",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Luke Fithian"
+    ],
+    "carry_forward_clients": [
+      "Duke McCarron"
+    ],
+    "fallback_clients": [
+      "Braydon Kersey",
+      "Eamon McDermott",
+      "Luke Fithian"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 37,
+        "found game, no player": 6,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 1,
+        "no game found": 6,
+        "found player": 1
+      },
+      "ESPN": {
+        "no game found": 3,
+        "found stats": 1,
+        "scheduled (ignored)": 2,
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 6
+      },
+      "StatBroadcast": {
+        "no game found": 6,
+        "blocked (Cloudflare 403)": 5,
+        "found player": 2
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 6
+      },
+      "game log": {
+        "found stats (live carry-forward)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 1,
+          "blocked": 6
+        }
+      }
+    }
   }
 ]
