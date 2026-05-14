@@ -1,135 +1,5 @@
 [
   {
-    "generated_at": "2026-05-12T17:47:05.410819+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
-    "blocked_clients": [
-      "Joe Tiroly"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Henry Zatkowski",
-      "Michael Dattalo"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 18,
-        "no game found": 2,
-        "found game, no player": 2
-      },
-      "ESPN": {
-        "found stats": 2,
-        "found game, no player": 2
-      },
-      "StatBroadcast": {
-        "fetch failed": 1,
-        "no game found": 2,
-        "blocked (Cloudflare 403)": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 1,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "no game found": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 1,
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
-        }
-      }
-    }
-  },
-  {
-    "generated_at": "2026-05-12T18:01:59.869564+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
-    "blocked_clients": [
-      "Joe Tiroly"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Henry Zatkowski",
-      "Michael Dattalo"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 18,
-        "no game found": 2,
-        "found game, no player": 2
-      },
-      "ESPN": {
-        "found stats": 2,
-        "found game, no player": 2
-      },
-      "StatBroadcast": {
-        "fetch failed": 1,
-        "no game found": 2,
-        "blocked (Cloudflare 403)": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 1,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "no game found": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 1,
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-12T18:17:06.072124+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -10879,6 +10749,34 @@
     "fallback_clients": [
       "Tanner Gordon"
     ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 43,
+        "no game found": 1
+      },
+      "ESPN": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-14T18:02:02.745400+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
     "total_clients": 83,
     "by_source": {
       "D1Baseball": {
