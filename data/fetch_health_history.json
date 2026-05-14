@@ -10575,5 +10575,57 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-14T20:46:58.904318+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Luke Fithian"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 42,
+        "no game found": 1,
+        "found game, no player": 1
+      },
+      "ESPN": {
+        "found stats": 1,
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "found player": 2,
+        "player not in box": 1,
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 1
+      },
+      "Sidearm": {
+        "no game found": 1,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "no game found": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 3,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
