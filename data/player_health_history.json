@@ -6023,7 +6023,7 @@
   },
   {
     "date": "2026-05-14",
-    "updated_at": "2026-05-14T22:17:16.814587+00:00",
+    "updated_at": "2026-05-14T22:32:05.118485+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -6127,7 +6127,7 @@
         "team": "Tampa Tarpons",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6304,9 +6304,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -6338,11 +6339,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -6387,13 +6389,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -6415,7 +6414,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6747,7 +6746,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6811,7 +6810,7 @@
         "team": "Fort Myers Mighty Mussels",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6899,13 +6898,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
