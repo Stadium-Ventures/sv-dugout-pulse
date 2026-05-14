@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T19:01:59.551602+00:00",
+  "generated_at": "2026-05-14T19:17:08.766237+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1687,7 +1687,7 @@
       "team": "Albuquerque Isotopes",
       "level": "Pro",
       "stats_summary": "0-2, BB",
-      "game_context": "Oklahoma City Comets 5, Albuquerque Isotopes 1 | Top 7",
+      "game_context": "Oklahoma City Comets 8, Albuquerque Isotopes 2 | Bottom 7",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-14",
@@ -1721,8 +1721,8 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "4.0 IP, 3 H, 1 ER, 5 K, 1 BB",
-      "game_context": "Colorado Rockies 2, Pittsburgh Pirates 7 | Middle 8",
-      "game_status": "Live",
+      "game_context": "Colorado Rockies 2, Pittsburgh Pirates 7 | Final",
+      "game_status": "Final",
       "game_time": "12:35 PM ET",
       "game_date": "2026-05-14",
       "is_yesterday": false,
@@ -3212,23 +3212,27 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
-      "game_context": "Fordham vs St Bonaventure",
-      "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "stats_summary": "1-1",
+      "game_context": "Fordham 0, St Bonaventure 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Taylor%20Kirk%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3363,7 +3367,7 @@
       "team": "Oklahoma City Comets",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Oklahoma City Comets 7, Albuquerque Isotopes 1 | Top 7",
+      "game_context": "Oklahoma City Comets 8, Albuquerque Isotopes 3 | Bottom 7",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-14",
@@ -3478,7 +3482,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jacksonville Jumbo Shrimp 5, Memphis Redbirds 5 | Top 10",
+      "game_context": "Jacksonville Jumbo Shrimp 7, Memphis Redbirds 5 | Bottom 10",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-14",
@@ -3578,6 +3582,9 @@
       },
       "ESPN": {
         "found stats": 1
+      },
+      "Sidearm": {
+        "found player": 1
       }
     },
     "blocked_sources": [],
