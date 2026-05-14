@@ -1,71 +1,5 @@
 [
   {
-    "generated_at": "2026-05-12T20:02:10.721716+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
-    "blocked_clients": [
-      "Joe Tiroly"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Henry Zatkowski",
-      "Kade Brown",
-      "Michael Dattalo"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 18,
-        "no game found": 2,
-        "found game, no player": 2
-      },
-      "ESPN": {
-        "found stats": 2,
-        "found game, no player": 2
-      },
-      "StatBroadcast": {
-        "fetch failed": 1,
-        "no game found": 2,
-        "blocked (Cloudflare 403)": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 1,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "no game found": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 1,
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-12T20:16:28.930546+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -10629,6 +10563,37 @@
   },
   {
     "generated_at": "2026-05-14T20:01:56.515568+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 43,
+        "no game found": 1
+      },
+      "ESPN": {
+        "found stats": 1
+      },
+      "Sidearm": {
+        "found player": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-14T20:05:56.912918+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
