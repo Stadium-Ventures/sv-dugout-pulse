@@ -10668,5 +10668,101 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-14T22:44:21.515611+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 8,
+    "blocked_clients": [
+      "Mason Eckelman",
+      "Brisen Tweedy",
+      "Sam Mitchell",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Luke Fithian"
+    ],
+    "carry_forward_clients": [
+      "Duke McCarron"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Jack Cebert",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Austin Amaral",
+      "Bennett Edwards",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Zack Johnson"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 24,
+        "found game, no player": 19,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 1,
+        "no game found": 16,
+        "found player": 1
+      },
+      "ESPN": {
+        "no game found": 2,
+        "scheduled (ignored)": 7,
+        "found stats": 4,
+        "found game, no player": 7
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 16
+      },
+      "StatBroadcast": {
+        "no game found": 16,
+        "fetch failed": 2,
+        "player not in box": 8,
+        "blocked (Cloudflare 403)": 8,
+        "found player": 7
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 16
+      },
+      "game log": {
+        "found stats (live carry-forward)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 11,
+          "blocked": 9
+        }
+      }
+    }
   }
 ]
