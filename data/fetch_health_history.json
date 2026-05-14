@@ -10774,5 +10774,108 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-14T23:01:58.428203+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 13,
+    "blocked_clients": [
+      "Joe Tiroly",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Ben Tryon",
+      "Boston Torres",
+      "Braydon Kersey",
+      "Brisen Tweedy",
+      "Drew Bellis",
+      "Sam Mitchell",
+      "Duke McCarron",
+      "Lee Sowers",
+      "Luke Fithian"
+    ],
+    "carry_forward_clients": [
+      "Braydon Kersey",
+      "Duke McCarron"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Jack Cebert",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Austin Amaral",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Zack Johnson"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 17,
+        "found game, no player": 26,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 1,
+        "no game found": 18,
+        "found player": 1
+      },
+      "ESPN": {
+        "no game found": 3,
+        "scheduled (ignored)": 5,
+        "found stats": 9,
+        "found game, no player": 10
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 18
+      },
+      "StatBroadcast": {
+        "no game found": 18,
+        "fetch failed": 11,
+        "player not in box": 1,
+        "blocked (Cloudflare 403)": 13
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 17,
+        "no game found": 1
+      },
+      "game log": {
+        "found stats (live carry-forward)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 1,
+          "blocked": 14
+        }
+      }
+    }
   }
 ]
