@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T20:46:58.904318+00:00",
+  "generated_at": "2026-05-14T21:02:55.652454+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1074,23 +1074,47 @@
       "player_name": "Dane Moehler",
       "team": "Clemson",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Clemson vs Virginia Tech",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "0.0 IP",
+      "game_context": "Clemson 0, Virginia Tech 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847848",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636469",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Dane%20Moehler%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dane%20Moehler%22%20Clemson&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2177,16 +2201,16 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
-      "game_context": "Mercer vs East Tennessee State",
-      "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Mercer 0, East Tennessee State 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631610",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
       "data_source": "D1Baseball",
@@ -2194,6 +2218,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2926,8 +2954,8 @@
       "player_name": "Duke McCarron",
       "team": "Saint Josephs",
       "level": "NCAA",
-      "stats_summary": "2.0 IP, 2 H, ER, K, 2 BB",
-      "game_context": "Saint Josephs 1, Rhode Island 1 | Top 3",
+      "stats_summary": "2.2 IP, 2 H, 2 ER, 2 K, 3 BB",
+      "game_context": "Saint Josephs 4, Rhode Island 1 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-14",
@@ -2936,7 +2964,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=648445",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Duke%20McCarron%22&btnI=",
       "performance_grade": "🚩 Off Day",
-      "grade_reason": "More walks (2) than strikeouts (1)",
+      "grade_reason": "More walks (3) than strikeouts (2)",
       "social_search_url": "https://x.com/search?q=%22Duke%20McCarron%22%20Saint%20Josephs&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3123,7 +3151,7 @@
       "team": "Rutgers",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Rutgers 0, Northwestern 1 | Bottom 2",
+      "game_context": "Rutgers 0, Northwestern 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-14",
@@ -3244,8 +3272,8 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "3-3, RBI, HBP",
-      "game_context": "Fordham 3, St Bonaventure 1 | Top 6",
+      "stats_summary": "3-3, RBI, R, HBP",
+      "game_context": "Fordham 5, St Bonaventure 3 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-14",
@@ -3609,28 +3637,29 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 42,
+        "found stats": 41,
         "no game found": 1,
-        "found game, no player": 1
+        "found game, no player": 2
       },
       "ESPN": {
         "found stats": 1,
+        "scheduled (ignored)": 1,
         "found game, no player": 1
       },
       "StatBroadcast": {
-        "found player": 2,
-        "player not in box": 1,
-        "no game found": 1
+        "found player": 4,
+        "no game found": 2,
+        "player not in box": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 2
       },
       "Sidearm": {
-        "no game found": 1,
+        "no game found": 2,
         "found player": 1
       },
       "NCAA.org": {
-        "no game found": 1
+        "no game found": 2
       }
     },
     "blocked_sources": [],
@@ -3650,7 +3679,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 3,
+          "success": 5,
           "blocked": 0
         }
       }
