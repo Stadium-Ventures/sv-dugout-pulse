@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T04:17:01.638326+00:00",
+  "generated_at": "2026-05-15T04:32:04.499862+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -227,7 +227,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -552,9 +552,9 @@
       "player_name": "Kellon Lindsey",
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "San Jose Giants 4, Ontario Tower Buzzers 8 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "San Jose Giants 4, Ontario Tower Buzzers 8 | Final",
+      "game_status": "Final",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -568,7 +568,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/821204",
       "player_profile_url": "https://www.mlb.com/player/813916",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kellon%20Lindsey%22%20Dodgers&f=live",
       "data_source": "MLB Stats API",
@@ -669,7 +669,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -901,7 +901,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1776,7 +1776,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1846,10 +1846,10 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "1-5, R, 2B",
-      "game_context": "Tarleton St. vs Sacramento St.",
-      "game_status": "Scheduled",
-      "game_time": null,
+      "stats_summary": "1-5, 1 R",
+      "game_context": "Tarleton 5, Sacramento State 8 | Final",
+      "game_status": "Final",
+      "game_time": "9:00 PM ET",
       "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
@@ -1858,11 +1858,15 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "1-for-5",
       "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "game log",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "scheduled (no game_time)"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1870,11 +1874,27 @@
         },
         {
           "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-15T04:02:03.554825+00:00",
-      "stats_captured_status": null,
+      "stats_captured_at": "2026-05-15T04:02:03.535390+00:00",
+      "stats_captured_status": "Live",
       "is_client": true,
       "tags": {
         "draft_class": "2028",
@@ -2082,7 +2102,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2821,7 +2841,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -2945,9 +2965,9 @@
       "player_name": "Kade Brown",
       "team": "Stockton Ports",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 2, Stockton Ports 6 | Bottom 8",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Inland Empire 66ers 2, Stockton Ports 9 | Final",
+      "game_status": "Final",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -2961,7 +2981,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/821008",
       "player_profile_url": "https://www.mlb.com/player/824044",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
       "data_source": "MLB Stats API",
@@ -3292,8 +3312,8 @@
       "player_name": "Brennan Orf",
       "team": "Vancouver Canadians",
       "level": "Pro",
-      "stats_summary": "1-2, R, BB",
-      "game_context": "Everett AquaSox 0, Vancouver Canadians 5 | Bottom 8",
+      "stats_summary": "2-3, 2 RBI, R, BB",
+      "game_context": "Everett AquaSox 0, Vancouver Canadians 7 | End 8",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-15",
@@ -3308,8 +3328,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819093",
       "player_profile_url": "https://www.mlb.com/player/804710",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Productive game",
+      "performance_grade": "🔥 Standout",
+      "grade_reason": "Reached base 3 times",
       "social_search_url": "https://x.com/search?q=%22Brennan%20Orf%22%20Jays&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -3482,10 +3502,10 @@
       "player_name": "Ethan Lay",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "3.0 IP, 5 H, 4 ER, 2 K, 2 BB",
-      "game_context": "Tarleton St. vs Sacramento St.",
-      "game_status": "Scheduled",
-      "game_time": null,
+      "stats_summary": "3 IP, 5 H, 4 ER, 2 K, 2 BB",
+      "game_context": "Tarleton 5, Sacramento State 8 | Final",
+      "game_status": "Final",
+      "game_time": "9:00 PM ET",
       "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
@@ -3494,11 +3514,15 @@
       "performance_grade": "🚩 Off Day",
       "grade_reason": "4 earned runs in 3 IP",
       "social_search_url": "https://x.com/search?q=%22Ethan%20Lay%22%20Sacramento%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "game log",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "scheduled (no game_time)"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3506,11 +3530,27 @@
         },
         {
           "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-15T04:02:03.554825+00:00",
-      "stats_captured_status": null,
+      "stats_captured_at": "2026-05-15T04:02:03.535390+00:00",
+      "stats_captured_status": "Live",
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -3959,7 +3999,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -4234,20 +4274,18 @@
     "by_source": {
       "D1Baseball": {
         "found stats": 7,
-        "found game, no player": 34,
-        "no game found": 1,
-        "scheduled (no game_time)": 2
+        "found game, no player": 36,
+        "no game found": 1
       },
       "StatBroadcast": {
         "found player": 6,
-        "no game found": 21,
-        "fetch failed": 9,
-        "player not in box": 7,
-        "blocked (Cloudflare 403)": 16
+        "no game found": 23,
+        "fetch failed": 12,
+        "blocked (Cloudflare 403)": 22
       },
       "Sidearm": {
         "player not in box": 2,
-        "no game found": 21,
+        "no game found": 23,
         "found player": 1
       },
       "ESPN": {
@@ -4257,24 +4295,29 @@
       },
       "NCAA.com": {
         "found game, no player": 17,
-        "scheduled (ignored)": 4,
-        "found stats": 2
+        "scheduled (ignored)": 6
       },
       "NCAA.org": {
         "found game, no player": 17,
-        "scheduled (ignored)": 4
+        "scheduled (ignored)": 6
       },
       "game log": {
-        "found stats": 2
+        "found stats": 4
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 16,
+    "blocked_event_count": 22,
     "blocked_clients": [
+      "Cam Flukey",
+      "Myles Bailey",
+      "Adam McKelvey",
       "Joe Tiroly",
+      "Riley Goodman",
+      "Sam Harry",
       "Ty Finkbeiner",
+      "Will Rhine",
       "Ben Tryon",
       "Boston Torres",
       "Brady Neal",
@@ -4341,8 +4384,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 5,
-          "blocked": 8
+          "success": 0,
+          "blocked": 14
         }
       }
     }
