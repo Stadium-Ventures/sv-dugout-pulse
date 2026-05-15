@@ -1,102 +1,5 @@
 [
   {
-    "generated_at": "2026-05-13T02:02:15.570363+00:00",
-    "severity": "critical",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 10,
-    "blocked_clients": [
-      "Cam Flukey",
-      "Caleb Daniel",
-      "Henry Zatkowski",
-      "Riley Goodman",
-      "Bennett Edwards",
-      "Boston Torres",
-      "Eamon McDermott",
-      "Lee Sowers",
-      "Lucas Steele"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Kellon Lindsey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Henry Zatkowski",
-      "Jack Cebert",
-      "Riley Goodman",
-      "Tanner Gordon",
-      "Ty Finkbeiner",
-      "Davis Sharpe",
-      "Kade Brown",
-      "Michael Dattalo",
-      "Najer Victor",
-      "Ryan DeSanto",
-      "Eamon McDermott",
-      "Lee Sowers",
-      "Peyton Glavine"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 4,
-        "found game, no player": 16,
-        "no game found": 2
-      },
-      "Sidearm": {
-        "found player": 3,
-        "no game found": 12,
-        "player not in box": 2
-      },
-      "StatBroadcast": {
-        "blocked (Cloudflare 403)": 10,
-        "no game found": 12,
-        "fetch failed": 2,
-        "found player": 1
-      },
-      "ESPN": {
-        "found game, no player": 12,
-        "found stats": 6
-      },
-      "NCAA.com": {
-        "found game, no player": 4,
-        "scheduled (ignored)": 5,
-        "no game found": 3
-      },
-      "NCAA.org": {
-        "found game, no player": 6,
-        "scheduled (ignored)": 5,
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 9
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-13T02:16:53.929199+00:00",
     "severity": "critical",
     "blocked_sources": [
@@ -11305,6 +11208,134 @@
         "geo.iproyal.com": {
           "success": 0,
           "blocked": 19
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-15T02:16:53.073241+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 29,
+    "blocked_clients": [
+      "Aiden Robbins",
+      "Cam Flukey",
+      "Kyle Jones",
+      "Myles Bailey",
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Joe Tiroly",
+      "Riley Goodman",
+      "Sam Harry",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Ben Tryon",
+      "Boston Torres",
+      "Brady Neal",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brisen Tweedy",
+      "Cole Cleveland",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Sam Mitchell",
+      "Tanner Chun",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Lucas Steele",
+      "Michael Gillen"
+    ],
+    "carry_forward_clients": [
+      "Braydon Kersey",
+      "Duke McCarron"
+    ],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Dax Kilby",
+      "Kellon Lindsey",
+      "Myles Bailey",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Jack Cebert",
+      "Riley Goodman",
+      "Sam Harry",
+      "Will Rhine",
+      "Austin Amaral",
+      "Brady St. Pierre",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Kade Brown",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Eamon McDermott",
+      "Ethan Lay",
+      "Lee Sowers",
+      "Lucas Steele",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Peyton Glavine",
+      "Truitt Webb",
+      "Zack Johnson"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 42,
+        "no game found": 1,
+        "found stats": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 29,
+        "no game found": 24,
+        "fetch failed": 11
+      },
+      "ESPN": {
+        "found stats": 19,
+        "no game found": 5,
+        "found game, no player": 19
+      },
+      "Sidearm": {
+        "player not in box": 2,
+        "no game found": 24,
+        "found player": 1
+      },
+      "NCAA.com": {
+        "found game, no player": 4,
+        "scheduled (ignored)": 20
+      },
+      "NCAA.org": {
+        "found game, no player": 6,
+        "scheduled (ignored)": 18
+      },
+      "game log": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 18
         }
       }
     }
