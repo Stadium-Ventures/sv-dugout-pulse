@@ -7129,7 +7129,7 @@
   },
   {
     "date": "2026-05-15",
-    "updated_at": "2026-05-15T21:47:26.548581+00:00",
+    "updated_at": "2026-05-15T22:02:24.185662+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -7482,8 +7482,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
@@ -7567,8 +7567,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -7633,11 +7633,15 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -8010,17 +8014,14 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "D1Baseball",
+        "game_status": "Scheduled",
+        "captured": true,
+        "blocked": false,
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
