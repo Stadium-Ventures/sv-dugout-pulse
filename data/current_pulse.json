@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:02:25.606562+00:00",
+  "generated_at": "2026-05-15T21:18:31.433343+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -37,10 +37,10 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 6:00 PM",
       "game_context": "Northern Kentucky vs USC Upstate",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
@@ -1076,7 +1076,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clemson 1, Virginia Tech 0 | Top 7",
+      "game_context": "Clemson 1, Virginia Tech 0 | Bottom 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1527,8 +1527,8 @@
       "player_name": "Mason Eckelman",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "0-1",
-      "game_context": "Ohio State 1, Michigan 2 | Inn 3",
+      "stats_summary": "0-2",
+      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1537,21 +1537,17 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633085",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1822,7 +1818,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Ohio State 1, Michigan 2 | Top 4",
+      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -1841,7 +1837,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2010,7 +2006,7 @@
       "team": "Dallas Baptist",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
+      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
       "game_status": "Live",
       "game_time": "7:30 PM ET",
       "game_date": "2026-05-15",
@@ -2029,7 +2025,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2254,55 +2250,31 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "0-1",
-      "game_context": "Mercer 9, East Tennessee State 7 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "2-4, 2 RBI, R, HBP, 2B | 1.2 IP, H, 2 K",
+      "game_context": "Mercer 9, East Tennessee State 7 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631611",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Extra-base hit (double)",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
-      "data_source": "game log (live)",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "stale (yesterday)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
-        },
-        {
-          "source": "game log",
-          "outcome": "found stats (live carry-forward)"
+          "outcome": "found player"
         }
       ],
-      "stats_captured_at": "2026-05-15T18:46:56.015449+00:00",
-      "stats_captured_status": "Live",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2027",
@@ -3151,8 +3123,8 @@
       "player_name": "Lee Ellis",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "1-1, RBI",
-      "game_context": "Ohio State 1, Michigan 2 | Inn 3",
+      "stats_summary": "1-2, RBI",
+      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3163,19 +3135,15 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3256,7 +3224,7 @@
       "team": "Rutgers",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Rutgers 3, Northwestern 0 | Bottom 3",
+      "game_context": "Rutgers 3, Northwestern 1 | Top 4",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -3378,7 +3346,7 @@
       "team": "Fordham",
       "level": "NCAA",
       "stats_summary": "1-5, R, BB, K",
-      "game_context": "Fordham 20, St Bonaventure 2 | Top 9",
+      "game_context": "Fordham 21, St Bonaventure 2 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3766,55 +3734,48 @@
     }
   ],
   "health": {
-    "severity": "critical",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 35,
+        "found stats": 38,
         "no game found": 1,
-        "found game, no player": 8
+        "found game, no player": 5
       },
       "ESPN": {
-        "found stats": 3,
+        "found stats": 1,
         "found game, no player": 3,
         "scheduled (ignored)": 1,
-        "no game found": 2
+        "no game found": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 6,
-        "no game found": 6,
-        "fetch failed": 2
+        "blocked (Cloudflare 403)": 3,
+        "no game found": 5,
+        "found player": 3,
+        "player not in box": 2
       },
       "NCAA.com": {
-        "stale (yesterday)": 4,
+        "stale (yesterday)": 3,
         "scheduled (ignored)": 2
       },
       "Sidearm": {
-        "no game found": 6,
+        "no game found": 5,
         "found player": 1
       },
       "NCAA.org": {
-        "stale (yesterday)": 4,
+        "stale (yesterday)": 3,
         "no game found": 1,
         "scheduled (ignored)": 1
-      },
-      "game log": {
-        "found stats (live carry-forward)": 1
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 6,
+    "blocked_event_count": 3,
     "blocked_clients": [
-      "Ty Finkbeiner",
-      "Ben Tryon",
-      "Braydon Kersey",
       "Duke McCarron",
       "Luke Fithian"
     ],
-    "carry_forward_clients": [
-      "Braydon Kersey"
-    ],
+    "carry_forward_clients": [],
     "fallback_clients": [
       "Ty Finkbeiner",
       "Ben Tryon",
@@ -3834,12 +3795,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 2,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 7
+          "success": 2,
+          "blocked": 4
         }
       }
     }
