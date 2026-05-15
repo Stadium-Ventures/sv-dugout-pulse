@@ -7129,19 +7129,20 @@
   },
   {
     "date": "2026-05-15",
-    "updated_at": "2026-05-15T23:32:22.543971+00:00",
+    "updated_at": "2026-05-15T23:47:56.972082+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
         "team": "Texas",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN"
         ]
       },
       {
@@ -7282,12 +7283,17 @@
         "team": "Florida",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -7417,8 +7423,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -7537,14 +7543,17 @@
         "team": "South Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -7653,10 +7662,10 @@
         "team": "Vanderbilt",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": false,
+        "game_status": "Live",
+        "captured": true,
         "blocked": false,
-        "source": "",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
@@ -7685,13 +7694,10 @@
         "game_status": "Live",
         "captured": false,
         "blocked": true,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -7701,8 +7707,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
@@ -7942,8 +7948,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -7959,12 +7965,14 @@
         "team": "Tulane",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
