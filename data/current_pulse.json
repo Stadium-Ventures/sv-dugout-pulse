@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T07:31:58.044996+00:00",
+  "generated_at": "2026-05-15T07:47:04.226324+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -171,7 +171,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -917,7 +917,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1792,7 +1792,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2118,7 +2118,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2438,7 +2438,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2581,7 +2581,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2774,7 +2774,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2857,7 +2857,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3164,7 +3164,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3482,7 +3482,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3638,7 +3638,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3694,7 +3694,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3806,7 +3806,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3932,7 +3932,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4015,7 +4015,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4296,9 +4296,9 @@
       "StatBroadcast": {
         "found player": 6,
         "no game found": 24,
-        "fetch failed": 12,
-        "player not in box": 2,
-        "blocked (Cloudflare 403)": 20
+        "player not in box": 17,
+        "blocked (Cloudflare 403)": 10,
+        "fetch failed": 7
       },
       "Sidearm": {
         "player not in box": 2,
@@ -4326,27 +4326,17 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 20,
+    "blocked_event_count": 10,
     "blocked_clients": [
-      "Adam McKelvey",
       "Joe Tiroly",
-      "Riley Goodman",
       "Sam Harry",
       "Ty Finkbeiner",
-      "Will Rhine",
       "Ben Tryon",
       "Boston Torres",
       "Brady Neal",
-      "Brady St. Pierre",
       "Braydon Kersey",
-      "Brisen Tweedy",
-      "Drew Bellis",
-      "Sam Mitchell",
       "Tanner Chun",
-      "Duke McCarron",
-      "Eamon McDermott",
-      "Lee Sowers",
-      "Lucas Steele"
+      "Duke McCarron"
     ],
     "carry_forward_clients": [
       "Sam Harry",
@@ -4391,17 +4381,16 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 5,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 11
+          "success": 12,
+          "blocked": 0
         }
       }
     }
