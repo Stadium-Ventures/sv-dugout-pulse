@@ -6023,7 +6023,7 @@
   },
   {
     "date": "2026-05-14",
-    "updated_at": "2026-05-15T00:02:01.006832+00:00",
+    "updated_at": "2026-05-15T00:16:32.245537+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -6082,8 +6082,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -6182,11 +6182,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -6235,12 +6236,17 @@
         "team": "Georgia Tech",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6270,12 +6276,17 @@
         "team": "Georgia Tech",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6409,14 +6420,17 @@
         "team": "South Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6510,24 +6524,6 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
-        ]
-      },
-      {
-        "name": "Alex Kranzler",
-        "team": "Vanderbilt",
-        "level": "NCAA",
-        "tier": null,
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
@@ -6536,6 +6532,24 @@
           "D1Baseball",
           "ESPN",
           "NCAA.com"
+        ]
+      },
+      {
+        "name": "Alex Kranzler",
+        "team": "Vanderbilt",
+        "level": "NCAA",
+        "tier": null,
+        "game_status": "Live",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6572,13 +6586,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -6587,7 +6598,7 @@
         "team": "Arkansas Travelers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6619,8 +6630,7 @@
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -6646,10 +6656,10 @@
         "team": "Mercer",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
-        "source": "game log (live)",
+        "source": "game log",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
@@ -6665,14 +6675,17 @@
         "team": "USF",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6681,8 +6694,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -6701,13 +6714,10 @@
         "game_status": "Live",
         "captured": false,
         "blocked": true,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -6745,17 +6755,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
@@ -6879,8 +6886,7 @@
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -7068,17 +7074,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
