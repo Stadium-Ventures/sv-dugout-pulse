@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T04:47:02.054582+00:00",
+  "generated_at": "2026-05-15T05:02:07.700819+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -490,10 +490,10 @@
       "team": "Saint Mary's",
       "level": "NCAA",
       "stats_summary": "1-4, HR, RBI, R, BB, 2 K",
-      "game_context": "San Francisco 9, Saint Mary's 6 | Final",
+      "game_context": "San Francisco 9, Saint Mary's (CA) 6 | Final",
       "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-05-15",
+      "game_time": "9:00 PM ET",
+      "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870550",
@@ -501,7 +501,7 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Home run",
       "social_search_url": "https://x.com/search?q=%22Ian%20Josephson%22%20Saint%20Mary%27s&f=live",
-      "data_source": "ESPN",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -509,6 +509,22 @@
         },
         {
           "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
           "outcome": "found stats"
         }
       ],
@@ -3313,8 +3329,8 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "2-3, 2 RBI, R, BB",
-      "game_context": "Everett AquaSox 2, Vancouver Canadians 7 | Top 9",
-      "game_status": "Live",
+      "game_context": "Everett AquaSox 2, Vancouver Canadians 7 | Final",
+      "game_status": "Final",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -4279,26 +4295,27 @@
       },
       "StatBroadcast": {
         "found player": 6,
-        "no game found": 23,
+        "no game found": 24,
         "fetch failed": 12,
         "blocked (Cloudflare 403)": 22
       },
       "Sidearm": {
         "player not in box": 2,
-        "no game found": 23,
+        "no game found": 24,
         "found player": 1
       },
       "ESPN": {
         "no game found": 5,
-        "found game, no player": 18,
-        "found stats": 14
+        "found game, no player": 19,
+        "found stats": 13
       },
       "NCAA.com": {
         "found game, no player": 17,
-        "scheduled (ignored)": 6
+        "scheduled (ignored)": 7
       },
       "NCAA.org": {
         "found game, no player": 17,
+        "found stats": 1,
         "scheduled (ignored)": 6
       },
       "game log": {
