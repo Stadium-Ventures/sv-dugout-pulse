@@ -1,163 +1,5 @@
 [
   {
-    "generated_at": "2026-05-13T23:02:15.084364+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Xavier Kolhosser"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 6,
-        "found game, no player": 12,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "found player": 6,
-        "player not in box": 12,
-        "no game found": 9
-      },
-      "ESPN": {
-        "no game found": 13
-      },
-      "NCAA.com": {
-        "found game, no player": 9,
-        "found stats": 4
-      },
-      "StatBroadcast": {
-        "no game found": 9
-      },
-      "NCAA.org": {
-        "found game, no player": 9
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
-    "generated_at": "2026-05-13T23:14:27.351364+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Xavier Kolhosser",
-      "Peyton Glavine"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 6,
-        "found game, no player": 12,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "found player": 6,
-        "player not in box": 12,
-        "no game found": 9
-      },
-      "ESPN": {
-        "no game found": 13
-      },
-      "NCAA.com": {
-        "found game, no player": 9,
-        "found stats": 4
-      },
-      "StatBroadcast": {
-        "no game found": 9
-      },
-      "NCAA.org": {
-        "no game found": 9
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
-    "generated_at": "2026-05-13T23:17:09.762663+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Xavier Kolhosser",
-      "Peyton Glavine"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 6,
-        "found game, no player": 12,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "found player": 6,
-        "player not in box": 12,
-        "no game found": 9
-      },
-      "ESPN": {
-        "no game found": 13
-      },
-      "NCAA.com": {
-        "found game, no player": 9,
-        "found stats": 4
-      },
-      "StatBroadcast": {
-        "no game found": 9
-      },
-      "NCAA.org": {
-        "found game, no player": 9
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-13T23:32:13.768272+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -12796,6 +12638,128 @@
         "geo.iproyal.com": {
           "success": 0,
           "blocked": 16
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-15T23:17:16.508934+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 19,
+    "blocked_clients": [
+      "Cam Flukey",
+      "Myles Bailey",
+      "Caleb Daniel",
+      "Joe Tiroly",
+      "Riley Goodman",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Ben Tryon",
+      "Boston Torres",
+      "Brady St. Pierre",
+      "Brisen Tweedy",
+      "Brooks Wright",
+      "Cole Cleveland",
+      "Drew Bellis",
+      "Sam Mitchell",
+      "Duke McCarron",
+      "Lee Sowers",
+      "Luke Fithian"
+    ],
+    "carry_forward_clients": [
+      "Caleb Daniel",
+      "Cole Cleveland"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Cade Doughty",
+      "Carter Johnson",
+      "Henry Zatkowski",
+      "Justin Riemer",
+      "Riley Goodman",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Alex Kranzler",
+      "Austin Amaral",
+      "Ben Tryon",
+      "Brady St. Pierre",
+      "Brisen Tweedy",
+      "Brooks Wright",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Michael Dattalo",
+      "Sam Mitchell",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Peyton Glavine",
+      "Truitt Webb",
+      "Zack Johnson"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 9,
+        "found game, no player": 34,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 1,
+        "no game found": 26,
+        "found player": 1
+      },
+      "ESPN": {
+        "no game found": 2,
+        "found game, no player": 22,
+        "found stats": 9,
+        "scheduled (ignored)": 2
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 16,
+        "stale (yesterday)": 7,
+        "found game, no player": 3
+      },
+      "StatBroadcast": {
+        "no game found": 26,
+        "fetch failed": 14,
+        "blocked (Cloudflare 403)": 19,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 17,
+        "stale (yesterday)": 8,
+        "no game found": 1
+      },
+      "game log": {
+        "found stats (live carry-forward)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 19
         }
       }
     }

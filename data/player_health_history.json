@@ -7129,7 +7129,7 @@
   },
   {
     "date": "2026-05-15",
-    "updated_at": "2026-05-15T23:01:48.027825+00:00",
+    "updated_at": "2026-05-15T23:17:16.527096+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -7185,12 +7185,14 @@
         "team": "Coastal Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -7198,7 +7200,7 @@
         "team": "Louisville Bats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7311,7 +7313,7 @@
         "team": "Fayetteville Woodpeckers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7362,7 +7364,7 @@
         "team": "New Hampshire Fisher Cats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7498,7 +7500,7 @@
         "team": "Lansing Lugnuts",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7535,12 +7537,17 @@
         "team": "South Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -7652,12 +7659,17 @@
         "team": "Vanderbilt",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -7697,13 +7709,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -7973,7 +7982,7 @@
         "team": "Fort Myers Mighty Mussels",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Player challenge",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8074,12 +8083,17 @@
         "team": "North Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -8100,7 +8114,7 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -8136,7 +8150,7 @@
         "team": "Columbus Clingstones",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
