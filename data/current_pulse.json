@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:18:31.433343+00:00",
+  "generated_at": "2026-05-15T21:32:16.470754+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1076,7 +1076,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clemson 1, Virginia Tech 0 | Bottom 7",
+      "game_context": "Clemson 1, Virginia Tech 0 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1528,7 +1528,7 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "0-2",
-      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
+      "game_context": "Ohio State 2, Michigan 2 | Inn 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1539,15 +1539,19 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1818,7 +1822,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
+      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -1837,7 +1841,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2006,7 +2010,7 @@
       "team": "Dallas Baptist",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
+      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
       "game_status": "Live",
       "game_time": "7:30 PM ET",
       "game_date": "2026-05-15",
@@ -2025,7 +2029,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3124,7 +3128,7 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "1-2, RBI",
-      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
+      "game_context": "Ohio State 2, Michigan 2 | Inn 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3135,15 +3139,19 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3224,7 +3232,7 @@
       "team": "Rutgers",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Rutgers 3, Northwestern 1 | Top 4",
+      "game_context": "Rutgers 3, Northwestern 3 | Bottom 4",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -3346,8 +3354,8 @@
       "team": "Fordham",
       "level": "NCAA",
       "stats_summary": "1-5, R, BB, K",
-      "game_context": "Fordham 21, St Bonaventure 2 | Top 9",
-      "game_status": "Live",
+      "game_context": "Fordham 21, St Bonaventure 2 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -3737,21 +3745,21 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 38,
+        "found stats": 36,
         "no game found": 1,
-        "found game, no player": 5
+        "found game, no player": 7
       },
       "ESPN": {
-        "found stats": 1,
+        "found stats": 3,
         "found game, no player": 3,
         "scheduled (ignored)": 1,
         "no game found": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 3,
+        "blocked (Cloudflare 403)": 5,
         "no game found": 5,
-        "found player": 3,
-        "player not in box": 2
+        "fetch failed": 2,
+        "found player": 1
       },
       "NCAA.com": {
         "stale (yesterday)": 3,
@@ -3770,8 +3778,10 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 3,
+    "blocked_event_count": 5,
     "blocked_clients": [
+      "Ty Finkbeiner",
+      "Ben Tryon",
       "Duke McCarron",
       "Luke Fithian"
     ],
@@ -3795,12 +3805,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 2,
-          "blocked": 4
+          "success": 0,
+          "blocked": 6
         }
       }
     }
