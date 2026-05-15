@@ -6023,7 +6023,7 @@
   },
   {
     "date": "2026-05-14",
-    "updated_at": "2026-05-15T01:38:49.465076+00:00",
+    "updated_at": "2026-05-15T01:47:07.244061+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -6125,7 +6125,7 @@
         "team": "Hillsboro Hops",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6172,7 +6172,7 @@
         "team": "Ontario Tower Buzzers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6216,7 +6216,7 @@
         "team": "Fayetteville Woodpeckers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6385,7 +6385,7 @@
         "team": "Lansing Lugnuts",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6422,7 +6422,7 @@
         "team": "South Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -6528,17 +6528,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "D1Baseball",
+        "game_status": "Scheduled",
+        "captured": true,
+        "blocked": false,
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
@@ -6546,7 +6543,7 @@
         "team": "Vanderbilt",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
@@ -6634,8 +6631,7 @@
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -6643,7 +6639,7 @@
         "team": "SE Louisiana",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -6699,8 +6695,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
@@ -6728,7 +6724,7 @@
         "team": "Akron RubberDucks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -6757,17 +6753,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
@@ -6891,8 +6884,7 @@
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -7042,7 +7034,7 @@
         "team": "Columbus Clingstones",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7067,7 +7059,7 @@
         "team": "SE Louisiana",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -7085,17 +7077,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
