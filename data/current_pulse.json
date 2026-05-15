@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T05:02:07.700819+00:00",
+  "generated_at": "2026-05-15T05:17:00.706610+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -227,7 +227,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -685,7 +685,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1792,7 +1792,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2118,7 +2118,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2857,7 +2857,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4015,7 +4015,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4296,8 +4296,9 @@
       "StatBroadcast": {
         "found player": 6,
         "no game found": 24,
-        "fetch failed": 12,
-        "blocked (Cloudflare 403)": 22
+        "fetch failed": 10,
+        "player not in box": 6,
+        "blocked (Cloudflare 403)": 18
       },
       "Sidearm": {
         "player not in box": 2,
@@ -4325,16 +4326,12 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 22,
+    "blocked_event_count": 18,
     "blocked_clients": [
-      "Cam Flukey",
-      "Myles Bailey",
       "Adam McKelvey",
       "Joe Tiroly",
-      "Riley Goodman",
       "Sam Harry",
       "Ty Finkbeiner",
-      "Will Rhine",
       "Ben Tryon",
       "Boston Torres",
       "Brady Neal",
@@ -4397,12 +4394,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 2,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 13
+          "success": 2,
+          "blocked": 9
         }
       }
     }
