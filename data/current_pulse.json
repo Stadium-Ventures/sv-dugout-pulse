@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T07:01:42.526821+00:00",
+  "generated_at": "2026-05-15T07:17:13.401534+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -81,7 +81,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -191,7 +191,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -227,7 +227,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -705,7 +705,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2458,7 +2458,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2601,7 +2601,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2794,7 +2794,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2877,7 +2877,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3184,7 +3184,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3502,7 +3502,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3658,7 +3658,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3714,7 +3714,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3770,7 +3770,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3826,7 +3826,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3952,7 +3952,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4035,7 +4035,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4297,8 +4297,7 @@
         "found player": 6,
         "no game found": 24,
         "fetch failed": 12,
-        "player not in box": 1,
-        "blocked (Cloudflare 403)": 21
+        "blocked (Cloudflare 403)": 22
       },
       "Sidearm": {
         "player not in box": 2,
@@ -4315,8 +4314,7 @@
         "scheduled (ignored)": 6
       },
       "NCAA.org": {
-        "no game found": 15,
-        "found game, no player": 3,
+        "found game, no player": 18,
         "found stats": 1,
         "scheduled (ignored)": 5
       },
@@ -4327,8 +4325,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 21,
+    "blocked_event_count": 22,
     "blocked_clients": [
+      "Cam Flukey",
       "Myles Bailey",
       "Adam McKelvey",
       "Joe Tiroly",
@@ -4402,8 +4401,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 12
+          "success": 0,
+          "blocked": 13
         }
       }
     }
