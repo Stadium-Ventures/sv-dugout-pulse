@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T07:17:13.401534+00:00",
+  "generated_at": "2026-05-15T07:31:58.044996+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -227,7 +227,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -685,7 +685,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4297,7 +4297,8 @@
         "found player": 6,
         "no game found": 24,
         "fetch failed": 12,
-        "blocked (Cloudflare 403)": 22
+        "player not in box": 2,
+        "blocked (Cloudflare 403)": 20
       },
       "Sidearm": {
         "player not in box": 2,
@@ -4325,10 +4326,8 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 22,
+    "blocked_event_count": 20,
     "blocked_clients": [
-      "Cam Flukey",
-      "Myles Bailey",
       "Adam McKelvey",
       "Joe Tiroly",
       "Riley Goodman",
@@ -4397,12 +4396,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 2,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 13
+          "blocked": 11
         }
       }
     }
