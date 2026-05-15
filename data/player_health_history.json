@@ -6023,7 +6023,7 @@
   },
   {
     "date": "2026-05-14",
-    "updated_at": "2026-05-15T01:49:02.141435+00:00",
+    "updated_at": "2026-05-15T02:01:27.188926+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -6081,7 +6081,7 @@
         "team": "Coastal Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -6184,13 +6184,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -6198,7 +6197,7 @@
         "team": "Florida State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -6528,14 +6527,17 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6569,7 +6571,7 @@
         "team": "Dallas Baptist",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "ESPN",
@@ -6631,7 +6633,8 @@
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -6753,14 +6756,17 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -6841,7 +6847,7 @@
         "team": "Tulane",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "ESPN",
@@ -6884,7 +6890,8 @@
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -7077,14 +7084,17 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
