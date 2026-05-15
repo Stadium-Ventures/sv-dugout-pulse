@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T21:32:16.470754+00:00",
+  "generated_at": "2026-05-15T21:47:26.531396+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -123,23 +123,47 @@
       "player_name": "Bruce Littleton",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 7:00 PM",
-      "game_context": "Georgia Southern vs Southern Miss",
-      "game_status": "Scheduled",
-      "game_time": "7:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "7:00 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635098",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -1076,7 +1100,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clemson 1, Virginia Tech 0 | Bottom 8",
+      "game_context": "Clemson 1, Virginia Tech 0 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1271,7 +1295,7 @@
       "player_name": "Jack Cebert",
       "team": "Somerset Patriots",
       "level": "Pro",
-      "stats_summary": "Game at 6:35 PM ET",
+      "stats_summary": "On the mound",
       "game_context": "Binghamton Rumble Ponies vs Somerset Patriots | 6:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:35 PM ET",
@@ -1527,8 +1551,8 @@
       "player_name": "Mason Eckelman",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "0-2",
-      "game_context": "Ohio State 2, Michigan 2 | Inn 5",
+      "stats_summary": "1-3",
+      "game_context": "Ohio State 4, Michigan 2 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1537,7 +1561,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633085",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-2",
+      "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
       "data_source": "ESPN",
       "fetch_diagnostic": [
@@ -1547,7 +1571,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1653,7 +1677,7 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (3B)",
       "game_context": "Daytona Tortugas vs Palm Beach Cardinals | 6:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:30 PM ET",
@@ -1822,7 +1846,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Ohio State 2, Michigan 2 | Bottom 5",
+      "game_context": "Ohio State 4, Michigan 2 | Top 6",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -1841,7 +1865,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2009,10 +2033,10 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game in progress",
-      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
+      "stats_summary": "In lineup",
+      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
       "game_status": "Live",
-      "game_time": "7:30 PM ET",
+      "game_time": null,
       "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
@@ -2025,11 +2049,47 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
+        }
+      ],
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": true,
+      "tags": {
+        "draft_class": "2026",
+        "position": "Hitter",
+        "roster_priority": 3
+      }
+    },
+    {
+      "player_name": "Bennett Edwards",
+      "team": "Georgia Southern",
+      "level": "NCAA",
+      "stats_summary": "Game in progress",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "7:00 PM ET",
+      "game_date": "2026-05-15",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635098",
+      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bennett%20Edwards%22&btnI=",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Bennett%20Edwards%22%20Georgia%20Southern&f=live",
+      "data_source": "D1Baseball",
+      "fetch_diagnostic": [
+        {
+          "source": "D1Baseball",
           "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -2049,39 +2109,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
-        }
-      ],
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": true,
-      "tags": {
-        "draft_class": "2026",
-        "position": "Hitter",
-        "roster_priority": 3
-      }
-    },
-    {
-      "player_name": "Bennett Edwards",
-      "team": "Georgia Southern",
-      "level": "NCAA",
-      "stats_summary": "Game at 7:00 PM",
-      "game_context": "Georgia Southern vs Southern Miss",
-      "game_status": "Scheduled",
-      "game_time": "7:00 PM",
-      "game_date": "2026-05-15",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853092",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bennett%20Edwards%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Bennett%20Edwards%22%20Georgia%20Southern&f=live",
-      "data_source": "D1Baseball",
-      "fetch_diagnostic": [
-        {
-          "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -2789,23 +2817,47 @@
       "player_name": "Sam Mitchell",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 7:00 PM",
-      "game_context": "Georgia Southern vs Southern Miss",
-      "game_status": "Scheduled",
-      "game_time": "7:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "7:00 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401853092",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635098",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3128,7 +3180,7 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "1-2, RBI",
-      "game_context": "Ohio State 2, Michigan 2 | Inn 5",
+      "game_context": "Ohio State 4, Michigan 2 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3147,7 +3199,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3232,7 +3284,7 @@
       "team": "Rutgers",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Rutgers 3, Northwestern 3 | Bottom 4",
+      "game_context": "Rutgers 3, Northwestern 3 | Bottom 5",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -3745,34 +3797,34 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 36,
-        "no game found": 1,
-        "found game, no player": 7
-      },
-      "ESPN": {
-        "found stats": 3,
-        "found game, no player": 3,
-        "scheduled (ignored)": 1,
+        "found stats": 34,
+        "found game, no player": 9,
         "no game found": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 5,
-        "no game found": 5,
         "fetch failed": 2,
-        "found player": 1
+        "no game found": 7,
+        "blocked (Cloudflare 403)": 5,
+        "player not in box": 2,
+        "found player": 2
+      },
+      "ESPN": {
+        "scheduled (ignored)": 3,
+        "found stats": 3,
+        "found game, no player": 3,
+        "no game found": 1
       },
       "NCAA.com": {
-        "stale (yesterday)": 3,
-        "scheduled (ignored)": 2
+        "scheduled (ignored)": 4,
+        "stale (yesterday)": 3
       },
       "Sidearm": {
-        "no game found": 5,
+        "no game found": 7,
         "found player": 1
       },
       "NCAA.org": {
-        "stale (yesterday)": 3,
-        "no game found": 1,
-        "scheduled (ignored)": 1
+        "scheduled (ignored)": 3,
+        "stale (yesterday)": 4
       }
     },
     "blocked_sources": [
@@ -3780,15 +3832,16 @@
     ],
     "blocked_event_count": 5,
     "blocked_clients": [
-      "Ty Finkbeiner",
-      "Ben Tryon",
+      "Mason Eckelman",
+      "Sam Mitchell",
       "Duke McCarron",
       "Luke Fithian"
     ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Ty Finkbeiner",
-      "Ben Tryon",
+      "Bennett Edwards",
+      "Sam Mitchell",
       "Duke McCarron",
       "Luke Fithian"
     ],
@@ -3805,11 +3858,11 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
+          "success": 1,
           "blocked": 6
         }
       }
