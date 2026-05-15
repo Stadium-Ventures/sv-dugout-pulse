@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T12:31:45.661479+00:00",
+  "generated_at": "2026-05-15T12:47:22.558097+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2170,7 +2170,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2309,35 +2309,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Brooks%20Wright%22%20SE%20Louisiana&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3348,7 +3328,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3678,41 +3658,35 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 40,
+        "found stats": 41,
         "no game found": 1,
-        "found game, no player": 3
+        "found game, no player": 2
       },
       "ESPN": {
         "found stats": 1,
-        "scheduled (ignored)": 3
+        "scheduled (ignored)": 2
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 2,
-        "no game found": 3,
-        "fetch failed": 1
+        "player not in box": 2,
+        "no game found": 2,
+        "found player": 1
       },
       "NCAA.com": {
-        "found game, no player": 3
+        "found game, no player": 2
       },
       "Sidearm": {
-        "no game found": 3
+        "no game found": 2
       },
       "NCAA.org": {
-        "scheduled (ignored)": 2,
-        "found stats": 1
+        "scheduled (ignored)": 2
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 2,
-    "blocked_clients": [
-      "Brady St. Pierre",
-      "Brooks Wright"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [],
     "total_clients": 84,
@@ -3723,7 +3697,6 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -3732,8 +3705,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
+          "success": 1,
+          "blocked": 0
         }
       }
     }
