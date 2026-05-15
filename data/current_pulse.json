@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T04:02:03.554825+00:00",
+  "generated_at": "2026-05-15T04:17:01.638326+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -171,7 +171,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -360,9 +360,9 @@
       "player_name": "David Hagaman",
       "team": "Hillsboro Hops",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Spokane Indians 2, Hillsboro Hops 6 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Spokane Indians 2, Hillsboro Hops 6 | Final",
+      "game_status": "Final",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -376,7 +376,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819302",
       "player_profile_url": "https://www.mlb.com/player/701908",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22David%20Hagaman%22%20Diamondbacks&f=live",
       "data_source": "MLB Stats API",
@@ -490,7 +490,7 @@
       "team": "Saint Mary's",
       "level": "NCAA",
       "stats_summary": "1-3, HR, RBI, R, BB, 2 K",
-      "game_context": "San Francisco 9, Saint Mary's 5 | Inn 8",
+      "game_context": "San Francisco 9, Saint Mary's 5 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -553,7 +553,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "San Jose Giants 4, Ontario Tower Buzzers 6 | Bottom 8",
+      "game_context": "San Jose Giants 4, Ontario Tower Buzzers 8 | Top 9",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-15",
@@ -1847,8 +1847,8 @@
       "team": "Sacramento State",
       "level": "NCAA",
       "stats_summary": "1-5, R, 2B",
-      "game_context": "Tarleton 5, Sacramento State 5 | Bottom 8",
-      "game_status": "Live",
+      "game_context": "Tarleton St. vs Sacramento St.",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-14",
       "is_yesterday": false,
@@ -1862,14 +1862,18 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "scheduled (no game_time)"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
-      "stats_captured_at": null,
+      "stats_captured_at": "2026-05-15T04:02:03.554825+00:00",
       "stats_captured_status": null,
       "is_client": true,
       "tags": {
@@ -2398,7 +2402,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2541,7 +2545,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2734,7 +2738,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2942,7 +2946,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 2, Stockton Ports 6 | Top 8",
+      "game_context": "Inland Empire 66ers 2, Stockton Ports 6 | Bottom 8",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-15",
@@ -3124,7 +3128,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3289,7 +3293,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "1-2, R, BB",
-      "game_context": "Everett AquaSox 0, Vancouver Canadians 5 | End 7",
+      "game_context": "Everett AquaSox 0, Vancouver Canadians 5 | Bottom 8",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-15",
@@ -3442,7 +3446,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3479,8 +3483,8 @@
       "team": "Sacramento State",
       "level": "NCAA",
       "stats_summary": "3.0 IP, 5 H, 4 ER, 2 K, 2 BB",
-      "game_context": "Tarleton 5, Sacramento State 5 | Bottom 8",
-      "game_status": "Live",
+      "game_context": "Tarleton St. vs Sacramento St.",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-14",
       "is_yesterday": false,
@@ -3494,14 +3498,18 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "scheduled (no game_time)"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
-      "stats_captured_at": null,
+      "stats_captured_at": "2026-05-15T04:02:03.554825+00:00",
       "stats_captured_status": null,
       "is_client": true,
       "tags": {
@@ -3574,7 +3582,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3630,7 +3638,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3742,7 +3750,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3868,7 +3876,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -4225,16 +4233,17 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found stats": 9,
+        "found stats": 7,
         "found game, no player": 34,
-        "no game found": 1
+        "no game found": 1,
+        "scheduled (no game_time)": 2
       },
       "StatBroadcast": {
-        "found player": 8,
+        "found player": 6,
         "no game found": 21,
-        "player not in box": 17,
-        "blocked (Cloudflare 403)": 9,
-        "fetch failed": 6
+        "fetch failed": 9,
+        "player not in box": 7,
+        "blocked (Cloudflare 403)": 16
       },
       "Sidearm": {
         "player not in box": 2,
@@ -4242,13 +4251,14 @@
         "found player": 1
       },
       "ESPN": {
-        "no game found": 3,
+        "no game found": 5,
         "found game, no player": 18,
         "found stats": 14
       },
       "NCAA.com": {
         "found game, no player": 17,
-        "scheduled (ignored)": 4
+        "scheduled (ignored)": 4,
+        "found stats": 2
       },
       "NCAA.org": {
         "found game, no player": 17,
@@ -4261,20 +4271,29 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 9,
+    "blocked_event_count": 16,
     "blocked_clients": [
       "Joe Tiroly",
       "Ty Finkbeiner",
       "Ben Tryon",
       "Boston Torres",
       "Brady Neal",
+      "Brady St. Pierre",
       "Braydon Kersey",
+      "Brisen Tweedy",
+      "Drew Bellis",
+      "Sam Mitchell",
       "Tanner Chun",
-      "Duke McCarron"
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Lee Sowers",
+      "Lucas Steele"
     ],
     "carry_forward_clients": [
+      "Sam Harry",
       "Braydon Kersey",
-      "Duke McCarron"
+      "Duke McCarron",
+      "Ethan Lay"
     ],
     "fallback_clients": [
       "Cam Flukey",
@@ -4313,6 +4332,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -4321,8 +4341,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 22,
-          "blocked": 0
+          "success": 5,
+          "blocked": 8
         }
       }
     }
