@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T20:32:22.838780+00:00",
+  "generated_at": "2026-05-15T20:46:58.540869+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1076,7 +1076,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clemson 1, Virginia Tech 0 | Top 5",
+      "game_context": "Clemson 1, Virginia Tech 0 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1528,7 +1528,7 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Ohio State 1, Michigan 0 | Inn 2",
+      "game_context": "Ohio State 1, Michigan 2 | Inn 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -1547,7 +1547,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1822,7 +1822,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Ohio State 1, Michigan 0 | Bottom 2",
+      "game_context": "Ohio State 1, Michigan 2 | Bottom 3",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -1841,7 +1841,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2010,7 +2010,7 @@
       "team": "Dallas Baptist",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
+      "game_context": "Jacksonville State 0, Dallas Baptist 0 | Top 1",
       "game_status": "Live",
       "game_time": "7:30 PM ET",
       "game_date": "2026-05-15",
@@ -2029,7 +2029,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2255,7 +2255,7 @@
       "team": "Mercer",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Mercer 9, East Tennessee State 6 | Top 8",
+      "game_context": "Mercer 9, East Tennessee State 6 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3152,7 +3152,7 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "1-1, RBI",
-      "game_context": "Ohio State 1, Michigan 0 | Inn 2",
+      "game_context": "Ohio State 1, Michigan 2 | Inn 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3171,7 +3171,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3256,7 +3256,7 @@
       "team": "Rutgers",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Rutgers 0, Northwestern 0 | Top 2",
+      "game_context": "Rutgers 1, Northwestern 0 | Top 3",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-15",
@@ -3378,7 +3378,7 @@
       "team": "Fordham",
       "level": "NCAA",
       "stats_summary": "1-5, R, BB, K",
-      "game_context": "Fordham 20, St Bonaventure 2 | Bottom 7",
+      "game_context": "Fordham 20, St Bonaventure 2 | Top 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3766,7 +3766,7 @@
     }
   ],
   "health": {
-    "severity": "critical",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
         "found stats": 35,
@@ -3780,9 +3780,9 @@
         "no game found": 2
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 6,
+        "blocked (Cloudflare 403)": 5,
         "no game found": 6,
-        "fetch failed": 2
+        "player not in box": 3
       },
       "NCAA.com": {
         "stale (yesterday)": 4,
@@ -3804,10 +3804,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 6,
+    "blocked_event_count": 5,
     "blocked_clients": [
-      "Ty Finkbeiner",
-      "Ben Tryon",
+      "Mason Eckelman",
       "Braydon Kersey",
       "Duke McCarron",
       "Luke Fithian"
@@ -3834,12 +3833,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 7
+          "success": 1,
+          "blocked": 6
         }
       }
     }
