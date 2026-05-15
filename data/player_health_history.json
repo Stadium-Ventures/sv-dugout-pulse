@@ -7129,7 +7129,7 @@
   },
   {
     "date": "2026-05-15",
-    "updated_at": "2026-05-15T17:32:32.989023+00:00",
+    "updated_at": "2026-05-15T17:47:21.489190+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -7388,12 +7388,17 @@
         "team": "Clemson",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {

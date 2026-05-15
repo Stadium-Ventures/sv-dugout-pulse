@@ -12075,5 +12075,67 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-15T17:47:21.472807+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Duke McCarron"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Duke McCarron"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 41,
+        "no game found": 1,
+        "found game, no player": 2
+      },
+      "ESPN": {
+        "found stats": 1,
+        "scheduled (ignored)": 1,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 2,
+        "no game found": 2
+      },
+      "NCAA.com": {
+        "stale (yesterday)": 2
+      },
+      "Sidearm": {
+        "no game found": 2
+      },
+      "NCAA.org": {
+        "stale (yesterday)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 3
+        }
+      }
+    }
   }
 ]
