@@ -12298,5 +12298,75 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-15T19:49:57.458918+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 3,
+    "blocked_clients": [
+      "Braydon Kersey",
+      "Duke McCarron"
+    ],
+    "carry_forward_clients": [
+      "Braydon Kersey"
+    ],
+    "fallback_clients": [
+      "Duke McCarron"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 40,
+        "no game found": 1,
+        "found game, no player": 3
+      },
+      "ESPN": {
+        "found stats": 1,
+        "found game, no player": 1,
+        "no game found": 2
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 3,
+        "no game found": 3
+      },
+      "NCAA.com": {
+        "stale (yesterday)": 3
+      },
+      "Sidearm": {
+        "no game found": 3,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 1,
+        "stale (yesterday)": 2
+      },
+      "game log": {
+        "found stats (live carry-forward)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 4
+        }
+      }
+    }
   }
 ]
