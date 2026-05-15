@@ -12473,5 +12473,79 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-15T21:16:17.919138+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 4,
+    "blocked_clients": [
+      "Mason Eckelman",
+      "Duke McCarron",
+      "Luke Fithian"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Ty Finkbeiner",
+      "Ben Tryon",
+      "Duke McCarron",
+      "Luke Fithian"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 36,
+        "no game found": 1,
+        "found game, no player": 7
+      },
+      "ESPN": {
+        "found stats": 3,
+        "found game, no player": 3,
+        "scheduled (ignored)": 1,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 4,
+        "no game found": 5,
+        "player not in box": 3,
+        "found player": 1
+      },
+      "NCAA.com": {
+        "stale (yesterday)": 3,
+        "scheduled (ignored)": 2
+      },
+      "Sidearm": {
+        "no game found": 5,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "stale (yesterday)": 3,
+        "no game found": 1,
+        "scheduled (ignored)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 3,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 5
+        }
+      }
+    }
   }
 ]
