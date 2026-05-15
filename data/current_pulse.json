@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T18:17:23.024570+00:00",
+  "generated_at": "2026-05-15T18:32:32.450936+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1111,7 +1111,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clemson 0, Virginia Tech 0 | Top 1",
+      "game_context": "Clemson 0, Virginia Tech 0 | Top 1",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-15",
@@ -1130,7 +1130,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2233,8 +2233,8 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Mercer 0, East Tennessee State 0 | Bottom 1",
+      "stats_summary": "Game in progress",
+      "game_context": "Mercer 0, East Tennessee State 0 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -2249,11 +2249,31 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -2987,7 +3007,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Saint Josephs 0, Rhode Island 3 | Top 5",
+      "game_context": "Saint Josephs 1, Rhode Island 3 | Top 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3006,7 +3026,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3202,10 +3222,10 @@
       "player_name": "Luke Fithian",
       "team": "Rutgers",
       "level": "NCAA",
-      "stats_summary": "Game at 2:00 PM",
+      "stats_summary": "Game at 4:00 PM",
       "game_context": "Rutgers vs Northwestern",
       "game_status": "Scheduled",
-      "game_time": "2:00 PM",
+      "game_time": "4:00 PM",
       "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
@@ -3300,8 +3320,8 @@
       "player_name": "Taylor Kirk",
       "team": "Fordham",
       "level": "NCAA",
-      "stats_summary": "0-0, BB",
-      "game_context": "Fordham 1, St Bonaventure 0 | Top 1",
+      "stats_summary": "0-1, BB",
+      "game_context": "Fordham 2, St Bonaventure 0 | Top 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3310,7 +3330,7 @@
       "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Taylor%20Kirk%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "Productive game",
+      "grade_reason": "Reached base early",
       "social_search_url": "https://x.com/search?q=%22Taylor%20Kirk%22%20Fordham&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -3689,39 +3709,44 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 41,
+        "found stats": 40,
         "no game found": 1,
-        "found game, no player": 2
+        "found game, no player": 3
       },
       "ESPN": {
         "found stats": 1,
         "scheduled (ignored)": 1,
-        "no game found": 1
+        "no game found": 2
       },
       "StatBroadcast": {
-        "player not in box": 2,
-        "no game found": 2,
-        "found player": 1
+        "blocked (Cloudflare 403)": 3,
+        "no game found": 3
       },
       "NCAA.com": {
-        "stale (yesterday)": 2
+        "stale (yesterday)": 3
       },
       "Sidearm": {
-        "no game found": 2,
+        "no game found": 3,
         "found player": 1
       },
       "NCAA.org": {
-        "stale (yesterday)": 2
+        "stale (yesterday)": 3
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 3,
+    "blocked_clients": [
+      "Braydon Kersey",
+      "Duke McCarron"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Braydon Kersey",
       "Duke McCarron"
     ],
     "total_clients": 84,
@@ -3732,6 +3757,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -3740,8 +3766,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 0
+          "success": 0,
+          "blocked": 4
         }
       }
     }
