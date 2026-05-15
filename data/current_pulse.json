@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T06:32:02.288942+00:00",
+  "generated_at": "2026-05-15T06:46:58.251221+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -668,7 +668,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "Miami 6, Florida State 7 | Final",
       "game_status": "Final",
-      "game_time": "6:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-14",
       "is_yesterday": false,
       "next_game": null,
@@ -685,7 +685,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -693,7 +693,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         },
         {
           "source": "Sidearm",
@@ -4297,8 +4297,7 @@
         "found player": 6,
         "no game found": 24,
         "fetch failed": 12,
-        "blocked (Cloudflare 403)": 21,
-        "player not in box": 1
+        "blocked (Cloudflare 403)": 22
       },
       "Sidearm": {
         "player not in box": 2,
@@ -4311,8 +4310,8 @@
         "found stats": 13
       },
       "NCAA.com": {
-        "found game, no player": 17,
-        "scheduled (ignored)": 7
+        "found game, no player": 18,
+        "scheduled (ignored)": 6
       },
       "NCAA.org": {
         "found game, no player": 18,
@@ -4326,9 +4325,10 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 21,
+    "blocked_event_count": 22,
     "blocked_clients": [
       "Cam Flukey",
+      "Myles Bailey",
       "Adam McKelvey",
       "Joe Tiroly",
       "Riley Goodman",
@@ -4397,12 +4397,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 12
+          "blocked": 13
         }
       }
     }
