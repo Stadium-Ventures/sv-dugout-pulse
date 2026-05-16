@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-16T01:28:57.326923+00:00",
+  "generated_at": "2026-05-16T01:31:55.855173+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
       "stats_summary": "0-1, K",
-      "game_context": "Missouri 0, Texas 10 | Top 6",
+      "game_context": "Missouri 0, Texas 10 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -17,15 +17,19 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -207,8 +211,8 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "4.0 IP, 2 H, 5 K, BB",
-      "game_context": "Coastal Carolina 3, Louisiana 0 | Middle 8",
+      "stats_summary": "4.0 IP, 2 H, 0 ER, 5 K, 1 BB",
+      "game_context": "Coastal 3, Louisiana 0 | Inn 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -219,15 +223,19 @@
       "performance_grade": "✅ Good",
       "grade_reason": "5 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -571,7 +579,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Florida 7, LSU 1 | Bottom 6",
+      "game_context": "Florida 7, LSU 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -590,7 +598,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -653,8 +661,8 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Miami 1, Florida State 10 | Bottom 8",
+      "stats_summary": "Did Not Play",
+      "game_context": "Miami 1, Florida State 10 | Bottom 8",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-15",
@@ -673,7 +681,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -710,7 +718,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fayetteville Woodpeckers 7, Delmarva Shorebirds 3 | Top 8",
+      "game_context": "Fayetteville Woodpeckers 7, Delmarva Shorebirds 3 | Bottom 8",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-15",
@@ -905,7 +913,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -925,7 +933,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1065,8 +1073,8 @@
       "player_name": "Caden Powell",
       "team": "Asheville Tourists",
       "level": "Pro",
-      "stats_summary": "3-4, 3 RBI, 2 R, BB",
-      "game_context": "Hub City Spartanburgers 6, Asheville Tourists 23 | Middle 8",
+      "stats_summary": "3-5, 3 RBI, 2 R, BB",
+      "game_context": "Hub City Spartanburgers 6, Asheville Tourists 23 | Bottom 8",
       "game_status": "Live",
       "game_time": "6:35 PM ET",
       "game_date": "2026-05-15",
@@ -1081,7 +1089,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/822504",
       "player_profile_url": "https://www.mlb.com/player/702547",
-      "performance_grade": "🔥 Standout",
+      "performance_grade": "✅ Good",
       "grade_reason": "3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Caden%20Powell%22%20Astros&f=live",
       "data_source": "MLB Stats API",
@@ -1314,7 +1322,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1384,7 +1392,7 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
+      "stats_summary": "Did Not Play",
       "game_context": "Virginia 2, Louisville 12 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
@@ -1529,7 +1537,7 @@
       "team": "Asheville Tourists",
       "level": "Pro",
       "stats_summary": "5-6, 2 RBI, 2 R",
-      "game_context": "Hub City Spartanburgers 6, Asheville Tourists 23 | Middle 8",
+      "game_context": "Hub City Spartanburgers 6, Asheville Tourists 23 | Bottom 8",
       "game_status": "Live",
       "game_time": "6:35 PM ET",
       "game_date": "2026-05-15",
@@ -1563,8 +1571,8 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "1-4, K",
-      "game_context": "Virginia 2, Louisville 12 | Inn 8",
-      "game_status": "Live",
+      "game_context": "Virginia 2, Louisville 12 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -1630,7 +1638,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-2",
-      "game_context": "Amarillo Sod Poodles 2, Corpus Christi Hooks 1 | Bottom 5",
+      "game_context": "Amarillo Sod Poodles 2, Corpus Christi Hooks 1 | End 5",
       "game_status": "Live",
       "game_time": "8:05 PM ET",
       "game_date": "2026-05-16",
@@ -1664,7 +1672,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Quad Cities River Bandits 6, Lansing Lugnuts 10 | Top 7",
+      "game_context": "Quad Cities River Bandits 9, Lansing Lugnuts 10 | Top 7",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-15",
@@ -1725,7 +1733,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Amarillo Sod Poodles 2, Corpus Christi Hooks 1 | Bottom 5",
+      "game_context": "Amarillo Sod Poodles 2, Corpus Christi Hooks 1 | End 5",
       "game_status": "Live",
       "game_time": "8:05 PM ET",
       "game_date": "2026-05-16",
@@ -1982,7 +1990,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1999,7 +2007,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Arizona Diamondbacks 6, Colorado Rockies 1 | End 2",
+      "game_context": "Arizona Diamondbacks 6, Colorado Rockies 1 | Top 3",
       "game_status": "Live",
       "game_time": "8:40 PM ET",
       "game_date": "2026-05-16",
@@ -2033,7 +2041,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Arizona Diamondbacks 6, Colorado Rockies 1 | End 2",
+      "game_context": "Arizona Diamondbacks 6, Colorado Rockies 1 | Top 3",
       "game_status": "Live",
       "game_time": "8:40 PM ET",
       "game_date": "2026-05-16",
@@ -2157,7 +2165,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Amarillo Sod Poodles 2, Corpus Christi Hooks 1 | Bottom 5",
+      "game_context": "Amarillo Sod Poodles 2, Corpus Christi Hooks 1 | End 5",
       "game_status": "Live",
       "game_time": "8:05 PM ET",
       "game_date": "2026-05-16",
@@ -2303,8 +2311,8 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "0.2 IP, 1 H, 0 ER, 0 K",
-      "game_context": "Wilmington Blue Rocks 5, Winston-Salem Dash 9 | Middle 9",
-      "game_status": "Live",
+      "game_context": "Wilmington Blue Rocks 5, Winston-Salem Dash 9 | Final",
+      "game_status": "Final",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-15",
       "is_yesterday": false,
@@ -2337,7 +2345,7 @@
       "team": "Dallas Baptist",
       "level": "NCAA",
       "stats_summary": "0-1, 2 R, 2 BB",
-      "game_context": "Jax State 5, Dallas Baptist 9 | Inn 5",
+      "game_context": "Jax State 5, Dallas Baptist 9 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -2417,7 +2425,7 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "1-2, R, SB",
-      "game_context": "Arkansas Travelers 2, Northwest Arkansas Naturals 5 | Top 5",
+      "game_context": "Arkansas Travelers 5, Northwest Arkansas Naturals 5 | Top 5",
       "game_status": "Live",
       "game_time": "8:05 PM ET",
       "game_date": "2026-05-16",
@@ -2491,7 +2499,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-3, 2 K",
-      "game_context": "Ole Miss 5, Alabama 0 | Inn 7",
+      "game_context": "Ole Miss 5, Alabama 0 | Inn 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3153,7 +3161,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "El Paso Chihuahuas 3, Salt Lake Bees 0 | Top 3",
+      "game_context": "El Paso Chihuahuas 3, Salt Lake Bees 0 | Middle 3",
       "game_status": "Live",
       "game_time": "8:35 PM ET",
       "game_date": "2026-05-16",
@@ -3439,7 +3447,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-2, 2 K",
-      "game_context": "Ole Miss 5, Alabama 0 | Inn 7",
+      "game_context": "Ole Miss 5, Alabama 0 | Inn 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-15",
@@ -3911,7 +3919,7 @@
       "team": "Columbus Clingstones",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Knoxville Smokies 5, Columbus Clingstones 4 | Top 9",
+      "game_context": "Knoxville Smokies 5, Columbus Clingstones 4 | Middle 9",
       "game_status": "Live",
       "game_time": "7:06 PM ET",
       "game_date": "2026-05-15",
@@ -4289,7 +4297,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jacksonville Jumbo Shrimp 2, Memphis Redbirds 5 | Bottom 4",
+      "game_context": "Jacksonville Jumbo Shrimp 2, Memphis Redbirds 5 | Top 5",
       "game_status": "Live",
       "game_time": "8:05 PM ET",
       "game_date": "2026-05-16",
@@ -4384,27 +4392,26 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found stats": 4,
-        "found game, no player": 38,
+        "found game, no player": 40,
         "no game found": 1,
+        "found stats": 2,
         "scheduled (no game_time)": 1
       },
       "StatBroadcast": {
-        "found player": 3,
+        "blocked (Cloudflare 403)": 26,
         "no game found": 26,
-        "fetch failed": 14,
-        "blocked (Cloudflare 403)": 21,
-        "player not in box": 2
+        "fetch failed": 13,
+        "found player": 1
+      },
+      "ESPN": {
+        "found stats": 15,
+        "no game found": 4,
+        "found game, no player": 23
       },
       "Sidearm": {
         "player not in box": 1,
         "no game found": 26,
         "found player": 1
-      },
-      "ESPN": {
-        "no game found": 4,
-        "found game, no player": 23,
-        "found stats": 13
       },
       "NCAA.com": {
         "scheduled (ignored)": 14,
@@ -4413,9 +4420,9 @@
         "found stats": 1
       },
       "NCAA.org": {
-        "scheduled (ignored)": 17,
-        "stale (yesterday)": 7,
-        "found game, no player": 2
+        "scheduled (ignored)": 14,
+        "stale (yesterday)": 9,
+        "found game, no player": 3
       },
       "game log": {
         "found stats": 1
@@ -4424,8 +4431,13 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 21,
+    "blocked_event_count": 26,
     "blocked_clients": [
+      "Aiden Robbins",
+      "Cam Flukey",
+      "Kyle Jones",
+      "Myles Bailey",
+      "Adam McKelvey",
       "Caleb Daniel",
       "Joe Tiroly",
       "Riley Goodman",
@@ -4505,8 +4517,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 4,
-          "blocked": 20
+          "success": 0,
+          "blocked": 24
         }
       }
     }
