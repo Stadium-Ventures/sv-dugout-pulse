@@ -247,7 +247,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4382,9 +4382,10 @@
         "found stats": 2
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 25,
+        "blocked (Cloudflare 403)": 24,
         "no game found": 27,
         "fetch failed": 14,
+        "player not in box": 1,
         "found player": 1
       },
       "ESPN": {
@@ -4416,10 +4417,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 25,
+    "blocked_event_count": 24,
     "blocked_clients": [
       "Aiden Robbins",
-      "Cam Flukey",
       "Kyle Jones",
       "Myles Bailey",
       "Adam McKelvey",
