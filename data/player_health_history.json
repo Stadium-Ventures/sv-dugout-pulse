@@ -8259,7 +8259,7 @@
   },
   {
     "date": "2026-05-16",
-    "updated_at": "2026-05-16T21:31:54.746437+00:00",
+    "updated_at": "2026-05-16T21:46:48.430364+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -8692,17 +8692,18 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": false,
-        "blocked": false,
-        "source": "",
+        "blocked": true,
+        "source": "game log (live)",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
           "NCAA.com",
           "NCAA.org",
           "Sidearm",
-          "StatBroadcast"
+          "StatBroadcast",
+          "game log"
         ]
       },
       {
@@ -8817,12 +8818,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -8858,12 +8858,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -8887,17 +8886,10 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Braydon Kersey",
@@ -8942,17 +8934,10 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Cole Cleveland",
@@ -8986,8 +8971,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -9175,8 +9160,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -9192,14 +9177,17 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
