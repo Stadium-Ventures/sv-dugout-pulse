@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T05:20:17.413521+00:00",
+  "generated_at": "2026-05-16T05:35:33.584910+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -305,7 +305,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -618,7 +618,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1302,7 +1302,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -1322,7 +1322,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1432,7 +1432,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1880,7 +1880,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2128,7 +2128,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -2254,7 +2254,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -2274,7 +2274,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3502,7 +3502,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3594,7 +3594,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3614,7 +3614,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3746,7 +3746,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -4353,10 +4353,9 @@
         "found stats": 5
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 12,
+        "blocked (Cloudflare 403)": 9,
         "no game found": 24,
-        "fetch failed": 5,
-        "player not in box": 2,
+        "fetch failed": 10,
         "found player": 2
       },
       "ESPN": {
@@ -4374,8 +4373,8 @@
         "stale (yesterday)": 7
       },
       "NCAA.org": {
-        "found game, no player": 23,
-        "stale (yesterday)": 1
+        "found game, no player": 16,
+        "stale (yesterday)": 8
       },
       "game log": {
         "found stats": 1
@@ -4384,18 +4383,17 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 12,
+    "blocked_event_count": 9,
     "blocked_clients": [
       "Aiden Robbins",
       "Cam Flukey",
       "Caleb Daniel",
       "Joe Tiroly",
+      "Riley Goodman",
       "Ben Tryon",
       "Boston Torres",
       "Brooks Wright",
-      "Tanner Chun",
-      "Ethan Lay",
-      "Lucas Steele"
+      "Tanner Chun"
     ],
     "carry_forward_clients": [
       "Caleb Daniel"
@@ -4450,12 +4448,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 5
+          "blocked": 2
         }
       }
     }
