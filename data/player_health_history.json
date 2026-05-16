@@ -7129,7 +7129,7 @@
   },
   {
     "date": "2026-05-15",
-    "updated_at": "2026-05-16T01:01:59.199743+00:00",
+    "updated_at": "2026-05-16T01:19:42.798864+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -7137,13 +7137,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -7213,12 +7212,14 @@
         "team": "Portland",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -7259,7 +7260,7 @@
         "team": "Saint Mary's",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
@@ -7331,7 +7332,7 @@
         "team": "ACL Reds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7412,7 +7413,7 @@
         "team": "Jupiter Hammerheads",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7459,7 +7460,7 @@
         "team": "Somerset Patriots",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -7573,12 +7574,17 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -7736,7 +7742,7 @@
         "team": "Wake Forest",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "ESPN",
@@ -7817,8 +7823,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -7860,7 +7866,7 @@
         "team": "UCF",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -7984,7 +7990,7 @@
         "team": "Fort Myers Mighty Mussels",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8057,12 +8063,17 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -8139,7 +8150,7 @@
         "team": "UCF",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
