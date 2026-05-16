@@ -1,35 +1,5 @@
 [
   {
-    "generated_at": "2026-05-14T17:16:54.168108+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Tanner Gordon"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 43,
-        "no game found": 1
-      },
-      "ESPN": {
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-14T17:31:57.448705+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -15607,6 +15577,92 @@
         "p.webshare.io": {
           "success": 9,
           "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-16T17:17:13.444200+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 10,
+    "blocked_clients": [
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Joe Tiroly",
+      "Ty Finkbeiner",
+      "Braydon Kersey",
+      "Brisen Tweedy",
+      "Drew Bellis",
+      "Sam Mitchell",
+      "Duke McCarron"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Henry Zatkowski",
+      "Ty Finkbeiner",
+      "Bennett Edwards",
+      "Braydon Kersey",
+      "Brisen Tweedy",
+      "Drew Bellis",
+      "Sam Mitchell",
+      "Duke McCarron",
+      "Michael Gillen"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 25,
+        "found game, no player": 18,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 2,
+        "no game found": 14,
+        "found player": 1
+      },
+      "ESPN": {
+        "no game found": 3,
+        "scheduled (ignored)": 3,
+        "found stats": 5,
+        "found game, no player": 8
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 12,
+        "stale (yesterday)": 2
+      },
+      "StatBroadcast": {
+        "no game found": 14,
+        "fetch failed": 6,
+        "blocked (Cloudflare 403)": 10
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 14
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 10
         }
       }
     }
