@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T05:35:33.584910+00:00",
+  "generated_at": "2026-05-16T05:47:28.287048+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -305,7 +305,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1302,7 +1302,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3594,7 +3594,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3746,7 +3746,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -4353,9 +4353,9 @@
         "found stats": 5
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 9,
+        "blocked (Cloudflare 403)": 13,
         "no game found": 24,
-        "fetch failed": 10,
+        "fetch failed": 6,
         "found player": 2
       },
       "ESPN": {
@@ -4383,7 +4383,7 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 9,
+    "blocked_event_count": 13,
     "blocked_clients": [
       "Aiden Robbins",
       "Cam Flukey",
@@ -4393,7 +4393,9 @@
       "Ben Tryon",
       "Boston Torres",
       "Brooks Wright",
-      "Tanner Chun"
+      "Tanner Chun",
+      "Ethan Lay",
+      "Lucas Steele"
     ],
     "carry_forward_clients": [
       "Caleb Daniel"
@@ -4453,7 +4455,7 @@
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 2
+          "blocked": 6
         }
       }
     }
