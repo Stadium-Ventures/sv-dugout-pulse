@@ -16709,5 +16709,128 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-16T22:16:52.922103+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 20,
+    "blocked_clients": [
+      "Adam McKelvey",
+      "Henry Zatkowski",
+      "Joe Tiroly",
+      "Riley Goodman",
+      "Sam Harry",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Ben Tryon",
+      "Boston Torres",
+      "Braydon Kersey",
+      "Brisen Tweedy",
+      "Drew Bellis",
+      "Sam Mitchell",
+      "Tanner Chun",
+      "Duke McCarron",
+      "Lee Sowers",
+      "Lucas Steele",
+      "Luke Fithian"
+    ],
+    "carry_forward_clients": [
+      "Sam Harry",
+      "Braydon Kersey"
+    ],
+    "fallback_clients": [
+      "Aiden Robbins",
+      "Cam Flukey",
+      "Kyle Jones",
+      "Myles Bailey",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Henry Zatkowski",
+      "Jack Cebert",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Brady St. Pierre",
+      "Brisen Tweedy",
+      "Brooks Wright",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Ethan Lay",
+      "Lucas Steele",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Peyton Glavine",
+      "Zack Johnson"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 41,
+        "no game found": 1,
+        "found stats": 2
+      },
+      "StatBroadcast": {
+        "player not in box": 4,
+        "no game found": 27,
+        "fetch failed": 15,
+        "blocked (Cloudflare 403)": 20,
+        "found player": 1
+      },
+      "ESPN": {
+        "found game, no player": 20,
+        "no game found": 5,
+        "found stats": 15,
+        "scheduled (ignored)": 2
+      },
+      "NCAA.com": {
+        "stale (yesterday)": 4,
+        "found game, no player": 13,
+        "scheduled (ignored)": 10
+      },
+      "Sidearm": {
+        "no game found": 27,
+        "player not in box": 2,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "stale (yesterday)": 5,
+        "found game, no player": 14,
+        "scheduled (ignored)": 7,
+        "found stats": 1
+      },
+      "game log": {
+        "found stats (live carry-forward)": 1,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 3,
+          "blocked": 18
+        }
+      }
+    }
   }
 ]

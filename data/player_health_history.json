@@ -8259,7 +8259,7 @@
   },
   {
     "date": "2026-05-16",
-    "updated_at": "2026-05-16T22:03:12.169717+00:00",
+    "updated_at": "2026-05-16T22:16:52.943594+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -8267,8 +8267,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8320,9 +8320,9 @@
         "team": "Coastal Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8423,8 +8423,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8441,8 +8441,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8509,7 +8509,7 @@
         "team": "Asheville Tourists",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8534,7 +8534,7 @@
         "team": "Jupiter Hammerheads",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8581,7 +8581,7 @@
         "team": "Somerset Patriots",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8592,7 +8592,7 @@
         "team": "Asheville Tourists",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8711,7 +8711,7 @@
         "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
-        "game_status": "Manager challenge",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8722,7 +8722,7 @@
         "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
-        "game_status": "Manager challenge",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8773,14 +8773,17 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.com",
+        "game_status": "Final",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -8855,7 +8858,7 @@
         "team": "Wake Forest",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "ESPN",
@@ -8870,13 +8873,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -8972,7 +8976,7 @@
         "team": "Akron RubberDucks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Delayed Start",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9001,14 +9005,17 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -9137,13 +9144,14 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -9169,7 +9177,7 @@
         "team": "Duke",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
@@ -9256,7 +9264,7 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -9292,7 +9300,7 @@
         "team": "Columbus Clingstones",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9332,14 +9340,17 @@
         "team": "Alabama",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
