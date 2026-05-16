@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T06:18:05.524767+00:00",
+  "generated_at": "2026-05-16T06:32:16.384644+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1876,7 +1876,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2250,7 +2250,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3742,7 +3742,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -4349,11 +4349,10 @@
         "no game found": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 10,
+        "blocked (Cloudflare 403)": 12,
         "no game found": 24,
         "found player": 3,
-        "fetch failed": 5,
-        "player not in box": 3
+        "fetch failed": 6
       },
       "ESPN": {
         "found stats": 14,
@@ -4380,17 +4379,19 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 10,
+    "blocked_event_count": 12,
     "blocked_clients": [
       "Aiden Robbins",
       "Cam Flukey",
       "Caleb Daniel",
       "Joe Tiroly",
+      "Riley Goodman",
       "Ben Tryon",
       "Boston Torres",
       "Brooks Wright",
       "Tanner Chun",
-      "Ethan Lay"
+      "Ethan Lay",
+      "Lucas Steele"
     ],
     "carry_forward_clients": [
       "Caleb Daniel"
@@ -4449,8 +4450,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 2,
-          "blocked": 3
+          "success": 0,
+          "blocked": 5
         }
       }
     }
