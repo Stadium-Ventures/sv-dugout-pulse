@@ -8259,7 +8259,7 @@
   },
   {
     "date": "2026-05-16",
-    "updated_at": "2026-05-16T19:51:29.912924+00:00",
+    "updated_at": "2026-05-16T20:03:00.788934+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -8267,8 +8267,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8321,8 +8321,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8420,17 +8420,14 @@
         "team": "Florida",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
+          "NCAA.com"
         ]
       },
       {
@@ -8439,8 +8436,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8496,7 +8493,7 @@
         "team": "New Hampshire Fisher Cats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -8561,9 +8558,9 @@
         "team": "Virginia",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Final",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8649,7 +8646,7 @@
         "team": "Ohio State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
@@ -8736,7 +8733,7 @@
         "team": "Michigan",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": false,
         "blocked": true,
         "source": "D1Baseball",
@@ -9203,7 +9200,7 @@
         "team": "Ohio State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
