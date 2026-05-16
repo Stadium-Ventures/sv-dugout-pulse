@@ -1,33 +1,5 @@
 [
   {
-    "generated_at": "2026-05-14T12:32:06.876760+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 40,
-        "no game found": 4
-      },
-      "ESPN": {
-        "found stats": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-14T12:47:00.905872+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -15315,6 +15287,38 @@
   },
   {
     "generated_at": "2026-05-16T12:17:24.061645+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 39,
+        "no game found": 1,
+        "found game, no player": 1
+      },
+      "ESPN": {
+        "found stats": 2
+      },
+      "Sidearm": {
+        "player not in box": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-16T12:32:23.690516+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
