@@ -8259,7 +8259,7 @@
   },
   {
     "date": "2026-05-16",
-    "updated_at": "2026-05-16T18:17:32.271662+00:00",
+    "updated_at": "2026-05-16T18:32:23.190355+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -9027,7 +9027,7 @@
         "team": "ACL Guardians",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9205,12 +9205,17 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
