@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T16:32:12.086956+00:00",
+  "generated_at": "2026-05-16T16:47:04.851123+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -124,7 +124,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -143,7 +143,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -798,7 +798,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Tech 5, Boston College 0 | Bottom 1",
+      "game_context": "Georgia Tech 5, Boston College 2 | Top 2",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-16",
@@ -976,7 +976,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Georgia Tech 5, Boston College 0 | Bottom 1",
+      "game_context": "Georgia Tech 5, Boston College 2 | Top 2",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-16",
@@ -1147,7 +1147,7 @@
       "team": "Clemson",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Clemson 0, Virginia Tech 0 | Top 1",
+      "game_context": "Clemson 0, Virginia Tech 0 | Top 1",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-16",
@@ -1166,7 +1166,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1782,7 +1782,7 @@
       "player_name": "Sterlin Thompson",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "Game at 3:10 PM ET",
+      "stats_summary": "In lineup — batting 7th (RF)",
       "game_context": "Arizona Diamondbacks vs Colorado Rockies | 3:10 PM ET",
       "game_status": "Scheduled",
       "game_time": "3:10 PM ET",
@@ -2080,10 +2080,10 @@
       "player_name": "Bennett Edwards",
       "team": "Georgia Southern",
       "level": "NCAA",
-      "stats_summary": "Game in progress",
-      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "stats_summary": "In lineup",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
-      "game_time": "2:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-16",
       "is_yesterday": false,
       "next_game": null,
@@ -2096,31 +2096,11 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "scheduled (ignored)"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "stale (yesterday)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2833,7 +2813,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -2852,7 +2832,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3111,7 +3091,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Saint Josephs 0, Rhode Island 1 | Top 2",
+      "game_context": "Saint Josephs 0, Rhode Island 1 | Top 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-16",
@@ -3130,7 +3110,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3809,50 +3789,42 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 35,
-        "found game, no player": 8,
+        "found stats": 36,
+        "found game, no player": 7,
         "no game found": 1
       },
       "StatBroadcast": {
-        "fetch failed": 2,
-        "no game found": 7,
-        "player not in box": 2,
-        "blocked (Cloudflare 403)": 3
+        "player not in box": 6,
+        "no game found": 6,
+        "found player": 1
       },
       "ESPN": {
-        "scheduled (ignored)": 4,
+        "scheduled (ignored)": 3,
         "found stats": 2,
         "found game, no player": 2,
         "no game found": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 6,
-        "stale (yesterday)": 1
+        "scheduled (ignored)": 6
       },
       "Sidearm": {
-        "no game found": 7,
+        "no game found": 6,
         "player not in box": 1
       },
       "NCAA.org": {
-        "no game found": 7
+        "no game found": 6
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 3,
-    "blocked_clients": [
-      "Sam Mitchell",
-      "Duke McCarron"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Adam McKelvey",
       "Caleb Daniel",
-      "Bennett Edwards",
       "Sam Mitchell",
       "Duke McCarron"
     ],
@@ -3862,19 +3834,12 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 4
+          "success": 6,
+          "blocked": 0
         }
       }
     }
