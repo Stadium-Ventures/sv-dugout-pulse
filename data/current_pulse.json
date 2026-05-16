@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T18:32:23.169895+00:00",
+  "generated_at": "2026-05-16T18:34:48.530549+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -614,7 +614,7 @@
       "team": "Florida State",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Miami 0, Florida State 1 | Bottom 2",
+      "game_context": "Miami 0, Florida State 1 | End 2",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -846,7 +846,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Tech 11, Boston College 2 | Top 6",
+      "game_context": "Georgia Tech 11, Boston College 2 | Bottom 6",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-16",
@@ -956,7 +956,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Reading Fightin Phils 7, New Hampshire Fisher Cats 0 | Top 5",
+      "game_context": "Reading Fightin Phils 7, New Hampshire Fisher Cats 0 | Middle 5",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-16",
@@ -1024,7 +1024,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Georgia Tech 11, Boston College 2 | Top 6",
+      "game_context": "Georgia Tech 11, Boston College 2 | Bottom 6",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-16",
@@ -1765,7 +1765,7 @@
       "team": "South Carolina",
       "level": "NCAA",
       "stats_summary": "1.0 IP, H, BB",
-      "game_context": "South Carolina 2, Vanderbilt 0 | Middle 2",
+      "game_context": "South Carolina 2, Vanderbilt 0 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-16",
@@ -2091,7 +2091,7 @@
       "team": "Vanderbilt",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "South Carolina 2, Vanderbilt 0 | Middle 2",
+      "game_context": "South Carolina 2, Vanderbilt 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -2351,7 +2351,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Houston Christian 0, Southeastern Louisiana 0 | Bottom 2",
+      "game_context": "Houston Christian 0, Southeastern Louisiana 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -2370,7 +2370,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -2526,7 +2526,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Houston Christian 0, Southeastern Louisiana 0 | Bottom 2",
+      "game_context": "Houston Christian 0, Southeastern Louisiana 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -2545,7 +2545,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -3015,7 +3015,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Padres 2, ACL Guardians 0 | End 1",
+      "game_context": "ACL Padres 2, ACL Guardians 0 | Top 2",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -4139,9 +4139,9 @@
       },
       "StatBroadcast": {
         "no game found": 18,
-        "player not in box": 17,
+        "player not in box": 15,
         "found player": 8,
-        "fetch failed": 1
+        "fetch failed": 3
       },
       "NCAA.org": {
         "scheduled (ignored)": 17,
@@ -4184,11 +4184,11 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 14,
+          "success": 7,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 11,
+          "success": 16,
           "blocked": 0
         }
       }
