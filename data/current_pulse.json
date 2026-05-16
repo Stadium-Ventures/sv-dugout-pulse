@@ -148,7 +148,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -167,7 +167,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -841,7 +841,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1019,7 +1019,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1300,7 +1300,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -1470,15 +1470,19 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1662,10 +1666,18 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         },
         {
@@ -2965,7 +2977,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
+      "game_context": "Georgia Southern 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-16",
@@ -2984,7 +2996,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3374,10 +3386,18 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Extra-base hit (double) + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         },
         {
