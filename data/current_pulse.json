@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T05:47:28.287048+00:00",
+  "generated_at": "2026-05-16T06:02:24.489041+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -285,11 +285,11 @@
       "player_name": "Cole Katayama-Stall",
       "team": "Portland",
       "level": "NCAA",
-      "stats_summary": "1-5, 2 K",
+      "stats_summary": "1-5, R, BB, 2 K, 2B",
       "game_context": "Pacific 2, Portland 3 | Final",
       "game_status": "Final",
       "game_time": null,
-      "game_date": "2026-05-16",
+      "game_date": "2026-05-15",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646380",
@@ -297,19 +297,15 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "1-for-5",
       "social_search_url": "https://x.com/search?q=%22Cole%20Katayama-Stall%22%20Portland&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1302,7 +1298,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1880,7 +1876,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2254,7 +2250,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3594,7 +3590,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3746,7 +3742,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4348,18 +4344,19 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 38,
-        "no game found": 1,
-        "found stats": 5
+        "found game, no player": 37,
+        "found stats": 6,
+        "no game found": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 13,
+        "blocked (Cloudflare 403)": 8,
         "no game found": 24,
-        "fetch failed": 6,
-        "found player": 2
+        "found player": 3,
+        "player not in box": 5,
+        "fetch failed": 5
       },
       "ESPN": {
-        "found stats": 15,
+        "found stats": 14,
         "no game found": 3,
         "found game, no player": 21
       },
@@ -4383,19 +4380,16 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 13,
+    "blocked_event_count": 8,
     "blocked_clients": [
       "Aiden Robbins",
       "Cam Flukey",
       "Caleb Daniel",
       "Joe Tiroly",
-      "Riley Goodman",
       "Ben Tryon",
       "Boston Torres",
       "Brooks Wright",
-      "Tanner Chun",
-      "Ethan Lay",
-      "Lucas Steele"
+      "Tanner Chun"
     ],
     "carry_forward_clients": [
       "Caleb Daniel"
@@ -4445,7 +4439,6 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -4454,8 +4447,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 6
+          "success": 5,
+          "blocked": 0
         }
       }
     }
