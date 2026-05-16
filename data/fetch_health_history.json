@@ -1,61 +1,5 @@
 [
   {
-    "generated_at": "2026-05-14T15:17:13.354729+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 40,
-        "no game found": 4
-      },
-      "ESPN": {
-        "found stats": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
-    "generated_at": "2026-05-14T15:32:08.130380+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 40,
-        "no game found": 4
-      },
-      "ESPN": {
-        "found stats": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-14T15:46:55.177172+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -15420,6 +15364,38 @@
   },
   {
     "generated_at": "2026-05-16T15:17:09.768482+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 42,
+        "no game found": 1,
+        "found game, no player": 1
+      },
+      "ESPN": {
+        "found stats": 2
+      },
+      "Sidearm": {
+        "player not in box": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-16T15:32:19.606613+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
