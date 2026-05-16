@@ -1,61 +1,5 @@
 [
   {
-    "generated_at": "2026-05-14T06:47:20.661260+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Tanner Gordon",
-      "Austin Amaral",
-      "Blake Rambusch",
-      "Davis Sharpe",
-      "Najer Victor",
-      "Xavier Kolhosser",
-      "Brennan Orf",
-      "Peyton Glavine"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 6,
-        "found game, no player": 12,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "found player": 6,
-        "player not in box": 12,
-        "no game found": 9
-      },
-      "ESPN": {
-        "no game found": 13
-      },
-      "NCAA.com": {
-        "found game, no player": 9,
-        "found stats": 4
-      },
-      "StatBroadcast": {
-        "no game found": 9
-      },
-      "NCAA.org": {
-        "no game found": 9
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-14T07:02:27.115030+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -14988,6 +14932,123 @@
         "geo.iproyal.com": {
           "success": 0,
           "blocked": 4
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-16T07:02:02.810227+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 12,
+    "blocked_clients": [
+      "Aiden Robbins",
+      "Cam Flukey",
+      "Caleb Daniel",
+      "Joe Tiroly",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Boston Torres",
+      "Brooks Wright",
+      "Tanner Chun",
+      "Ethan Lay",
+      "Lucas Steele"
+    ],
+    "carry_forward_clients": [
+      "Caleb Daniel"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Kyle Jones",
+      "Myles Bailey",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Cade Doughty",
+      "Carter Johnson",
+      "Henry Zatkowski",
+      "Justin Riemer",
+      "Riley Goodman",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Alex Kranzler",
+      "Brady St. Pierre",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Kade Brown",
+      "Michael Dattalo",
+      "Najer Victor",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Ethan Lay",
+      "Lee Sowers",
+      "Lucas Steele",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Peyton Glavine",
+      "Truitt Webb"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 37,
+        "found stats": 6,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 12,
+        "no game found": 24,
+        "found player": 3,
+        "fetch failed": 6
+      },
+      "ESPN": {
+        "found stats": 14,
+        "no game found": 3,
+        "found game, no player": 21
+      },
+      "Sidearm": {
+        "player not in box": 19,
+        "no game found": 24,
+        "found player": 3
+      },
+      "NCAA.com": {
+        "found game, no player": 17,
+        "stale (yesterday)": 7
+      },
+      "NCAA.org": {
+        "found game, no player": 19,
+        "stale (yesterday)": 5
+      },
+      "game log": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 5
         }
       }
     }
