@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T07:02:02.810227+00:00",
+  "generated_at": "2026-05-16T07:10:47.265049+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -614,7 +614,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1318,7 +1318,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1428,7 +1428,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1876,7 +1876,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2250,7 +2250,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4349,10 +4349,11 @@
         "no game found": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 12,
+        "blocked (Cloudflare 403)": 11,
         "no game found": 24,
         "found player": 3,
-        "fetch failed": 6
+        "fetch failed": 5,
+        "player not in box": 2
       },
       "ESPN": {
         "found stats": 14,
@@ -4369,8 +4370,8 @@
         "stale (yesterday)": 7
       },
       "NCAA.org": {
-        "found game, no player": 19,
-        "stale (yesterday)": 5
+        "found game, no player": 16,
+        "stale (yesterday)": 8
       },
       "game log": {
         "found stats": 1
@@ -4379,13 +4380,12 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 12,
+    "blocked_event_count": 11,
     "blocked_clients": [
       "Aiden Robbins",
       "Cam Flukey",
       "Caleb Daniel",
       "Joe Tiroly",
-      "Alex Kranzler",
       "Ben Tryon",
       "Boston Torres",
       "Brooks Wright",
@@ -4450,8 +4450,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 5
+          "success": 1,
+          "blocked": 4
         }
       }
     }
