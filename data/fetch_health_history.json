@@ -1,61 +1,5 @@
 [
   {
-    "generated_at": "2026-05-14T16:13:47.101980+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 40,
-        "no game found": 4
-      },
-      "ESPN": {
-        "found stats": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
-    "generated_at": "2026-05-14T16:17:02.013855+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 40,
-        "no game found": 4
-      },
-      "ESPN": {
-        "found stats": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-14T16:32:13.610109+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -15456,6 +15400,63 @@
   },
   {
     "generated_at": "2026-05-16T16:13:41.547665+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Sam Mitchell",
+      "Duke McCarron"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 36,
+        "found game, no player": 7,
+        "no game found": 1
+      },
+      "StatBroadcast": {
+        "player not in box": 6,
+        "no game found": 6,
+        "found player": 1
+      },
+      "ESPN": {
+        "scheduled (ignored)": 3,
+        "found stats": 2,
+        "found game, no player": 2,
+        "no game found": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 6
+      },
+      "Sidearm": {
+        "no game found": 6,
+        "player not in box": 1
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 6
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 6,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-16T16:17:11.655045+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
