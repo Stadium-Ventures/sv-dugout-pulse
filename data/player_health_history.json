@@ -9361,7 +9361,7 @@
   },
   {
     "date": "2026-05-17",
-    "updated_at": "2026-05-17T19:17:41.104606+00:00",
+    "updated_at": "2026-05-17T19:31:55.941829+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -9401,7 +9401,7 @@
         "team": "Boston Red Sox",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Delayed",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9611,8 +9611,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -9629,11 +9629,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -9697,7 +9698,7 @@
         "team": "Fort Myers Mighty Mussels",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9770,7 +9771,7 @@
         "team": "Boston Red Sox",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Delayed",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T19:17:41.083054+00:00",
+  "generated_at": "2026-05-17T19:31:55.924605+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -45,7 +45,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -463,9 +463,9 @@
       "player_name": "Garrett Whitlock",
       "team": "Boston Red Sox",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Boston Red Sox 0, Atlanta Braves 7 | Top 6",
-      "game_status": "Live",
+      "stats_summary": "No game data",
+      "game_context": "Boston Red Sox vs Atlanta Braves | Delayed",
+      "game_status": "Delayed",
       "game_time": "1:35 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -614,7 +614,7 @@
       "player_name": "Kellon Lindsey",
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
-      "stats_summary": "Game at 4:05 PM ET",
+      "stats_summary": "In lineup — batting 1st (2B)",
       "game_context": "San Jose Giants vs Ontario Tower Buzzers | 4:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "4:05 PM ET",
@@ -695,7 +695,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -795,7 +795,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fayetteville Woodpeckers 1, Delmarva Shorebirds 4 | Top 5",
+      "game_context": "Fayetteville Woodpeckers 3, Delmarva Shorebirds 4 | Middle 5",
       "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-17",
@@ -1116,7 +1116,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Reading Fightin Phils 0, New Hampshire Fisher Cats 1 | Top 4",
+      "game_context": "Reading Fightin Phils 2, New Hampshire Fisher Cats 1 | End 4",
       "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-17",
@@ -1150,8 +1150,8 @@
       "player_name": "Caden Powell",
       "team": "Asheville Tourists",
       "level": "Pro",
-      "stats_summary": "1-3, R",
-      "game_context": "Hub City Spartanburgers 12, Asheville Tourists 7 | Bottom 6",
+      "stats_summary": "1-4, RBI, 2 R",
+      "game_context": "Hub City Spartanburgers 12, Asheville Tourists 12 | Bottom 6",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -1167,7 +1167,7 @@
       "box_score_url": "https://www.mlb.com/gameday/822498",
       "player_profile_url": "https://www.mlb.com/player/702547",
       "performance_grade": "😐 Routine",
-      "grade_reason": "1-for-3",
+      "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Caden%20Powell%22%20Astros&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1196,7 +1196,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Caleb%20Daniel%22%20Georgia%20Tech&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -1224,7 +1224,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1590,7 +1590,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Binghamton Rumble Ponies 10, Somerset Patriots 7 | Top 8",
+      "game_context": "Binghamton Rumble Ponies 10, Somerset Patriots 7 | Top 9",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -1623,8 +1623,8 @@
       "player_name": "Jason Schiavone",
       "team": "Asheville Tourists",
       "level": "Pro",
-      "stats_summary": "0-2, 2 BB, K",
-      "game_context": "Hub City Spartanburgers 12, Asheville Tourists 7 | Bottom 6",
+      "stats_summary": "0-2, R, 2 BB, K",
+      "game_context": "Hub City Spartanburgers 12, Asheville Tourists 12 | Bottom 6",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -2373,7 +2373,7 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 2, Winston-Salem Dash 3 | Middle 5",
+      "game_context": "Wilmington Blue Rocks 2, Winston-Salem Dash 4 | Top 6",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-17",
@@ -2485,8 +2485,8 @@
       "player_name": "Blake Rambusch",
       "team": "Arkansas Travelers",
       "level": "Pro",
-      "stats_summary": "0-0, R, BB",
-      "game_context": "Arkansas Travelers 4, Northwest Arkansas Naturals 0 | Top 1",
+      "stats_summary": "0-1, R, BB",
+      "game_context": "Arkansas Travelers 4, Northwest Arkansas Naturals 1 | Middle 2",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-17",
@@ -2502,7 +2502,7 @@
       "box_score_url": "https://www.mlb.com/gameday/817295",
       "player_profile_url": "https://www.mlb.com/player/800683",
       "performance_grade": "✅ Good",
-      "grade_reason": "Productive game",
+      "grade_reason": "Reached base early",
       "social_search_url": "https://x.com/search?q=%22Blake%20Rambusch%22%20Mariners&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2607,7 +2607,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "McNeese 3, Southeastern Louisiana 3 | Top 5",
+      "game_context": "McNeese 4, Southeastern Louisiana 3 | Bottom 5",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-17",
@@ -2626,7 +2626,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2646,7 +2646,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -2790,7 +2790,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "0-2, K",
-      "game_context": "McNeese 3, Southeastern Louisiana 3 | Top 5",
+      "game_context": "McNeese 4, SE Louisiana 3 | Inn 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-17",
@@ -2801,15 +2801,19 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Brooks%20Wright%22%20SE%20Louisiana&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2897,7 +2901,7 @@
       "team": "Akron RubberDucks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Chesapeake Baysox 8, Akron RubberDucks 4 | End 6",
+      "game_context": "Chesapeake Baysox 8, Akron RubberDucks 5 | Bottom 7",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -3446,9 +3450,9 @@
       "player_name": "Xavier Kolhosser",
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
-      "stats_summary": "No game data",
-      "game_context": "Fort Myers Mighty Mussels vs Bradenton Marauders | Delayed",
-      "game_status": "Delayed",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Fort Myers Mighty Mussels 1, Bradenton Marauders 2 | Top 7",
+      "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -4022,7 +4026,7 @@
       "team": "Columbus Clingstones",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Knoxville Smokies 1, Columbus Clingstones 3 | End 8",
+      "game_context": "Knoxville Smokies 4, Columbus Clingstones 3 | Top 9",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -4092,7 +4096,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "McNeese 3, Southeastern Louisiana 3 | Top 5",
+      "game_context": "McNeese 4, Southeastern Louisiana 3 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-17",
@@ -4111,7 +4115,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -4131,7 +4135,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -4380,7 +4384,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jacksonville Jumbo Shrimp 3, Memphis Redbirds 2 | Top 5",
+      "game_context": "Jacksonville Jumbo Shrimp 4, Memphis Redbirds 2 | Bottom 5",
       "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-17",
@@ -4413,9 +4417,9 @@
       "player_name": "Trevor Story",
       "team": "Boston Red Sox",
       "level": "Pro",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Boston Red Sox 0, Atlanta Braves 7 | Top 6",
-      "game_status": "Live",
+      "stats_summary": "No game data",
+      "game_context": "Boston Red Sox vs Atlanta Braves | Delayed",
+      "game_status": "Delayed",
       "game_time": "1:35 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -4472,11 +4476,11 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 29,
-        "found stats": 14,
+        "found game, no player": 30,
+        "found stats": 13,
         "no game found": 1
       },
       "Sidearm": {
@@ -4486,7 +4490,8 @@
       },
       "ESPN": {
         "no game found": 28,
-        "found game, no player": 2
+        "found game, no player": 2,
+        "found stats": 1
       },
       "NCAA.com": {
         "found game, no player": 23,
@@ -4496,14 +4501,14 @@
       },
       "StatBroadcast": {
         "no game found": 25,
-        "blocked (Cloudflare 403)": 1,
-        "found player": 3,
-        "player not in box": 2
+        "blocked (Cloudflare 403)": 3,
+        "found player": 2,
+        "fetch failed": 1
       },
       "NCAA.org": {
-        "no game found": 2,
-        "found game, no player": 21,
-        "scheduled (ignored)": 2
+        "found game, no player": 22,
+        "found stats": 1,
+        "stale (yesterday)": 2
       },
       "game log": {
         "found stats": 1
@@ -4512,18 +4517,21 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 1,
-    "blocked_clients": [],
+    "blocked_event_count": 3,
+    "blocked_clients": [
+      "Brady St. Pierre",
+      "Brooks Wright"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
-      "Garrett Whitlock",
       "Cade Doughty",
       "Cade Doughty",
       "Jack Cebert",
       "Austin Amaral",
       "Brady St. Pierre",
       "Davis Sharpe",
+      "Xavier Kolhosser",
       "Peyton Glavine",
       "Truitt Webb"
     ],
@@ -4544,8 +4552,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 2,
-          "blocked": 2
+          "success": 1,
+          "blocked": 3
         }
       }
     }
