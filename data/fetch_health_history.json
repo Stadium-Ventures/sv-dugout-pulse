@@ -1,81 +1,5 @@
 [
   {
-    "generated_at": "2026-05-15T21:47:26.531396+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 5,
-    "blocked_clients": [
-      "Mason Eckelman",
-      "Sam Mitchell",
-      "Duke McCarron",
-      "Luke Fithian"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Ty Finkbeiner",
-      "Bennett Edwards",
-      "Sam Mitchell",
-      "Duke McCarron",
-      "Luke Fithian"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 34,
-        "found game, no player": 9,
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "fetch failed": 2,
-        "no game found": 7,
-        "blocked (Cloudflare 403)": 5,
-        "player not in box": 2,
-        "found player": 2
-      },
-      "ESPN": {
-        "scheduled (ignored)": 3,
-        "found stats": 3,
-        "found game, no player": 3,
-        "no game found": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 4,
-        "stale (yesterday)": 3
-      },
-      "Sidearm": {
-        "no game found": 7,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 3,
-        "stale (yesterday)": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 6
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-15T22:02:24.169097+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -17419,6 +17343,91 @@
   },
   {
     "generated_at": "2026-05-17T21:47:01.206039+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Brady St. Pierre"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Sterlin Thompson",
+      "Tanner Gordon",
+      "Austin Amaral",
+      "Brady St. Pierre",
+      "Davis Sharpe",
+      "Jake Munroe",
+      "Kade Brown",
+      "Najer Victor",
+      "Brennan Orf",
+      "Peyton Glavine",
+      "Truitt Webb"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 29,
+        "found stats": 14,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 26,
+        "no game found": 25,
+        "found player": 11
+      },
+      "ESPN": {
+        "no game found": 28,
+        "found game, no player": 2
+      },
+      "NCAA.com": {
+        "found game, no player": 23,
+        "found stats": 5,
+        "scheduled (ignored)": 1,
+        "stale (yesterday)": 1
+      },
+      "StatBroadcast": {
+        "no game found": 25,
+        "blocked (Cloudflare 403)": 2,
+        "found player": 3,
+        "fetch failed": 1
+      },
+      "NCAA.org": {
+        "found game, no player": 21,
+        "found stats": 2,
+        "stale (yesterday)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 3
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-17T22:02:11.848954+00:00",
     "severity": "warning",
     "blocked_sources": [
       "StatBroadcast"
