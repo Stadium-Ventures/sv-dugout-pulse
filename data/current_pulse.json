@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T16:18:05.592844+00:00",
+  "generated_at": "2026-05-17T16:32:38.391533+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -297,8 +297,8 @@
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
-      "stats_summary": "0.2 IP, 5 H, 4 ER, 0 K, 1 HR",
-      "game_context": "Indianapolis Indians 4, Louisville Bats 0 | Top 1",
+      "stats_summary": "1.1 IP, 5 H, 4 ER, 0 K, 1 BB, 1 HR",
+      "game_context": "Indianapolis Indians 4, Louisville Bats 0 | Top 2",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-17",
@@ -314,7 +314,7 @@
       "box_score_url": "https://www.mlb.com/gameday/816275",
       "player_profile_url": "https://www.mlb.com/player/695534",
       "performance_grade": "🚩 Off Day",
-      "grade_reason": "4 earned runs in 0.2 IP",
+      "grade_reason": "More walks (1) than strikeouts (0)",
       "social_search_url": "https://x.com/search?q=%22Chase%20Petty%22%20Reds&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -465,7 +465,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Dunedin Blue Jays 0, Tampa Tarpons 0 | Top 2",
+      "game_context": "Dunedin Blue Jays 0, Tampa Tarpons 0 | Top 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-17",
@@ -1264,7 +1264,7 @@
       "team": "Jupiter Hammerheads",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Jupiter Hammerheads 0, St. Lucie Mets 0 | Top 1",
+      "game_context": "Jupiter Hammerheads 0, St. Lucie Mets 1 | Top 2",
       "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-17",
@@ -1378,7 +1378,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2001,8 +2001,8 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "In lineup — batting 5th (3B)",
-      "game_context": "Daytona Tortugas vs Palm Beach Cardinals | 12:30 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Daytona Tortugas 0, Palm Beach Cardinals 0 | Top 1",
+      "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -2016,7 +2016,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820414",
       "player_profile_url": "https://www.mlb.com/player/805550",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ryan%20Weingartner%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -3177,8 +3177,8 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "In lineup — batting 3rd (DH)",
-      "game_context": "Daytona Tortugas vs Palm Beach Cardinals | 12:30 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Daytona Tortugas 0, Palm Beach Cardinals 0 | Top 1",
+      "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -3192,7 +3192,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820414",
       "player_profile_url": "https://www.mlb.com/player/809633",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -3405,7 +3405,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fort Myers Mighty Mussels 0, Bradenton Marauders 0 | Top 2",
+      "game_context": "Fort Myers Mighty Mussels 0, Bradenton Marauders 0 | Top 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-17",
@@ -4422,7 +4422,7 @@
       },
       "StatBroadcast": {
         "no game found": 23,
-        "blocked (Cloudflare 403)": 1,
+        "player not in box": 1,
         "found player": 2
       },
       "NCAA.org": {
@@ -4430,10 +4430,8 @@
         "found stats": 2
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
+    "blocked_sources": [],
+    "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
@@ -4448,16 +4446,15 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
+          "success": 3,
           "blocked": 0
         }
       }
