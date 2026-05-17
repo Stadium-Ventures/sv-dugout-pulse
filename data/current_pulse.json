@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T19:55:21.538548+00:00",
+  "generated_at": "2026-05-17T20:02:25.744293+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -464,7 +464,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Boston Red Sox 0, Atlanta Braves 7 | Bottom 6",
+      "game_context": "Boston Red Sox 0, Atlanta Braves 7 | Top 7",
       "game_status": "Live",
       "game_time": "1:35 PM ET",
       "game_date": "2026-05-17",
@@ -791,7 +791,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fayetteville Woodpeckers 3, Delmarva Shorebirds 7 | Top 6",
+      "game_context": "Fayetteville Woodpeckers 4, Delmarva Shorebirds 7 | Middle 6",
       "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-17",
@@ -1112,7 +1112,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Reading Fightin Phils 2, New Hampshire Fisher Cats 1 | Middle 6",
+      "game_context": "Reading Fightin Phils 2, New Hampshire Fisher Cats 1 | Top 7",
       "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-17",
@@ -1147,7 +1147,7 @@
       "team": "Asheville Tourists",
       "level": "Pro",
       "stats_summary": "1-5, RBI, 2 R, K",
-      "game_context": "Hub City Spartanburgers 15, Asheville Tourists 12 | Top 8",
+      "game_context": "Hub City Spartanburgers 16, Asheville Tourists 12 | Top 8",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -1620,7 +1620,7 @@
       "team": "Asheville Tourists",
       "level": "Pro",
       "stats_summary": "0-3, R, 2 BB, K",
-      "game_context": "Hub City Spartanburgers 15, Asheville Tourists 12 | Top 8",
+      "game_context": "Hub City Spartanburgers 16, Asheville Tourists 12 | Top 8",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -1974,17 +1974,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "4 strikeouts with good command",
+      "grade_reason": "More walks (1) than strikeouts (0)",
       "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2138,7 +2146,7 @@
       "player_name": "Trevor Cohen",
       "team": "Eugene Emeralds",
       "level": "Pro",
-      "stats_summary": "Game at 4:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (DH)",
       "game_context": "Eugene Emeralds vs Tri-City Dust Devils | 4:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "4:30 PM ET",
@@ -2344,15 +2352,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Scoreless in 1 IP",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2369,7 +2385,7 @@
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Wilmington Blue Rocks 3, Winston-Salem Dash 4 | Top 7",
+      "game_context": "Wilmington Blue Rocks 3, Winston-Salem Dash 4 | Bottom 7",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-17",
@@ -2482,7 +2498,7 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "0-1, R, BB",
-      "game_context": "Arkansas Travelers 5, Northwest Arkansas Naturals 2 | Middle 3",
+      "game_context": "Arkansas Travelers 5, Northwest Arkansas Naturals 2 | Top 4",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-17",
@@ -2805,7 +2821,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "fetch failed"
         },
         {
           "source": "ESPN",
@@ -2897,7 +2913,7 @@
       "team": "Akron RubberDucks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Chesapeake Baysox 9, Akron RubberDucks 6 | Bottom 8",
+      "game_context": "Chesapeake Baysox 9, Akron RubberDucks 7 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
@@ -3446,8 +3462,8 @@
       "player_name": "Xavier Kolhosser",
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
-      "stats_summary": "1.2 IP, 0 ER, 1 K, 2 BB",
-      "game_context": "Fort Myers Mighty Mussels 1, Bradenton Marauders 2 | Bottom 8",
+      "stats_summary": "2.0 IP, 0 ER, 2 K, 2 BB",
+      "game_context": "Fort Myers Mighty Mussels 1, Bradenton Marauders 2 | Top 9",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-17",
@@ -3462,8 +3478,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820875",
       "player_profile_url": "https://www.mlb.com/player/828492",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "1.2 IP, 0 ER",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Scoreless in 2 IP",
       "social_search_url": "https://x.com/search?q=%22Xavier%20Kolhosser%22%20Twins&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -4238,7 +4254,7 @@
       "team": "Oklahoma City Comets",
       "level": "Pro",
       "stats_summary": "1-1, RBI",
-      "game_context": "Oklahoma City Comets 2, Albuquerque Isotopes 0 | Bottom 1",
+      "game_context": "Oklahoma City Comets 3, Albuquerque Isotopes 2 | Top 2",
       "game_status": "Live",
       "game_time": "3:35 PM ET",
       "game_date": "2026-05-17",
@@ -4380,7 +4396,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jacksonville Jumbo Shrimp 4, Memphis Redbirds 2 | Top 7",
+      "game_context": "Jacksonville Jumbo Shrimp 5, Memphis Redbirds 2 | Bottom 7",
       "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-17",
@@ -4414,7 +4430,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Boston Red Sox 0, Atlanta Braves 7 | Bottom 6",
+      "game_context": "Boston Red Sox 0, Atlanta Braves 7 | Top 7",
       "game_status": "Live",
       "game_time": "1:35 PM ET",
       "game_date": "2026-05-17",
@@ -4475,8 +4491,8 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 30,
-        "found stats": 13,
+        "found game, no player": 32,
+        "found stats": 11,
         "no game found": 1
       },
       "Sidearm": {
@@ -4485,21 +4501,20 @@
         "found player": 11
       },
       "ESPN": {
-        "no game found": 28,
+        "no game found": 30,
         "found game, no player": 2,
         "found stats": 1
       },
       "NCAA.com": {
         "found game, no player": 23,
-        "found stats": 5,
+        "found stats": 7,
         "scheduled (ignored)": 1,
         "stale (yesterday)": 1
       },
       "StatBroadcast": {
         "no game found": 25,
         "blocked (Cloudflare 403)": 3,
-        "found player": 2,
-        "fetch failed": 1
+        "fetch failed": 3
       },
       "NCAA.org": {
         "found game, no player": 21,
@@ -4512,8 +4527,8 @@
     ],
     "blocked_event_count": 3,
     "blocked_clients": [
-      "Brady St. Pierre",
-      "Brooks Wright"
+      "Riley Goodman",
+      "Brady St. Pierre"
     ],
     "carry_forward_clients": [],
     "fallback_clients": [
@@ -4541,12 +4556,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 3
+          "blocked": 4
         }
       }
     }
