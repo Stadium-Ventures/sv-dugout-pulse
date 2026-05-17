@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T23:17:12.926130+00:00",
+  "generated_at": "2026-05-17T23:31:44.538166+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -45,7 +45,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -101,7 +101,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -218,7 +218,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -281,7 +281,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -541,9 +541,9 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ian%20Josephson%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "",
+      "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Ian%20Josephson%22%20Saint%20Mary%27s&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "game log",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -567,11 +567,15 @@
         },
         {
           "source": "NCAA.org",
+          "outcome": "no game found"
+        },
+        {
+          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": null,
-      "stats_captured_status": null,
+      "stats_captured_at": "2026-05-16T04:17:49.095506+00:00",
+      "stats_captured_status": "Final",
       "is_client": false,
       "tags": {
         "draft_class": "2028",
@@ -691,7 +695,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -774,7 +778,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1006,7 +1010,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1192,7 +1196,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Caleb%20Daniel%22%20Georgia%20Tech&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -1220,7 +1224,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found stats"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1398,7 +1402,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1515,7 +1519,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -1732,7 +1736,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-2, K",
-      "game_context": "Amarillo Sod Poodles 1, Corpus Christi Hooks 1 | End 4",
+      "game_context": "Amarillo Sod Poodles 1, Corpus Christi Hooks 1 | Top 5",
       "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-17",
@@ -1827,7 +1831,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "1-2",
-      "game_context": "Amarillo Sod Poodles 1, Corpus Christi Hooks 1 | End 4",
+      "game_context": "Amarillo Sod Poodles 1, Corpus Christi Hooks 1 | Top 5",
       "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-17",
@@ -2048,7 +2052,14 @@
       "game_time": null,
       "game_date": null,
       "is_yesterday": false,
-      "next_game": null,
+      "next_game": {
+        "date": "Wed 05/20",
+        "date_full": "2026-05-20",
+        "opponent": "Abilene Chrstn",
+        "home_away": "vs",
+        "time": "6:00 PM ET",
+        "display": "vs Abilene Chrstn — Wed 05/20 6:00 PM ET"
+      },
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
       "performance_grade": "— No Data",
@@ -2079,7 +2090,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Arizona Diamondbacks 8, Colorado Rockies 2 | Top 8",
+      "game_context": "Arizona Diamondbacks 8, Colorado Rockies 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-17",
@@ -2113,7 +2124,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Arizona Diamondbacks 8, Colorado Rockies 2 | Top 8",
+      "game_context": "Arizona Diamondbacks 8, Colorado Rockies 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-17",
@@ -2227,7 +2238,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2244,7 +2255,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-2, K",
-      "game_context": "Amarillo Sod Poodles 1, Corpus Christi Hooks 1 | End 4",
+      "game_context": "Amarillo Sod Poodles 1, Corpus Christi Hooks 1 | Top 5",
       "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-17",
@@ -2317,7 +2328,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2658,7 +2669,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2785,7 +2796,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -2982,7 +2993,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3065,7 +3076,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3135,9 +3146,9 @@
       "player_name": "Jake Munroe",
       "team": "Tri-City Dust Devils",
       "level": "Pro",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Eugene Emeralds 8, Tri-City Dust Devils 3 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Eugene Emeralds 8, Tri-City Dust Devils 3 | Final",
+      "game_status": "Final",
       "game_time": "4:30 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -3151,7 +3162,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819165",
       "player_profile_url": "https://www.mlb.com/player/827719",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Jake%20Munroe%22%20Angels&f=live",
       "data_source": "MLB Stats API",
@@ -3170,7 +3181,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 12, Stockton Ports 7 | Top 6",
+      "game_context": "Inland Empire 66ers 14, Stockton Ports 11 | Top 7",
       "game_status": "Live",
       "game_time": "5:09 PM ET",
       "game_date": "2026-05-17",
@@ -3379,7 +3390,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3637,7 +3648,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3700,7 +3711,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3722,7 +3733,14 @@
       "game_time": null,
       "game_date": null,
       "is_yesterday": false,
-      "next_game": null,
+      "next_game": {
+        "date": "Wed 05/20",
+        "date_full": "2026-05-20",
+        "opponent": "Abilene Chrstn",
+        "home_away": "vs",
+        "time": "6:00 PM ET",
+        "display": "vs Abilene Chrstn — Wed 05/20 6:00 PM ET"
+      },
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ethan%20Lay%22&btnI=",
       "performance_grade": "— No Data",
@@ -3756,7 +3774,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3898,7 +3916,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -3961,7 +3979,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -4017,7 +4035,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -4143,7 +4161,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "no game found"
         }
       ],
       "stats_captured_at": null,
@@ -4512,9 +4530,10 @@
         "found player": 1
       },
       "NCAA.org": {
-        "found game, no player": 21,
-        "found stats": 2,
-        "stale (yesterday)": 2
+        "no game found": 25
+      },
+      "game log": {
+        "found stats": 1
       }
     },
     "blocked_sources": [
