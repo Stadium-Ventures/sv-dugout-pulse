@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T06:31:39.016454+00:00",
+  "generated_at": "2026-05-17T06:46:56.083934+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -101,7 +101,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -211,7 +211,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -267,7 +267,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -650,7 +650,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1294,7 +1294,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1404,7 +1404,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2637,7 +2637,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2677,7 +2677,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2697,7 +2697,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -2854,7 +2854,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -2937,7 +2937,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3244,7 +3244,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3503,7 +3503,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3559,7 +3559,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3615,7 +3615,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3767,7 +3767,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3823,7 +3823,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -3879,7 +3879,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4354,14 +4354,13 @@
       },
       "StatBroadcast": {
         "no game found": 25,
-        "blocked (Cloudflare 403)": 10,
+        "blocked (Cloudflare 403)": 11,
         "found player": 1,
-        "fetch failed": 8
+        "fetch failed": 7
       },
       "NCAA.org": {
-        "stale (yesterday)": 3,
-        "no game found": 17,
-        "found game, no player": 4,
+        "stale (yesterday)": 5,
+        "found game, no player": 19,
         "found stats": 1
       },
       "game log": {
@@ -4371,7 +4370,7 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 10,
+    "blocked_event_count": 11,
     "blocked_clients": [
       "Joe Tiroly",
       "Riley Goodman",
@@ -4379,6 +4378,7 @@
       "Ben Tryon",
       "Boston Torres",
       "Braydon Kersey",
+      "Brooks Wright",
       "Tanner Chun",
       "Lee Sowers"
     ],
