@@ -9361,14 +9361,14 @@
   },
   {
     "date": "2026-05-17",
-    "updated_at": "2026-05-17T18:01:52.063885+00:00",
+    "updated_at": "2026-05-17T18:17:27.307811+00:00",
     "players": [
       {
         "name": "Chase Petty",
         "team": "Louisville Bats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9401,7 +9401,7 @@
         "team": "Tampa Tarpons",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9434,7 +9434,7 @@
         "team": "Fayetteville Woodpeckers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9588,7 +9588,7 @@
         "team": "Wilmington Blue Rocks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9610,12 +9610,17 @@
         "team": "SE Louisiana",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -9623,12 +9628,14 @@
         "team": "SE Louisiana",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
@@ -9724,12 +9731,17 @@
         "team": "SE Louisiana",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -9748,7 +9760,7 @@
         "team": "Memphis Redbirds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
