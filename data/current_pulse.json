@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T04:46:54.268583+00:00",
+  "generated_at": "2026-05-17T05:01:51.442325+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1274,7 +1274,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2035,8 +2035,8 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "2-5, RBI, R, K",
-      "game_context": "Eugene Emeralds 15, Tri-City Dust Devils 8 | Bottom 9",
-      "game_status": "Live",
+      "game_context": "Eugene Emeralds 15, Tri-City Dust Devils 8 | Final",
+      "game_status": "Final",
       "game_time": "9:30 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -2976,8 +2976,8 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "0-4, R, BB",
-      "game_context": "Eugene Emeralds 15, Tri-City Dust Devils 8 | Bottom 9",
-      "game_status": "Live",
+      "game_context": "Eugene Emeralds 15, Tri-City Dust Devils 8 | Final",
+      "game_status": "Final",
       "game_time": "9:30 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -4322,9 +4322,8 @@
       },
       "StatBroadcast": {
         "no game found": 24,
-        "blocked (Cloudflare 403)": 9,
+        "blocked (Cloudflare 403)": 10,
         "found player": 1,
-        "player not in box": 1,
         "fetch failed": 7
       },
       "NCAA.org": {
@@ -4339,7 +4338,7 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 9,
+    "blocked_event_count": 10,
     "blocked_clients": [
       "Joe Tiroly",
       "Riley Goodman",
@@ -4395,6 +4394,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -4403,8 +4403,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 2,
-          "blocked": 0
+          "success": 1,
+          "blocked": 2
         }
       }
     }
