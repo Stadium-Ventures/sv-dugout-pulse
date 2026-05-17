@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T15:06:07.541423+00:00",
+  "generated_at": "2026-05-17T15:17:20.143386+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -45,7 +45,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -281,7 +281,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -576,9 +576,9 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ian%20Josephson%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "0-for-3",
+      "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ian%20Josephson%22%20Saint%20Mary%27s&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -602,15 +602,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-16T04:17:49.095506+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": false,
       "tags": {
         "draft_class": "2028",
@@ -813,7 +809,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "no game found"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -1231,7 +1227,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Caleb%20Daniel%22%20Georgia%20Tech&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -1259,7 +1255,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -4465,11 +4461,8 @@
         "found player": 2
       },
       "NCAA.org": {
-        "no game found": 3,
-        "found game, no player": 20
-      },
-      "game log": {
-        "found stats": 1
+        "found game, no player": 21,
+        "found stats": 2
       }
     },
     "blocked_sources": [
