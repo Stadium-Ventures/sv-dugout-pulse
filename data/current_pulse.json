@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T13:02:22.335755+00:00",
+  "generated_at": "2026-05-17T13:17:26.817003+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1413,7 +1413,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2009,17 +2009,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "4 strikeouts with good command",
+      "grade_reason": "More walks (1) than strikeouts (0)",
       "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2379,15 +2387,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Scoreless in 1 IP",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -4436,11 +4452,11 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 27,
-        "found stats": 13,
+        "found game, no player": 29,
+        "found stats": 11,
         "no game found": 1
       },
       "Sidearm": {
@@ -4449,25 +4465,29 @@
         "found player": 11
       },
       "ESPN": {
-        "no game found": 28
+        "no game found": 30
       },
       "NCAA.com": {
         "found game, no player": 23,
-        "found stats": 5
+        "found stats": 7
       },
       "StatBroadcast": {
         "no game found": 23,
-        "player not in box": 1,
-        "found player": 2
+        "blocked (Cloudflare 403)": 2,
+        "fetch failed": 1
       },
       "NCAA.org": {
         "found game, no player": 21,
         "found stats": 2
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Riley Goodman"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [],
     "total_clients": 84,
@@ -4478,6 +4498,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -4486,8 +4507,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 0
+          "success": 0,
+          "blocked": 4
         }
       }
     }
