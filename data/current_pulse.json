@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T04:01:56.309072+00:00",
+  "generated_at": "2026-05-17T04:17:08.157986+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2034,8 +2034,8 @@
       "player_name": "Trevor Cohen",
       "team": "Eugene Emeralds",
       "level": "Pro",
-      "stats_summary": "1-4, R, K",
-      "game_context": "Eugene Emeralds 10, Tri-City Dust Devils 7 | Top 7",
+      "stats_summary": "1-4, RBI, R, K",
+      "game_context": "Eugene Emeralds 12, Tri-City Dust Devils 7 | Bottom 7",
       "game_status": "Live",
       "game_time": "9:30 PM ET",
       "game_date": "2026-05-17",
@@ -2653,53 +2653,20 @@
       "player_name": "Brooks Wright",
       "team": "SE Louisiana",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "Houston Christian 4, Southeastern Louisiana 8 | Final",
+      "stats_summary": "No game data",
+      "game_context": "Southeastern Louisiana 13, McNeese 12 | Final",
       "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-16",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.lionsports.net/boxscore.aspx?id=9746",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659514",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brooks%20Wright%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Brooks%20Wright%22%20SE%20Louisiana&f=live",
-      "data_source": "D1Baseball",
-      "fetch_diagnostic": [
-        {
-          "source": "D1Baseball",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "fetch failed"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found game, no player"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "no game found"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
-        }
-      ],
+      "data_source": "",
+      "fetch_diagnostic": null,
       "stats_captured_at": null,
       "stats_captured_status": null,
       "is_client": true,
@@ -2707,7 +2674,8 @@
         "draft_class": "2026",
         "position": "Hitter",
         "roster_priority": 3
-      }
+      },
+      "game_number": 2
     },
     {
       "player_name": "Cole Cleveland",
@@ -3008,7 +2976,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "0-3, R, BB",
-      "game_context": "Eugene Emeralds 10, Tri-City Dust Devils 7 | Top 7",
+      "game_context": "Eugene Emeralds 12, Tri-City Dust Devils 7 | Bottom 7",
       "game_status": "Live",
       "game_time": "9:30 PM ET",
       "game_date": "2026-05-17",
@@ -3042,7 +3010,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 3, Stockton Ports 3 | Bottom 7",
+      "game_context": "Inland Empire 66ers 4, Stockton Ports 3 | Middle 8",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-17",
@@ -4333,33 +4301,33 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 39,
+        "found game, no player": 38,
         "no game found": 1,
         "found stats": 3
       },
       "Sidearm": {
-        "player not in box": 22,
-        "no game found": 25,
+        "player not in box": 21,
+        "no game found": 24,
         "found player": 2
       },
       "ESPN": {
-        "found game, no player": 20,
+        "found game, no player": 19,
         "no game found": 5,
         "found stats": 15
       },
       "NCAA.com": {
         "stale (yesterday)": 4,
-        "found game, no player": 20,
+        "found game, no player": 19,
         "scheduled (ignored)": 1
       },
       "StatBroadcast": {
-        "no game found": 25,
+        "no game found": 24,
         "blocked (Cloudflare 403)": 10,
         "found player": 1,
-        "fetch failed": 8
+        "fetch failed": 7
       },
       "NCAA.org": {
-        "stale (yesterday)": 5,
+        "stale (yesterday)": 4,
         "found game, no player": 19,
         "found stats": 1
       },
@@ -4403,7 +4371,6 @@
       "Will Rhine",
       "Austin Amaral",
       "Brisen Tweedy",
-      "Brooks Wright",
       "Davis Sharpe",
       "Drew Bellis",
       "Evan Taylor",
@@ -4436,8 +4403,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 3
+          "success": 1,
+          "blocked": 2
         }
       }
     }
