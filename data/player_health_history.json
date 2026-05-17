@@ -9361,7 +9361,7 @@
   },
   {
     "date": "2026-05-17",
-    "updated_at": "2026-05-17T19:47:32.955390+00:00",
+    "updated_at": "2026-05-17T19:55:21.559910+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -9401,7 +9401,7 @@
         "team": "Boston Red Sox",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9478,7 +9478,7 @@
         "team": "Somerset Patriots",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9611,8 +9611,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -9628,12 +9628,13 @@
         "team": "SE Louisiana",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "game_status": "Rain Delay",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -9719,7 +9720,7 @@
         "team": "Columbus Clingstones",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9770,7 +9771,7 @@
         "team": "Boston Red Sox",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
