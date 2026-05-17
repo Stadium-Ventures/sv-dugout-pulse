@@ -8259,7 +8259,7 @@
   },
   {
     "date": "2026-05-16",
-    "updated_at": "2026-05-17T03:16:52.682324+00:00",
+    "updated_at": "2026-05-17T03:31:32.534224+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -8546,8 +8546,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -8937,10 +8937,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
+        "captured": true,
         "blocked": false,
-        "source": "",
-        "sources_tried": []
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
       },
       {
         "name": "Cole Cleveland",
@@ -9042,7 +9049,7 @@
         "team": "Salt Lake Bees",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
