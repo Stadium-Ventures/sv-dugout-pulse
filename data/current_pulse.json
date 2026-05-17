@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T22:02:11.848954+00:00",
+  "generated_at": "2026-05-17T22:11:31.228133+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -396,7 +396,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Spokane Indians 2, Hillsboro Hops 3 | Top 7",
+      "game_context": "Spokane Indians 2, Hillsboro Hops 3 | Bottom 7",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -610,8 +610,8 @@
       "player_name": "Kellon Lindsey",
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
-      "stats_summary": "0-3, K",
-      "game_context": "San Jose Giants 3, Ontario Tower Buzzers 6 | Top 7",
+      "stats_summary": "1-4, K",
+      "game_context": "San Jose Giants 5, Ontario Tower Buzzers 6 | Bottom 7",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -627,7 +627,7 @@
       "box_score_url": "https://www.mlb.com/gameday/821202",
       "player_profile_url": "https://www.mlb.com/player/813916",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-3",
+      "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Kellon%20Lindsey%22%20Dodgers&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1732,8 +1732,8 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "In lineup — batting 5th (LF)",
-      "game_context": "Amarillo Sod Poodles vs Corpus Christi Hooks | 6:05 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Amarillo Sod Poodles 0, Corpus Christi Hooks 0 | Top 1",
+      "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -1747,7 +1747,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/817510",
       "player_profile_url": "https://www.mlb.com/player/813896",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Joseph%20Sullivan%22%20Astros&f=live",
       "data_source": "MLB Stats API",
@@ -1827,8 +1827,8 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "In lineup — batting 3rd (RF)",
-      "game_context": "Amarillo Sod Poodles vs Corpus Christi Hooks | 6:05 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Amarillo Sod Poodles 0, Corpus Christi Hooks 0 | Top 1",
+      "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -1842,7 +1842,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/817510",
       "player_profile_url": "https://www.mlb.com/player/828599",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Spence%22%20Astros&f=live",
       "data_source": "MLB Stats API",
@@ -1974,17 +1974,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "4 strikeouts with good command",
+      "grade_reason": "More walks (1) than strikeouts (0)",
       "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2071,7 +2079,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Arizona Diamondbacks 5, Colorado Rockies 1 | Bottom 4",
+      "game_context": "Arizona Diamondbacks 6, Colorado Rockies 2 | Top 5",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-17",
@@ -2105,7 +2113,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Arizona Diamondbacks 5, Colorado Rockies 1 | Bottom 4",
+      "game_context": "Arizona Diamondbacks 6, Colorado Rockies 2 | Top 5",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-17",
@@ -2139,7 +2147,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "1-3, RBI, 2 R, BB",
-      "game_context": "Eugene Emeralds 6, Tri-City Dust Devils 1 | Middle 6",
+      "game_context": "Eugene Emeralds 6, Tri-City Dust Devils 1 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:30 PM ET",
       "game_date": "2026-05-17",
@@ -2236,8 +2244,8 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "In lineup — batting 4th (C)",
-      "game_context": "Amarillo Sod Poodles vs Corpus Christi Hooks | 6:05 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Amarillo Sod Poodles 0, Corpus Christi Hooks 0 | Top 1",
+      "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -2251,7 +2259,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/817510",
       "player_profile_url": "https://www.mlb.com/player/813844",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Will%20Bush%22%20Astros&f=live",
       "data_source": "MLB Stats API",
@@ -2344,15 +2352,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Scoreless in 1 IP",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3120,7 +3136,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Eugene Emeralds 6, Tri-City Dust Devils 1 | Top 6",
+      "game_context": "Eugene Emeralds 6, Tri-City Dust Devils 1 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:30 PM ET",
       "game_date": "2026-05-17",
@@ -3154,7 +3170,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Inland Empire 66ers 4, Stockton Ports 3 | Top 3",
+      "game_context": "Inland Empire 66ers 6, Stockton Ports 3 | Bottom 3",
       "game_status": "Live",
       "game_time": "5:09 PM ET",
       "game_date": "2026-05-17",
@@ -3249,7 +3265,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "El Paso Chihuahuas 5, Salt Lake Bees 6 | End 6",
+      "game_context": "El Paso Chihuahuas 5, Salt Lake Bees 6 | Top 7",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -3504,7 +3520,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Everett AquaSox 2, Vancouver Canadians 5 | Top 6",
+      "game_context": "Everett AquaSox 2, Vancouver Canadians 7 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -4233,8 +4249,8 @@
       "player_name": "Braxton Fulford",
       "team": "Oklahoma City Comets",
       "level": "Pro",
-      "stats_summary": "2-3, 2 RBI, 3 R, 2 BB",
-      "game_context": "Oklahoma City Comets 17, Albuquerque Isotopes 7 | Top 8",
+      "stats_summary": "2-4, 2 RBI, 3 R, 2 BB",
+      "game_context": "Oklahoma City Comets 17, Albuquerque Isotopes 8 | Bottom 8",
       "game_status": "Live",
       "game_time": "3:35 PM ET",
       "game_date": "2026-05-17",
@@ -4249,7 +4265,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/815449",
       "player_profile_url": "https://www.mlb.com/player/669261",
-      "performance_grade": "🔥 Standout",
+      "performance_grade": "✅ Good",
       "grade_reason": "Reached base 4 times",
       "social_search_url": "https://x.com/search?q=%22Braxton%20Fulford%22%20Dodgers&f=live",
       "data_source": "MLB Stats API",
@@ -4471,8 +4487,8 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 29,
-        "found stats": 14,
+        "found game, no player": 31,
+        "found stats": 12,
         "no game found": 1
       },
       "Sidearm": {
@@ -4481,20 +4497,20 @@
         "found player": 11
       },
       "ESPN": {
-        "no game found": 28,
+        "no game found": 30,
         "found game, no player": 2
       },
       "NCAA.com": {
         "found game, no player": 23,
-        "found stats": 5,
+        "found stats": 7,
         "scheduled (ignored)": 1,
         "stale (yesterday)": 1
       },
       "StatBroadcast": {
         "no game found": 25,
-        "blocked (Cloudflare 403)": 2,
-        "found player": 3,
-        "fetch failed": 1
+        "blocked (Cloudflare 403)": 3,
+        "fetch failed": 2,
+        "found player": 1
       },
       "NCAA.org": {
         "found game, no player": 21,
@@ -4505,8 +4521,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 2,
+    "blocked_event_count": 3,
     "blocked_clients": [
+      "Riley Goodman",
       "Brady St. Pierre"
     ],
     "carry_forward_clients": [],
@@ -4541,12 +4558,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 3
+          "blocked": 4
         }
       }
     }
