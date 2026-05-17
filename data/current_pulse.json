@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T10:03:14.859705+00:00",
+  "generated_at": "2026-05-17T10:17:45.767187+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1413,7 +1413,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2081,23 +2081,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-5",
       "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "found stats"
         },
         {
           "source": "Sidearm",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "no game found"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -4447,25 +4439,25 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 28,
-        "found stats": 12,
+        "found game, no player": 27,
+        "found stats": 13,
         "no game found": 1
       },
       "Sidearm": {
-        "player not in box": 27,
+        "player not in box": 26,
         "no game found": 23,
-        "found player": 10
+        "found player": 11
       },
       "ESPN": {
-        "no game found": 29
+        "no game found": 28
       },
       "NCAA.com": {
         "found game, no player": 23,
-        "found stats": 6
+        "found stats": 5
       },
       "StatBroadcast": {
         "no game found": 23,
-        "player not in box": 1,
+        "blocked (Cloudflare 403)": 1,
         "found player": 2
       },
       "NCAA.org": {
@@ -4473,8 +4465,10 @@
         "found stats": 2
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [],
@@ -4484,12 +4478,19 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 3,
-          "blocked": 0
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 3
         }
       }
     }
