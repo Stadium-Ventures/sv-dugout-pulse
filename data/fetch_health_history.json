@@ -1,116 +1,5 @@
 [
   {
-    "generated_at": "2026-05-15T07:47:04.226324+00:00",
-    "severity": "critical",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 10,
-    "blocked_clients": [
-      "Joe Tiroly",
-      "Sam Harry",
-      "Ty Finkbeiner",
-      "Ben Tryon",
-      "Boston Torres",
-      "Brady Neal",
-      "Braydon Kersey",
-      "Tanner Chun",
-      "Duke McCarron"
-    ],
-    "carry_forward_clients": [
-      "Sam Harry",
-      "Braydon Kersey",
-      "Duke McCarron",
-      "Ethan Lay"
-    ],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Dax Kilby",
-      "Kellon Lindsey",
-      "Myles Bailey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Jack Cebert",
-      "Riley Goodman",
-      "Will Rhine",
-      "Austin Amaral",
-      "Brady St. Pierre",
-      "Brisen Tweedy",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Kade Brown",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Xavier Kolhosser",
-      "Eamon McDermott",
-      "Lee Sowers",
-      "Lucas Steele",
-      "Luke Fithian",
-      "Michael Gillen",
-      "Peyton Glavine",
-      "Truitt Webb",
-      "Zack Johnson"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 7,
-        "found game, no player": 36,
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "found player": 6,
-        "no game found": 24,
-        "player not in box": 17,
-        "blocked (Cloudflare 403)": 10,
-        "fetch failed": 7
-      },
-      "Sidearm": {
-        "player not in box": 2,
-        "no game found": 24,
-        "found player": 1
-      },
-      "ESPN": {
-        "no game found": 5,
-        "found game, no player": 19,
-        "found stats": 13
-      },
-      "NCAA.com": {
-        "found game, no player": 18,
-        "scheduled (ignored)": 6
-      },
-      "NCAA.org": {
-        "found game, no player": 18,
-        "found stats": 1,
-        "scheduled (ignored)": 5
-      },
-      "game log": {
-        "found stats": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 5,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 12,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-15T08:02:14.474989+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -16536,6 +16425,83 @@
       "ESPN": {
         "found game, no player": 19,
         "no game found": 5,
+        "found stats": 15
+      },
+      "NCAA.com": {
+        "stale (yesterday)": 4,
+        "found game, no player": 19,
+        "scheduled (ignored)": 1
+      },
+      "StatBroadcast": {
+        "no game found": 24,
+        "blocked (Cloudflare 403)": 9,
+        "found player": 1,
+        "player not in box": 1,
+        "fetch failed": 7
+      },
+      "NCAA.org": {
+        "stale (yesterday)": 4,
+        "found game, no player": 19,
+        "found stats": 1
+      },
+      "game log": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-17T08:00:48.985412+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 9,
+    "blocked_clients": [
+      "Joe Tiroly",
+      "Riley Goodman",
+      "Sam Harry",
+      "Ben Tryon",
+      "Boston Torres",
+      "Braydon Kersey",
+      "Tanner Chun",
+      "Lee Sowers"
+    ],
+    "carry_forward_clients": [
+      "Sam Harry",
+      "Braydon Kersey"
+    ],
+    "fallback_clients": [
+      "Kellon Lindsey"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 38,
+        "no game found": 1,
+        "found stats": 3
+      },
+      "Sidearm": {
+        "player not in box": 21,
+        "no game found": 24,
+        "found player": 2
+      },
+      "ESPN": {
+        "found game, no player": 5,
+        "no game found": 19,
         "found stats": 15
       },
       "NCAA.com": {
