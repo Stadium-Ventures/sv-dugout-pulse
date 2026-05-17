@@ -1,124 +1,5 @@
 [
   {
-    "generated_at": "2026-05-15T02:49:20.674232+00:00",
-    "severity": "critical",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 19,
-    "blocked_clients": [
-      "Joe Tiroly",
-      "Sam Harry",
-      "Ty Finkbeiner",
-      "Ben Tryon",
-      "Boston Torres",
-      "Brady Neal",
-      "Brady St. Pierre",
-      "Braydon Kersey",
-      "Brisen Tweedy",
-      "Cole Cleveland",
-      "Drew Bellis",
-      "Sam Mitchell",
-      "Tanner Chun",
-      "Duke McCarron",
-      "Eamon McDermott",
-      "Lee Sowers",
-      "Lucas Steele"
-    ],
-    "carry_forward_clients": [
-      "Braydon Kersey",
-      "Duke McCarron"
-    ],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Dax Kilby",
-      "Kellon Lindsey",
-      "Myles Bailey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Jack Cebert",
-      "Riley Goodman",
-      "Sam Harry",
-      "Will Rhine",
-      "Austin Amaral",
-      "Brady St. Pierre",
-      "Brisen Tweedy",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Kade Brown",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Xavier Kolhosser",
-      "Eamon McDermott",
-      "Ethan Lay",
-      "Lee Sowers",
-      "Lucas Steele",
-      "Luke Fithian",
-      "Michael Gillen",
-      "Peyton Glavine",
-      "Truitt Webb",
-      "Zack Johnson"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 5,
-        "found game, no player": 38,
-        "no game found": 1
-      },
-      "StatBroadcast": {
-        "found player": 4,
-        "no game found": 23,
-        "fetch failed": 10,
-        "player not in box": 7,
-        "blocked (Cloudflare 403)": 19
-      },
-      "Sidearm": {
-        "player not in box": 2,
-        "no game found": 23,
-        "found player": 1
-      },
-      "ESPN": {
-        "no game found": 5,
-        "found game, no player": 18,
-        "found stats": 16
-      },
-      "NCAA.com": {
-        "found game, no player": 10,
-        "scheduled (ignored)": 13
-      },
-      "NCAA.org": {
-        "found game, no player": 10,
-        "scheduled (ignored)": 13
-      },
-      "game log": {
-        "found stats": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 8,
-          "blocked": 11
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-15T03:05:22.761949+00:00",
     "severity": "critical",
     "blocked_sources": [
@@ -16757,6 +16638,113 @@
         },
         "geo.iproyal.com": {
           "success": 22,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-17T03:01:55.830594+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 9,
+    "blocked_clients": [
+      "Joe Tiroly",
+      "Riley Goodman",
+      "Sam Harry",
+      "Ben Tryon",
+      "Boston Torres",
+      "Braydon Kersey",
+      "Tanner Chun",
+      "Lee Sowers"
+    ],
+    "carry_forward_clients": [
+      "Sam Harry",
+      "Braydon Kersey"
+    ],
+    "fallback_clients": [
+      "Aiden Robbins",
+      "Cam Flukey",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Kellon Lindsey",
+      "Kyle Jones",
+      "Myles Bailey",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Henry Zatkowski",
+      "Jack Cebert",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Austin Amaral",
+      "Brisen Tweedy",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Kade Brown",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Duke McCarron",
+      "Eamon McDermott",
+      "Ethan Lay",
+      "Lucas Steele",
+      "Luke Fithian",
+      "Michael Gillen",
+      "Peyton Glavine"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 38,
+        "no game found": 1,
+        "found stats": 3
+      },
+      "Sidearm": {
+        "player not in box": 21,
+        "no game found": 24,
+        "found player": 2
+      },
+      "ESPN": {
+        "found game, no player": 19,
+        "no game found": 5,
+        "found stats": 15
+      },
+      "NCAA.com": {
+        "stale (yesterday)": 4,
+        "found game, no player": 19,
+        "scheduled (ignored)": 1
+      },
+      "StatBroadcast": {
+        "no game found": 24,
+        "blocked (Cloudflare 403)": 9,
+        "found player": 1,
+        "player not in box": 1,
+        "fetch failed": 7
+      },
+      "NCAA.org": {
+        "stale (yesterday)": 4,
+        "found game, no player": 19,
+        "found stats": 1
+      },
+      "game log": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
           "blocked": 0
         }
       }
