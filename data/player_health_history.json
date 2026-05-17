@@ -9361,7 +9361,7 @@
   },
   {
     "date": "2026-05-17",
-    "updated_at": "2026-05-17T19:31:55.941829+00:00",
+    "updated_at": "2026-05-17T19:47:32.955390+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -9611,8 +9611,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -9629,12 +9629,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -9749,7 +9748,7 @@
         "team": "Oklahoma City Comets",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
