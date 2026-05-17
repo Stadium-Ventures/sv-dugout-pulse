@@ -17181,5 +17181,71 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-17T17:47:20.797233+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Jack Cebert",
+      "Davis Sharpe",
+      "Peyton Glavine"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 27,
+        "found stats": 16,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 26,
+        "no game found": 23,
+        "found player": 11
+      },
+      "ESPN": {
+        "no game found": 28
+      },
+      "NCAA.com": {
+        "found game, no player": 23,
+        "found stats": 5
+      },
+      "StatBroadcast": {
+        "no game found": 23,
+        "player not in box": 1,
+        "found player": 2
+      },
+      "NCAA.org": {
+        "no game found": 23
+      },
+      "game log": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 1,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
