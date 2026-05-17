@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T20:47:26.545396+00:00",
+  "generated_at": "2026-05-17T21:01:51.534615+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -396,7 +396,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Spokane Indians 1, Hillsboro Hops 1 | Top 3",
+      "game_context": "Spokane Indians 2, Hillsboro Hops 1 | End 3",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -610,8 +610,8 @@
       "player_name": "Kellon Lindsey",
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
-      "stats_summary": "0-1, K",
-      "game_context": "San Jose Giants 0, Ontario Tower Buzzers 1 | Top 3",
+      "stats_summary": "0-2, K",
+      "game_context": "San Jose Giants 0, Ontario Tower Buzzers 1 | Top 4",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -627,7 +627,7 @@
       "box_score_url": "https://www.mlb.com/gameday/821202",
       "player_profile_url": "https://www.mlb.com/player/813916",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Kellon%20Lindsey%22%20Dodgers&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -791,7 +791,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fayetteville Woodpeckers 7, Delmarva Shorebirds 7 | Bottom 8",
+      "game_context": "Fayetteville Woodpeckers 8, Delmarva Shorebirds 7 | Middle 9",
       "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-17",
@@ -1147,8 +1147,8 @@
       "team": "Asheville Tourists",
       "level": "Pro",
       "stats_summary": "1-5, RBI, 2 R, BB, K",
-      "game_context": "Hub City Spartanburgers 19, Asheville Tourists 12 | Bottom 9",
-      "game_status": "Live",
+      "game_context": "Hub City Spartanburgers 19, Asheville Tourists 12 | Final",
+      "game_status": "Final",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -1620,8 +1620,8 @@
       "team": "Asheville Tourists",
       "level": "Pro",
       "stats_summary": "0-4, R, 2 BB, 2 K",
-      "game_context": "Hub City Spartanburgers 19, Asheville Tourists 12 | Bottom 9",
-      "game_status": "Live",
+      "game_context": "Hub City Spartanburgers 19, Asheville Tourists 12 | Final",
+      "game_status": "Final",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -1974,17 +1974,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Riley%20Goodman%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "4 strikeouts with good command",
+      "grade_reason": "More walks (1) than strikeouts (0)",
       "social_search_url": "https://x.com/search?q=%22Riley%20Goodman%22%20South%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2070,9 +2078,9 @@
       "player_name": "Sterlin Thompson",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "No game data",
-      "game_context": "Arizona Diamondbacks vs Colorado Rockies | Delayed Start",
-      "game_status": "Delayed Start",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Arizona Diamondbacks 0, Colorado Rockies 0 | Top 1",
+      "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -2104,9 +2112,9 @@
       "player_name": "Tanner Gordon",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "No game data",
-      "game_context": "Arizona Diamondbacks vs Colorado Rockies | Delayed Start",
-      "game_status": "Delayed Start",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Arizona Diamondbacks 0, Colorado Rockies 0 | Top 1",
+      "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -2139,7 +2147,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "0-0, R, BB",
-      "game_context": "Eugene Emeralds 1, Tri-City Dust Devils 0 | Middle 1",
+      "game_context": "Eugene Emeralds 1, Tri-City Dust Devils 1 | Top 2",
       "game_status": "Live",
       "game_time": "4:30 PM ET",
       "game_date": "2026-05-17",
@@ -2344,15 +2352,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Scoreless in 1 IP",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "fetch failed"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2482,7 +2498,7 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "0-3, R, BB",
-      "game_context": "Arkansas Travelers 8, Northwest Arkansas Naturals 5 | Middle 6",
+      "game_context": "Arkansas Travelers 9, Northwest Arkansas Naturals 5 | Top 7",
       "game_status": "Live",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-17",
@@ -2603,7 +2619,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "McNeese 6, Southeastern Louisiana 3 | Top 7",
+      "game_context": "McNeese 7, Southeastern Louisiana 4 | Top 8",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-17",
@@ -2786,7 +2802,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "0-2, K",
-      "game_context": "McNeese 6, SE Louisiana 3 | Inn 6",
+      "game_context": "McNeese 7, SE Louisiana 4 | Inn 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-17",
@@ -3124,7 +3140,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Eugene Emeralds 1, Tri-City Dust Devils 0 | Middle 1",
+      "game_context": "Eugene Emeralds 1, Tri-City Dust Devils 1 | Top 2",
       "game_status": "Live",
       "game_time": "4:30 PM ET",
       "game_date": "2026-05-17",
@@ -3253,7 +3269,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "El Paso Chihuahuas 0, Salt Lake Bees 1 | Top 4",
+      "game_context": "El Paso Chihuahuas 2, Salt Lake Bees 1 | Bottom 4",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -3508,7 +3524,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Everett AquaSox 0, Vancouver Canadians 1 | Bottom 2",
+      "game_context": "Everett AquaSox 1, Vancouver Canadians 3 | Bottom 3",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-17",
@@ -4092,7 +4108,7 @@
       "team": "SE Louisiana",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "McNeese 6, Southeastern Louisiana 3 | Top 7",
+      "game_context": "McNeese 7, Southeastern Louisiana 4 | Top 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-17",
@@ -4237,8 +4253,8 @@
       "player_name": "Braxton Fulford",
       "team": "Oklahoma City Comets",
       "level": "Pro",
-      "stats_summary": "1-1, RBI, R, 2 BB",
-      "game_context": "Oklahoma City Comets 9, Albuquerque Isotopes 2 | Top 4",
+      "stats_summary": "1-1, RBI, 2 R, 2 BB",
+      "game_context": "Oklahoma City Comets 11, Albuquerque Isotopes 2 | Top 5",
       "game_status": "Live",
       "game_time": "3:35 PM ET",
       "game_date": "2026-05-17",
@@ -4379,9 +4395,9 @@
       "player_name": "Richard Fitts",
       "team": "Memphis Redbirds",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jacksonville Jumbo Shrimp 7, Memphis Redbirds 2 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Jacksonville Jumbo Shrimp 7, Memphis Redbirds 3 | Final",
+      "game_status": "Final",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-17",
       "is_yesterday": false,
@@ -4395,7 +4411,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/816205",
       "player_profile_url": "https://www.mlb.com/player/690916",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Richard%20Fitts%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -4475,8 +4491,8 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found game, no player": 30,
-        "found stats": 13,
+        "found game, no player": 32,
+        "found stats": 11,
         "no game found": 1
       },
       "Sidearm": {
@@ -4485,21 +4501,20 @@
         "found player": 11
       },
       "ESPN": {
-        "no game found": 28,
+        "no game found": 30,
         "found game, no player": 2,
         "found stats": 1
       },
       "NCAA.com": {
         "found game, no player": 23,
-        "found stats": 5,
+        "found stats": 7,
         "scheduled (ignored)": 1,
         "stale (yesterday)": 1
       },
       "StatBroadcast": {
         "no game found": 25,
-        "blocked (Cloudflare 403)": 2,
-        "found player": 2,
-        "fetch failed": 2
+        "blocked (Cloudflare 403)": 3,
+        "fetch failed": 3
       },
       "NCAA.org": {
         "found game, no player": 21,
@@ -4510,8 +4525,9 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 2,
+    "blocked_event_count": 3,
     "blocked_clients": [
+      "Riley Goodman",
       "Brady St. Pierre"
     ],
     "carry_forward_clients": [],
@@ -4521,6 +4537,8 @@
       "Cade Doughty",
       "Cade Doughty",
       "Jack Cebert",
+      "Sterlin Thompson",
+      "Tanner Gordon",
       "Austin Amaral",
       "Brady St. Pierre",
       "Davis Sharpe",
@@ -4547,8 +4565,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 3
+          "success": 0,
+          "blocked": 4
         }
       }
     }
