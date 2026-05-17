@@ -1,54 +1,5 @@
 [
   {
-    "generated_at": "2026-05-15T09:32:22.887553+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 41,
-        "no game found": 1,
-        "found game, no player": 2
-      },
-      "ESPN": {
-        "found stats": 1,
-        "scheduled (ignored)": 2
-      },
-      "StatBroadcast": {
-        "player not in box": 2,
-        "no game found": 2,
-        "found player": 1
-      },
-      "NCAA.com": {
-        "found game, no player": 2
-      },
-      "Sidearm": {
-        "no game found": 2
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-15T09:47:22.729977+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -16513,6 +16464,64 @@
         "geo.iproyal.com": {
           "success": 0,
           "blocked": 4
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-17T09:32:40.809260+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found game, no player": 27,
+        "found stats": 13,
+        "no game found": 1
+      },
+      "Sidearm": {
+        "player not in box": 26,
+        "no game found": 23,
+        "found player": 11
+      },
+      "ESPN": {
+        "no game found": 28
+      },
+      "NCAA.com": {
+        "found game, no player": 23,
+        "found stats": 5
+      },
+      "StatBroadcast": {
+        "no game found": 23,
+        "player not in box": 1,
+        "found player": 2
+      },
+      "NCAA.org": {
+        "found game, no player": 21,
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 3,
+          "blocked": 0
         }
       }
     }
