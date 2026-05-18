@@ -117,10 +117,16 @@
 <div class="wrap">
   <h1>Source health</h1>
   <div class="subhead">
-    Rolling 48-hour history of scraper outcomes per run.
+    Run-level detail covers the last 7 days. Per-day rollups cover the last 14.
     <a href="index.html">← Back to dashboard</a>
   </div>
   <div id="summary"></div>
+
+  <h2>Plain English (last 14 days)</h2>
+  <div class="subhead" style="margin-top:-6px;margin-bottom:8px;">
+    What we captured each day, in normal words. Click a row to see which players we missed and why.
+  </div>
+  <div id="dailySummary"></div>
 
   <h2>Today's live-stats coverage</h2>
   <div id="todayCoverage"></div>
@@ -128,10 +134,10 @@
   <h2>Per-player history (last 30 days)</h2>
   <div id="playerHistory"></div>
 
-  <h2>Aggregated by source (last 48h)</h2>
+  <h2>Aggregated by source (last 7 days)</h2>
   <div id="sourceAgg"></div>
 
-  <h2>Residential proxy pool (last 48h)</h2>
+  <h2>Residential proxy pool (last 7 days)</h2>
   <div id="proxyPool"></div>
 
   <h2>Per-run history</h2>
@@ -165,6 +171,121 @@ function fmtTime(iso) {
     month: 'short', day: 'numeric',
     hour: 'numeric', minute: '2-digit',
     timeZone: 'America/New_York', timeZoneName: 'short',
+  });
+}
+
+function pctClass(pct) {
+  if (pct >= 80) return 'ok';
+  if (pct >= 55) return 'warning';
+  return 'critical';
+}
+
+function renderDailySummary(playerHist) {
+  // Build per-day rollups from player_health_history.json. This file retains
+  // 90 days, so a Monday-morning post-mortem of last Wednesday is just
+  // scrolling down the table. No run-level data is touched — this is the
+  // human-readable view.
+  const el = document.getElementById('dailySummary');
+  if (!Array.isArray(playerHist) || !playerHist.length) {
+    el.innerHTML = '<div class="empty">No daily history yet.</div>';
+    return;
+  }
+  // Most recent 14 days, newest first.
+  const days = [...playerHist].sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0, 14);
+
+  const rows = days.map((day, idx) => {
+    const players = Array.isArray(day.players) ? day.players : [];
+    const ncaa = players.filter(p => p.level === 'NCAA');
+    const pro = players.filter(p => p.level === 'Pro');
+    const hs = players.filter(p => p.level === 'HS');
+    const ncaaCap = ncaa.filter(p => p.captured).length;
+    const proCap = pro.filter(p => p.captured).length;
+    const hsCap = hs.filter(p => p.captured).length;
+    const ncaaPct = ncaa.length ? Math.round(100 * ncaaCap / ncaa.length) : null;
+    const proPct = pro.length ? Math.round(100 * proCap / pro.length) : null;
+    const hsPct = hs.length ? Math.round(100 * hsCap / hs.length) : null;
+
+    const blockedNcaa = ncaa.filter(p => !p.captured);
+    const blockedPro = pro.filter(p => !p.captured);
+    const blockedAll = [...blockedNcaa, ...blockedPro];
+
+    // English sentence per day
+    const parts = [];
+    if (ncaa.length) parts.push(`${ncaaCap}/${ncaa.length} NCAA (${ncaaPct}%)`);
+    if (pro.length) parts.push(`${proCap}/${pro.length} Pro (${proPct}%)`);
+    if (hs.length) parts.push(`${hsCap}/${hs.length} HS (${hsPct}%)`);
+    let note = '';
+    const overallPct = (ncaa.length + pro.length) ?
+      Math.round(100 * (ncaaCap + proCap) / (ncaa.length + pro.length)) : 0;
+    if (overallPct >= 90) note = 'Healthy day.';
+    else if (overallPct >= 70) note = 'OK — some misses.';
+    else if (overallPct >= 50) note = 'Rough day — many NCAA blocked.';
+    else note = 'Bad day — most NCAA blocked.';
+
+    // Date formatting
+    const d = new Date(day.date + 'T12:00:00');
+    const dow = d.toLocaleDateString('en-US', {weekday: 'short'});
+    const md = d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+    const isToday = idx === 0;
+
+    // Blocked detail (collapsible)
+    const blockedDetail = blockedAll.length ? `
+      <tr class="detail" data-day="${esc(day.date)}" style="display:none;">
+        <td colspan="5" style="background:rgba(255,255,255,0.02);padding:0.6rem 1rem;">
+          <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.4rem;">
+            ${blockedAll.length} player${blockedAll.length===1?'':'s'} missed on ${esc(dow)} ${esc(md)}:
+          </div>
+          <table style="margin:0;font-size:0.78rem;">
+            <thead><tr>
+              <th>Player</th><th>Team</th><th>Level</th><th>Status</th><th>Sources tried</th>
+            </tr></thead>
+            <tbody>
+            ${blockedAll.map(p => `
+              <tr>
+                <td>${esc(p.name)}</td>
+                <td>${esc(p.team)}</td>
+                <td><span class="level-tag">${esc(p.level)}</span></td>
+                <td>${esc(p.game_status||'')}</td>
+                <td class="src-list">${(p.sources_tried||[]).map(esc).join(' → ') || '—'}</td>
+              </tr>
+            `).join('')}
+            </tbody>
+          </table>
+        </td>
+      </tr>` : '';
+
+    const cls = pctClass(overallPct);
+    return `
+      <tr class="day-row" data-day="${esc(day.date)}" style="cursor:pointer;">
+        <td>
+          <strong>${esc(dow)} ${esc(md)}</strong>
+          ${isToday ? '<span class="level-tag">today</span>' : ''}
+        </td>
+        <td><span class="pill ${cls}">${overallPct}%</span></td>
+        <td>${esc(parts.join(' · '))}</td>
+        <td>${blockedAll.length ? `<span class="blocked-src">${blockedAll.length}</span> blocked` : '<span style="color:var(--ok);">all captured</span>'}</td>
+        <td style="color:var(--text-dim);">${esc(note)}</td>
+      </tr>
+      ${blockedDetail}
+    `;
+  }).join('');
+
+  el.innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Date</th><th>Overall</th><th>Breakdown</th><th>Misses</th><th>Read</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+
+  // Click row to toggle detail
+  el.querySelectorAll('.day-row').forEach(r => {
+    r.addEventListener('click', () => {
+      const day = r.getAttribute('data-day');
+      const detail = el.querySelector(`tr.detail[data-day="${day}"]`);
+      if (detail) detail.style.display = (detail.style.display === 'none' ? '' : 'none');
+    });
   });
 }
 
@@ -473,6 +594,7 @@ async function load() {
     fetchJson('data/player_health_history.json'),
   ]);
   renderSummary(history || []);
+  renderDailySummary(playerHist || []);
   renderTodayCoverage(pulse);
   renderPlayerHistory(playerHist || []);
   renderSourceAggregation(history || []);

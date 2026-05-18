@@ -1333,7 +1333,7 @@ def _summarize_run_health(pulse: list[dict]) -> dict:
 _HEALTH_HISTORY_PATH = os.path.join(
     os.path.dirname(__file__), "data", "fetch_health_history.json"
 )
-_HEALTH_HISTORY_MAX_HOURS = 48
+_HEALTH_HISTORY_MAX_HOURS = 168  # 7 days — enough to look back on a Wed from a Mon
 
 
 def _append_health_history(generated_at: str, health: dict) -> None:
