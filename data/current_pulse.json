@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T02:16:50.265798+00:00",
+  "generated_at": "2026-05-18T02:32:29.028103+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1378,7 +1378,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2629,7 +2629,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4121,7 +4121,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4482,7 +4482,7 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
         "found game, no player": 29,
@@ -4505,9 +4505,8 @@
       },
       "StatBroadcast": {
         "no game found": 25,
-        "blocked (Cloudflare 403)": 2,
-        "found player": 3,
-        "fetch failed": 1
+        "player not in box": 3,
+        "found player": 3
       },
       "NCAA.org": {
         "found game, no player": 21,
@@ -4515,13 +4514,9 @@
         "stale (yesterday)": 2
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 2,
-    "blocked_clients": [
-      "Brady St. Pierre"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
@@ -4548,7 +4543,6 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -4557,8 +4551,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 3
+          "success": 3,
+          "blocked": 0
         }
       }
     }
