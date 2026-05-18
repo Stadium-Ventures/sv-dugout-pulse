@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T02:32:29.028103+00:00",
+  "generated_at": "2026-05-18T02:47:40.680262+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -541,9 +541,9 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ian%20Josephson%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "",
+      "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Ian%20Josephson%22%20Saint%20Mary%27s&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "game log",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -567,11 +567,15 @@
         },
         {
           "source": "NCAA.org",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": null,
-      "stats_captured_status": null,
+      "stats_captured_at": "2026-05-16T04:17:49.095506+00:00",
+      "stats_captured_status": "Final",
       "is_client": false,
       "tags": {
         "draft_class": "2028",
@@ -1378,7 +1382,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2649,7 +2653,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4141,7 +4145,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "found game, no player"
         }
       ],
       "stats_captured_at": null,
@@ -4217,33 +4221,6 @@
       }
     },
     {
-      "player_name": "Alex Smith",
-      "team": "HS",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Alex%20Smith%22%20HS&f=live",
-      "data_source": "HS Sheet",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "Hitter",
-        "roster_priority": 99
-      }
-    },
-    {
       "player_name": "Braxton Fulford",
       "team": "Oklahoma City Comets",
       "level": "Pro",
@@ -4274,114 +4251,6 @@
       "tags": {
         "draft_class": "",
         "position": "C",
-        "roster_priority": 99
-      }
-    },
-    {
-      "player_name": "Kohen Poplin",
-      "team": "HS",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Kohen%20Poplin%22%20HS&f=live",
-      "data_source": "HS Sheet",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "Pitcher",
-        "roster_priority": 99
-      }
-    },
-    {
-      "player_name": "Kyle Rogossienski",
-      "team": "HS",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Kyle%20Rogossienski%22%20HS&f=live",
-      "data_source": "HS Sheet",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "Hitter",
-        "roster_priority": 99
-      }
-    },
-    {
-      "player_name": "Lucas Lawerence",
-      "team": "HS",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Lucas%20Lawerence%22%20HS&f=live",
-      "data_source": "HS Sheet",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "Pitcher",
-        "roster_priority": 99
-      }
-    },
-    {
-      "player_name": "Lukas Klipper",
-      "team": "HS",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Lukas%20Klipper%22%20HS&f=live",
-      "data_source": "HS Sheet",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "Hitter",
         "roster_priority": 99
       }
     },
@@ -4452,33 +4321,6 @@
         "position": "SS",
         "roster_priority": 99
       }
-    },
-    {
-      "player_name": "Ty Howard",
-      "team": "HS",
-      "level": "HS",
-      "stats_summary": "No game today",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": null,
-      "player_profile_url": null,
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Ty%20Howard%22%20HS&f=live",
-      "data_source": "HS Sheet",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "",
-        "position": "Pitcher",
-        "roster_priority": 99
-      }
     }
   ],
   "health": {
@@ -4505,17 +4347,22 @@
       },
       "StatBroadcast": {
         "no game found": 25,
-        "player not in box": 3,
-        "found player": 3
+        "blocked (Cloudflare 403)": 1,
+        "found player": 3,
+        "player not in box": 2
       },
       "NCAA.org": {
-        "found game, no player": 21,
-        "found stats": 2,
-        "stale (yesterday)": 2
+        "found game, no player": 24,
+        "found stats": 1
+      },
+      "game log": {
+        "found stats": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
@@ -4543,16 +4390,17 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 2,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 0
+          "success": 0,
+          "blocked": 2
         }
       }
     }
