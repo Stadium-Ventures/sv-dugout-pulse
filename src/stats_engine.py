@@ -168,16 +168,25 @@ _sb_event_cache: dict = {}
 # slash), e.g. "https://sv-sb-proxy.example.workers.dev".
 _SB_PROXY_URL = os.environ.get("SB_PROXY_URL", "").rstrip("/")
 
-# Residential HTTP proxy pool: SB_HTTP_PROXY (primary) + SB_HTTP_PROXY_2 (backup).
+# Residential HTTP proxy pool: SB_HTTP_PROXY (primary) + SB_HTTP_PROXY_2 (backup)
+# + SB_HTTP_PROXY_3 (last-resort Cloudflare-bypass service).
 # Datacenter egress (CF Workers, Fly, Deno, Actions runners) gets categorically
 # blocked by SB's Cloudflare WAF on ASN reputation.  Residential ISP IPs aren't
 # on those blocklists because blocking Comcast/Verizon would block real users.
 # Format: "http://user:pass@host:port" (Webshare, IPRoyal, Smartproxy, etc.).
 # When the primary 403s mid-run, we mark it dead and rotate to the backup —
 # uncorrelated providers means a single CF flag doesn't take out everything.
+#
+# Tier 3 is structurally different: a Cloudflare-bypass service (ScraperAPI)
+# accessed via proxy mode. It rotates its own pool and handles WAF bypass on
+# its end. It's billed per request, so we deliberately put it last in the
+# pool — only hit it when both residential tiers have already 403'd this run.
 _SB_HTTP_PROXY = os.environ.get("SB_HTTP_PROXY", "").strip()
 _SB_HTTP_PROXY_2 = os.environ.get("SB_HTTP_PROXY_2", "").strip()
-_SB_HTTP_PROXY_POOL: list[str] = [p for p in (_SB_HTTP_PROXY, _SB_HTTP_PROXY_2) if p]
+_SB_HTTP_PROXY_3 = os.environ.get("SB_HTTP_PROXY_3", "").strip()
+_SB_HTTP_PROXY_POOL: list[str] = [
+    p for p in (_SB_HTTP_PROXY, _SB_HTTP_PROXY_2, _SB_HTTP_PROXY_3) if p
+]
 
 # Per-run rotation state.  Each scheduled run is a fresh process so this resets
 # naturally — no cross-run persistence needed.

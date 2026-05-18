@@ -74,12 +74,14 @@ jobs:
           # curl_cffi Chrome impersonation from the Actions runner.  Restore
           # `${{ secrets.SB_PROXY_URL }}` if direct also fails.
           SB_PROXY_URL: ""
-          # Residential HTTP proxy pool — primary (Webshare) + backup (IPRoyal).
-          # Pool rotates on 403: when SB_HTTP_PROXY's IP gets flagged by CF,
-          # SB_HTTP_PROXY_2 takes over for the rest of the run.  Either alone
-          # is sufficient if the other isn't set.  Empty = direct mode.
+          # Residential HTTP proxy pool — primary (Webshare) + backup (IPRoyal)
+          # + last-resort Cloudflare-bypass service (ScraperAPI proxy mode).
+          # Pool rotates on 403: when one tier's IP gets flagged by CF, the
+          # next tier takes over for the rest of the run. Tier 3 is billed
+          # per request — only hit when both residential tiers are dead.
           SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
           SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+          SB_HTTP_PROXY_3: ${{ secrets.SB_HTTP_PROXY_3 }}
         run: |
           set -eo pipefail
           if [ -z "$SLACK_WEBHOOK_URL" ]; then echo "⚠️ SLACK_WEBHOOK_URL not set — alerts will be skipped"; fi
@@ -97,6 +99,7 @@ jobs:
           SB_PROXY_URL: ""
           SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
           SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+          SB_HTTP_PROXY_3: ${{ secrets.SB_HTTP_PROXY_3 }}
         run: |
           set -eo pipefail
           if [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
@@ -111,6 +114,7 @@ jobs:
           SB_PROXY_URL: ${{ secrets.SB_PROXY_URL }}
           SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
           SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+          SB_HTTP_PROXY_3: ${{ secrets.SB_HTTP_PROXY_3 }}
         run: |
           set -eo pipefail
           python -c "import src.historical_stats; import src.window_grader; print('Historical imports OK')"
