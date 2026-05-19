@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T20:31:56.842514+00:00",
+  "generated_at": "2026-05-19T20:47:07.555920+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1896,8 +1896,8 @@
       "player_name": "Alex Kranzler",
       "team": "Vanderbilt",
       "level": "NCAA",
-      "stats_summary": "0.1 IP",
-      "game_context": "Kentucky 4, Vanderbilt 1 | Bottom 5",
+      "stats_summary": "1.1 IP, 0 ER, 1 K",
+      "game_context": "Kentucky 4, Vanderbilt 1 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-19",
@@ -1906,17 +1906,21 @@
       "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660507",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "Scoreless in 0.3 IP",
+      "grade_reason": "Scoreless in 1.1 IP",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2543,7 +2547,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 2, San Jose Giants 17 | Top 8",
+      "game_context": "Stockton Ports 2, San Jose Giants 17 | Top 9",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-19",
@@ -2976,7 +2980,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3626,15 +3630,15 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 7,
-        "Game found, not in box score": 1
+        "found stats": 6,
+        "Game found, not in box score": 2
       },
       "StatBroadcast": {
-        "found player": 1,
-        "player not in box": 1,
+        "Couldn't reach site": 2,
         "No game listed today": 1
       },
       "ESPN": {
+        "found stats": 1,
         "Game found, not in box score": 1
       },
       "NCAA.com": {
@@ -3663,18 +3667,24 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
+      "active": "proxy-server.scraperapi.com",
       "dead": [
-        "p.webshare.io"
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
         }
       }
     }
