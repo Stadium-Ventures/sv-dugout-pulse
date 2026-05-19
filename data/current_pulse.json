@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T21:31:58.316772+00:00",
+  "generated_at": "2026-05-19T21:46:58.599503+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -988,7 +988,7 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (SS)",
       "game_context": "Daytona Tortugas vs Jupiter Hammerheads | 6:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:30 PM ET",
@@ -1284,7 +1284,7 @@
       "player_name": "Jason Schiavone",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 4th (1B)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1413,7 +1413,7 @@
       "player_name": "Justin Riemer",
       "team": "Lansing Lugnuts",
       "level": "Pro",
-      "stats_summary": "Game at 6:05 PM ET",
+      "stats_summary": "In lineup — batting 6th (3B)",
       "game_context": "Lansing Lugnuts vs Lake County Captains | 6:05 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:05 PM ET",
@@ -1474,7 +1474,7 @@
       "player_name": "Lucas Spence",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 3rd (CF)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1828,7 +1828,7 @@
       "player_name": "Will Bush",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 5th (C)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1896,27 +1896,27 @@
       "player_name": "Alex Kranzler",
       "team": "Vanderbilt",
       "level": "NCAA",
-      "stats_summary": "3.1 IP, 0 ER, 4 K",
-      "game_context": "Kentucky 4, Vanderbilt 5 | Inn 8",
+      "stats_summary": "3.1 IP, 4 K",
+      "game_context": "Kentucky 4, Vanderbilt 8 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869477",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660507",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
       "performance_grade": "✅ Good",
       "grade_reason": "4 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         },
         {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3626,17 +3626,16 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 6,
-        "Stale data — skipped": 1,
-        "Game found, not in box score": 1
-      },
-      "ESPN": {
-        "found stats": 1,
+        "found stats": 7,
         "Game found, not in box score": 1
       },
       "StatBroadcast": {
+        "found player": 1,
         "player not in box": 1,
         "No game listed today": 1
+      },
+      "ESPN": {
+        "Game found, not in box score": 1
       },
       "NCAA.com": {
         "Game found, not in box score": 1
@@ -3664,17 +3663,11 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 1,
+          "success": 2,
           "blocked": 0
         }
       }
