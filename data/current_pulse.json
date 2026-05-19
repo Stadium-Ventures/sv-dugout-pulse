@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T13:16:58.242335+00:00",
+  "generated_at": "2026-05-19T13:32:09.255222+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2952,23 +2952,47 @@
       "player_name": "Eamon McDermott",
       "team": "Duke",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
-      "game_context": "Duke vs NC State",
-      "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Duke 0, NC State 0 | Bottom 2",
+      "game_status": "Live",
+      "game_time": "9:00 AM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869455",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657482&vislive=ncst",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Eamon%20McDermott%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Eamon%20McDermott%22%20Duke&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found game, no player"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "scheduled (ignored)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "no game found"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "no game found"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "scheduled (ignored)"
         }
       ],
       "stats_captured_at": null,
@@ -3598,14 +3622,33 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 8
+        "found stats": 7,
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "player not in box": 1,
+        "no game found": 1
+      },
+      "ESPN": {
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 1
+      },
+      "Sidearm": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 1
       }
     },
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Eamon McDermott"
+    ],
     "total_clients": 83,
     "proxy_pool": {
       "pool": [
@@ -3613,9 +3656,14 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": null,
+      "active": "p.webshare.io",
       "dead": [],
-      "stats": {}
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 0
+        }
+      }
     }
   }
 }
