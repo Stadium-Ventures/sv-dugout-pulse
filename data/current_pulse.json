@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T20:54:05.478666+00:00",
+  "generated_at": "2026-05-19T21:01:46.990862+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1897,7 +1897,7 @@
       "team": "Vanderbilt",
       "level": "NCAA",
       "stats_summary": "1.1 IP, K",
-      "game_context": "Kentucky 4, Vanderbilt 1 | Bottom 6",
+      "game_context": "Kentucky 4, Vanderbilt 4 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-19",
@@ -2542,9 +2542,9 @@
       "player_name": "Kade Brown",
       "team": "Stockton Ports",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 2, San Jose Giants 17 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Stockton Ports 4, San Jose Giants 17 | Final",
+      "game_status": "Final",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
@@ -2558,7 +2558,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/821078",
       "player_profile_url": "https://www.mlb.com/player/824044",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Kade%20Brown%22%20Athletics&f=live",
       "data_source": "MLB Stats API",
@@ -2976,7 +2976,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3631,7 +3631,7 @@
       },
       "StatBroadcast": {
         "found player": 1,
-        "player not in box": 1,
+        "Couldn't reach site": 1,
         "No game listed today": 1
       },
       "ESPN": {
@@ -3663,18 +3663,24 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
+      "active": "proxy-server.scraperapi.com",
       "dead": [
-        "p.webshare.io"
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 1,
-          "blocked": 0
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
         }
       }
     }
