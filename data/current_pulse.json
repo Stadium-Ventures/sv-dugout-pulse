@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T22:02:05.414446+00:00",
+  "generated_at": "2026-05-19T22:16:55.022012+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -500,7 +500,7 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Next: vs TBD — Wed 05/20 2:00 PM ET",
+      "stats_summary": "Next: vs Vanderbilt — Wed 05/20 2:00 PM ET",
       "game_context": "",
       "game_status": "N/A",
       "game_time": null,
@@ -509,10 +509,10 @@
       "next_game": {
         "date": "Wed 05/20",
         "date_full": "2026-05-20",
-        "opponent": "TBD",
+        "opponent": "Vanderbilt",
         "home_away": "vs",
         "time": "2:00 PM ET",
-        "display": "vs TBD — Wed 05/20 2:00 PM ET"
+        "display": "vs Vanderbilt — Wed 05/20 2:00 PM ET"
       },
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
@@ -859,9 +859,9 @@
       "player_name": "Cade Doughty",
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
-      "stats_summary": "Game at 6:03 PM ET",
-      "game_context": "Hartford Yard Goats vs New Hampshire Fisher Cats | 6:03 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "No game data",
+      "game_context": "Hartford Yard Goats vs New Hampshire Fisher Cats | Delayed Start",
+      "game_status": "Delayed Start",
       "game_time": "6:03 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
@@ -875,7 +875,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818540",
       "player_profile_url": "https://www.mlb.com/player/683103",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cade%20Doughty%22%20Jays&f=live",
       "data_source": "MLB Stats API",
@@ -1076,23 +1076,47 @@
       "player_name": "Dane Moehler",
       "team": "Clemson",
       "level": "NCAA",
-      "stats_summary": "Game at 6:10 PM",
-      "game_context": "Clemson vs Notre Dame",
-      "game_status": "Scheduled",
-      "game_time": "6:10 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Clemson 0, Notre Dame 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "5:00 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869457",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/index.html?id=657484",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Dane%20Moehler%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dane%20Moehler%22%20Clemson&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1414,8 +1438,8 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "In lineup — batting 6th (3B)",
-      "game_context": "Lansing Lugnuts vs Lake County Captains | 6:05 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Lansing Lugnuts 0, Lake County Captains 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
@@ -1429,7 +1453,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819884",
       "player_profile_url": "https://www.mlb.com/player/811312",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Justin%20Riemer%22%20Athletics&f=live",
       "data_source": "MLB Stats API",
@@ -1594,10 +1618,10 @@
       "player_name": "Riley Goodman",
       "team": "South Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
+      "stats_summary": "Game at 6:35 PM",
       "game_context": "South Carolina vs Tennessee",
       "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "game_time": "6:35 PM",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
@@ -1626,9 +1650,9 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 1st (2B)",
-      "game_context": "Palm Beach Cardinals vs St. Lucie Mets | 6:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "0-1, K",
+      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
@@ -1642,8 +1666,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820353",
       "player_profile_url": "https://www.mlb.com/player/805550",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Ryan%20Weingartner%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1796,10 +1820,10 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
+      "stats_summary": "Game at 6:00 PM ET",
       "game_context": "Rutgers vs Michigan",
       "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
@@ -1808,10 +1832,18 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
           "outcome": "found stats"
         }
       ],
@@ -2604,8 +2636,8 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "In lineup — batting 5th (3B)",
-      "game_context": "Palm Beach Cardinals vs St. Lucie Mets | 6:05 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
@@ -2619,7 +2651,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820353",
       "player_profile_url": "https://www.mlb.com/player/809633",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -3146,10 +3178,10 @@
       "player_name": "Luke Fithian",
       "team": "Rutgers",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
+      "stats_summary": "Game at 6:00 PM ET",
       "game_context": "Rutgers vs Michigan",
       "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
@@ -3158,10 +3190,18 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Luke%20Fithian%22%20Rutgers&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
           "outcome": "found stats"
         }
       ],
@@ -3626,24 +3666,28 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 7,
-        "Game found, not in box score": 1
+        "Game found, not in box score": 2,
+        "found stats": 4,
+        "Stale data — skipped": 2
       },
       "StatBroadcast": {
-        "found player": 1,
-        "player not in box": 1,
-        "No game listed today": 1
+        "player not in box": 2,
+        "No game listed today": 2,
+        "found player": 1
       },
       "ESPN": {
-        "Game found, not in box score": 1
+        "Game found, not in box score": 4
       },
       "NCAA.com": {
+        "Stale data — skipped": 1,
+        "found stats": 2,
         "Game found, not in box score": 1
       },
       "Sidearm": {
-        "No game listed today": 1
+        "No game listed today": 2
       },
       "NCAA.org": {
+        "Stale data — skipped": 1,
         "Game found, not in box score": 1
       }
     },

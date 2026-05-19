@@ -9852,7 +9852,7 @@
   },
   {
     "date": "2026-05-19",
-    "updated_at": "2026-05-19T22:02:05.441122+00:00",
+    "updated_at": "2026-05-19T22:16:55.050910+00:00",
     "players": [
       {
         "name": "Chase Petty",
@@ -9936,7 +9936,7 @@
         "team": "New Hampshire Fisher Cats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Delayed Start",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -9969,12 +9969,17 @@
         "team": "Clemson",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -10015,7 +10020,7 @@
         "team": "Lansing Lugnuts",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -10063,7 +10068,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -10110,9 +10115,11 @@
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com"
         ]
       },
       {
@@ -10200,7 +10207,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -10289,9 +10296,11 @@
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "NCAA.com",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com"
         ]
       },
       {
