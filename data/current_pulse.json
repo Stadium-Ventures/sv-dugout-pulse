@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T17:32:00.876969+00:00",
+  "generated_at": "2026-05-19T17:47:06.161080+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -2321,9 +2321,9 @@
       "player_name": "Davis Sharpe",
       "team": "Akron RubberDucks",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Akron RubberDucks 8, Harrisburg Senators 4 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Akron RubberDucks 8, Harrisburg Senators 4 | Final",
+      "game_status": "Final",
       "game_time": "11:00 AM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
@@ -2337,7 +2337,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818680",
       "player_profile_url": "https://www.mlb.com/player/681571",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Davis%20Sharpe%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -2972,7 +2972,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "fetch failed"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3626,7 +3626,7 @@
         "found game, no player": 1
       },
       "StatBroadcast": {
-        "fetch failed": 1,
+        "player not in box": 1,
         "no game found": 1
       },
       "ESPN": {
@@ -3657,11 +3657,9 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
+      "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
@@ -3669,12 +3667,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
+          "success": 1,
+          "blocked": 0
         }
       }
     }
