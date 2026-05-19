@@ -1201,8 +1201,33 @@ function renderCard(p) {
       p.fetch_diagnostic.filter(d => blockedRe.test(d.outcome || '')).map(d => d.source || 'unknown')
     )];
     const triedSources = [...new Set(p.fetch_diagnostic.map(d => d.source || 'unknown'))];
-    const techDetail = p.fetch_diagnostic
+    // Dedupe outcomes per source: if a source appears twice (e.g. StatBroadcast
+    // "Couldn't reach site" on first try then "No game listed today" on retry),
+    // collapse to the most informative outcome. Priority: any blocked outcome
+    // wins (it's the actionable one), then "Game found, not in box score"
+    // (high-signal), else the last outcome we saw.
+    const outcomeRank = (o) => {
+      const s = (o || '').toLowerCase();
+      if (blockedRe.test(s)) return 3;
+      if (s.includes('not in box')) return 2;
+      if (s.includes("couldn't reach")) return 1;
+      return 0;
+    };
+    const bySource = {};
+    p.fetch_diagnostic.forEach(d => {
+      const src = d.source || '?';
+      if (!bySource[src] || outcomeRank(d.outcome) >= outcomeRank(bySource[src].outcome)) {
+        bySource[src] = d;
+      }
+    });
+    const techDetail = Object.values(bySource)
       .map(d => `${d.source || '?'}: ${d.outcome || '?'}`).join(' · ');
+    // Did at least one source confirm the game exists and check the box score?
+    // That's the "he just hasn't played yet" signal — high confidence the
+    // system is working, the player just isn't in the lineup/box yet.
+    const sawBoxScore = p.fetch_diagnostic.some(d =>
+      (d.outcome || '').toLowerCase().includes('not in box'));
+    const isPitcher = /pitcher|hp\b|two-way/i.test((p.tags && p.tags.position) || '');
     // Recovery-plan tail tells Kent what we're doing about it. The Yesterday
     // view points at the overnight backfill (3 AM + 5 AM ET, when StatBroadcast
     // is least loaded); live cards retry every 15 min until games end and
@@ -1223,9 +1248,17 @@ function renderCard(p) {
         <span>Box score never posted to ${esc(triedSources.join(', '))}.${recoveryTail} Hover for detail.</span>
       </div>`;
     } else {
+      // Position-aware "system is working, he just hasn't played yet" copy.
+      // Pitchers don't appear in the box until they enter the game; hitters
+      // either haven't batted yet or were left out of the starting lineup.
+      const summary = sawBoxScore
+        ? (isPitcher
+            ? "Game is live — he hasn't entered yet. Pitchers only show in the box once they take the mound."
+            : "Game is live — he isn't in the box yet (still waiting for a plate appearance or not in the lineup).")
+        : "No game listed yet on any of our sources.";
       fetchDiagHtml = `<div class="card-status card-status-info" title="${esc(techDetail)}">
         <span class="card-status-icon">ℹ️</span>
-        <span>Checked ${esc(triedSources.join(', '))} — player not in the box score. Hover for detail.</span>
+        <span>${esc(summary)} Hover for detail.</span>
       </div>`;
     }
   }

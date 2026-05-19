@@ -3437,7 +3437,7 @@ class D1BaseballScraper(BaseSchoolScraper):
                     elif sb_blocked:
                         inner_attempts.append({"source": "StatBroadcast", "outcome": "blocked (Cloudflare 403)"})
                     else:
-                        inner_attempts.append({"source": "StatBroadcast", "outcome": "fetch failed"})
+                        inner_attempts.append({"source": "StatBroadcast", "outcome": "Couldn't reach site"})
                 else:
                     sidearm_folder = _SCHOOL_LOOKUP.get(team, {}).get("sidearm_folder", "")
                     player_stats = self._parse_sidearm_box_score(
@@ -5263,7 +5263,7 @@ class NCAAStatsFetcher:
             try:
                 result = scraper.fetch_stats(name, team, yesterday_only=yesterday_only, position=position)
                 if result is None:
-                    attempts.append({"source": diag_label, "outcome": "no game found"})
+                    attempts.append({"source": diag_label, "outcome": "No game listed today"})
                     continue
 
                 if self._has_player_stats(result):
@@ -5273,7 +5273,7 @@ class NCAAStatsFetcher:
                             and not result.get("game_time")
                             and best_context is None):
                         best_context = result
-                        attempts.append({"source": diag_label, "outcome": "scheduled (no game_time)"})
+                        attempts.append({"source": diag_label, "outcome": "Stale data — skipped"})
                         _flush_inner(result)
                         logger.info(
                             "%s found scheduled game for %s @ %s but no game_time — trying next for time",
@@ -5305,7 +5305,7 @@ class NCAAStatsFetcher:
                         # overwrite stats_summary — it may already be "Did Not Play".
                         if result.get("game_time") and not best_context.get("game_time"):
                             best_context["game_time"] = result["game_time"]
-                        attempts.append({"source": diag_label, "outcome": "scheduled (ignored)"})
+                        attempts.append({"source": diag_label, "outcome": "Stale data — skipped"})
                         _flush_inner(result)
                         logger.info(
                             "%s returned Scheduled for %s @ %s — ignoring (best_context is %s)",
@@ -5338,7 +5338,7 @@ class NCAAStatsFetcher:
                 if best_context is None:
                     best_context = result
                     best_context["data_source"] = label
-                    attempts.append({"source": diag_label, "outcome": "found game, no player"})
+                    attempts.append({"source": diag_label, "outcome": "Game found, not in box score"})
                     _flush_inner(result)
                     logger.info(
                         "%s found game for %s @ %s but no player stats — trying next scraper",
@@ -5353,7 +5353,7 @@ class NCAAStatsFetcher:
                     # Preserve D1Baseball's URL (StatBroadcast) over ESPN's
                     if best_context.get("box_score_url"):
                         result["box_score_url"] = best_context["box_score_url"]
-                    attempts.append({"source": diag_label, "outcome": "found game, no player"})
+                    attempts.append({"source": diag_label, "outcome": "Game found, not in box score"})
                     _flush_inner(result)
                     best_context = result
                 elif best_context is not None and not self._has_player_stats(result):
@@ -5363,7 +5363,7 @@ class NCAAStatsFetcher:
                     if (r_sum and r_sum != "No game data"
                             and best_context.get("stats_summary") == "Game in progress"):
                         best_context["stats_summary"] = r_sum
-                    attempts.append({"source": diag_label, "outcome": "found game, no player"})
+                    attempts.append({"source": diag_label, "outcome": "Game found, not in box score"})
                     _flush_inner(result)
                     logger.info(
                         "%s upgraded game_time for %s @ %s",
