@@ -20464,5 +20464,67 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-19T16:32:00.844798+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Davis Sharpe",
+      "Eamon McDermott"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 7,
+        "found game, no player": 1
+      },
+      "StatBroadcast": {
+        "fetch failed": 1,
+        "no game found": 1
+      },
+      "ESPN": {
+        "found game, no player": 1
+      },
+      "NCAA.com": {
+        "scheduled (ignored)": 1
+      },
+      "Sidearm": {
+        "no game found": 1
+      },
+      "NCAA.org": {
+        "scheduled (ignored)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
+        }
+      }
+    }
   }
 ]
