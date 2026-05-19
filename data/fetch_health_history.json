@@ -22018,5 +22018,61 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-19T22:22:07.525304+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Davis Sharpe",
+      "Kade Brown",
+      "Eamon McDermott"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 2,
+        "found stats": 4,
+        "Stale data — skipped": 2
+      },
+      "StatBroadcast": {
+        "player not in box": 2,
+        "No game listed today": 2,
+        "found player": 1
+      },
+      "ESPN": {
+        "Game found, not in box score": 4
+      },
+      "NCAA.com": {
+        "Stale data — skipped": 1,
+        "found stats": 2,
+        "Game found, not in box score": 1
+      },
+      "Sidearm": {
+        "No game listed today": 2
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 1,
+        "Game found, not in box score": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
