@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T17:47:06.161080+00:00",
+  "generated_at": "2026-05-19T18:02:07.838266+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1896,10 +1896,10 @@
       "player_name": "Alex Kranzler",
       "team": "Vanderbilt",
       "level": "NCAA",
-      "stats_summary": "Game at 1:30 PM",
+      "stats_summary": "Game at 2:00 PM",
       "game_context": "Kentucky vs Vanderbilt",
       "game_status": "Scheduled",
-      "game_time": "1:30 PM",
+      "game_time": "2:00 PM",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
@@ -2968,7 +2968,7 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found game, no player"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
@@ -2976,23 +2976,23 @@
         },
         {
           "source": "ESPN",
-          "outcome": "found game, no player"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "NCAA.com",
-          "outcome": "scheduled (ignored)"
+          "outcome": "Stale data — skipped"
         },
         {
           "source": "Sidearm",
-          "outcome": "no game found"
+          "outcome": "No game listed today"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "no game found"
+          "outcome": "No game listed today"
         },
         {
           "source": "NCAA.org",
-          "outcome": "scheduled (ignored)"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3623,23 +3623,23 @@
     "by_source": {
       "D1Baseball": {
         "found stats": 7,
-        "found game, no player": 1
+        "Game found, not in box score": 1
       },
       "StatBroadcast": {
         "player not in box": 1,
-        "no game found": 1
+        "No game listed today": 1
       },
       "ESPN": {
-        "found game, no player": 1
+        "Game found, not in box score": 1
       },
       "NCAA.com": {
-        "scheduled (ignored)": 1
+        "Stale data — skipped": 1
       },
       "Sidearm": {
-        "no game found": 1
+        "No game listed today": 1
       },
       "NCAA.org": {
-        "scheduled (ignored)": 1
+        "Stale data — skipped": 1
       }
     },
     "blocked_sources": [],
@@ -3657,16 +3657,10 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
