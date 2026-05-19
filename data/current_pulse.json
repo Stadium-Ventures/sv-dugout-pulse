@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T19:16:56.097392+00:00",
+  "generated_at": "2026-05-19T19:32:00.116535+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1896,27 +1896,23 @@
       "player_name": "Alex Kranzler",
       "team": "Vanderbilt",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Kentucky 1, Vanderbilt 0 | Bottom 1",
-      "game_status": "Live",
+      "stats_summary": "Game at 2:00 PM ET",
+      "game_context": "Kentucky vs Vanderbilt",
+      "game_status": "Scheduled",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-19",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660507",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869477",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "Stale data — skipped"
         },
         {
           "source": "ESPN",
@@ -1924,19 +1920,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2563,7 +2547,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 2, San Jose Giants 8 | Bottom 4",
+      "game_context": "Stockton Ports 2, San Jose Giants 10 | Bottom 5",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-19",
@@ -3647,23 +3631,25 @@
     "by_source": {
       "D1Baseball": {
         "found stats": 6,
-        "Game found, not in box score": 2
-      },
-      "StatBroadcast": {
-        "Couldn't reach site": 2,
-        "No game listed today": 2
+        "Stale data — skipped": 1,
+        "Game found, not in box score": 1
       },
       "ESPN": {
         "Game found, not in box score": 2
       },
       "NCAA.com": {
-        "Stale data — skipped": 2
+        "found stats": 1,
+        "Stale data — skipped": 1
+      },
+      "StatBroadcast": {
+        "Couldn't reach site": 1,
+        "No game listed today": 1
       },
       "Sidearm": {
-        "No game listed today": 2
+        "No game listed today": 1
       },
       "NCAA.org": {
-        "Stale data — skipped": 2
+        "Stale data — skipped": 1
       }
     },
     "blocked_sources": [],
@@ -3671,7 +3657,6 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
-      "Alex Kranzler",
       "Davis Sharpe",
       "Kade Brown",
       "Eamon McDermott"
