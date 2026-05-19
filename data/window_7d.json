@@ -1,37 +1,5 @@
 [
   {
-    "player_name": "Dax Kilby",
-    "team": "New York Yankees",
-    "level": "Pro",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "N/A",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-18T14:26:38.573310Z"
-  },
-  {
     "player_name": "Kellon Lindsey",
     "team": "Los Angeles Dodgers",
     "level": "Pro",
@@ -61,7 +29,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 3,
-    "last_updated": "2026-05-18T14:26:38.588444Z",
+    "last_updated": "2026-05-19T13:52:25.360414Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -108,6 +76,38 @@
     ]
   },
   {
+    "player_name": "Dax Kilby",
+    "team": "New York Yankees",
+    "level": "Pro",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "N/A",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:25.406921Z"
+  },
+  {
     "player_name": "Garrett Whitlock",
     "team": "Boston Red Sox",
     "level": "Pro",
@@ -120,19 +120,30 @@
     "window": "7d",
     "window_grade": "🔥 Hot",
     "stats": {
-      "ip": "2",
-      "k": 3,
+      "ip": "3",
+      "k": 4,
       "bb": 0,
       "era": "0.00",
-      "whip": "0.00",
-      "k_per_9": "13.5",
+      "whip": "0.33",
+      "k_per_9": "12.0",
       "bb_per_9": "0.0",
-      "k_pct": "50.0%",
+      "k_pct": "40.0%",
       "bb_pct": "0.0%"
     },
-    "games_played": 2,
-    "last_updated": "2026-05-18T14:26:38.596568Z",
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:52:25.418766Z",
     "game_log": [
+      {
+        "date": "2026-05-18",
+        "opponent": "",
+        "stats": {
+          "ip": "1.0",
+          "er": 0,
+          "k": 1,
+          "bb": 0,
+          "h": 1
+        }
+      },
       {
         "date": "2026-05-14",
         "opponent": "vs ",
@@ -158,6 +169,298 @@
     ]
   },
   {
+    "player_name": "Aiden Robbins",
+    "team": "Texas",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 5,
+      "ab": 4,
+      "h": 0,
+      "hr": 0,
+      "bb": 1,
+      "k": 3,
+      "rbi": 1,
+      "r": 1,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".200",
+      "slg": ".000",
+      "ops": ".200",
+      "k_pct": "60.0%",
+      "bb_pct": "20.0%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:25.257609Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Missouri",
+        "stats": {
+          "h": 0,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847468"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Missouri",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660121"
+      }
+    ]
+  },
+  {
+    "player_name": "Trevor Condon",
+    "team": "Etowah",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 7,
+      "ab": 6,
+      "h": 3,
+      "hr": 0,
+      "bb": 1,
+      "k": 0,
+      "rbi": 0,
+      "r": 2,
+      "sb": 0,
+      "avg": ".500",
+      "obp": ".571",
+      "slg": ".500",
+      "ops": "1.071",
+      "k_pct": "0.0%",
+      "bb_pct": "14.3%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:26.548685Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "W 3-1// 5-0",
+        "stats": {
+          "h": 3,
+          "ab": 6,
+          "hr": 0,
+          "rbi": 0,
+          "r": 2,
+          "bb": 1,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Bo Lowrance",
+    "team": "Christ Church",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 24,
+      "ab": 23,
+      "h": 1,
+      "hr": 1,
+      "bb": 1,
+      "k": 1,
+      "rbi": 2,
+      "r": 1,
+      "sb": 0,
+      "avg": ".043",
+      "obp": ".083",
+      "slg": ".174",
+      "ops": ".257",
+      "k_pct": "4.2%",
+      "bb_pct": "4.2%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:26.549399Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "",
+        "stats": {
+          "h": 0,
+          "ab": 20,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-13",
+        "opponent": "L 17-7",
+        "stats": {
+          "h": 1,
+          "ab": 3,
+          "hr": 1,
+          "rbi": 2,
+          "r": 1,
+          "bb": 1,
+          "k": 1,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Max Phillips",
+    "team": "Trinity",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 7,
+      "ab": 5,
+      "h": 0,
+      "hr": 0,
+      "bb": 2,
+      "k": 1,
+      "rbi": 0,
+      "r": 0,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".286",
+      "slg": ".000",
+      "ops": ".286",
+      "k_pct": "14.3%",
+      "bb_pct": "28.6%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:26.550151Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "W 11-2",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 1,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "W 5-1",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 1,
+          "k": 1,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Taj Marchand",
+    "team": "James Island",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 4,
+      "ab": 2,
+      "h": 1,
+      "hr": 1,
+      "bb": 2,
+      "k": 0,
+      "rbi": 2,
+      "r": 2,
+      "sb": 0,
+      "avg": ".500",
+      "obp": ".750",
+      "slg": "2.000",
+      "ops": "2.750",
+      "k_pct": "0.0%",
+      "bb_pct": "50.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:26.550866Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "W 12-5",
+        "stats": {
+          "h": 1,
+          "ab": 2,
+          "hr": 1,
+          "rbi": 2,
+          "r": 2,
+          "bb": 2,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
     "player_name": "Aaron Watson",
     "team": "Cincinnati Reds",
     "level": "Pro",
@@ -168,29 +471,29 @@
       "roster_priority": 2
     },
     "window": "7d",
-    "window_grade": "✅ Solid",
+    "window_grade": "😐 Steady",
     "stats": {
-      "ip": "4",
+      "ip": "4.2",
       "k": 6,
-      "bb": 0,
-      "era": "2.25",
-      "whip": "1.25",
-      "k_per_9": "13.5",
-      "bb_per_9": "0.0",
-      "k_pct": "35.3%",
-      "bb_pct": "0.0%"
+      "bb": 3,
+      "era": "3.86",
+      "whip": "1.71",
+      "k_per_9": "11.6",
+      "bb_per_9": "5.8",
+      "k_pct": "27.3%",
+      "bb_pct": "13.6%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:26:39.613862Z",
+    "last_updated": "2026-05-19T13:52:26.629563Z",
     "game_log": [
       {
-        "date": "2026-05-11",
-        "opponent": "vs ",
+        "date": "2026-05-18",
+        "opponent": "",
         "stats": {
-          "ip": "4.0",
-          "er": 1,
+          "ip": "4.2",
+          "er": 2,
           "k": 6,
-          "bb": 0,
+          "bb": 3,
           "h": 5
         }
       }
@@ -226,7 +529,7 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-18T14:26:39.670969Z"
+    "last_updated": "2026-05-19T13:52:26.722271Z"
   },
   {
     "player_name": "Carter Johnson",
@@ -258,7 +561,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:26:39.711238Z",
+    "last_updated": "2026-05-19T13:52:26.817977Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -356,7 +659,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:26:39.755723Z",
+    "last_updated": "2026-05-19T13:52:26.914730Z",
     "game_log": [
       {
         "date": "2026-05-15",
@@ -384,25 +687,39 @@
     "window": "7d",
     "window_grade": "🥶 Cold",
     "stats": {
-      "pa": 4,
-      "ab": 4,
-      "h": 0,
+      "pa": 8,
+      "ab": 8,
+      "h": 1,
       "hr": 0,
       "bb": 0,
       "k": 1,
       "rbi": 0,
       "r": 0,
       "sb": 0,
-      "avg": ".000",
-      "obp": ".000",
-      "slg": ".000",
-      "ops": ".000",
-      "k_pct": "25.0%",
+      "avg": ".125",
+      "obp": ".125",
+      "slg": ".125",
+      "ops": ".250",
+      "k_pct": "12.5%",
       "bb_pct": "0.0%"
     },
-    "games_played": 2,
-    "last_updated": "2026-05-18T14:26:39.790378Z",
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:52:27.001972Z",
     "game_log": [
+      {
+        "date": "2026-05-18",
+        "opponent": "vs ",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "k": 0,
+          "sb": 0
+        }
+      },
       {
         "date": "2026-05-16",
         "opponent": "vs ",
@@ -457,7 +774,7 @@
       "bb_pct": "6.2%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:26:39.828800Z",
+    "last_updated": "2026-05-19T13:52:27.131846Z",
     "game_log": [
       {
         "date": "2026-05-14",
@@ -468,6 +785,713 @@
           "k": 5,
           "bb": 1,
           "h": 3
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Cam Flukey",
+    "team": "Coastal Carolina",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "ip": "4",
+      "k": 5,
+      "bb": 1,
+      "era": "0.00",
+      "whip": "0.75",
+      "k_per_9": "11.2",
+      "bb_per_9": "2.2",
+      "k_pct": "33.3%",
+      "bb_pct": "6.7%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:25.363601Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Louisiana",
+        "stats": {
+          "ip": "4",
+          "er": 0,
+          "k": 5,
+          "bb": 1,
+          "h": 2
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=627890"
+      }
+    ]
+  },
+  {
+    "player_name": "Colin Raymond",
+    "team": "Stony Brook",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:29.383524Z"
+  },
+  {
+    "player_name": "Kyle Jones",
+    "team": "Florida",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 2,
+      "ab": 2,
+      "h": 2,
+      "hr": 0,
+      "bb": 0,
+      "k": 0,
+      "rbi": 2,
+      "r": 1,
+      "sb": 0,
+      "avg": "1.000",
+      "obp": "1.000",
+      "slg": "1.000",
+      "ops": "2.000",
+      "k_pct": "0.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:25.410812Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "vs LSU",
+        "stats": {
+          "h": 2,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 2,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632801"
+      }
+    ]
+  },
+  {
+    "player_name": "Myles Bailey",
+    "team": "Florida State",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:25.423545Z"
+  },
+  {
+    "player_name": "Caleb Daniel",
+    "team": "Georgia Tech",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 2,
+      "ab": 2,
+      "h": 0,
+      "hr": 0,
+      "bb": 0,
+      "k": 2,
+      "rbi": 0,
+      "r": 0,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".000",
+      "slg": ".000",
+      "ops": ".000",
+      "k_pct": "100.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:27.136235Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Boston College",
+        "stats": {
+          "h": 0,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630087"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Boston College",
+        "stats": {
+          "h": 0,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630087"
+      }
+    ]
+  },
+  {
+    "player_name": "Adam McKelvey",
+    "team": "Georgia Tech",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:38.407258Z"
+  },
+  {
+    "player_name": "Joe Tiroly",
+    "team": "Virginia",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "😐 Steady",
+    "stats": {
+      "pa": 20,
+      "ab": 15,
+      "h": 4,
+      "hr": 0,
+      "bb": 4,
+      "k": 3,
+      "rbi": 3,
+      "r": 4,
+      "sb": 0,
+      "avg": ".267",
+      "obp": ".450",
+      "slg": ".267",
+      "ops": ".717",
+      "k_pct": "15.0%",
+      "bb_pct": "20.0%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:52:29.384359Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Louisville",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632771"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Louisville",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632770"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Louisville",
+        "stats": {
+          "h": 2,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 2,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632769"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Richmond",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 1,
+          "r": 3,
+          "bb": 3,
+          "hbp": 1,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636362"
+      }
+    ]
+  },
+  {
+    "player_name": "Axton Westmoreland",
+    "team": "Hernando",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:41.414312Z"
+  },
+  {
+    "player_name": "Hunter Wieckowski",
+    "team": "Timber Creek",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:41.414986Z"
+  },
+  {
+    "player_name": "Jace Moran",
+    "team": "Suwannee",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:41.415575Z"
+  },
+  {
+    "player_name": "Lucas Lawrence",
+    "team": "B.R. Catholic",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:41.416023Z"
+  },
+  {
+    "player_name": "Chris Grasso",
+    "team": "St. Joseph's Prep",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "ip": "5",
+      "k": 4,
+      "bb": 1,
+      "era": "1.80",
+      "whip": "0.60",
+      "k_per_9": "7.2",
+      "bb_per_9": "1.8",
+      "k_pct": "22.2%",
+      "bb_pct": "5.6%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:41.416368Z",
+    "game_log": [
+      {
+        "date": "2026-05-13",
+        "opponent": "L 7-4",
+        "stats": {
+          "ip": "5",
+          "er": 1,
+          "k": 4,
+          "bb": 1,
+          "h": 2
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Devin Diaz",
+    "team": "Iona Prep",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 11,
+      "ab": 10,
+      "h": 4,
+      "hr": 1,
+      "bb": 1,
+      "k": 2,
+      "rbi": 3,
+      "r": 4,
+      "sb": 0,
+      "avg": ".400",
+      "obp": ".455",
+      "slg": ".900",
+      "ops": "1.355",
+      "k_pct": "18.2%",
+      "bb_pct": "9.1%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:52:41.416854Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "W 10-3",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 1,
+          "rbi": 1,
+          "r": 3,
+          "bb": 1,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-13",
+        "opponent": "W 8-0",
+        "stats": {
+          "h": 2,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 0,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "W 4-3",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 0,
+          "bb": 0,
+          "k": 2,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Graham Virag",
+    "team": "Cardinal Gibbons",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "😐 Steady",
+    "stats": {
+      "pa": 7,
+      "ab": 5,
+      "h": 1,
+      "hr": 0,
+      "bb": 2,
+      "k": 1,
+      "rbi": 0,
+      "r": 1,
+      "sb": 0,
+      "avg": ".200",
+      "obp": ".429",
+      "slg": ".200",
+      "ops": ".629",
+      "k_pct": "14.3%",
+      "bb_pct": "28.6%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:41.417418Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "W 6-4",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 1,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "W 7-6",
+        "stats": {
+          "h": 1,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 1,
+          "k": 1,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Noah Milburn",
+    "team": "IMG",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:41.417782Z"
+  },
+  {
+    "player_name": "Phinn Beaird",
+    "team": "Briarcrest",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "ip": "1",
+      "k": 0,
+      "bb": 3,
+      "era": "27.00",
+      "whip": "4.00",
+      "k_per_9": "0.0",
+      "bb_per_9": "27.0",
+      "k_pct": "0.0%",
+      "bb_pct": "42.9%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:41.418164Z",
+    "game_log": [
+      {
+        "date": "2026-05-13",
+        "opponent": "L 11-0",
+        "stats": {
+          "ip": "1",
+          "er": 3,
+          "k": 0,
+          "bb": 3,
+          "h": 1
         }
       }
     ]
@@ -496,7 +1520,7 @@
       "bb_pct": "20.0%"
     },
     "games_played": 2,
-    "last_updated": "2026-05-18T14:26:54.450569Z",
+    "last_updated": "2026-05-19T13:52:41.501147Z",
     "game_log": [
       {
         "date": "2026-05-15",
@@ -552,7 +1576,7 @@
       "bb_pct": "12.5%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:26:54.483151Z",
+    "last_updated": "2026-05-19T13:52:41.585641Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -650,7 +1674,7 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-18T14:26:54.508363Z"
+    "last_updated": "2026-05-19T13:52:41.686872Z"
   },
   {
     "player_name": "Jake Munroe",
@@ -682,7 +1706,7 @@
       "bb_pct": "20.0%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:26:54.543528Z",
+    "last_updated": "2026-05-19T13:52:41.773677Z",
     "game_log": [
       {
         "date": "2026-05-16",
@@ -786,7 +1810,7 @@
       "bb_pct": "17.4%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:26:54.578857Z",
+    "last_updated": "2026-05-19T13:52:41.871094Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -884,7 +1908,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 2,
-    "last_updated": "2026-05-18T14:26:54.613434Z",
+    "last_updated": "2026-05-19T13:52:41.965354Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -940,7 +1964,7 @@
       "bb_pct": "18.8%"
     },
     "games_played": 4,
-    "last_updated": "2026-05-18T14:26:54.655024Z",
+    "last_updated": "2026-05-19T13:52:42.059424Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1024,7 +2048,7 @@
       "bb_pct": "33.3%"
     },
     "games_played": 2,
-    "last_updated": "2026-05-18T14:26:54.688961Z",
+    "last_updated": "2026-05-19T13:52:42.158760Z",
     "game_log": [
       {
         "date": "2026-05-16",
@@ -1061,30 +2085,30 @@
       "roster_priority": 3
     },
     "window": "7d",
-    "window_grade": "🔥 Hot",
+    "window_grade": "😐 Steady",
     "stats": {
-      "ip": "4",
-      "k": 7,
+      "ip": "5",
+      "k": 4,
       "bb": 0,
-      "era": "0.00",
-      "whip": "0.00",
-      "k_per_9": "15.8",
+      "era": "3.60",
+      "whip": "1.00",
+      "k_per_9": "7.2",
       "bb_per_9": "0.0",
-      "k_pct": "58.3%",
+      "k_pct": "20.0%",
       "bb_pct": "0.0%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:26:54.726499Z",
+    "last_updated": "2026-05-19T13:52:42.252936Z",
     "game_log": [
       {
-        "date": "2026-05-11",
+        "date": "2026-05-18",
         "opponent": "vs ",
         "stats": {
-          "ip": "4.0",
-          "er": 0,
-          "k": 7,
+          "ip": "5.0",
+          "er": 2,
+          "k": 4,
           "bb": 0,
-          "h": 0
+          "h": 5
         }
       }
     ]
@@ -1113,7 +2137,7 @@
       "bb_pct": "22.7%"
     },
     "games_played": 2,
-    "last_updated": "2026-05-18T14:26:54.764808Z",
+    "last_updated": "2026-05-19T13:52:42.394489Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1138,6 +2162,1295 @@
         }
       }
     ]
+  },
+  {
+    "player_name": "Riley Goodman",
+    "team": "South Carolina",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "ip": "3",
+      "k": 4,
+      "bb": 1,
+      "era": "6.00",
+      "whip": "1.67",
+      "k_per_9": "12.0",
+      "bb_per_9": "3.0",
+      "k_pct": "28.6%",
+      "bb_pct": "7.1%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:32.368101Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Vanderbilt",
+        "stats": {
+          "ip": "3",
+          "er": 2,
+          "k": 4,
+          "bb": 1,
+          "h": 4
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636382"
+      }
+    ]
+  },
+  {
+    "player_name": "Will Rhine",
+    "team": "Alabama",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:52:35.446621Z"
+  },
+  {
+    "player_name": "Ty Finkbeiner",
+    "team": "Michigan",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "ip": "0.1",
+      "k": 1,
+      "bb": 0,
+      "era": "27.00",
+      "whip": "3.00",
+      "k_per_9": "27.0",
+      "bb_per_9": "0.0",
+      "k_pct": "50.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:38.407753Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Ohio State",
+        "stats": {
+          "ip": "0.1",
+          "er": 1,
+          "k": 1,
+          "bb": 0,
+          "h": 1
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633084"
+      }
+    ]
+  },
+  {
+    "player_name": "Brady Neal",
+    "team": "Alabama",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 12,
+      "ab": 10,
+      "h": 0,
+      "hr": 0,
+      "bb": 2,
+      "k": 5,
+      "rbi": 0,
+      "r": 0,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".167",
+      "slg": ".000",
+      "ops": ".167",
+      "k_pct": "41.7%",
+      "bb_pct": "16.7%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:52:50.370161Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 2,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847096"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847095"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847094"
+      }
+    ]
+  },
+  {
+    "player_name": "Alex Kranzler",
+    "team": "Vanderbilt",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "ip": "3.1",
+      "k": 6,
+      "bb": 1,
+      "era": "0.00",
+      "whip": "0.30",
+      "k_per_9": "16.2",
+      "bb_per_9": "2.7",
+      "k_pct": "54.5%",
+      "bb_pct": "9.1%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:42.397905Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs South Carolina",
+        "stats": {
+          "ip": "1",
+          "er": 0,
+          "k": 2,
+          "bb": 0,
+          "h": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636382"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs South Carolina",
+        "stats": {
+          "ip": "2.1",
+          "er": 0,
+          "k": 4,
+          "bb": 1,
+          "h": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636380"
+      }
+    ]
+  },
+  {
+    "player_name": "Ben Tryon",
+    "team": "Dallas Baptist",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "pa": 11,
+      "ab": 9,
+      "h": 2,
+      "hr": 1,
+      "bb": 2,
+      "k": 1,
+      "rbi": 3,
+      "r": 4,
+      "sb": 0,
+      "avg": ".222",
+      "obp": ".364",
+      "slg": ".556",
+      "ops": ".919",
+      "k_pct": "9.1%",
+      "bb_pct": "18.2%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:52:44.431825Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Jacksonville State",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631333"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Jax State",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 2,
+          "bb": 2,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631332"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Jacksonville State",
+        "stats": {
+          "h": 2,
+          "ab": 2,
+          "hr": 1,
+          "rbi": 3,
+          "r": 2,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631331"
+      }
+    ]
+  },
+  {
+    "player_name": "Boston Torres",
+    "team": "Wake Forest",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "pa": 17,
+      "ab": 16,
+      "h": 6,
+      "hr": 0,
+      "bb": 1,
+      "k": 2,
+      "rbi": 4,
+      "r": 4,
+      "sb": 0,
+      "avg": ".375",
+      "obp": ".412",
+      "slg": ".375",
+      "ops": ".787",
+      "k_pct": "11.8%",
+      "bb_pct": "5.9%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:52:47.347601Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Duke",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631425"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Duke",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631424"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Duke",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 2,
+          "r": 2,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631423"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Liberty",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632696"
+      }
+    ]
+  },
+  {
+    "player_name": "Brady St. Pierre",
+    "team": "SE Louisiana",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "ip": "0.2",
+      "k": 1,
+      "bb": 0,
+      "era": "40.50",
+      "whip": "6.00",
+      "k_per_9": "13.5",
+      "bb_per_9": "0.0",
+      "k_pct": "16.7%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:52:50.370526Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Southeastern Louisiana",
+        "stats": {
+          "ip": "0.2",
+          "er": 3,
+          "k": 1,
+          "bb": 0,
+          "h": 4
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659514"
+      }
+    ]
+  },
+  {
+    "player_name": "Braydon Kersey",
+    "team": "Mercer",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Two-Way",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 9,
+      "ab": 7,
+      "h": 5,
+      "hr": 1,
+      "bb": 2,
+      "k": 4,
+      "rbi": 4,
+      "r": 4,
+      "sb": 1,
+      "avg": ".714",
+      "obp": ".778",
+      "slg": "1.143",
+      "ops": "1.921",
+      "k_pct": "44.4%",
+      "bb_pct": "22.2%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:52:53.425661Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs East Tennessee State",
+        "stats": {
+          "h": 1,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 1,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631612"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs East Tennessee State",
+        "stats": {
+          "h": 1,
+          "ab": 0,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631611"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs East Tennessee State",
+        "stats": {
+          "h": 1,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 2,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 1
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631610"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Georgia Tech",
+        "stats": {
+          "h": 2,
+          "ab": 3,
+          "hr": 1,
+          "rbi": 2,
+          "r": 2,
+          "bb": 2,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631961"
+      }
+    ]
+  },
+  {
+    "player_name": "Evan Taylor",
+    "team": "Alabama",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Two-Way",
+      "draft_class": "2028",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "ip": "6",
+      "k": 13,
+      "bb": 1,
+      "era": "0.00",
+      "whip": "0.33",
+      "k_per_9": "19.5",
+      "bb_per_9": "1.5",
+      "k_pct": "65.0%",
+      "bb_pct": "5.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:05.639334Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "ip": "6",
+          "er": 0,
+          "k": 13,
+          "bb": 1,
+          "h": 1
+        },
+        "box_score_url": "https://olemisssports.com/boxscore.aspx?id=14711"
+      }
+    ]
+  },
+  {
+    "player_name": "Henry Zatkowski",
+    "team": "Virginia",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "ip": "6",
+      "k": 6,
+      "bb": 3,
+      "era": "1.50",
+      "whip": "1.33",
+      "k_per_9": "9.0",
+      "bb_per_9": "4.5",
+      "k_pct": "23.1%",
+      "bb_pct": "11.5%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:05.639749Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Louisville",
+        "stats": {
+          "ip": "6",
+          "er": 1,
+          "k": 6,
+          "bb": 3,
+          "h": 5
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632769"
+      }
+    ]
+  },
+  {
+    "player_name": "Brooks Wright",
+    "team": "SE Louisiana",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 3,
+      "ab": 3,
+      "h": 0,
+      "hr": 0,
+      "bb": 0,
+      "k": 2,
+      "rbi": 0,
+      "r": 0,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".000",
+      "slg": ".000",
+      "ops": ".000",
+      "k_pct": "66.7%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:52:56.378583Z",
+    "game_log": [
+      {
+        "date": "2026-05-17",
+        "opponent": "vs McNeese",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659515"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs McNeese",
+        "stats": {
+          "h": 0,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659512"
+      }
+    ]
+  },
+  {
+    "player_name": "Cole Cleveland",
+    "team": "FIU",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 12,
+      "ab": 10,
+      "h": 5,
+      "hr": 0,
+      "bb": 1,
+      "k": 0,
+      "rbi": 8,
+      "r": 5,
+      "sb": 0,
+      "avg": ".500",
+      "obp": ".583",
+      "slg": ".600",
+      "ops": "1.183",
+      "k_pct": "0.0%",
+      "bb_pct": "8.3%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:52:59.412525Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs New Mexico St.",
+        "stats": {
+          "h": 1,
+          "ab": 6,
+          "hr": 0,
+          "rbi": 4,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://www.nmstatesports.com/boxscore.aspx?id=19086"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs New Mexico St",
+        "stats": {
+          "h": 2,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 2,
+          "r": 2,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633821"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Florida International",
+        "stats": {
+          "h": 2,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 2,
+          "r": 2,
+          "bb": 0,
+          "hbp": 1,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633821"
+      }
+    ]
+  },
+  {
+    "player_name": "Drew Bellis",
+    "team": "UCF",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:02.594092Z"
+  },
+  {
+    "player_name": "Mason Eckelman",
+    "team": "Ohio State",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 18,
+      "ab": 13,
+      "h": 1,
+      "hr": 0,
+      "bb": 4,
+      "k": 3,
+      "rbi": 0,
+      "r": 4,
+      "sb": 0,
+      "avg": ".077",
+      "obp": ".333",
+      "slg": ".077",
+      "ops": ".410",
+      "k_pct": "16.7%",
+      "bb_pct": "22.2%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:53:05.640356Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Michigan",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 2,
+          "bb": 2,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633086"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Michigan",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633085"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Michigan",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633084"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Wright State",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 1,
+          "hbp": 1,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://ohiostatebuckeyes.com/sidearmstats/baseball/"
+      }
+    ]
+  },
+  {
+    "player_name": "Sam Mitchell",
+    "team": "Southern Miss",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2028",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:08.403933Z"
+  },
+  {
+    "player_name": "Braedon Mackay",
+    "team": "Sarasota HS",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:20.430584Z"
+  },
+  {
+    "player_name": "Griffin Loy",
+    "team": "South Walton",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:20.431174Z",
+    "game_log": [
+      {
+        "date": "2026-05-13",
+        "opponent": "W 6-2",
+        "stats": {
+          "ip": "0",
+          "er": 0,
+          "k": 0,
+          "bb": 0,
+          "h": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Jackson Staples",
+    "team": "The Hun School",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 12,
+      "ab": 11,
+      "h": 7,
+      "hr": 1,
+      "bb": 1,
+      "k": 3,
+      "rbi": 8,
+      "r": 5,
+      "sb": 0,
+      "avg": ".636",
+      "obp": ".667",
+      "slg": "1.091",
+      "ops": "1.758",
+      "k_pct": "25.0%",
+      "bb_pct": "8.3%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:53:20.431529Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "W 13-3",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 2,
+          "bb": 0,
+          "k": 2,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "W 14-4",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 3,
+          "r": 1,
+          "bb": 0,
+          "k": 1,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "W 10-0",
+        "stats": {
+          "h": 3,
+          "ab": 3,
+          "hr": 1,
+          "rbi": 4,
+          "r": 2,
+          "bb": 1,
+          "k": 0,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Kyle Rogosienski",
+    "team": "Muskego",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 6,
+      "ab": 3,
+      "h": 0,
+      "hr": 0,
+      "bb": 3,
+      "k": 3,
+      "rbi": 0,
+      "r": 1,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".500",
+      "slg": ".000",
+      "ops": ".500",
+      "k_pct": "50.0%",
+      "bb_pct": "50.0%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:53:20.431885Z",
+    "game_log": [
+      {
+        "date": "2026-05-15",
+        "opponent": "W 7-0",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 2,
+          "k": 2,
+          "sb": 0,
+          "hbp": 0
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "W 16-0",
+        "stats": {
+          "h": 0,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 1,
+          "k": 1,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Tyler Howard",
+    "team": "Spotswood",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2028",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:20.432131Z"
+  },
+  {
+    "player_name": "David Vargas",
+    "team": "Cartersville",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 8,
+      "ab": 8,
+      "h": 2,
+      "hr": 0,
+      "bb": 0,
+      "k": 2,
+      "rbi": 3,
+      "r": 1,
+      "sb": 0,
+      "avg": ".250",
+      "obp": ".250",
+      "slg": ".250",
+      "ops": ".500",
+      "k_pct": "25.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:20.432461Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "L 7-6 // 11-7",
+        "stats": {
+          "h": 2,
+          "ab": 8,
+          "hr": 0,
+          "rbi": 3,
+          "r": 1,
+          "bb": 0,
+          "k": 2,
+          "sb": 0,
+          "hbp": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Easton Viveros",
+    "team": "Coral Springs Charter",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:20.432972Z"
+  },
+  {
+    "player_name": "Brisen Tweedy",
+    "team": "USF",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2028",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:11.371954Z"
   },
   {
     "player_name": "Brennan Orf",
@@ -1169,7 +3482,7 @@
       "bb_pct": "18.2%"
     },
     "games_played": 3,
-    "last_updated": "2026-05-18T14:27:36.605531Z",
+    "last_updated": "2026-05-19T13:53:23.549183Z",
     "game_log": [
       {
         "date": "2026-05-16",
@@ -1239,7 +3552,1413 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-18T14:27:36.633931Z"
+    "last_updated": "2026-05-19T13:53:23.689209Z"
+  },
+  {
+    "player_name": "Lee Ellis",
+    "team": "Ohio State",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "pa": 18,
+      "ab": 15,
+      "h": 6,
+      "hr": 0,
+      "bb": 2,
+      "k": 3,
+      "rbi": 5,
+      "r": 5,
+      "sb": 0,
+      "avg": ".400",
+      "obp": ".500",
+      "slg": ".467",
+      "ops": ".967",
+      "k_pct": "16.7%",
+      "bb_pct": "11.1%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:53:23.693183Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Michigan",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 3,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633086"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Michigan",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633085"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Michigan",
+        "stats": {
+          "h": 2,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 2,
+          "bb": 1,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633084"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Wright State",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 0,
+          "hbp": 1,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://ohiostatebuckeyes.com/sidearmstats/baseball/"
+      }
+    ]
+  },
+  {
+    "player_name": "Sam Harry",
+    "team": "Sacramento State",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 14,
+      "ab": 14,
+      "h": 3,
+      "hr": 0,
+      "bb": 0,
+      "k": 1,
+      "rbi": 2,
+      "r": 3,
+      "sb": 0,
+      "avg": ".214",
+      "obp": ".214",
+      "slg": ".214",
+      "ops": ".429",
+      "k_pct": "7.1%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:53:14.394506Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Tarleton",
+        "stats": {
+          "h": 1,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 2,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650614"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Tarleton",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650612"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Tarleton",
+        "stats": {
+          "h": 1,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650611"
+      }
+    ]
+  },
+  {
+    "player_name": "Michael Gillen",
+    "team": "UCF",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:26.365510Z"
+  },
+  {
+    "player_name": "Duke McCarron",
+    "team": "Saint Josephs",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "😐 Steady",
+    "stats": {
+      "ip": "2",
+      "k": 1,
+      "bb": 2,
+      "era": "4.50",
+      "whip": "2.00",
+      "k_per_9": "4.5",
+      "bb_per_9": "9.0",
+      "k_pct": "10.0%",
+      "bb_pct": "20.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:17.652736Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Rhode Island",
+        "stats": {
+          "ip": "2",
+          "er": 1,
+          "k": 1,
+          "bb": 2,
+          "h": 2
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=648445"
+      }
+    ]
+  },
+  {
+    "player_name": "Bryce Fowler",
+    "team": "Alabama",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 12,
+      "ab": 12,
+      "h": 6,
+      "hr": 0,
+      "bb": 0,
+      "k": 2,
+      "rbi": 2,
+      "r": 4,
+      "sb": 0,
+      "avg": ".500",
+      "obp": ".500",
+      "slg": ".500",
+      "ops": "1.000",
+      "k_pct": "16.7%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:53:29.409103Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 3,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 2,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629691"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629690"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 3,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 1,
+          "r": 2,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629689"
+      }
+    ]
+  },
+  {
+    "player_name": "Tanner Chun",
+    "team": "Tulane",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 10,
+      "ab": 9,
+      "h": 1,
+      "hr": 0,
+      "bb": 1,
+      "k": 0,
+      "rbi": 1,
+      "r": 1,
+      "sb": 0,
+      "avg": ".111",
+      "obp": ".200",
+      "slg": ".111",
+      "ops": ".311",
+      "k_pct": "0.0%",
+      "bb_pct": "10.0%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:53:20.433773Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Rice",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630318"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Rice",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 0,
+          "bb": 1,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630317"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Rice",
+        "stats": {
+          "h": 0,
+          "ab": 2,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630316"
+      }
+    ]
+  },
+  {
+    "player_name": "Lucas Steele",
+    "team": "Auburn",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 4,
+      "ab": 4,
+      "h": 0,
+      "hr": 0,
+      "bb": 0,
+      "k": 3,
+      "rbi": 0,
+      "r": 0,
+      "sb": 0,
+      "avg": ".000",
+      "obp": ".000",
+      "slg": ".000",
+      "ops": ".000",
+      "k_pct": "75.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:23.693664Z",
+    "game_log": [
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Jax State",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 3,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632450"
+      }
+    ]
+  },
+  {
+    "player_name": "Taylor Kirk",
+    "team": "Fordham",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "🔥 Hot",
+    "stats": {
+      "pa": 17,
+      "ab": 15,
+      "h": 8,
+      "hr": 0,
+      "bb": 1,
+      "k": 2,
+      "rbi": 3,
+      "r": 3,
+      "sb": 1,
+      "avg": ".533",
+      "obp": ".588",
+      "slg": ".667",
+      "ops": "1.255",
+      "k_pct": "11.8%",
+      "bb_pct": "5.9%"
+    },
+    "games_played": 3,
+    "last_updated": "2026-05-19T13:53:26.366221Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs St Bonaventure",
+        "stats": {
+          "h": 3,
+          "ab": 6,
+          "hr": 0,
+          "rbi": 2,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 1
+        },
+        "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs St Bonaventure",
+        "stats": {
+          "h": 1,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 0,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs St Bonaventure",
+        "stats": {
+          "h": 4,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 0,
+          "hbp": 1,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary"
+      }
+    ]
+  },
+  {
+    "player_name": "Truitt Webb",
+    "team": "SE Louisiana",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "ip": "7",
+      "k": 4,
+      "bb": 3,
+      "era": "2.57",
+      "whip": "1.00",
+      "k_per_9": "5.1",
+      "bb_per_9": "3.9",
+      "k_pct": "14.3%",
+      "bb_pct": "10.7%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:38.319073Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Hou Christian",
+        "stats": {
+          "ip": "7",
+          "er": 2,
+          "k": 4,
+          "bb": 3,
+          "h": 4
+        },
+        "box_score_url": "http://statb.us/v/houb/659513"
+      }
+    ]
+  },
+  {
+    "player_name": "Zack Johnson",
+    "team": "Alabama",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 8,
+      "ab": 8,
+      "h": 1,
+      "hr": 0,
+      "bb": 0,
+      "k": 4,
+      "rbi": 1,
+      "r": 0,
+      "sb": 0,
+      "avg": ".125",
+      "obp": ".125",
+      "slg": ".125",
+      "ops": ".250",
+      "k_pct": "50.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 2,
+    "last_updated": "2026-05-19T13:53:38.319705Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 1,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://olemisssports.com/boxscore.aspx?id=14712"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Ole Miss",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 3,
+          "sb": 0
+        },
+        "box_score_url": "https://olemisssports.com/boxscore.aspx?id=14711"
+      }
+    ]
+  },
+  {
+    "player_name": "Alexander Smith",
+    "team": "N. Broward Prep",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2027",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:38.319914Z"
+  },
+  {
+    "player_name": "Will Myhand",
+    "team": "Mill Creek",
+    "level": "HS",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:38.320333Z"
+  },
+  {
+    "player_name": "Bennett Edwards",
+    "team": "Georgia Southern",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Hitter",
+      "draft_class": "2028",
+      "roster_priority": 3
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "pa": 15,
+      "ab": 15,
+      "h": 2,
+      "hr": 0,
+      "bb": 0,
+      "k": 5,
+      "rbi": 1,
+      "r": 1,
+      "sb": 0,
+      "avg": ".133",
+      "obp": ".133",
+      "slg": ".133",
+      "ops": ".267",
+      "k_pct": "33.3%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:53:38.320973Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Southern Miss",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635099"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs GA Southern",
+        "stats": {
+          "h": 1,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635097"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Southern Miss",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635097"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Charleston",
+        "stats": {
+          "h": 1,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=631955"
+      }
+    ]
+  },
+  {
+    "player_name": "Ethan Lay",
+    "team": "Sacramento State",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2026",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "ip": "3",
+      "k": 2,
+      "bb": 2,
+      "era": "12.00",
+      "whip": "2.33",
+      "k_per_9": "6.0",
+      "bb_per_9": "6.0",
+      "k_pct": "12.5%",
+      "bb_pct": "12.5%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:38.321323Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Tarleton",
+        "stats": {
+          "ip": "3",
+          "er": 4,
+          "k": 2,
+          "bb": 2,
+          "h": 5
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650611"
+      }
+    ]
+  },
+  {
+    "player_name": "Eamon McDermott",
+    "team": "Duke",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2028",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:29.409397Z"
+  },
+  {
+    "player_name": "Ty Pohl",
+    "team": "",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "LHP",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.374234Z"
+  },
+  {
+    "player_name": "James Fenton",
+    "team": "",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "RHP",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.374386Z"
+  },
+  {
+    "player_name": "Carson Wheatley",
+    "team": "",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "LHP",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.374484Z"
+  },
+  {
+    "player_name": "Cooper Janke",
+    "team": "",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "RHP",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.374561Z"
+  },
+  {
+    "player_name": "Greyson Wuis",
+    "team": "Bob Jones HS",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "SS",
+      "draft_class": "2030",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.374757Z"
+  },
+  {
+    "player_name": "Brandon Sweeney",
+    "team": "St. Francis HS",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "SS",
+      "draft_class": "2030",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.375073Z"
+  },
+  {
+    "player_name": "Ashby Piatt",
+    "team": "",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "LHP",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.375170Z"
+  },
+  {
+    "player_name": "John Crandall",
+    "team": "",
+    "level": "HS",
+    "is_client": false,
+    "tags": {
+      "position": "SS",
+      "draft_class": "2028",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "pa": "--",
+      "ab": "--",
+      "h": "--",
+      "hr": "--",
+      "bb": "--",
+      "k": "--",
+      "rbi": "--",
+      "r": "--",
+      "sb": "--",
+      "avg": "--",
+      "obp": "--",
+      "slg": "--",
+      "ops": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.375247Z"
+  },
+  {
+    "player_name": "Bruce Littleton",
+    "team": "Southern Miss",
+    "level": "NCAA",
+    "is_client": false,
+    "tags": {
+      "position": "LHP",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.375410Z"
+  },
+  {
+    "player_name": "Andrew Kummer",
+    "team": "USC Upstate",
+    "level": "NCAA",
+    "is_client": false,
+    "tags": {
+      "position": "RHP",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "🥶 Cold",
+    "stats": {
+      "ip": "1",
+      "k": 0,
+      "bb": 0,
+      "era": "9.00",
+      "whip": "2.00",
+      "k_per_9": "0.0",
+      "bb_per_9": "0.0",
+      "k_pct": "0.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:41.375900Z",
+    "game_log": [
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Clemson",
+        "stats": {
+          "ip": "1",
+          "er": 1,
+          "k": 0,
+          "bb": 0,
+          "h": 2
+        },
+        "box_score_url": "https://upstatespartans.com/sidearmstats/baseball/media;category=batting"
+      }
+    ]
+  },
+  {
+    "player_name": "Ian Josephson",
+    "team": "Saint Mary's",
+    "level": "NCAA",
+    "is_client": false,
+    "tags": {
+      "position": "SS",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "pa": 14,
+      "ab": 12,
+      "h": 2,
+      "hr": 2,
+      "bb": 2,
+      "k": 6,
+      "rbi": 2,
+      "r": 2,
+      "sb": 0,
+      "avg": ".167",
+      "obp": ".286",
+      "slg": ".667",
+      "ops": ".952",
+      "k_pct": "42.9%",
+      "bb_pct": "14.3%"
+    },
+    "games_played": 4,
+    "last_updated": "2026-05-19T13:53:41.376217Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs San Francisco",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870551"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs San Francisco",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 1,
+          "rbi": 1,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870550"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs San Francisco",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 1,
+          "rbi": 1,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870550"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Stanford",
+        "stats": {
+          "h": 0,
+          "ab": 1,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848356"
+      }
+    ]
+  },
+  {
+    "player_name": "Cole Katayama-Stall",
+    "team": "Portland",
+    "level": "NCAA",
+    "is_client": false,
+    "tags": {
+      "position": "SS",
+      "draft_class": "2027",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "pa": 21,
+      "ab": 19,
+      "h": 5,
+      "hr": 1,
+      "bb": 2,
+      "k": 4,
+      "rbi": 6,
+      "r": 4,
+      "sb": 1,
+      "avg": ".263",
+      "obp": ".333",
+      "slg": ".421",
+      "ops": ".754",
+      "k_pct": "19.0%",
+      "bb_pct": "9.5%"
+    },
+    "games_played": 5,
+    "last_updated": "2026-05-19T13:53:41.376508Z",
+    "game_log": [
+      {
+        "date": "2026-05-16",
+        "opponent": "vs Pacific",
+        "stats": {
+          "h": 1,
+          "ab": 5,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "hbp": 0,
+          "k": 2,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646380"
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "vs Pacific",
+        "stats": {
+          "h": 1,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 1,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646379"
+      },
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Pacific",
+        "stats": {
+          "h": 1,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 1,
+          "r": 1,
+          "bb": 1,
+          "hbp": 0,
+          "k": 1,
+          "sb": 1
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646379"
+      },
+      {
+        "date": "2026-05-13",
+        "opponent": "vs Oregon St",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 1,
+          "rbi": 2,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634185"
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "vs Oregon State",
+        "stats": {
+          "h": 1,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 2,
+          "r": 1,
+          "bb": 0,
+          "hbp": 0,
+          "k": 0,
+          "sb": 0
+        },
+        "box_score_url": "https://osubeavers.com/boxscore.aspx?id=22580"
+      }
+    ]
+  },
+  {
+    "player_name": "Trey Williford",
+    "team": "UNC-Willmington",
+    "level": "NCAA",
+    "is_client": false,
+    "tags": {
+      "position": "LHP",
+      "draft_class": "2028",
+      "roster_priority": 1
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:41.376706Z"
   },
   {
     "player_name": "Chase Petty",
@@ -1265,7 +4984,7 @@
       "bb_pct": "5.6%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:27:54.527246Z",
+    "last_updated": "2026-05-19T13:53:41.577947Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1304,7 +5023,7 @@
       "bb_pct": "18.8%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:27:54.579111Z",
+    "last_updated": "2026-05-19T13:53:41.741795Z",
     "game_log": [
       {
         "date": "2026-05-13",
@@ -1349,7 +5068,7 @@
       "bb_pct": "5.9%"
     },
     "games_played": 4,
-    "last_updated": "2026-05-18T14:27:54.650672Z",
+    "last_updated": "2026-05-19T13:53:42.070829Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1439,7 +5158,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:27:54.704214Z",
+    "last_updated": "2026-05-19T13:53:42.243753Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1543,7 +5262,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:27:54.775442Z",
+    "last_updated": "2026-05-19T13:53:42.499977Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1647,7 +5366,7 @@
       "bb_pct": "20.0%"
     },
     "games_played": 4,
-    "last_updated": "2026-05-18T14:27:54.845609Z",
+    "last_updated": "2026-05-19T13:53:42.744534Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1737,7 +5456,7 @@
       "bb_pct": "20.0%"
     },
     "games_played": 6,
-    "last_updated": "2026-05-18T14:27:54.899151Z",
+    "last_updated": "2026-05-19T13:53:42.915042Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1849,7 +5568,7 @@
       "bb_pct": "15.0%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-18T14:27:54.951539Z",
+    "last_updated": "2026-05-19T13:53:43.131909Z",
     "game_log": [
       {
         "date": "2026-05-12",
@@ -1894,7 +5613,7 @@
       "bb_pct": "35.0%"
     },
     "games_played": 5,
-    "last_updated": "2026-05-18T14:27:55.028368Z",
+    "last_updated": "2026-05-19T13:53:43.366108Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -1998,7 +5717,7 @@
       "bb_pct": "18.2%"
     },
     "games_played": 6,
-    "last_updated": "2026-05-18T14:27:55.096337Z",
+    "last_updated": "2026-05-19T13:53:43.651488Z",
     "game_log": [
       {
         "date": "2026-05-17",
@@ -2110,7 +5829,7 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-18T14:27:55.159722Z"
+    "last_updated": "2026-05-19T13:53:43.822366Z"
   },
   {
     "player_name": "Trevor Story",
@@ -2142,7 +5861,7 @@
       "bb_pct": "9.1%"
     },
     "games_played": 3,
-    "last_updated": "2026-05-18T14:27:55.214399Z",
+    "last_updated": "2026-05-19T13:53:44.123399Z",
     "game_log": [
       {
         "date": "2026-05-14",
@@ -2187,2024 +5906,6 @@
         }
       }
     ]
-  },
-  {
-    "player_name": "Braxton Fulford",
-    "team": "Los Angeles Dodgers",
-    "level": "Pro",
-    "is_client": false,
-    "tags": {
-      "position": "C",
-      "draft_class": "",
-      "roster_priority": 99
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "pa": 25,
-      "ab": 22,
-      "h": 6,
-      "hr": 2,
-      "bb": 3,
-      "k": 3,
-      "rbi": 9,
-      "r": 6,
-      "sb": 1,
-      "avg": ".273",
-      "obp": ".360",
-      "slg": ".591",
-      "ops": ".951",
-      "k_pct": "12.0%",
-      "bb_pct": "12.0%"
-    },
-    "games_played": 5,
-    "last_updated": "2026-05-18T14:27:55.290075Z",
-    "game_log": [
-      {
-        "date": "2026-05-17",
-        "opponent": "",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 2,
-          "r": 3,
-          "bb": 2,
-          "k": 0,
-          "sb": 0
-        }
-      },
-      {
-        "date": "2026-05-16",
-        "opponent": "",
-        "stats": {
-          "h": 1,
-          "ab": 5,
-          "hr": 1,
-          "rbi": 3,
-          "r": 1,
-          "bb": 0,
-          "k": 1,
-          "sb": 0
-        }
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "",
-        "stats": {
-          "h": 3,
-          "ab": 6,
-          "hr": 1,
-          "rbi": 4,
-          "r": 2,
-          "bb": 0,
-          "k": 0,
-          "sb": 1
-        }
-      },
-      {
-        "date": "2026-05-13",
-        "opponent": "",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "k": 1,
-          "sb": 0
-        }
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 1,
-          "k": 1,
-          "sb": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Aiden Robbins",
-    "team": "Texas",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 5,
-      "ab": 4,
-      "h": 0,
-      "hr": 0,
-      "bb": 1,
-      "k": 3,
-      "rbi": 1,
-      "r": 1,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".200",
-      "slg": ".000",
-      "ops": ".200",
-      "k_pct": "60.0%",
-      "bb_pct": "20.0%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.250461Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Missouri",
-        "stats": {
-          "h": 0,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847468"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Missouri",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660121"
-      }
-    ]
-  },
-  {
-    "player_name": "Cam Flukey",
-    "team": "Coastal Carolina",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "ip": "4",
-      "k": 5,
-      "bb": 1,
-      "era": "0.00",
-      "whip": "0.75",
-      "k_per_9": "11.2",
-      "bb_per_9": "2.2",
-      "k_pct": "33.3%",
-      "bb_pct": "6.7%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.250532Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Louisiana",
-        "stats": {
-          "ip": "4",
-          "er": 0,
-          "k": 5,
-          "bb": 1,
-          "h": 2
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=627890"
-      }
-    ]
-  },
-  {
-    "player_name": "Kyle Jones",
-    "team": "Florida",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 2,
-      "ab": 2,
-      "h": 2,
-      "hr": 0,
-      "bb": 0,
-      "k": 0,
-      "rbi": 2,
-      "r": 1,
-      "sb": 0,
-      "avg": "1.000",
-      "obp": "1.000",
-      "slg": "1.000",
-      "ops": "2.000",
-      "k_pct": "0.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.250822Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "vs LSU",
-        "stats": {
-          "h": 2,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 2,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632801"
-      }
-    ]
-  },
-  {
-    "player_name": "Myles Bailey",
-    "team": "Florida State",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.250968Z"
-  },
-  {
-    "player_name": "Caleb Daniel",
-    "team": "Georgia Tech",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 2,
-      "ab": 2,
-      "h": 0,
-      "hr": 0,
-      "bb": 0,
-      "k": 2,
-      "rbi": 0,
-      "r": 0,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".000",
-      "slg": ".000",
-      "ops": ".000",
-      "k_pct": "100.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.251196Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Boston College",
-        "stats": {
-          "h": 0,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630087"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Boston College",
-        "stats": {
-          "h": 0,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630087"
-      }
-    ]
-  },
-  {
-    "player_name": "Joe Tiroly",
-    "team": "Virginia",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "😐 Steady",
-    "stats": {
-      "pa": 20,
-      "ab": 15,
-      "h": 4,
-      "hr": 0,
-      "bb": 4,
-      "k": 3,
-      "rbi": 3,
-      "r": 4,
-      "sb": 0,
-      "avg": ".267",
-      "obp": ".450",
-      "slg": ".267",
-      "ops": ".717",
-      "k_pct": "15.0%",
-      "bb_pct": "20.0%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.251520Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Louisville",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632771"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Louisville",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632770"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Louisville",
-        "stats": {
-          "h": 2,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 2,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632769"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Richmond",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 1,
-          "r": 3,
-          "bb": 3,
-          "hbp": 1,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636362"
-      }
-    ]
-  },
-  {
-    "player_name": "Riley Goodman",
-    "team": "South Carolina",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "ip": "3",
-      "k": 4,
-      "bb": 1,
-      "era": "6.00",
-      "whip": "1.67",
-      "k_per_9": "12.0",
-      "bb_per_9": "3.0",
-      "k_pct": "28.6%",
-      "bb_pct": "7.1%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.251604Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Vanderbilt",
-        "stats": {
-          "ip": "3",
-          "er": 2,
-          "k": 4,
-          "bb": 1,
-          "h": 4
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636382"
-      }
-    ]
-  },
-  {
-    "player_name": "Will Rhine",
-    "team": "Alabama",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.251613Z"
-  },
-  {
-    "player_name": "Adam McKelvey",
-    "team": "Georgia Tech",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.251665Z"
-  },
-  {
-    "player_name": "Ty Finkbeiner",
-    "team": "Michigan",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "ip": "0.1",
-      "k": 1,
-      "bb": 0,
-      "era": "27.00",
-      "whip": "3.00",
-      "k_per_9": "27.0",
-      "bb_per_9": "0.0",
-      "k_pct": "50.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.251745Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Ohio State",
-        "stats": {
-          "ip": "0.1",
-          "er": 1,
-          "k": 1,
-          "bb": 0,
-          "h": 1
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633084"
-      }
-    ]
-  },
-  {
-    "player_name": "Alex Kranzler",
-    "team": "Vanderbilt",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "ip": "3.1",
-      "k": 6,
-      "bb": 1,
-      "era": "0.00",
-      "whip": "0.30",
-      "k_per_9": "16.2",
-      "bb_per_9": "2.7",
-      "k_pct": "54.5%",
-      "bb_pct": "9.1%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.251859Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs South Carolina",
-        "stats": {
-          "ip": "1",
-          "er": 0,
-          "k": 2,
-          "bb": 0,
-          "h": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636382"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs South Carolina",
-        "stats": {
-          "ip": "2.1",
-          "er": 0,
-          "k": 4,
-          "bb": 1,
-          "h": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636380"
-      }
-    ]
-  },
-  {
-    "player_name": "Ben Tryon",
-    "team": "Dallas Baptist",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "pa": 11,
-      "ab": 9,
-      "h": 2,
-      "hr": 1,
-      "bb": 2,
-      "k": 1,
-      "rbi": 3,
-      "r": 4,
-      "sb": 0,
-      "avg": ".222",
-      "obp": ".364",
-      "slg": ".556",
-      "ops": ".919",
-      "k_pct": "9.1%",
-      "bb_pct": "18.2%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.252150Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Jacksonville State",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631333"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Jax State",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 2,
-          "bb": 2,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631332"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Jacksonville State",
-        "stats": {
-          "h": 2,
-          "ab": 2,
-          "hr": 1,
-          "rbi": 3,
-          "r": 2,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631331"
-      }
-    ]
-  },
-  {
-    "player_name": "Boston Torres",
-    "team": "Wake Forest",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "pa": 17,
-      "ab": 16,
-      "h": 6,
-      "hr": 0,
-      "bb": 1,
-      "k": 2,
-      "rbi": 4,
-      "r": 4,
-      "sb": 0,
-      "avg": ".375",
-      "obp": ".412",
-      "slg": ".375",
-      "ops": ".787",
-      "k_pct": "11.8%",
-      "bb_pct": "5.9%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.252380Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Duke",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631425"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Duke",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631424"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Duke",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 2,
-          "r": 2,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631423"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Liberty",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632696"
-      }
-    ]
-  },
-  {
-    "player_name": "Brady Neal",
-    "team": "Alabama",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 12,
-      "ab": 10,
-      "h": 0,
-      "hr": 0,
-      "bb": 2,
-      "k": 5,
-      "rbi": 0,
-      "r": 0,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".167",
-      "slg": ".000",
-      "ops": ".167",
-      "k_pct": "41.7%",
-      "bb_pct": "16.7%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.252647Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 2,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847096"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847095"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401847094"
-      }
-    ]
-  },
-  {
-    "player_name": "Brady St. Pierre",
-    "team": "SE Louisiana",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "ip": "0.2",
-      "k": 1,
-      "bb": 0,
-      "era": "40.50",
-      "whip": "6.00",
-      "k_per_9": "13.5",
-      "bb_per_9": "0.0",
-      "k_pct": "16.7%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.252687Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Southeastern Louisiana",
-        "stats": {
-          "ip": "0.2",
-          "er": 3,
-          "k": 1,
-          "bb": 0,
-          "h": 4
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659514"
-      }
-    ]
-  },
-  {
-    "player_name": "Braydon Kersey",
-    "team": "Mercer",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Two-Way",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 9,
-      "ab": 7,
-      "h": 5,
-      "hr": 1,
-      "bb": 2,
-      "k": 4,
-      "rbi": 4,
-      "r": 4,
-      "sb": 1,
-      "avg": ".714",
-      "obp": ".778",
-      "slg": "1.143",
-      "ops": "1.921",
-      "k_pct": "44.4%",
-      "bb_pct": "22.2%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.252981Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs East Tennessee State",
-        "stats": {
-          "h": 1,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 1,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631612"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs East Tennessee State",
-        "stats": {
-          "h": 1,
-          "ab": 0,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631611"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs East Tennessee State",
-        "stats": {
-          "h": 1,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 2,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 1
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631610"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Georgia Tech",
-        "stats": {
-          "h": 2,
-          "ab": 3,
-          "hr": 1,
-          "rbi": 2,
-          "r": 2,
-          "bb": 2,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=631961"
-      }
-    ]
-  },
-  {
-    "player_name": "Brooks Wright",
-    "team": "SE Louisiana",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 3,
-      "ab": 3,
-      "h": 0,
-      "hr": 0,
-      "bb": 0,
-      "k": 2,
-      "rbi": 0,
-      "r": 0,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".000",
-      "slg": ".000",
-      "ops": ".000",
-      "k_pct": "66.7%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.253182Z",
-    "game_log": [
-      {
-        "date": "2026-05-17",
-        "opponent": "vs McNeese",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659515"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs McNeese",
-        "stats": {
-          "h": 0,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659512"
-      }
-    ]
-  },
-  {
-    "player_name": "Cole Cleveland",
-    "team": "FIU",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 12,
-      "ab": 10,
-      "h": 5,
-      "hr": 0,
-      "bb": 1,
-      "k": 0,
-      "rbi": 8,
-      "r": 5,
-      "sb": 0,
-      "avg": ".500",
-      "obp": ".583",
-      "slg": ".600",
-      "ops": "1.183",
-      "k_pct": "0.0%",
-      "bb_pct": "8.3%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.253463Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs New Mexico St.",
-        "stats": {
-          "h": 1,
-          "ab": 6,
-          "hr": 0,
-          "rbi": 4,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://www.nmstatesports.com/boxscore.aspx?id=19086"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs New Mexico St",
-        "stats": {
-          "h": 2,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 2,
-          "r": 2,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633821"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Florida International",
-        "stats": {
-          "h": 2,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 2,
-          "r": 2,
-          "bb": 0,
-          "hbp": 1,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633821"
-      }
-    ]
-  },
-  {
-    "player_name": "Drew Bellis",
-    "team": "UCF",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.253472Z"
-  },
-  {
-    "player_name": "Evan Taylor",
-    "team": "Alabama",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Two-Way",
-      "draft_class": "2028",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "ip": "6",
-      "k": 13,
-      "bb": 1,
-      "era": "0.00",
-      "whip": "0.33",
-      "k_per_9": "19.5",
-      "bb_per_9": "1.5",
-      "k_pct": "65.0%",
-      "bb_pct": "5.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.253529Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "ip": "6",
-          "er": 0,
-          "k": 13,
-          "bb": 1,
-          "h": 1
-        },
-        "box_score_url": "https://olemisssports.com/boxscore.aspx?id=14711"
-      }
-    ]
-  },
-  {
-    "player_name": "Henry Zatkowski",
-    "team": "Virginia",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "ip": "6",
-      "k": 6,
-      "bb": 3,
-      "era": "1.50",
-      "whip": "1.33",
-      "k_per_9": "9.0",
-      "bb_per_9": "4.5",
-      "k_pct": "23.1%",
-      "bb_pct": "11.5%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.253630Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Louisville",
-        "stats": {
-          "ip": "6",
-          "er": 1,
-          "k": 6,
-          "bb": 3,
-          "h": 5
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632769"
-      }
-    ]
-  },
-  {
-    "player_name": "Mason Eckelman",
-    "team": "Ohio State",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 18,
-      "ab": 13,
-      "h": 1,
-      "hr": 0,
-      "bb": 4,
-      "k": 3,
-      "rbi": 0,
-      "r": 4,
-      "sb": 0,
-      "avg": ".077",
-      "obp": ".333",
-      "slg": ".077",
-      "ops": ".410",
-      "k_pct": "16.7%",
-      "bb_pct": "22.2%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.253884Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Michigan",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 2,
-          "bb": 2,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633086"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Michigan",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633085"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Michigan",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633084"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Wright State",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 1,
-          "hbp": 1,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://ohiostatebuckeyes.com/sidearmstats/baseball/"
-      }
-    ]
-  },
-  {
-    "player_name": "Sam Mitchell",
-    "team": "Southern Miss",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2028",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.253934Z"
-  },
-  {
-    "player_name": "Brisen Tweedy",
-    "team": "USF",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2028",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.253989Z"
-  },
-  {
-    "player_name": "Sam Harry",
-    "team": "Sacramento State",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 14,
-      "ab": 14,
-      "h": 3,
-      "hr": 0,
-      "bb": 0,
-      "k": 1,
-      "rbi": 2,
-      "r": 3,
-      "sb": 0,
-      "avg": ".214",
-      "obp": ".214",
-      "slg": ".214",
-      "ops": ".429",
-      "k_pct": "7.1%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.254321Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Tarleton",
-        "stats": {
-          "h": 1,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 2,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650614"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Tarleton",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650612"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Tarleton",
-        "stats": {
-          "h": 1,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650611"
-      }
-    ]
-  },
-  {
-    "player_name": "Duke McCarron",
-    "team": "Saint Josephs",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "😐 Steady",
-    "stats": {
-      "ip": "2",
-      "k": 1,
-      "bb": 2,
-      "era": "4.50",
-      "whip": "2.00",
-      "k_per_9": "4.5",
-      "bb_per_9": "9.0",
-      "k_pct": "10.0%",
-      "bb_pct": "20.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.254407Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Rhode Island",
-        "stats": {
-          "ip": "2",
-          "er": 1,
-          "k": 1,
-          "bb": 2,
-          "h": 2
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=648445"
-      }
-    ]
-  },
-  {
-    "player_name": "Tanner Chun",
-    "team": "Tulane",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 10,
-      "ab": 9,
-      "h": 1,
-      "hr": 0,
-      "bb": 1,
-      "k": 0,
-      "rbi": 1,
-      "r": 1,
-      "sb": 0,
-      "avg": ".111",
-      "obp": ".200",
-      "slg": ".111",
-      "ops": ".311",
-      "k_pct": "0.0%",
-      "bb_pct": "10.0%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.254669Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Rice",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630318"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Rice",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 0,
-          "bb": 1,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630317"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Rice",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=630316"
-      }
-    ]
-  },
-  {
-    "player_name": "Lee Ellis",
-    "team": "Ohio State",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "pa": 18,
-      "ab": 15,
-      "h": 6,
-      "hr": 0,
-      "bb": 2,
-      "k": 3,
-      "rbi": 5,
-      "r": 5,
-      "sb": 0,
-      "avg": ".400",
-      "obp": ".500",
-      "slg": ".467",
-      "ops": ".967",
-      "k_pct": "16.7%",
-      "bb_pct": "11.1%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.254895Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Michigan",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 3,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633086"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Michigan",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633085"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Michigan",
-        "stats": {
-          "h": 2,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 2,
-          "bb": 1,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633084"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Wright State",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 0,
-          "hbp": 1,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://ohiostatebuckeyes.com/sidearmstats/baseball/"
-      }
-    ]
-  },
-  {
-    "player_name": "Lucas Steele",
-    "team": "Auburn",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 4,
-      "ab": 4,
-      "h": 0,
-      "hr": 0,
-      "bb": 0,
-      "k": 3,
-      "rbi": 0,
-      "r": 0,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".000",
-      "slg": ".000",
-      "ops": ".000",
-      "k_pct": "75.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.255068Z",
-    "game_log": [
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Jax State",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 3,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=632450"
-      }
-    ]
-  },
-  {
-    "player_name": "Michael Gillen",
-    "team": "UCF",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.255112Z"
-  },
-  {
-    "player_name": "Taylor Kirk",
-    "team": "Fordham",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 17,
-      "ab": 15,
-      "h": 8,
-      "hr": 0,
-      "bb": 1,
-      "k": 2,
-      "rbi": 3,
-      "r": 3,
-      "sb": 1,
-      "avg": ".533",
-      "obp": ".588",
-      "slg": ".667",
-      "ops": "1.255",
-      "k_pct": "11.8%",
-      "bb_pct": "5.9%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.255395Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs St Bonaventure",
-        "stats": {
-          "h": 3,
-          "ab": 6,
-          "hr": 0,
-          "rbi": 2,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 1
-        },
-        "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs St Bonaventure",
-        "stats": {
-          "h": 1,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs St Bonaventure",
-        "stats": {
-          "h": 4,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 0,
-          "hbp": 1,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://gobonnies.com/sidearmstats/baseball/summary"
-      }
-    ]
-  },
-  {
-    "player_name": "Bryce Fowler",
-    "team": "Alabama",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 12,
-      "ab": 12,
-      "h": 6,
-      "hr": 0,
-      "bb": 0,
-      "k": 2,
-      "rbi": 2,
-      "r": 4,
-      "sb": 0,
-      "avg": ".500",
-      "obp": ".500",
-      "slg": ".500",
-      "ops": "1.000",
-      "k_pct": "16.7%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.255667Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 3,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 2,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629691"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629690"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 3,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 1,
-          "r": 2,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=629689"
-      }
-    ]
-  },
-  {
-    "player_name": "Eamon McDermott",
-    "team": "Duke",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2028",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.255673Z"
   },
   {
     "player_name": "Lee Sowers",
@@ -4236,7 +5937,7 @@
       "bb_pct": "0.0%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.255769Z",
+    "last_updated": "2026-05-19T13:53:32.325270Z",
     "game_log": [
       {
         "date": "2026-05-16",
@@ -4255,1852 +5956,6 @@
         "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=633490"
       }
     ]
-  },
-  {
-    "player_name": "Luke Fithian",
-    "team": "Rutgers",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.255776Z"
-  },
-  {
-    "player_name": "Truitt Webb",
-    "team": "SE Louisiana",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "ip": "7",
-      "k": 4,
-      "bb": 3,
-      "era": "2.57",
-      "whip": "1.00",
-      "k_per_9": "5.1",
-      "bb_per_9": "3.9",
-      "k_pct": "14.3%",
-      "bb_pct": "10.7%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.255869Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Hou Christian",
-        "stats": {
-          "ip": "7",
-          "er": 2,
-          "k": 4,
-          "bb": 3,
-          "h": 4
-        },
-        "box_score_url": "http://statb.us/v/houb/659513"
-      }
-    ]
-  },
-  {
-    "player_name": "Zack Johnson",
-    "team": "Alabama",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 8,
-      "ab": 8,
-      "h": 1,
-      "hr": 0,
-      "bb": 0,
-      "k": 4,
-      "rbi": 1,
-      "r": 0,
-      "sb": 0,
-      "avg": ".125",
-      "obp": ".125",
-      "slg": ".125",
-      "ops": ".250",
-      "k_pct": "50.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.256025Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://olemisssports.com/boxscore.aspx?id=14712"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Ole Miss",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 3,
-          "sb": 0
-        },
-        "box_score_url": "https://olemisssports.com/boxscore.aspx?id=14711"
-      }
-    ]
-  },
-  {
-    "player_name": "Bennett Edwards",
-    "team": "Georgia Southern",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 15,
-      "ab": 15,
-      "h": 2,
-      "hr": 0,
-      "bb": 0,
-      "k": 5,
-      "rbi": 1,
-      "r": 1,
-      "sb": 0,
-      "avg": ".133",
-      "obp": ".133",
-      "slg": ".133",
-      "ops": ".267",
-      "k_pct": "33.3%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.256142Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Southern Miss",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635099"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs GA Southern",
-        "stats": {
-          "h": 1,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635097"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Southern Miss",
-        "stats": {
-          "h": 0,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=635097"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Charleston",
-        "stats": {
-          "h": 1,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=631955"
-      }
-    ]
-  },
-  {
-    "player_name": "Ethan Lay",
-    "team": "Sacramento State",
-    "level": "NCAA",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "ip": "3",
-      "k": 2,
-      "bb": 2,
-      "era": "12.00",
-      "whip": "2.33",
-      "k_per_9": "6.0",
-      "bb_per_9": "6.0",
-      "k_pct": "12.5%",
-      "bb_pct": "12.5%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.256184Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Tarleton",
-        "stats": {
-          "ip": "3",
-          "er": 4,
-          "k": 2,
-          "bb": 2,
-          "h": 5
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=650611"
-      }
-    ]
-  },
-  {
-    "player_name": "Dane Moehler",
-    "team": "Clemson",
-    "level": "NCAA",
-    "is_client": false,
-    "tags": {
-      "position": "RHP",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "😐 Steady",
-    "stats": {
-      "ip": "2",
-      "k": 0,
-      "bb": 0,
-      "era": "4.50",
-      "whip": "2.00",
-      "k_per_9": "0.0",
-      "bb_per_9": "0.0",
-      "k_pct": "0.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.256242Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Virginia Tech",
-        "stats": {
-          "ip": "2",
-          "er": 1,
-          "k": 0,
-          "bb": 0,
-          "h": 4
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636469"
-      }
-    ]
-  },
-  {
-    "player_name": "Bruce Littleton",
-    "team": "Southern Miss",
-    "level": "NCAA",
-    "is_client": false,
-    "tags": {
-      "position": "LHP",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.256296Z"
-  },
-  {
-    "player_name": "Andrew Kummer",
-    "team": "USC Upstate",
-    "level": "NCAA",
-    "is_client": false,
-    "tags": {
-      "position": "RHP",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "ip": "1",
-      "k": 0,
-      "bb": 0,
-      "era": "9.00",
-      "whip": "2.00",
-      "k_per_9": "0.0",
-      "bb_per_9": "0.0",
-      "k_pct": "0.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.256359Z",
-    "game_log": [
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Clemson",
-        "stats": {
-          "ip": "1",
-          "er": 1,
-          "k": 0,
-          "bb": 0,
-          "h": 2
-        },
-        "box_score_url": "https://upstatespartans.com/sidearmstats/baseball/media;category=batting"
-      }
-    ]
-  },
-  {
-    "player_name": "Ian Josephson",
-    "team": "Saint Mary's",
-    "level": "NCAA",
-    "is_client": false,
-    "tags": {
-      "position": "SS",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "pa": 14,
-      "ab": 12,
-      "h": 2,
-      "hr": 2,
-      "bb": 2,
-      "k": 6,
-      "rbi": 2,
-      "r": 2,
-      "sb": 0,
-      "avg": ".167",
-      "obp": ".286",
-      "slg": ".667",
-      "ops": ".952",
-      "k_pct": "42.9%",
-      "bb_pct": "14.3%"
-    },
-    "games_played": 4,
-    "last_updated": "2026-05-19T13:46:52.256414Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs San Francisco",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870551"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs San Francisco",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 1,
-          "rbi": 1,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870550"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs San Francisco",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 1,
-          "rbi": 1,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401870550"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Stanford",
-        "stats": {
-          "h": 0,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401848356"
-      }
-    ]
-  },
-  {
-    "player_name": "Cole Katayama-Stall",
-    "team": "Portland",
-    "level": "NCAA",
-    "is_client": false,
-    "tags": {
-      "position": "SS",
-      "draft_class": "2027",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "✅ Solid",
-    "stats": {
-      "pa": 21,
-      "ab": 19,
-      "h": 5,
-      "hr": 1,
-      "bb": 2,
-      "k": 4,
-      "rbi": 6,
-      "r": 4,
-      "sb": 1,
-      "avg": ".263",
-      "obp": ".333",
-      "slg": ".421",
-      "ops": ".754",
-      "k_pct": "19.0%",
-      "bb_pct": "9.5%"
-    },
-    "games_played": 5,
-    "last_updated": "2026-05-19T13:46:52.256470Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "vs Pacific",
-        "stats": {
-          "h": 1,
-          "ab": 5,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "hbp": 0,
-          "k": 2,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646380"
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "vs Pacific",
-        "stats": {
-          "h": 1,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 1,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646379"
-      },
-      {
-        "date": "2026-05-14",
-        "opponent": "vs Pacific",
-        "stats": {
-          "h": 1,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 1,
-          "hbp": 0,
-          "k": 1,
-          "sb": 1
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=646379"
-      },
-      {
-        "date": "2026-05-13",
-        "opponent": "vs Oregon St",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 1,
-          "rbi": 2,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=634185"
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "vs Oregon State",
-        "stats": {
-          "h": 1,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 2,
-          "r": 1,
-          "bb": 0,
-          "hbp": 0,
-          "k": 0,
-          "sb": 0
-        },
-        "box_score_url": "https://osubeavers.com/boxscore.aspx?id=22580"
-      }
-    ]
-  },
-  {
-    "player_name": "Trey Williford",
-    "team": "UNC-Willmington",
-    "level": "NCAA",
-    "is_client": false,
-    "tags": {
-      "position": "LHP",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.256477Z"
-  },
-  {
-    "player_name": "Trevor Condon",
-    "team": "Etowah",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 7,
-      "ab": 6,
-      "h": 3,
-      "hr": 0,
-      "bb": 1,
-      "k": 0,
-      "rbi": 0,
-      "r": 2,
-      "sb": 0,
-      "avg": ".500",
-      "obp": ".571",
-      "slg": ".500",
-      "ops": "1.071",
-      "k_pct": "0.0%",
-      "bb_pct": "14.3%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.257707Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "W 3-1// 5-0",
-        "stats": {
-          "h": 3,
-          "ab": 6,
-          "hr": 0,
-          "rbi": 0,
-          "r": 2,
-          "bb": 1,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Bo Lowrance",
-    "team": "Christ Church",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 24,
-      "ab": 23,
-      "h": 1,
-      "hr": 1,
-      "bb": 1,
-      "k": 1,
-      "rbi": 2,
-      "r": 1,
-      "sb": 0,
-      "avg": ".043",
-      "obp": ".083",
-      "slg": ".174",
-      "ops": ".257",
-      "k_pct": "4.2%",
-      "bb_pct": "4.2%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.257876Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "",
-        "stats": {
-          "h": 0,
-          "ab": 20,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 0,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-13",
-        "opponent": "L 17-7",
-        "stats": {
-          "h": 1,
-          "ab": 3,
-          "hr": 1,
-          "rbi": 2,
-          "r": 1,
-          "bb": 1,
-          "k": 1,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Max Phillips",
-    "team": "Trinity",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 7,
-      "ab": 5,
-      "h": 0,
-      "hr": 0,
-      "bb": 2,
-      "k": 1,
-      "rbi": 0,
-      "r": 0,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".286",
-      "slg": ".000",
-      "ops": ".286",
-      "k_pct": "14.3%",
-      "bb_pct": "28.6%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.258072Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "W 11-2",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 1,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "W 5-1",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 1,
-          "k": 1,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Taj Marchand",
-    "team": "James Island",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 4,
-      "ab": 2,
-      "h": 1,
-      "hr": 1,
-      "bb": 2,
-      "k": 0,
-      "rbi": 2,
-      "r": 2,
-      "sb": 0,
-      "avg": ".500",
-      "obp": ".750",
-      "slg": "2.000",
-      "ops": "2.750",
-      "k_pct": "0.0%",
-      "bb_pct": "50.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.258250Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "W 12-5",
-        "stats": {
-          "h": 1,
-          "ab": 2,
-          "hr": 1,
-          "rbi": 2,
-          "r": 2,
-          "bb": 2,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Colin Raymond",
-    "team": "Stony Brook",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.258362Z"
-  },
-  {
-    "player_name": "Axton Westmoreland",
-    "team": "Hernando",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.258510Z"
-  },
-  {
-    "player_name": "Hunter Wieckowski",
-    "team": "Timber Creek",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.258580Z"
-  },
-  {
-    "player_name": "Jace Moran",
-    "team": "Suwannee",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.258734Z"
-  },
-  {
-    "player_name": "Lucas Lawrence",
-    "team": "B.R. Catholic",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.258761Z"
-  },
-  {
-    "player_name": "Chris Grasso",
-    "team": "St. Joseph's Prep",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "ip": "5",
-      "k": 4,
-      "bb": 1,
-      "era": "1.80",
-      "whip": "0.60",
-      "k_per_9": "7.2",
-      "bb_per_9": "1.8",
-      "k_pct": "22.2%",
-      "bb_pct": "5.6%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.258826Z",
-    "game_log": [
-      {
-        "date": "2026-05-13",
-        "opponent": "L 7-4",
-        "stats": {
-          "ip": "5",
-          "er": 1,
-          "k": 4,
-          "bb": 1,
-          "h": 2
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Devin Diaz",
-    "team": "Iona Prep",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 11,
-      "ab": 10,
-      "h": 4,
-      "hr": 1,
-      "bb": 1,
-      "k": 2,
-      "rbi": 3,
-      "r": 4,
-      "sb": 0,
-      "avg": ".400",
-      "obp": ".455",
-      "slg": ".900",
-      "ops": "1.355",
-      "k_pct": "18.2%",
-      "bb_pct": "9.1%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.258991Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "W 10-3",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 1,
-          "rbi": 1,
-          "r": 3,
-          "bb": 1,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-13",
-        "opponent": "W 8-0",
-        "stats": {
-          "h": 2,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 1,
-          "bb": 0,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "W 4-3",
-        "stats": {
-          "h": 0,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 1,
-          "r": 0,
-          "bb": 0,
-          "k": 2,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Graham Virag",
-    "team": "Cardinal Gibbons",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "😐 Steady",
-    "stats": {
-      "pa": 7,
-      "ab": 5,
-      "h": 1,
-      "hr": 0,
-      "bb": 2,
-      "k": 1,
-      "rbi": 0,
-      "r": 1,
-      "sb": 0,
-      "avg": ".200",
-      "obp": ".429",
-      "slg": ".200",
-      "ops": ".629",
-      "k_pct": "14.3%",
-      "bb_pct": "28.6%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.259131Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "W 6-4",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 1,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "W 7-6",
-        "stats": {
-          "h": 1,
-          "ab": 3,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 1,
-          "k": 1,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Noah Milburn",
-    "team": "IMG",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.259176Z"
-  },
-  {
-    "player_name": "Phinn Beaird",
-    "team": "Briarcrest",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "ip": "1",
-      "k": 0,
-      "bb": 3,
-      "era": "27.00",
-      "whip": "4.00",
-      "k_per_9": "0.0",
-      "bb_per_9": "27.0",
-      "k_pct": "0.0%",
-      "bb_pct": "42.9%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.259241Z",
-    "game_log": [
-      {
-        "date": "2026-05-13",
-        "opponent": "L 11-0",
-        "stats": {
-          "ip": "1",
-          "er": 3,
-          "k": 0,
-          "bb": 3,
-          "h": 1
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Braedon Mackay",
-    "team": "Sarasota HS",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.259402Z"
-  },
-  {
-    "player_name": "Griffin Loy",
-    "team": "South Walton",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.259474Z",
-    "game_log": [
-      {
-        "date": "2026-05-13",
-        "opponent": "W 6-2",
-        "stats": {
-          "ip": "0",
-          "er": 0,
-          "k": 0,
-          "bb": 0,
-          "h": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Jackson Staples",
-    "team": "The Hun School",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🔥 Hot",
-    "stats": {
-      "pa": 12,
-      "ab": 11,
-      "h": 7,
-      "hr": 1,
-      "bb": 1,
-      "k": 3,
-      "rbi": 8,
-      "r": 5,
-      "sb": 0,
-      "avg": ".636",
-      "obp": ".667",
-      "slg": "1.091",
-      "ops": "1.758",
-      "k_pct": "25.0%",
-      "bb_pct": "8.3%"
-    },
-    "games_played": 3,
-    "last_updated": "2026-05-19T13:46:52.259549Z",
-    "game_log": [
-      {
-        "date": "2026-05-16",
-        "opponent": "W 13-3",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 1,
-          "r": 2,
-          "bb": 0,
-          "k": 2,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-15",
-        "opponent": "W 14-4",
-        "stats": {
-          "h": 2,
-          "ab": 4,
-          "hr": 0,
-          "rbi": 3,
-          "r": 1,
-          "bb": 0,
-          "k": 1,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "W 10-0",
-        "stats": {
-          "h": 3,
-          "ab": 3,
-          "hr": 1,
-          "rbi": 4,
-          "r": 2,
-          "bb": 1,
-          "k": 0,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Kyle Rogosienski",
-    "team": "Muskego",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 6,
-      "ab": 3,
-      "h": 0,
-      "hr": 0,
-      "bb": 3,
-      "k": 3,
-      "rbi": 0,
-      "r": 1,
-      "sb": 0,
-      "avg": ".000",
-      "obp": ".500",
-      "slg": ".000",
-      "ops": ".500",
-      "k_pct": "50.0%",
-      "bb_pct": "50.0%"
-    },
-    "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.259646Z",
-    "game_log": [
-      {
-        "date": "2026-05-15",
-        "opponent": "W 7-0",
-        "stats": {
-          "h": 0,
-          "ab": 2,
-          "hr": 0,
-          "rbi": 0,
-          "r": 0,
-          "bb": 2,
-          "k": 2,
-          "sb": 0,
-          "hbp": 0
-        }
-      },
-      {
-        "date": "2026-05-12",
-        "opponent": "W 16-0",
-        "stats": {
-          "h": 0,
-          "ab": 1,
-          "hr": 0,
-          "rbi": 0,
-          "r": 1,
-          "bb": 1,
-          "k": 1,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Tyler Howard",
-    "team": "Spotswood",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Pitcher",
-      "draft_class": "2028",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.259653Z"
-  },
-  {
-    "player_name": "David Vargas",
-    "team": "Cartersville",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2028",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "🥶 Cold",
-    "stats": {
-      "pa": 8,
-      "ab": 8,
-      "h": 2,
-      "hr": 0,
-      "bb": 0,
-      "k": 2,
-      "rbi": 3,
-      "r": 1,
-      "sb": 0,
-      "avg": ".250",
-      "obp": ".250",
-      "slg": ".250",
-      "ops": ".500",
-      "k_pct": "25.0%",
-      "bb_pct": "0.0%"
-    },
-    "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.259812Z",
-    "game_log": [
-      {
-        "date": "2026-05-14",
-        "opponent": "L 7-6 // 11-7",
-        "stats": {
-          "h": 2,
-          "ab": 8,
-          "hr": 0,
-          "rbi": 3,
-          "r": 1,
-          "bb": 0,
-          "k": 2,
-          "sb": 0,
-          "hbp": 0
-        }
-      }
-    ]
-  },
-  {
-    "player_name": "Easton Viveros",
-    "team": "Coral Springs Charter",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 3
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.259909Z"
-  },
-  {
-    "player_name": "Alexander Smith",
-    "team": "N. Broward Prep",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2027",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.259916Z"
-  },
-  {
-    "player_name": "Will Myhand",
-    "team": "Mill Creek",
-    "level": "HS",
-    "is_client": true,
-    "tags": {
-      "position": "Hitter",
-      "draft_class": "2026",
-      "roster_priority": 4
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260063Z"
-  },
-  {
-    "player_name": "Ty Pohl",
-    "team": "",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "LHP",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260070Z"
-  },
-  {
-    "player_name": "James Fenton",
-    "team": "",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "RHP",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260077Z"
-  },
-  {
-    "player_name": "Carson Wheatley",
-    "team": "",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "LHP",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260083Z"
-  },
-  {
-    "player_name": "Cooper Janke",
-    "team": "",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "RHP",
-      "draft_class": "2028",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260089Z"
-  },
-  {
-    "player_name": "Greyson Wuis",
-    "team": "Bob Jones HS",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "SS",
-      "draft_class": "2030",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260127Z"
-  },
-  {
-    "player_name": "Brandon Sweeney",
-    "team": "St. Francis HS",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "SS",
-      "draft_class": "2030",
-      "roster_priority": 1
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260133Z"
-  },
-  {
-    "player_name": "Ashby Piatt",
-    "team": "",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "LHP",
-      "draft_class": "2027",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "ip": "--",
-      "k": "--",
-      "bb": "--",
-      "era": "--",
-      "whip": "--",
-      "k_per_9": "--",
-      "bb_per_9": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260139Z"
-  },
-  {
-    "player_name": "John Crandall",
-    "team": "",
-    "level": "HS",
-    "is_client": false,
-    "tags": {
-      "position": "SS",
-      "draft_class": "2028",
-      "roster_priority": 2
-    },
-    "window": "7d",
-    "window_grade": "— Insufficient",
-    "stats": {
-      "pa": "--",
-      "ab": "--",
-      "h": "--",
-      "hr": "--",
-      "bb": "--",
-      "k": "--",
-      "rbi": "--",
-      "r": "--",
-      "sb": "--",
-      "avg": "--",
-      "obp": "--",
-      "slg": "--",
-      "ops": "--",
-      "k_pct": "--",
-      "bb_pct": "--"
-    },
-    "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260145Z"
   },
   {
     "player_name": "Alex Smith",
@@ -6132,7 +5987,7 @@
       "bb_pct": "33.3%"
     },
     "games_played": 2,
-    "last_updated": "2026-05-19T13:46:52.260323Z",
+    "last_updated": "2026-05-19T13:53:44.292292Z",
     "game_log": [
       {
         "date": "2026-05-14",
@@ -6190,7 +6045,7 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260337Z"
+    "last_updated": "2026-05-19T13:53:44.292854Z"
   },
   {
     "player_name": "Kyle Rogossienski",
@@ -6222,7 +6077,7 @@
       "bb_pct": "40.0%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.260358Z",
+    "last_updated": "2026-05-19T13:53:44.293132Z",
     "game_log": [
       {
         "date": "2026-05-14",
@@ -6265,7 +6120,7 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260376Z"
+    "last_updated": "2026-05-19T13:53:44.293322Z"
   },
   {
     "player_name": "Lukas Klipper",
@@ -6297,7 +6152,7 @@
       "bb_pct": "--"
     },
     "games_played": 0,
-    "last_updated": "2026-05-19T13:46:52.260410Z"
+    "last_updated": "2026-05-19T13:53:44.293546Z"
   },
   {
     "player_name": "Ty Howard",
@@ -6323,7 +6178,7 @@
       "bb_pct": "8.3%"
     },
     "games_played": 1,
-    "last_updated": "2026-05-19T13:46:52.260463Z",
+    "last_updated": "2026-05-19T13:53:44.293861Z",
     "game_log": [
       {
         "date": "2026-05-12",
@@ -6335,6 +6190,176 @@
           "bb": 2,
           "h": 1
         }
+      }
+    ]
+  },
+  {
+    "player_name": "Braxton Fulford",
+    "team": "Los Angeles Dodgers",
+    "level": "Pro",
+    "is_client": false,
+    "tags": {
+      "position": "C",
+      "draft_class": "",
+      "roster_priority": 99
+    },
+    "window": "7d",
+    "window_grade": "✅ Solid",
+    "stats": {
+      "pa": 25,
+      "ab": 22,
+      "h": 6,
+      "hr": 2,
+      "bb": 3,
+      "k": 3,
+      "rbi": 9,
+      "r": 6,
+      "sb": 1,
+      "avg": ".273",
+      "obp": ".360",
+      "slg": ".591",
+      "ops": ".951",
+      "k_pct": "12.0%",
+      "bb_pct": "12.0%"
+    },
+    "games_played": 5,
+    "last_updated": "2026-05-19T13:53:44.491858Z",
+    "game_log": [
+      {
+        "date": "2026-05-17",
+        "opponent": "",
+        "stats": {
+          "h": 2,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 2,
+          "r": 3,
+          "bb": 2,
+          "k": 0,
+          "sb": 0
+        }
+      },
+      {
+        "date": "2026-05-16",
+        "opponent": "",
+        "stats": {
+          "h": 1,
+          "ab": 5,
+          "hr": 1,
+          "rbi": 3,
+          "r": 1,
+          "bb": 0,
+          "k": 1,
+          "sb": 0
+        }
+      },
+      {
+        "date": "2026-05-15",
+        "opponent": "",
+        "stats": {
+          "h": 3,
+          "ab": 6,
+          "hr": 1,
+          "rbi": 4,
+          "r": 2,
+          "bb": 0,
+          "k": 0,
+          "sb": 1
+        }
+      },
+      {
+        "date": "2026-05-13",
+        "opponent": "",
+        "stats": {
+          "h": 0,
+          "ab": 4,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 0,
+          "k": 1,
+          "sb": 0
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "opponent": "",
+        "stats": {
+          "h": 0,
+          "ab": 3,
+          "hr": 0,
+          "rbi": 0,
+          "r": 0,
+          "bb": 1,
+          "k": 1,
+          "sb": 0
+        }
+      }
+    ]
+  },
+  {
+    "player_name": "Luke Fithian",
+    "team": "Rutgers",
+    "level": "NCAA",
+    "is_client": true,
+    "tags": {
+      "position": "Pitcher",
+      "draft_class": "2027",
+      "roster_priority": 4
+    },
+    "window": "7d",
+    "window_grade": "— Insufficient",
+    "stats": {
+      "ip": "--",
+      "k": "--",
+      "bb": "--",
+      "era": "--",
+      "whip": "--",
+      "k_per_9": "--",
+      "bb_per_9": "--",
+      "k_pct": "--",
+      "bb_pct": "--"
+    },
+    "games_played": 0,
+    "last_updated": "2026-05-19T13:53:35.440130Z"
+  },
+  {
+    "player_name": "Dane Moehler",
+    "team": "Clemson",
+    "level": "NCAA",
+    "is_client": false,
+    "tags": {
+      "position": "RHP",
+      "draft_class": "2027",
+      "roster_priority": 2
+    },
+    "window": "7d",
+    "window_grade": "😐 Steady",
+    "stats": {
+      "ip": "2",
+      "k": 0,
+      "bb": 0,
+      "era": "4.50",
+      "whip": "2.00",
+      "k_per_9": "0.0",
+      "bb_per_9": "0.0",
+      "k_pct": "0.0%",
+      "bb_pct": "0.0%"
+    },
+    "games_played": 1,
+    "last_updated": "2026-05-19T13:53:38.321823Z",
+    "game_log": [
+      {
+        "date": "2026-05-14",
+        "opponent": "vs Virginia Tech",
+        "stats": {
+          "ip": "2",
+          "er": 1,
+          "k": 0,
+          "bb": 0,
+          "h": 4
+        },
+        "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=636469"
       }
     ]
   }
