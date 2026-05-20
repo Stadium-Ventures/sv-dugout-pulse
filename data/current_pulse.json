@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T22:50:06.751664+00:00",
+  "generated_at": "2026-05-20T22:58:41.276396+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -430,9 +430,9 @@
       "player_name": "Dax Kilby",
       "team": "Tampa Tarpons",
       "level": "Pro",
-      "stats_summary": "Game at 4:05 PM ET",
-      "game_context": "Clearwater Threshers vs Tampa Tarpons | 4:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
@@ -446,7 +446,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820275",
       "player_profile_url": "https://www.mlb.com/player/828076",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
@@ -756,8 +756,8 @@
       "player_name": "Nick Potter",
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
-      "stats_summary": "1.0 IP, 0 ER, 2 K, 1 BB",
-      "game_context": "Fredericksburg Nationals 0, Fayetteville Woodpeckers 0 | End 1",
+      "stats_summary": "1.1 IP, 2 H, 2 ER, 3 K, 2 BB",
+      "game_context": "Fredericksburg Nationals 2, Fayetteville Woodpeckers 0 | Top 2",
       "game_status": "Live",
       "game_time": "6:35 PM ET",
       "game_date": "2026-05-20",
@@ -772,8 +772,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/827267",
       "player_profile_url": "https://www.mlb.com/player/830769",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Scoreless in 1 IP",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "1.1 IP, 2 ER",
       "social_search_url": "https://x.com/search?q=%22Nick%20Potter%22%20Astros&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1021,7 +1021,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Hartford Yard Goats 3, New Hampshire Fisher Cats 0 | Bottom 3",
+      "game_context": "Hartford Yard Goats 3, New Hampshire Fisher Cats 0 | Top 4",
       "game_status": "Live",
       "game_time": "6:03 PM ET",
       "game_date": "2026-05-20",
@@ -1150,7 +1150,7 @@
       "team": "Jupiter Hammerheads",
       "level": "Pro",
       "stats_summary": "0-1, K",
-      "game_context": "Daytona Tortugas 0, Jupiter Hammerheads 0 | Bottom 1",
+      "game_context": "Daytona Tortugas 0, Jupiter Hammerheads 0 | Top 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-20",
@@ -1877,8 +1877,8 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "1-1, R, 2B",
-      "game_context": "Abilene Christian 2, Sacramento State 2 | Top 3",
+      "stats_summary": "1-1, R",
+      "game_context": "Abilene Chrstn 2, Sacramento St 2 | Inn 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1887,17 +1887,21 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659004",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "Extra-base hit (double)",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2135,7 +2139,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -2207,7 +2211,7 @@
       "team": "Dallas Baptist",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Kennesaw State 0, Dallas Baptist 1 | Bottom 3",
+      "game_context": "Kennesaw St 0, Dallas Baptist 1 | Inn 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -2218,15 +2222,19 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2269,8 +2277,8 @@
       "player_name": "Blake Rambusch",
       "team": "Arkansas Travelers",
       "level": "Pro",
-      "stats_summary": "0-1",
-      "game_context": "Springfield Cardinals 1, Arkansas Travelers 0 | Middle 3",
+      "stats_summary": "0-2",
+      "game_context": "Springfield Cardinals 1, Arkansas Travelers 0 | End 3",
       "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-20",
@@ -2286,7 +2294,7 @@
       "box_score_url": "https://www.mlb.com/gameday/817577",
       "player_profile_url": "https://www.mlb.com/player/800683",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Blake%20Rambusch%22%20Mariners&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2602,7 +2610,7 @@
       "team": "Akron RubberDucks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Akron RubberDucks 0, Harrisburg Senators 1 | Bottom 1",
+      "game_context": "Akron RubberDucks 0, Harrisburg Senators 1 | Bottom 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-20",
@@ -3068,7 +3076,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 0 | End 1",
+      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-20",
@@ -3250,7 +3258,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3286,8 +3294,8 @@
       "player_name": "Ethan Lay",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "2.1 IP, 4 H, 2 ER, 3 K, BB",
-      "game_context": "Abilene Christian 2, Sacramento State 2 | Top 3",
+      "stats_summary": "3.0 IP, 4 H, 2 ER, 3 K, 1 BB",
+      "game_context": "Abilene Chrstn 2, Sacramento St 2 | Inn 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -3296,17 +3304,21 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659004",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ethan%20Lay%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "2.3 IP, 2 ER",
+      "grade_reason": "3 IP, 2 ER",
       "social_search_url": "https://x.com/search?q=%22Ethan%20Lay%22%20Sacramento%20State&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3444,7 +3456,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3928,20 +3940,20 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 7,
-        "found stats": 13,
+        "Game found, not in box score": 10,
+        "found stats": 10,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 2,
+        "Couldn't reach site": 8,
         "No game listed today": 7,
-        "player not in box": 4,
-        "found player": 8
+        "player not in box": 1,
+        "found player": 5
       },
       "ESPN": {
         "No game listed today": 3,
         "Game found, not in box score": 4,
-        "found stats": 1
+        "found stats": 4
       },
       "NCAA.com": {
         "Stale data — skipped": 2,
@@ -3964,6 +3976,7 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Cam Flukey",
+      "Dax Kilby",
       "Dax Kilby",
       "Cade Doughty",
       "Justin Riemer",
@@ -3988,7 +4001,7 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 7,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
@@ -3996,7 +4009,7 @@
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 2,
+          "success": 8,
           "blocked": 0
         }
       }
