@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:17:07.756383+00:00",
+  "generated_at": "2026-05-20T13:32:41.471893+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1170,7 +1170,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1260,8 +1260,8 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "1.0 IP, 1 H, 1 ER, 1 K",
-      "game_context": "Duke 1, Virginia 0 | Inn 1",
+      "stats_summary": "2.0 IP, H, ER, K",
+      "game_context": "Duke 1, Virginia 1 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1270,21 +1270,17 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "1 IP, 1 ER",
+      "grade_reason": "2 IP, 1 ER",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1422,8 +1418,8 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "0-0",
-      "game_context": "Duke 1, Virginia 0 | Inn 1",
+      "stats_summary": "0-1, K",
+      "game_context": "Duke 1, Virginia 1 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1432,21 +1428,17 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Joe%20Tiroly%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3151,7 +3143,7 @@
       "team": "Duke",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 1, Virginia 0 | Bottom 1",
+      "game_context": "Duke 1, Virginia 1 | Bottom 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -3170,7 +3162,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3305,7 +3297,7 @@
       "team": "Auburn",
       "level": "NCAA",
       "stats_summary": "Game at 9:00 PM",
-      "game_context": " vs Auburn",
+      "game_context": "LSU vs Auburn",
       "game_status": "Scheduled",
       "game_time": "9:00 PM",
       "game_date": "2026-05-20",
@@ -3816,18 +3808,19 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 15,
+        "found stats": 17,
         "No game listed today": 1,
-        "Game found, not in box score": 5
+        "Game found, not in box score": 3
       },
       "ESPN": {
-        "found stats": 3,
+        "found stats": 1,
         "No game listed today": 2,
         "Game found, not in box score": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 4,
-        "No game listed today": 3
+        "player not in box": 2,
+        "No game listed today": 3,
+        "found player": 2
       },
       "NCAA.com": {
         "Game found, not in box score": 3
@@ -3855,24 +3848,12 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
+          "success": 2,
+          "blocked": 0
         }
       }
     }
