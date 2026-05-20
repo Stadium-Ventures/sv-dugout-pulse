@@ -2007,37 +2007,19 @@ async function switchWindow(window) {
   requestAnimationFrame(() => globalThis.scrollTo(0, _scrollPositions[window] || 0));
 }
 
-// Live workflow cron windows (UTC):
-//   00:00–06:45 UTC  (every 15 min)  = 8:00 PM–2:45 AM ET
-//   14:00–23:45 UTC  (every 15 min)  = 10:00 AM–7:45 PM ET
-// Gap: 06:45–14:00 UTC = 2:45 AM–10:00 AM ET (no live runs)
+// Pulse ingests data every 15 minutes around the clock — the GitHub Actions
+// cron covers 10 AM-2:45 AM ET, and an external scheduler fills the morning
+// gap (2:45-10 AM ET) with 15-min workflow_dispatch runs. So the next update
+// is always the next :00, :15, :30, or :45 on the wall clock.
 function getNextUpdateTime() {
   const now = new Date();
   const h = now.getUTCHours(), m = now.getUTCMinutes();
-  const totalMins = h * 60 + m;
-  const GAP_START = 6 * 60 + 46;  // 06:46 UTC (after last run at 06:45)
-  const GAP_END   = 14 * 60;       // 14:00 UTC
-
-  let next;
-  if (totalMins >= GAP_START && totalMins < GAP_END) {
-    // In the gap — next run is 14:00 UTC today
-    next = new Date(now);
-    next.setUTCHours(14, 0, 0, 0);
+  const nextM = Math.ceil((m + 1) / 15) * 15;
+  const next = new Date(now);
+  if (nextM >= 60) {
+    next.setUTCHours(h + 1, 0, 0, 0);
   } else {
-    // In an active window — next 15-min mark
-    const nextM = Math.ceil((m + 1) / 15) * 15;
-    next = new Date(now);
-    if (nextM >= 60) {
-      next.setUTCHours(h + 1, 0, 0, 0);
-    } else {
-      next.setUTCMinutes(nextM, 0, 0);
-    }
-    // If rounding pushed us into the gap, jump to 14:00 UTC
-    const nh = next.getUTCHours(), nm = next.getUTCMinutes();
-    const nextTotal = nh * 60 + nm;
-    if (nextTotal >= GAP_START && nextTotal < GAP_END) {
-      next.setUTCHours(14, 0, 0, 0);
-    }
+    next.setUTCMinutes(nextM, 0, 0);
   }
   return next;
 }
@@ -2128,12 +2110,14 @@ function updateTimestamp() {
 }
 
 function _isGameHours() {
-  // Mirror the cron schedule: active 14:00-06:45 UTC (10 AM-2:45 AM ET)
-  const now = new Date();
-  const total = now.getUTCHours() * 60 + now.getUTCMinutes();
-  const GAP_START = 6 * 60 + 46;  // 06:46 UTC
-  const GAP_END   = 14 * 60;       // 14:00 UTC
-  return total < GAP_START || total >= GAP_END;
+  // We used to gate auto-refresh to the cron's "live" window (10 AM-2:45 AM ET)
+  // and stop polling during the 2:45-10:00 AM gap. But fresh data does arrive
+  // during the gap (early-morning college games, overnight backfill, manual
+  // dispatches), and we burned a user when stats landed at 9:17 AM but the
+  // dashboard was still showing the 9:02 AM snapshot because auto-refresh was
+  // sleeping. Always poll on the Today tab — cost is one HTTP GET every 5
+  // min, negligible.
+  return true;
 }
 
 function manageAutoRefresh() {
