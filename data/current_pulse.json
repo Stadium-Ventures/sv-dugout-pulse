@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T14:17:05.150386+00:00",
+  "generated_at": "2026-05-20T14:32:24.509205+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1170,7 +1170,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1190,7 +1190,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1260,8 +1260,8 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "5.0 IP, 4 H, 2 ER, 3 K",
-      "game_context": "Duke 2, Virginia 1 | Bottom 5",
+      "stats_summary": "6.0 IP, 6 H, 2 ER, 4 K",
+      "game_context": "Duke 2, Virginia 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1270,7 +1270,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
       "performance_grade": "✅ Good",
-      "grade_reason": "3 strikeouts with good command",
+      "grade_reason": "4 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -1419,7 +1419,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "1-2, K, 2B",
-      "game_context": "Duke 2, Virginia 1 | Bottom 5",
+      "game_context": "Duke 2, Virginia 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1736,7 +1736,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3143,7 +3143,7 @@
       "team": "Duke",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 2, Virginia 1 | Bottom 5",
+      "game_context": "Duke 2, Virginia 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -3182,7 +3182,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3818,9 +3818,10 @@
         "Game found, not in box score": 1
       },
       "StatBroadcast": {
-        "player not in box": 2,
+        "Couldn't reach site": 1,
         "No game listed today": 3,
-        "found player": 2
+        "found player": 2,
+        "player not in box": 1
       },
       "NCAA.com": {
         "Game found, not in box score": 3
@@ -3830,8 +3831,7 @@
         "player not in box": 1
       },
       "NCAA.org": {
-        "Game found, not in box score": 2,
-        "Stale data — skipped": 1
+        "No game listed today": 3
       }
     },
     "blocked_sources": [],
@@ -3848,17 +3848,22 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
+      "active": "proxy-server.scraperapi.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 2,
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 1,
           "blocked": 0
         }
       }
