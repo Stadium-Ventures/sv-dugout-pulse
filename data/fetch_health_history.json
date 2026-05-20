@@ -28505,5 +28505,71 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-20T22:34:52.597994+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Cade Doughty",
+      "Justin Riemer",
+      "Tanner Gordon",
+      "Alex Kranzler",
+      "Davis Sharpe",
+      "Xavier Kolhosser",
+      "Eamon McDermott",
+      "Luke Fithian"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 7,
+        "found stats": 13,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "player not in box": 6,
+        "No game listed today": 7,
+        "found player": 8
+      },
+      "ESPN": {
+        "No game listed today": 3,
+        "Game found, not in box score": 4,
+        "found stats": 1
+      },
+      "NCAA.com": {
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 4,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 7,
+        "player not in box": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 4,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 9,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
