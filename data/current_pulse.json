@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T16:32:37.979549+00:00",
+  "generated_at": "2026-05-20T16:47:15.306232+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1516,7 +1516,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Lansing Lugnuts 1, Lake County Captains 0 | Top 5",
+      "game_context": "Lansing Lugnuts 1, Lake County Captains 1 | End 5",
       "game_status": "Live",
       "game_time": "11:05 AM ET",
       "game_date": "2026-05-20",
@@ -1752,8 +1752,8 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "0-3, K",
-      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Middle 5",
+      "stats_summary": "0-4, K",
+      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Bottom 6",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -1768,8 +1768,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820342",
       "player_profile_url": "https://www.mlb.com/player/805550",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-3",
+      "performance_grade": "🚩 Off Day",
+      "grade_reason": "Hitless in 4 at-bats",
       "social_search_url": "https://x.com/search?q=%22Ryan%20Weingartner%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2792,7 +2792,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "1-2",
-      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Middle 5",
+      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Bottom 6",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -3849,11 +3849,17 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 1,
           "blocked": 0
         }
       }
