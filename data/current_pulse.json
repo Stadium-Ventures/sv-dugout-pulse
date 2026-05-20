@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T20:47:16.544561+00:00",
+  "generated_at": "2026-05-20T21:02:09.186637+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -39,23 +39,47 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 4:50 PM",
-      "game_context": "Longwood vs USC Upstate",
-      "game_status": "Scheduled",
-      "game_time": "4:50 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Longwood 0, USC Upstate 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "3:00 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657202",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -601,8 +625,8 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "1-5, R, SB, 3 K",
-      "game_context": "Vanderbilt 3, Florida 8 | Top 9",
-      "game_status": "Live",
+      "game_context": "Vanderbilt 3, Florida 8 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
@@ -1885,7 +1909,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Texas Rangers 3, Colorado Rockies 2 | Bottom 5",
+      "game_context": "Texas Rangers 3, Colorado Rockies 4 | Top 6",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-20",
@@ -2052,16 +2076,16 @@
       "player_name": "Alex Kranzler",
       "team": "Vanderbilt",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Vanderbilt 3, Florida 8 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Vanderbilt 3, Florida 8 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660623",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
       "data_source": "D1Baseball",
@@ -3861,31 +3885,31 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 14,
-        "Game found, not in box score": 6,
+        "Game found, not in box score": 7,
+        "found stats": 13,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "player not in box": 5,
-        "No game listed today": 6,
+        "player not in box": 6,
+        "No game listed today": 7,
         "found player": 6
       },
       "ESPN": {
+        "No game listed today": 3,
         "Game found, not in box score": 4,
-        "found stats": 1,
-        "No game listed today": 2
+        "found stats": 1
       },
       "NCAA.com": {
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 3,
         "Game found, not in box score": 3,
         "stale (yesterday)": 1
       },
       "Sidearm": {
-        "No game listed today": 6,
+        "No game listed today": 7,
         "player not in box": 1
       },
       "NCAA.org": {
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 3,
         "Game found, not in box score": 3,
         "stale (yesterday)": 1
       }
