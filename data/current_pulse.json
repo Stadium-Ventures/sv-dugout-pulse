@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T15:47:12.949183+00:00",
+  "generated_at": "2026-05-20T16:02:50.285795+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1261,8 +1261,8 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "6.0 IP, 6 H, 2 ER, 4 K",
-      "game_context": "Duke 4, Virginia 6 | Top 9",
-      "game_status": "Live",
+      "game_context": "Duke 4, Virginia 6 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
@@ -1419,8 +1419,8 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "1-4, K, 2B",
-      "game_context": "Duke 4, Virginia 6 | Top 9",
-      "game_status": "Live",
+      "game_context": "Duke 4, Virginia 6 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
@@ -1516,7 +1516,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Lansing Lugnuts 0, Lake County Captains 0 | Top 2",
+      "game_context": "Lansing Lugnuts 1, Lake County Captains 0 | Top 3",
       "game_status": "Live",
       "game_time": "11:05 AM ET",
       "game_date": "2026-05-20",
@@ -1753,7 +1753,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-2, K",
-      "game_context": "Palm Beach Cardinals 1, St. Lucie Mets 0 | Bottom 3",
+      "game_context": "Palm Beach Cardinals 1, St. Lucie Mets 1 | Top 4",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -2792,7 +2792,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Palm Beach Cardinals 1, St. Lucie Mets 0 | Bottom 3",
+      "game_context": "Palm Beach Cardinals 1, St. Lucie Mets 1 | Top 4",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -3142,16 +3142,16 @@
       "player_name": "Eamon McDermott",
       "team": "Duke",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 4, Virginia 6 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Duke 4, Virginia 6 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Eamon%20McDermott%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Eamon%20McDermott%22%20Duke&f=live",
       "data_source": "D1Baseball",
@@ -3162,7 +3162,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3818,9 +3818,10 @@
         "Game found, not in box score": 1
       },
       "StatBroadcast": {
-        "player not in box": 2,
+        "player not in box": 1,
         "No game listed today": 3,
-        "found player": 2
+        "found player": 2,
+        "Couldn't reach site": 1
       },
       "NCAA.com": {
         "Game found, not in box score": 3
