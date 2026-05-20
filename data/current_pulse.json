@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T03:46:53.143886+00:00",
+  "generated_at": "2026-05-20T04:01:48.941985+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -467,7 +467,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "0-4, 3 K",
-      "game_context": "Ontario Tower Buzzers 4, Inland Empire 66ers 4 | Bottom 7",
+      "game_context": "Ontario Tower Buzzers 4, Inland Empire 66ers 4 | Bottom 8",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-20",
@@ -738,7 +738,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Athletics 1, ACL Reds 26 | Top 7",
+      "game_context": "ACL Athletics 4, ACL Reds 26 | Top 8",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-20",
@@ -1096,7 +1096,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1533,13 +1533,13 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "1-2, RBI",
-      "game_context": "Washington 4, Ohio State 4 | Inn 5",
+      "game_context": "Washington 6, Ohio State 4 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869726",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660390",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
       "performance_grade": "✅ Good",
       "grade_reason": "Productive game",
@@ -1548,7 +1548,11 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1642,7 +1646,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1747,7 +1751,7 @@
       "team": "Albuquerque Isotopes",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Albuquerque Isotopes 6, Las Vegas Aviators 5 | Bottom 4",
+      "game_context": "Albuquerque Isotopes 6, Las Vegas Aviators 6 | Bottom 5",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-20",
@@ -2585,7 +2589,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Tri-City Dust Devils 7, Everett AquaSox 1 | Top 7",
+      "game_context": "Tri-City Dust Devils 9, Everett AquaSox 1 | Top 8",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-20",
@@ -2931,7 +2935,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Vancouver Canadians 2, Spokane Indians 7 | Bottom 8",
+      "game_context": "Vancouver Canadians 2, Spokane Indians 9 | End 8",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-20",
@@ -3052,7 +3056,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3123,13 +3127,13 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "1-1, RBI, R",
-      "game_context": "Washington 4, Ohio State 4 | Inn 5",
+      "game_context": "Washington 6, Ohio State 4 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869726",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660390",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Ellis%22&btnI=",
       "performance_grade": "✅ Good",
       "grade_reason": "Productive game",
@@ -3138,7 +3142,11 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3730,14 +3738,12 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 5,
-        "Stale data — skipped": 2,
+        "Game found, not in box score": 7,
         "found stats": 1
       },
       "StatBroadcast": {
-        "player not in box": 3,
+        "Couldn't reach site": 7,
         "No game listed today": 5,
-        "Couldn't reach site": 2,
         "found player": 1
       },
       "ESPN": {
@@ -3783,9 +3789,11 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
+      "active": "proxy-server.scraperapi.com",
       "dead": [
-        "p.webshare.io"
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
       ],
       "stats": {
         "p.webshare.io": {
@@ -3793,8 +3801,12 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 5,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
         }
       }
     }
