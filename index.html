@@ -1787,18 +1787,34 @@ function render() {
       noGameSection.style.display = 'none';
     } else {
       empty.style.display = 'none';
+      // Group cards by game_status. MLB API and our scrapers emit values
+      // beyond the obvious four (Live/Final/Scheduled/Cancelled) — Delayed,
+      // Suspended, Warmup, Forfeit, etc. Match each known status into the
+      // best bucket, then dump anything unrecognized into "Other" so we
+      // never silently drop a player. (Past bug: Carter Johnson hidden on
+      // 2026-05-19 because his game went "Delayed" mid-game and the old
+      // strict equality match had no bucket for it.)
       const groups = [
-        { key: 'Live', label: 'In Progress' },
-        { key: 'Final', label: 'Final' },
-        { key: 'Scheduled', label: 'Scheduled' },
-        { key: 'Cancelled', label: 'Postponed' },
+        { label: 'In Progress', match: s => s === 'Live' || s === 'Delayed' || s === 'Suspended' || s === 'Warmup' || s === 'Pre-Game' || s === 'Manager Challenge' },
+        { label: 'Final', match: s => s === 'Final' || s === 'Forfeit' || s === 'Completed Early' },
+        { label: 'Scheduled', match: s => s === 'Scheduled' },
+        { label: 'Postponed', match: s => s === 'Cancelled' || s === 'Postponed' },
       ];
+      const placed = new Set();
       let html = '';
       for (const g of groups) {
-        const section = sorted.filter(p => p.game_status === g.key);
+        const section = sorted.filter(p => g.match(p.game_status || ''));
         if (section.length === 0) continue;
+        section.forEach(p => placed.add(p));
         html += `<div class="status-section-header">${g.label}</div>`;
         html += section.map(renderCard).join('');
+      }
+      const leftover = sorted.filter(p => !placed.has(p));
+      if (leftover.length > 0) {
+        const unknownStatuses = [...new Set(leftover.map(p => p.game_status || '(blank)'))].join(', ');
+        console.warn('Today render: catch-all bucket caught statuses:', unknownStatuses);
+        html += `<div class="status-section-header">Other (${esc(unknownStatuses)})</div>`;
+        html += leftover.map(renderCard).join('');
       }
       grid.innerHTML = html;
     }
