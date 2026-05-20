@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T17:33:03.695606+00:00",
+  "generated_at": "2026-05-20T17:47:13.391606+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -157,23 +157,47 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 1:30 PM",
-      "game_context": "Louisiana vs Coastal Carolina",
-      "game_status": "Scheduled",
-      "game_time": "1:30 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Louisiana 0, Coastal Carolina 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "1:45 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869505",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660407",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cam%20Flukey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -225,9 +249,9 @@
       "team": "Louisville Bats",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisville Bats 0, Columbus Clippers 0 | Top 1",
+      "game_context": "Louisville Bats 0, Columbus Clippers 0 | Top 2",
       "game_status": "Live",
-      "game_time": "12:05 PM ET",
+      "game_time": "1:30 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": {
@@ -1551,7 +1575,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Lansing Lugnuts 3, Lake County Captains 1 | Bottom 7",
+      "game_context": "Lansing Lugnuts 3, Lake County Captains 1 | Bottom 8",
       "game_status": "Live",
       "game_time": "11:05 AM ET",
       "game_date": "2026-05-20",
@@ -1812,7 +1836,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-4, SB, BB, K",
-      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Bottom 8",
+      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 4 | Top 9",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -2850,8 +2874,8 @@
       "player_name": "Michael Dattalo",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "2-3",
-      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Bottom 8",
+      "stats_summary": "2-3, BB",
+      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 4 | Top 9",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -2867,7 +2891,7 @@
       "box_score_url": "https://www.mlb.com/gameday/820342",
       "player_profile_url": "https://www.mlb.com/player/809633",
       "performance_grade": "✅ Good",
-      "grade_reason": "2 hits",
+      "grade_reason": "Reached base 3 times",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -3820,7 +3844,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Memphis Redbirds 0, Iowa Cubs 0 | Middle 2",
+      "game_context": "Memphis Redbirds 0, Iowa Cubs 0 | Bottom 3",
       "game_status": "Live",
       "game_time": "1:08 PM ET",
       "game_date": "2026-05-20",
@@ -3915,34 +3939,34 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 14,
-        "No game listed today": 1,
-        "Game found, not in box score": 6
-      },
-      "ESPN": {
-        "found stats": 1,
-        "No game listed today": 2,
-        "Stale data — skipped": 3,
-        "Game found, not in box score": 1
+        "found stats": 13,
+        "Game found, not in box score": 7,
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "player not in box": 5,
-        "No game listed today": 6,
+        "player not in box": 6,
+        "No game listed today": 7,
         "found player": 2
       },
+      "ESPN": {
+        "Stale data — skipped": 4,
+        "found stats": 1,
+        "No game listed today": 2,
+        "Game found, not in box score": 1
+      },
       "NCAA.com": {
+        "Stale data — skipped": 2,
         "Game found, not in box score": 3,
-        "stale (yesterday)": 2,
-        "Stale data — skipped": 1
+        "stale (yesterday)": 2
       },
       "Sidearm": {
-        "No game listed today": 6,
+        "No game listed today": 7,
         "player not in box": 1
       },
       "NCAA.org": {
+        "Stale data — skipped": 3,
         "Game found, not in box score": 2,
-        "stale (yesterday)": 2,
-        "Stale data — skipped": 2
+        "stale (yesterday)": 2
       }
     },
     "blocked_sources": [],
@@ -3950,6 +3974,7 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Cam Flukey",
       "Justin Riemer",
       "Mason Eckelman",
       "Eamon McDermott",
@@ -3967,7 +3992,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 4,
+          "success": 5,
           "blocked": 0
         }
       }
