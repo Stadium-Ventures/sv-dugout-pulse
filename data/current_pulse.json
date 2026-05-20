@@ -1096,7 +1096,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3048,7 +3048,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3773,11 +3773,9 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
+      "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
