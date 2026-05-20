@@ -24207,5 +24207,71 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-20T05:47:03.935419+00:00",
+    "severity": "warning",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Aaron Watson",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Riley Goodman",
+      "Sterlin Thompson",
+      "Ty Finkbeiner",
+      "Austin Amaral",
+      "Davis Sharpe",
+      "Jake Munroe",
+      "Kade Brown",
+      "Najer Victor",
+      "Ryan DeSanto",
+      "Brennan Orf",
+      "Eamon McDermott",
+      "Luke Fithian",
+      "Peyton Glavine"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 5,
+        "found stats": 3
+      },
+      "StatBroadcast": {
+        "player not in box": 1,
+        "No game listed today": 5,
+        "found player": 3
+      },
+      "ESPN": {
+        "Game found, not in box score": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 5
+      },
+      "Sidearm": {
+        "No game listed today": 5,
+        "player not in box": 4
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 5
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 2,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
