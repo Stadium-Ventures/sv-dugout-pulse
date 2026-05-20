@@ -241,23 +241,44 @@ def _sb_url(url: str) -> str:
 
 
 def _get_sb_session(proxy: str | None = None):
-    """Return the curl_cffi session for a specific residential proxy.
+    """Return the session for a specific residential proxy.
 
     Sessions are cached per-proxy so PoW cookies and TLS state don't get
     clobbered when we rotate. ``proxy=None`` means "use the currently-active
     proxy" — which is the common path once auth has settled on one.
+
+    Two session types:
+      - Residential proxies (Webshare, IPRoyal): curl_cffi with chrome120
+        TLS impersonation. We need Chrome's TLS fingerprint to bypass
+        Cloudflare's WAF on the residential IP.
+      - ScraperAPI (tier 3): plain `requests.Session` with verify=False.
+        ScraperAPI's proxy mode intercepts the request and fetches from
+        origin themselves with their own pool — Chrome TLS impersonation
+        through their CONNECT tunnel actively breaks the request. They
+        also MITM HTTPS so we have to skip cert verification.
     """
     if proxy is None:
         proxy = _sb_active_proxy or (_SB_HTTP_PROXY_POOL[0] if _SB_HTTP_PROXY_POOL else "")
 
     if proxy not in _sb_sessions:
-        from curl_cffi import requests as _cr  # local import: optional dep
-        kwargs = {"impersonate": "chrome120"}
-        if proxy:
-            kwargs["proxies"] = {"http": proxy, "https": proxy}
-            logger.info("StatBroadcast: created session via residential proxy %s",
+        if proxy and "scraperapi" in proxy.lower():
+            import requests as _req  # plain requests — ScraperAPI handles fingerprinting
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+            session = _req.Session()
+            session.proxies = {"http": proxy, "https": proxy}
+            session.verify = False
+            logger.info("StatBroadcast: created plain session via ScraperAPI proxy %s",
                         _sb_proxy_label(proxy))
-        _sb_sessions[proxy] = _cr.Session(**kwargs)
+            _sb_sessions[proxy] = session
+        else:
+            from curl_cffi import requests as _cr  # local import: optional dep
+            kwargs = {"impersonate": "chrome120"}
+            if proxy:
+                kwargs["proxies"] = {"http": proxy, "https": proxy}
+                logger.info("StatBroadcast: created session via residential proxy %s",
+                            _sb_proxy_label(proxy))
+            _sb_sessions[proxy] = _cr.Session(**kwargs)
 
     return _sb_sessions[proxy]
 
