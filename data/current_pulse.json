@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T19:17:09.152019+00:00",
+  "generated_at": "2026-05-20T19:34:50.684473+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -158,7 +158,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisiana 6, Coastal Carolina 0 | Bottom 3",
+      "game_context": "Louisiana 7, Coastal Carolina 0 | Bottom 4",
       "game_status": "Live",
       "game_time": "1:30 PM ET",
       "game_date": "2026-05-20",
@@ -249,7 +249,7 @@
       "team": "Louisville Bats",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisville Bats 1, Columbus Clippers 2 | Bottom 7",
+      "game_context": "Louisville Bats 1, Columbus Clippers 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:30 PM ET",
       "game_date": "2026-05-20",
@@ -366,41 +366,6 @@
         "position": "RHP",
         "roster_priority": 1
       }
-    },
-    {
-      "player_name": "Dax Kilby",
-      "team": "Tampa Tarpons",
-      "level": "Pro",
-      "stats_summary": "Game at 4:00 PM ET",
-      "game_context": "Clearwater Threshers vs Tampa Tarpons | 4:00 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM ET",
-      "game_date": "2026-05-20",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Thu 05/21",
-        "date_full": "2026-05-21",
-        "opponent": "Clearwater Threshers",
-        "home_away": "vs",
-        "time": "6:30 PM ET",
-        "display": "vs Clearwater Threshers - Thu 05/21 6:30 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/820274",
-      "player_profile_url": "https://www.mlb.com/player/828076",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
-      "data_source": "MLB Stats API",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Hitter",
-        "roster_priority": 1
-      },
-      "game_number": 1
     },
     {
       "player_name": "Dax Kilby",
@@ -635,27 +600,27 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "1-3, R, SB, 2 K",
-      "game_context": "Vanderbilt 3, Florida 3 | Middle 5",
+      "stats_summary": "1-3, R, 2 K",
+      "game_context": "Vanderbilt 3, Florida 5 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660623",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869481",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Stolen base",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Stale data — skipped"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1674,26 +1639,26 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "0-2, 2 K",
-      "game_context": "Rutgers 0, Ohio State 1 | Inn 5",
+      "game_context": "Rutgers 2, Ohio State 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869728",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         },
         {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1920,7 +1885,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Texas Rangers 0, Colorado Rockies 0 | Top 1",
+      "game_context": "Texas Rangers 0, Colorado Rockies 1 | Middle 2",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-20",
@@ -2087,27 +2052,23 @@
       "player_name": "Alex Kranzler",
       "team": "Vanderbilt",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Vanderbilt 3, Florida 3 | Middle 5",
-      "game_status": "Live",
+      "stats_summary": "Game today",
+      "game_context": "Vanderbilt vs Florida",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660623",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869481",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Alex%20Kranzler%22%20Vanderbilt&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Stale data — skipped"
         },
         {
           "source": "ESPN",
@@ -3322,26 +3283,26 @@
       "team": "Ohio State",
       "level": "NCAA",
       "stats_summary": "0-2",
-      "game_context": "Rutgers 0, Ohio State 1 | Inn 5",
+      "game_context": "Rutgers 2, Ohio State 1 | Bottom 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869728",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Ellis%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         },
         {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3423,23 +3384,27 @@
       "player_name": "Luke Fithian",
       "team": "Rutgers",
       "level": "NCAA",
-      "stats_summary": "Game at 2:00 PM ET",
-      "game_context": "TBA vs Rutgers",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Rutgers 2, Ohio State 1 | Bottom 6",
+      "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869728",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Luke%20Fithian%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Luke%20Fithian%22%20Rutgers&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3447,7 +3412,19 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3815,9 +3792,9 @@
       "player_name": "Richard Fitts",
       "team": "Memphis Redbirds",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Memphis Redbirds 2, Iowa Cubs 2 | Top 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Memphis Redbirds 2, Iowa Cubs 3 | Final",
+      "game_status": "Final",
       "game_time": "1:08 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
@@ -3831,7 +3808,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/816504",
       "player_profile_url": "https://www.mlb.com/player/690916",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Richard%20Fitts%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -3911,33 +3888,32 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 12,
+        "found stats": 13,
         "Game found, not in box score": 5,
         "No game listed today": 1,
-        "Stale data — skipped": 3
+        "Stale data — skipped": 2
       },
       "StatBroadcast": {
         "player not in box": 4,
-        "No game listed today": 5,
-        "found player": 3
+        "No game listed today": 6,
+        "found player": 4
       },
       "ESPN": {
         "Game found, not in box score": 4,
-        "found stats": 3,
+        "found stats": 2,
         "No game listed today": 2
       },
       "NCAA.com": {
-        "Stale data — skipped": 1,
+        "Stale data — skipped": 2,
         "Game found, not in box score": 3,
-        "stale (yesterday)": 1,
-        "found stats": 1
+        "stale (yesterday)": 1
       },
       "Sidearm": {
-        "No game listed today": 5,
+        "No game listed today": 6,
         "player not in box": 1
       },
       "NCAA.org": {
-        "Stale data — skipped": 1,
+        "Stale data — skipped": 2,
         "Game found, not in box score": 3,
         "stale (yesterday)": 1
       }
@@ -3950,27 +3926,21 @@
       "Cam Flukey",
       "Justin Riemer",
       "Tanner Gordon",
-      "Alex Kranzler",
-      "Eamon McDermott"
+      "Eamon McDermott",
+      "Luke Fithian"
     ],
-    "total_clients": 87,
+    "total_clients": 86,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 4,
+          "success": 5,
           "blocked": 0
         }
       }

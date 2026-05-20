@@ -10364,7 +10364,7 @@
   },
   {
     "date": "2026-05-20",
-    "updated_at": "2026-05-20T19:17:09.186356+00:00",
+    "updated_at": "2026-05-20T19:34:50.721649+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -10455,17 +10455,6 @@
         "sources_tried": []
       },
       {
-        "name": "Dax Kilby",
-        "team": "Tampa Tarpons",
-        "level": "Pro",
-        "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "MLB Stats API",
-        "sources_tried": []
-      },
-      {
         "name": "Garrett Whitlock",
         "team": "Boston Red Sox",
         "level": "Pro",
@@ -10520,10 +10509,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "StatBroadcast"
+          "ESPN"
         ]
       },
       {
@@ -10661,10 +10650,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "StatBroadcast"
         ]
       },
       {
@@ -10753,10 +10742,10 @@
         "team": "Vanderbilt",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": true,
+        "game_status": "Scheduled",
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
@@ -10976,10 +10965,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "StatBroadcast"
         ]
       },
       {
@@ -11000,14 +10989,17 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -11037,7 +11029,7 @@
         "team": "Memphis Redbirds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
