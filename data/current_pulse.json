@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T20:32:17.181453+00:00",
+  "generated_at": "2026-05-20T20:47:16.544561+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -158,7 +158,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisiana 7, Coastal Carolina 7 | Top 7",
+      "game_context": "Louisiana 10, Coastal Carolina 7 | Top 7",
       "game_status": "Live",
       "game_time": "1:30 PM ET",
       "game_date": "2026-05-20",
@@ -601,7 +601,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "1-5, R, SB, 3 K",
-      "game_context": "Vanderbilt 3, Florida 8 | Bottom 8",
+      "game_context": "Vanderbilt 3, Florida 8 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1885,7 +1885,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Texas Rangers 3, Colorado Rockies 2 | Top 5",
+      "game_context": "Texas Rangers 3, Colorado Rockies 2 | Bottom 5",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-20",
@@ -2053,7 +2053,7 @@
       "team": "Vanderbilt",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Vanderbilt 3, Florida 8 | Bottom 8",
+      "game_context": "Vanderbilt 3, Florida 8 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -2143,16 +2143,16 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
-      "game_context": "Kennesaw State vs Dallas Baptist",
-      "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Kennesaw State 0, Dallas Baptist 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869522",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660423",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
       "data_source": "D1Baseball",
@@ -2160,6 +2160,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3864,7 +3868,7 @@
       "StatBroadcast": {
         "player not in box": 5,
         "No game listed today": 6,
-        "found player": 5
+        "found player": 6
       },
       "ESPN": {
         "Game found, not in box score": 4,
@@ -3909,7 +3913,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 6,
+          "success": 7,
           "blocked": 0
         }
       }
