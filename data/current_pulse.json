@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T21:34:07.160243+00:00",
+  "generated_at": "2026-05-20T21:49:49.610318+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -40,7 +40,7 @@
       "team": "USC Upstate",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Longwood 0, USC Upstate 1 | Top 2",
+      "game_context": "Longwood 1, USC Upstate 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-20",
@@ -59,7 +59,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -182,7 +182,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisiana 10, Coastal Carolina 7 | Bottom 7",
+      "game_context": "Louisiana 10, Coastal Carolina 7 | Top 8",
       "game_status": "Live",
       "game_time": "1:30 PM ET",
       "game_date": "2026-05-20",
@@ -1114,7 +1114,7 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "Game at 6:30 PM ET",
+      "stats_summary": "In lineup — batting 1st (2B)",
       "game_context": "Daytona Tortugas vs Jupiter Hammerheads | 6:30 PM ET",
       "game_status": "Scheduled",
       "game_time": "6:30 PM ET",
@@ -1222,7 +1222,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1909,7 +1909,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Texas Rangers 3, Colorado Rockies 4 | Bottom 8",
+      "game_context": "Texas Rangers 3, Colorado Rockies 4 | Top 9",
       "game_status": "Live",
       "game_time": "3:10 PM ET",
       "game_date": "2026-05-20",
@@ -2096,7 +2096,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2167,10 +2167,10 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game in progress",
-      "game_context": "Kennesaw State 0, Dallas Baptist 0 | Top 1",
+      "stats_summary": "In lineup",
+      "game_context": "Kennesaw State 0, Dallas Baptist 0 | Top 1",
       "game_status": "Live",
-      "game_time": "6:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
@@ -2183,31 +2183,11 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3231,7 +3211,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3404,7 +3384,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "Rutgers 2, Ohio State 3 | Final",
       "game_status": "Final",
-      "game_time": "2:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
@@ -3421,7 +3401,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3429,7 +3409,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "Sidearm",
@@ -3637,6 +3617,33 @@
       }
     },
     {
+      "player_name": "Alex Smith",
+      "team": "HS",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Alex%20Smith%22%20HS&f=live",
+      "data_source": "HS Sheet",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "Hitter",
+        "roster_priority": 99
+      }
+    },
+    {
       "player_name": "Braxton Fulford",
       "team": "Oklahoma City Comets",
       "level": "Pro",
@@ -3667,6 +3674,114 @@
       "tags": {
         "draft_class": "",
         "position": "C",
+        "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Kohen Poplin",
+      "team": "HS",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Kohen%20Poplin%22%20HS&f=live",
+      "data_source": "HS Sheet",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "Pitcher",
+        "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Kyle Rogossienski",
+      "team": "HS",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Kyle%20Rogossienski%22%20HS&f=live",
+      "data_source": "HS Sheet",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "Hitter",
+        "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Lucas Lawerence",
+      "team": "HS",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Lucas%20Lawerence%22%20HS&f=live",
+      "data_source": "HS Sheet",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "Pitcher",
+        "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Lukas Klipper",
+      "team": "HS",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Lukas%20Klipper%22%20HS&f=live",
+      "data_source": "HS Sheet",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "Hitter",
         "roster_priority": 99
       }
     },
@@ -3737,42 +3852,66 @@
         "position": "SS",
         "roster_priority": 99
       }
+    },
+    {
+      "player_name": "Ty Howard",
+      "team": "HS",
+      "level": "HS",
+      "stats_summary": "No game today",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": null,
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Ty%20Howard%22%20HS&f=live",
+      "data_source": "HS Sheet",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "Pitcher",
+        "roster_priority": 99
+      }
     }
   ],
   "health": {
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 8,
-        "found stats": 12,
+        "Game found, not in box score": 7,
+        "found stats": 13,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 6,
-        "No game listed today": 8,
-        "player not in box": 1,
-        "found player": 5
+        "player not in box": 6,
+        "No game listed today": 7,
+        "found player": 6
       },
       "ESPN": {
         "No game listed today": 3,
         "Game found, not in box score": 4,
-        "found stats": 1,
-        "Stale data — skipped": 1
+        "found stats": 1
       },
       "NCAA.com": {
-        "Stale data — skipped": 4,
-        "Game found, not in box score": 3,
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 4,
         "stale (yesterday)": 1
       },
       "Sidearm": {
-        "No game listed today": 8,
+        "No game listed today": 7,
         "player not in box": 1
       },
       "NCAA.org": {
         "Stale data — skipped": 2,
         "Game found, not in box score": 4,
-        "stale (yesterday)": 1,
-        "No game listed today": 1
+        "stale (yesterday)": 1
       }
     },
     "blocked_sources": [],
@@ -3784,7 +3923,6 @@
       "Justin Riemer",
       "Tanner Gordon",
       "Alex Kranzler",
-      "Ben Tryon",
       "Eamon McDermott",
       "Luke Fithian"
     ],
@@ -3795,22 +3933,11 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 6,
+          "success": 7,
           "blocked": 0
         }
       }
