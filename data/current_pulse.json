@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T17:18:12.692343+00:00",
+  "generated_at": "2026-05-20T17:33:03.695606+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -189,9 +189,44 @@
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
-      "stats_summary": "Game at 12:05 PM ET",
-      "game_context": "Louisville Bats vs Columbus Clippers | 12:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Did Not Play",
+      "game_context": "Louisville Bats 5, Columbus Clippers 7 | Final",
+      "game_status": "Final",
+      "game_time": "12:05 PM ET",
+      "game_date": "2026-05-20",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Thu 05/21",
+        "date_full": "2026-05-21",
+        "opponent": "Columbus Clippers",
+        "home_away": "@",
+        "time": "12:05 PM ET",
+        "display": "@ Columbus Clippers - Thu 05/21 12:05 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/816810",
+      "player_profile_url": "https://www.mlb.com/player/695534",
+      "performance_grade": "— DNP",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Chase%20Petty%22%20Reds&f=live",
+      "data_source": "MLB Stats API",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": false,
+      "tags": {
+        "draft_class": "",
+        "position": "RHP",
+        "roster_priority": 1
+      },
+      "game_number": 1
+    },
+    {
+      "player_name": "Chase Petty",
+      "team": "Louisville Bats",
+      "level": "Pro",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Louisville Bats 0, Columbus Clippers 0 | Top 1",
+      "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
@@ -205,7 +240,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/816813",
       "player_profile_url": "https://www.mlb.com/player/695534",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Chase%20Petty%22%20Reds&f=live",
       "data_source": "MLB Stats API",
@@ -1516,7 +1551,7 @@
       "team": "Lansing Lugnuts",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Lansing Lugnuts 2, Lake County Captains 1 | Top 7",
+      "game_context": "Lansing Lugnuts 3, Lake County Captains 1 | Bottom 7",
       "game_status": "Live",
       "game_time": "11:05 AM ET",
       "game_date": "2026-05-20",
@@ -1610,23 +1645,47 @@
       "player_name": "Mason Eckelman",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "Game at 2:00 PM",
-      "game_context": "Ohio State vs Rutgers",
-      "game_status": "Scheduled",
-      "game_time": "2:00 PM",
+      "stats_summary": "Game in progress",
+      "game_context": "Ohio State 0, Rutgers 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "2:00 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869728",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Mason%20Eckelman%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1752,8 +1811,8 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "0-4, BB, K",
-      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Top 8",
+      "stats_summary": "0-4, SB, BB, K",
+      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Bottom 8",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -2792,7 +2851,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "2-3",
-      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Top 8",
+      "game_context": "Palm Beach Cardinals 3, St. Lucie Mets 3 | Bottom 8",
       "game_status": "Live",
       "game_time": "11:10 AM ET",
       "game_date": "2026-05-20",
@@ -3230,23 +3289,47 @@
       "player_name": "Lee Ellis",
       "team": "Ohio State",
       "level": "NCAA",
-      "stats_summary": "Game at 2:00 PM",
-      "game_context": "Ohio State vs Rutgers",
-      "game_status": "Scheduled",
-      "game_time": "2:00 PM",
+      "stats_summary": "Game in progress",
+      "game_context": "Ohio State 0, Rutgers 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "2:00 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869728",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Ellis%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3328,23 +3411,47 @@
       "player_name": "Luke Fithian",
       "team": "Rutgers",
       "level": "NCAA",
-      "stats_summary": "Game at 2:00 PM",
-      "game_context": "Ohio State vs Rutgers",
-      "game_status": "Scheduled",
-      "game_time": "2:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Ohio State 0, Rutgers 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "2:00 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869728",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Luke%20Fithian%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Luke%20Fithian%22%20Rutgers&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3713,7 +3820,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Memphis Redbirds 0, Iowa Cubs 0 | Top 1",
+      "game_context": "Memphis Redbirds 0, Iowa Cubs 0 | Middle 2",
       "game_status": "Live",
       "game_time": "1:08 PM ET",
       "game_date": "2026-05-20",
@@ -3808,30 +3915,34 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 17,
+        "found stats": 14,
         "No game listed today": 1,
-        "Game found, not in box score": 3
+        "Game found, not in box score": 6
       },
       "ESPN": {
         "found stats": 1,
         "No game listed today": 2,
+        "Stale data — skipped": 3,
         "Game found, not in box score": 1
       },
       "StatBroadcast": {
-        "player not in box": 2,
-        "No game listed today": 3,
+        "player not in box": 5,
+        "No game listed today": 6,
         "found player": 2
       },
       "NCAA.com": {
-        "Game found, not in box score": 3
+        "Game found, not in box score": 3,
+        "stale (yesterday)": 2,
+        "Stale data — skipped": 1
       },
       "Sidearm": {
-        "No game listed today": 3,
+        "No game listed today": 6,
         "player not in box": 1
       },
       "NCAA.org": {
         "Game found, not in box score": 2,
-        "Stale data — skipped": 1
+        "stale (yesterday)": 2,
+        "Stale data — skipped": 2
       }
     },
     "blocked_sources": [],
@@ -3840,7 +3951,10 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Justin Riemer",
-      "Eamon McDermott"
+      "Mason Eckelman",
+      "Eamon McDermott",
+      "Lee Ellis",
+      "Luke Fithian"
     ],
     "total_clients": 87,
     "proxy_pool": {
@@ -3853,7 +3967,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 4,
           "blocked": 0
         }
       }

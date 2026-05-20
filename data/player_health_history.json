@@ -10364,7 +10364,7 @@
   },
   {
     "date": "2026-05-20",
-    "updated_at": "2026-05-20T17:18:12.729118+00:00",
+    "updated_at": "2026-05-20T17:33:03.732025+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -10410,7 +10410,18 @@
         "team": "Louisville Bats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Chase Petty",
+        "team": "Louisville Bats",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -10641,12 +10652,17 @@
         "team": "Ohio State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -10950,12 +10966,17 @@
         "team": "Ohio State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -10976,12 +10997,17 @@
         "team": "Rutgers",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
