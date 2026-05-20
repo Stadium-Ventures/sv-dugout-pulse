@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T14:02:12.940863+00:00",
+  "generated_at": "2026-05-20T14:17:05.150386+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1260,8 +1260,8 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "4.0 IP, 3 H, 2 ER, 2 K",
-      "game_context": "Duke 2, Virginia 1 | Bottom 4",
+      "stats_summary": "5.0 IP, 4 H, 2 ER, 3 K",
+      "game_context": "Duke 2, Virginia 1 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -1269,8 +1269,8 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "4 IP, 2 ER",
+      "performance_grade": "✅ Good",
+      "grade_reason": "3 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -1419,7 +1419,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "1-2, K, 2B",
-      "game_context": "Duke 2, Virginia 1 | Bottom 4",
+      "game_context": "Duke 2, Virginia 1 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -3143,7 +3143,7 @@
       "team": "Duke",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Duke 2, Virginia 1 | Bottom 4",
+      "game_context": "Duke 2, Virginia 1 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-20",
@@ -3848,10 +3848,16 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 2,
           "blocked": 0
         }
