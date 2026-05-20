@@ -10364,7 +10364,7 @@
   },
   {
     "date": "2026-05-20",
-    "updated_at": "2026-05-20T17:47:13.429522+00:00",
+    "updated_at": "2026-05-20T18:02:20.277510+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -10517,12 +10517,13 @@
         "team": "Florida",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "StatBroadcast"
         ]
       },
       {
@@ -10663,10 +10664,6 @@
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -10675,7 +10672,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -10756,12 +10753,17 @@
         "team": "Vanderbilt",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -10872,7 +10874,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -10977,10 +10979,6 @@
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
