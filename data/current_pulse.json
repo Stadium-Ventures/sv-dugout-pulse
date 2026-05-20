@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:02:25.605987+00:00",
+  "generated_at": "2026-05-20T13:17:07.756383+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1170,7 +1170,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1260,22 +1260,30 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
-      "game_context": "Duke vs Virginia",
-      "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "stats_summary": "1.0 IP, 1 H, 1 ER, 1 K",
+      "game_context": "Duke 1, Virginia 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869459",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "1 IP, 1 ER",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -1414,22 +1422,30 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
-      "game_context": "Duke vs Virginia",
-      "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "stats_summary": "0-0",
+      "game_context": "Duke 1, Virginia 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869459",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Joe%20Tiroly%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -1778,10 +1794,10 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 6:00 PM",
       "game_context": "Abilene Christian vs Sacramento State",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
@@ -3134,23 +3150,47 @@
       "player_name": "Eamon McDermott",
       "team": "Duke",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
-      "game_context": "Duke vs Virginia",
-      "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Duke 1, Virginia 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869459",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Eamon%20McDermott%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Eamon%20McDermott%22%20Duke&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3166,10 +3206,10 @@
       "player_name": "Ethan Lay",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 6:00 PM",
       "game_context": "Abilene Christian vs Sacramento State",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
@@ -3776,34 +3816,38 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 18,
+        "found stats": 15,
         "No game listed today": 1,
-        "Game found, not in box score": 2
+        "Game found, not in box score": 5
       },
       "ESPN": {
-        "found stats": 1,
-        "No game listed today": 2
+        "found stats": 3,
+        "No game listed today": 2,
+        "Game found, not in box score": 1
       },
       "StatBroadcast": {
-        "player not in box": 1,
-        "No game listed today": 2
+        "Couldn't reach site": 4,
+        "No game listed today": 3
       },
       "NCAA.com": {
-        "Game found, not in box score": 2
+        "Game found, not in box score": 3
       },
       "Sidearm": {
-        "No game listed today": 2,
+        "No game listed today": 3,
         "player not in box": 1
       },
       "NCAA.org": {
-        "Game found, not in box score": 2
+        "Game found, not in box score": 2,
+        "Stale data — skipped": 1
       }
     },
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Eamon McDermott"
+    ],
     "total_clients": 87,
     "proxy_pool": {
       "pool": [
@@ -3811,12 +3855,24 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
         }
       }
     }
