@@ -27769,5 +27769,80 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-20T20:02:26.172532+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Justin Riemer",
+      "Tanner Gordon",
+      "Eamon McDermott",
+      "Luke Fithian"
+    ],
+    "total_clients": 86,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 13,
+        "Game found, not in box score": 5,
+        "No game listed today": 1,
+        "Stale data — skipped": 2
+      },
+      "StatBroadcast": {
+        "player not in box": 2,
+        "No game listed today": 6,
+        "Couldn't reach site": 2,
+        "found player": 4
+      },
+      "ESPN": {
+        "Game found, not in box score": 4,
+        "found stats": 2,
+        "No game listed today": 2
+      },
+      "NCAA.com": {
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 3,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 6,
+        "player not in box": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 3,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 2,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 3,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
