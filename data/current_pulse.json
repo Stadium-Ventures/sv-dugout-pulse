@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T13:05:58.860577+00:00",
+  "generated_at": "2026-05-21T13:20:23.729793+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -152,7 +152,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2184,35 +2184,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 4 at-bats",
       "social_search_url": "https://x.com/search?q=%22Boston%20Torres%22%20Wake%20Forest&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2857,7 +2837,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3162,7 +3142,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3323,7 +3303,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3859,30 +3839,29 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 22,
-        "Game found, not in box score": 7,
+        "found stats": 23,
+        "Game found, not in box score": 6,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 5,
-        "No game listed today": 7,
-        "found player": 1
+        "player not in box": 4,
+        "No game listed today": 6,
+        "found player": 2
       },
       "ESPN": {
-        "No game listed today": 7,
+        "No game listed today": 6,
         "found stats": 1
       },
       "NCAA.com": {
-        "Game found, not in box score": 5,
+        "Game found, not in box score": 4,
         "No game listed today": 2
       },
       "Sidearm": {
-        "No game listed today": 7,
+        "No game listed today": 6,
         "player not in box": 2
       },
       "NCAA.org": {
-        "Game found, not in box score": 6,
-        "found stats": 1
+        "Game found, not in box score": 6
       }
     },
     "blocked_sources": [],
@@ -3900,21 +3879,20 @@
       "active": "proxy-server.scraperapi.com",
       "dead": [
         "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
+          "success": 5,
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
+          "success": 1,
+          "blocked": 0
         }
       }
     }
