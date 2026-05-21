@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T19:50:05.968959+00:00",
+  "generated_at": "2026-05-21T20:05:25.319066+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -157,8 +157,8 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "4.0 IP, 2 H, 0 ER, 6 K, 3 BB",
-      "game_context": "App State 0, Coastal 3 | Inn 4",
+      "stats_summary": "4.0 IP, 2 H, ER, 6 K, 3 BB",
+      "game_context": "Appalachian State 1, Coastal Carolina 4 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -169,19 +169,15 @@
       "performance_grade": "✅ Good",
       "grade_reason": "6 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2055,10 +2051,10 @@
       "player_name": "Austin Amaral",
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
-      "stats_summary": "Game at 4:00 PM ET",
-      "game_context": "Jersey Shore BlueClaws vs Wilmington Blue Rocks | 4:00 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "4:00 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": {
@@ -2066,12 +2062,12 @@
         "date_full": "2026-05-22",
         "opponent": "Jersey Shore BlueClaws",
         "home_away": "vs",
-        "time": "6:35 PM ET",
-        "display": "vs Jersey Shore BlueClaws - Fri 05/22 6:35 PM ET"
+        "time": "4:30 PM ET",
+        "display": "vs Jersey Shore BlueClaws - Fri 05/22 4:30 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/821838",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/694544",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
       "data_source": "MLB Stats API",
@@ -2090,10 +2086,10 @@
       "player_name": "Austin Amaral",
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
-      "stats_summary": "Game at 4:05 PM ET",
-      "game_context": "Jersey Shore BlueClaws vs Wilmington Blue Rocks | 4:05 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "4:05 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": {
@@ -2101,12 +2097,12 @@
         "date_full": "2026-05-22",
         "opponent": "Jersey Shore BlueClaws",
         "home_away": "vs",
-        "time": "6:35 PM ET",
-        "display": "vs Jersey Shore BlueClaws - Fri 05/22 6:35 PM ET"
+        "time": "4:30 PM ET",
+        "display": "vs Jersey Shore BlueClaws - Fri 05/22 4:30 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/821856",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/694544",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
       "data_source": "MLB Stats API",
@@ -2989,41 +2985,6 @@
       "player_name": "Xavier Kolhosser",
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
-      "stats_summary": "Game at 4:30 PM ET",
-      "game_context": "Fort Myers Mighty Mussels vs Dunedin Blue Jays | 4:30 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM ET",
-      "game_date": "2026-05-21",
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Fri 05/22",
-        "date_full": "2026-05-22",
-        "opponent": "Dunedin Blue Jays",
-        "home_away": "@",
-        "time": "6:30 PM ET",
-        "display": "@ Dunedin Blue Jays - Fri 05/22 6:30 PM ET"
-      },
-      "box_score_url": "https://www.mlb.com/gameday/820673",
-      "player_profile_url": "https://www.mlb.com/player/828492",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Xavier%20Kolhosser%22%20Twins&f=live",
-      "data_source": "MLB Stats API",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Pitcher",
-        "roster_priority": 3
-      },
-      "game_number": 1
-    },
-    {
-      "player_name": "Xavier Kolhosser",
-      "team": "Fort Myers Mighty Mussels",
-      "level": "Pro",
       "stats_summary": "Game at 4:35 PM ET",
       "game_context": "Fort Myers Mighty Mussels vs Dunedin Blue Jays | 4:35 PM ET",
       "game_status": "Scheduled",
@@ -3153,7 +3114,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "5.0 IP, 10 H, 6 ER, 4 K, 1 BB",
-      "game_context": "Rhode Island 14, Saint Joseph's 7 | Inn 9",
+      "game_context": "Rhode Island 17, Saint Joseph's 9 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -3933,17 +3894,17 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 16,
-        "Game found, not in box score": 13,
-        "No game listed today": 1
+        "found stats": 17,
+        "No game listed today": 1,
+        "Game found, not in box score": 12
       },
       "StatBroadcast": {
-        "Couldn't reach site": 11,
-        "No game listed today": 9,
-        "found player": 1
+        "found player": 2,
+        "Couldn't reach site": 10,
+        "No game listed today": 9
       },
       "ESPN": {
-        "found stats": 4,
+        "found stats": 3,
         "Game found, not in box score": 5,
         "No game listed today": 5
       },
@@ -3975,7 +3936,7 @@
       "Drew Bellis",
       "Michael Gillen"
     ],
-    "total_clients": 85,
+    "total_clients": 84,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
@@ -3985,8 +3946,7 @@
       "active": "proxy-server.scraperapi.com",
       "dead": [
         "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
@@ -3994,12 +3954,12 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
+          "success": 8,
+          "blocked": 0
         }
       }
     }
