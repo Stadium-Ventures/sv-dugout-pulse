@@ -11079,17 +11079,17 @@
   },
   {
     "date": "2026-05-21",
-    "updated_at": "2026-05-21T23:05:18.775831+00:00",
+    "updated_at": "2026-05-21T23:25:09.525409+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.org",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
@@ -11394,15 +11394,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -11469,8 +11466,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -11498,8 +11495,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -11551,10 +11548,9 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -11692,6 +11688,17 @@
         "team": "Fort Myers Mighty Mussels",
         "level": "Pro",
         "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Xavier Kolhosser",
+        "team": "Fort Myers Mighty Mussels",
+        "level": "Pro",
+        "tier": null,
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
@@ -11717,10 +11724,9 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -11760,13 +11766,10 @@
         "game_status": "Live",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
           "StatBroadcast"
         ]
       },
@@ -11793,7 +11796,7 @@
         "team": "Columbus Clingstones",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
