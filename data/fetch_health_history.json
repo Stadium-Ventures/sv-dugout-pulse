@@ -34951,5 +34951,84 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-21T21:05:28.395727+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Henry Zatkowski",
+      "Will Rhine",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Michael Gillen",
+      "Zack Johnson"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 10,
+        "Game found, not in box score": 19,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "Couldn't reach site": 17,
+        "No game listed today": 12,
+        "found player": 1
+      },
+      "ESPN": {
+        "found stats": 7,
+        "Game found, not in box score": 8,
+        "No game listed today": 5
+      },
+      "NCAA.com": {
+        "Stale data — skipped": 5,
+        "Game found, not in box score": 5,
+        "No game listed today": 2,
+        "found stats": 1
+      },
+      "Sidearm": {
+        "No game listed today": 12,
+        "player not in box": 2,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 5,
+        "stale (yesterday)": 1,
+        "Game found, not in box score": 6
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 6,
+          "blocked": 1
+        }
+      }
+    }
   }
 ]
