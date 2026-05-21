@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T21:35:17.302409+00:00",
+  "generated_at": "2026-05-21T21:50:02.412964+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -508,7 +508,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "0-2, K",
-      "game_context": "Florida 2, Alabama 0 | Middle 4",
+      "game_context": "Florida 2, Alabama 0 | Top 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -1390,7 +1390,7 @@
       "player_name": "Jason Schiavone",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 4th (1B)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1491,7 +1491,7 @@
       "player_name": "Joseph Sullivan",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 6th (LF)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1586,7 +1586,7 @@
       "player_name": "Lucas Spence",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 3rd (CF)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1933,7 +1933,7 @@
       "player_name": "Will Bush",
       "team": "Corpus Christi Hooks",
       "level": "Pro",
-      "stats_summary": "Game at 7:35 PM ET",
+      "stats_summary": "In lineup — batting 5th (C)",
       "game_context": "Midland RockHounds vs Corpus Christi Hooks | 7:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "7:35 PM ET",
@@ -1968,7 +1968,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Florida 2, Alabama 0 | Middle 4",
+      "game_context": "Florida 2, Alabama 0 | Top 5",
       "game_status": "Live",
       "game_time": "8:00 PM ET",
       "game_date": "2026-05-21",
@@ -2166,17 +2166,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Home run",
+      "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2290,7 +2298,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "1-2",
-      "game_context": "Florida 2, Alabama 0 | Middle 4",
+      "game_context": "Florida 2, Alabama 0 | Top 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -2641,7 +2649,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Florida 2, Alabama 0 | Middle 4",
+      "game_context": "Florida 2, Alabama 0 | Top 5",
       "game_status": "Live",
       "game_time": "8:00 PM ET",
       "game_date": "2026-05-21",
@@ -3130,7 +3138,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "0-2",
-      "game_context": "Florida 2, Alabama 0 | Middle 4",
+      "game_context": "Florida 2, Alabama 0 | Top 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -3650,7 +3658,7 @@
       "team": "Alabama",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Florida 2, Alabama 0 | Middle 4",
+      "game_context": "Florida 2, Alabama 0 | Top 5",
       "game_status": "Live",
       "game_time": "8:00 PM ET",
       "game_date": "2026-05-21",
@@ -3970,25 +3978,26 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 15,
+        "found stats": 14,
         "No game listed today": 1,
-        "Game found, not in box score": 14
+        "Game found, not in box score": 15
       },
       "StatBroadcast": {
-        "found player": 6,
+        "found player": 5,
         "player not in box": 6,
         "No game listed today": 12,
-        "Couldn't reach site": 6
+        "Couldn't reach site": 7
       },
       "ESPN": {
         "found stats": 3,
         "Game found, not in box score": 8,
-        "No game listed today": 4
+        "No game listed today": 5
       },
       "NCAA.com": {
         "Game found, not in box score": 7,
         "Stale data — skipped": 3,
-        "No game listed today": 2
+        "No game listed today": 2,
+        "found stats": 1
       },
       "Sidearm": {
         "No game listed today": 12,
@@ -4033,11 +4042,11 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 5,
+          "success": 3,
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 8,
+          "success": 10,
           "blocked": 0
         }
       }
