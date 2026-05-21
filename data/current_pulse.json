@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T20:29:08.114604+00:00",
+  "generated_at": "2026-05-21T20:35:32.531122+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -157,8 +157,8 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "4.0 IP, 2 H, 6 K, 3 BB",
-      "game_context": "Appalachian State 1, Coastal Carolina 3 | Bottom 6",
+      "stats_summary": "4.0 IP, 2 H, 0 ER, 6 K, 3 BB",
+      "game_context": "App State 2, Coastal 4 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -169,15 +169,19 @@
       "performance_grade": "✅ Good",
       "grade_reason": "6 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2536,7 +2540,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "Oklahoma State 12, UCF 6 | Final",
       "game_status": "Final",
-      "game_time": "12:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -2561,7 +2565,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "Sidearm",
@@ -3429,7 +3433,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "Oklahoma State 12, UCF 6 | Final",
       "game_status": "Final",
-      "game_time": "12:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -3454,7 +3458,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "Sidearm",
@@ -3894,23 +3898,23 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 17,
-        "No game listed today": 1,
-        "Game found, not in box score": 12
+        "found stats": 16,
+        "Game found, not in box score": 13,
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "found player": 2,
-        "Couldn't reach site": 10,
-        "No game listed today": 9
+        "Couldn't reach site": 11,
+        "No game listed today": 9,
+        "found player": 1
       },
       "ESPN": {
-        "found stats": 3,
+        "found stats": 4,
         "Game found, not in box score": 5,
         "No game listed today": 5
       },
       "NCAA.com": {
-        "Stale data — skipped": 4,
-        "Game found, not in box score": 3,
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 5,
         "No game listed today": 2,
         "found stats": 1
       },
@@ -3948,7 +3952,7 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
@@ -3956,7 +3960,7 @@
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 7,
+          "success": 8,
           "blocked": 0
         }
       }
