@@ -30875,5 +30875,81 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-21T05:35:07.430181+00:00",
+    "severity": "warning",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Dax Kilby",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Justin Riemer",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Alex Kranzler",
+      "Austin Amaral",
+      "Davis Sharpe",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Eamon McDermott",
+      "Lucas Steele",
+      "Luke Fithian",
+      "Peyton Glavine"
+    ],
+    "total_clients": 86,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 11,
+        "No game listed today": 1,
+        "found stats": 9
+      },
+      "StatBroadcast": {
+        "player not in box": 7,
+        "No game listed today": 11,
+        "found player": 9
+      },
+      "ESPN": {
+        "No game listed today": 3,
+        "Game found, not in box score": 8,
+        "found stats": 1
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 7,
+        "Stale data — skipped": 3,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 11,
+        "player not in box": 4
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 9,
+        "Stale data — skipped": 1,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 8,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
