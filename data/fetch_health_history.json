@@ -33623,5 +33623,74 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-21T16:51:58.598787+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Henry Zatkowski",
+      "Drew Bellis",
+      "Michael Gillen"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 18,
+        "Game found, not in box score": 11,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "player not in box": 4,
+        "No game listed today": 11,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 6,
+        "found stats": 1,
+        "Game found, not in box score": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 5,
+        "Stale data — skipped": 4,
+        "No game listed today": 2
+      },
+      "StatBroadcast": {
+        "No game listed today": 11,
+        "player not in box": 7,
+        "found player": 4
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 6,
+        "Stale data — skipped": 4,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 3,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 5,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
