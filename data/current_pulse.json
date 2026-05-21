@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T12:37:27.434046+00:00",
+  "generated_at": "2026-05-21T12:50:08.199519+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -3902,10 +3902,16 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 7,
           "blocked": 0
         }
