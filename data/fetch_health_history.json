@@ -31564,5 +31564,90 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-21T07:50:01.629046+00:00",
+    "severity": "warning",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Dax Kilby",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Justin Riemer",
+      "Tanner Gordon",
+      "Ty Finkbeiner",
+      "Alex Kranzler",
+      "Austin Amaral",
+      "Davis Sharpe",
+      "Ryan DeSanto",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Eamon McDermott",
+      "Lucas Steele",
+      "Luke Fithian",
+      "Peyton Glavine"
+    ],
+    "total_clients": 86,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 11,
+        "No game listed today": 1,
+        "found stats": 9
+      },
+      "StatBroadcast": {
+        "Couldn't reach site": 7,
+        "No game listed today": 11,
+        "found player": 9
+      },
+      "ESPN": {
+        "No game listed today": 3,
+        "Game found, not in box score": 8,
+        "found stats": 1
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 10,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 11,
+        "player not in box": 4
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 9,
+        "No game listed today": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 7,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T07:35:38.775094+00:00",
+  "generated_at": "2026-05-21T07:50:01.629046+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1266,7 +1266,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1816,7 +1816,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -4051,7 +4051,8 @@
         "player not in box": 4
       },
       "NCAA.org": {
-        "Game found, not in box score": 11
+        "Game found, not in box score": 9,
+        "No game listed today": 2
       }
     },
     "blocked_sources": [],
@@ -4089,8 +4090,7 @@
       "active": "proxy-server.scraperapi.com",
       "dead": [
         "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
@@ -4102,8 +4102,8 @@
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
+          "success": 7,
+          "blocked": 0
         }
       }
     }
