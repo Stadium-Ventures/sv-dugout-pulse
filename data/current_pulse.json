@@ -3902,11 +3902,17 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 7,
+          "success": 6,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 1,
           "blocked": 0
         }
       }
