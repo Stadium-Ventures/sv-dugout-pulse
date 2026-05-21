@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T13:50:30.243045+00:00",
+  "generated_at": "2026-05-21T14:05:28.325580+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -803,10 +803,10 @@
       "player_name": "Adam McKelvey",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
+      "stats_summary": "Game at 11:00 AM",
       "game_context": "Virginia vs Georgia Tech",
       "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "game_time": "11:00 AM",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -993,10 +993,10 @@
       "player_name": "Caleb Daniel",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
+      "stats_summary": "Game at 11:00 AM",
       "game_context": "Virginia vs Georgia Tech",
       "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "game_time": "11:00 AM",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -1221,10 +1221,10 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
+      "stats_summary": "Game at 11:00 AM",
       "game_context": "Virginia vs Georgia Tech",
       "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "game_time": "11:00 AM",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -1375,10 +1375,10 @@
       "player_name": "Joe Tiroly",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
+      "stats_summary": "Game at 11:00 AM",
       "game_context": "Virginia vs Georgia Tech",
       "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "game_time": "11:00 AM",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -2294,23 +2294,27 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
-      "game_context": "The Citadel vs Mercer",
-      "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "stats_summary": "0-0, BB",
+      "game_context": "The Citadel 1, Mercer 0 | End 3",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869649",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660610",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3846,7 +3850,7 @@
       "StatBroadcast": {
         "player not in box": 4,
         "No game listed today": 6,
-        "found player": 2
+        "found player": 3
       },
       "ESPN": {
         "No game listed today": 6,
@@ -3880,7 +3884,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 6,
+          "success": 7,
           "blocked": 0
         }
       }
