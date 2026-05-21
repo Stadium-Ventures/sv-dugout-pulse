@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T01:56:29.755434+00:00",
+  "generated_at": "2026-05-21T02:04:34.831901+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -212,7 +212,7 @@
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660407",
+      "box_score_url": "https://www.goccusports.com/boxscore.aspx?id=24012",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cam%20Flukey%22&btnI=",
       "performance_grade": "— DNP",
       "grade_reason": "",
@@ -224,7 +224,7 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "player not in box"
         },
         {
@@ -386,7 +386,7 @@
       "team": "Hillsboro Hops",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Hillsboro Hops 0, Eugene Emeralds 0 | Top 2",
+      "game_context": "Hillsboro Hops 2, Eugene Emeralds 0 | Top 2",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-21",
@@ -490,7 +490,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Boston Red Sox 4, Kansas City Royals 3 | Top 8",
+      "game_context": "Boston Red Sox 4, Kansas City Royals 3 | Middle 8",
       "game_status": "Live",
       "game_time": "7:40 PM ET",
       "game_date": "2026-05-20",
@@ -1427,7 +1427,7 @@
       "team": "Somerset Patriots",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Somerset Patriots 8, Chesapeake Baysox 12 | End 6",
+      "game_context": "Somerset Patriots 8, Chesapeake Baysox 12 | Top 7",
       "game_status": "Live",
       "game_time": "6:35 PM ET",
       "game_date": "2026-05-20",
@@ -1461,7 +1461,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-3, 2 K",
-      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | End 7",
+      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-20",
@@ -1558,7 +1558,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-3",
-      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | End 7",
+      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-20",
@@ -1653,7 +1653,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-2, SB, BB",
-      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | End 7",
+      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-20",
@@ -1971,7 +1971,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Hillsboro Hops 0, Eugene Emeralds 0 | Top 2",
+      "game_context": "Hillsboro Hops 2, Eugene Emeralds 0 | Top 2",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-21",
@@ -2004,23 +2004,47 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game at 10:00 PM",
-      "game_context": "Washington vs Michigan",
-      "game_status": "Scheduled",
-      "game_time": "10:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Washington 0, Michigan 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "10:00 PM ET",
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869730",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660394",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -2037,7 +2061,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | End 7",
+      "game_context": "Midland RockHounds 1, Corpus Christi Hooks 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-20",
@@ -2111,7 +2135,7 @@
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660623",
+      "box_score_url": "https://floridagators.com/boxscore.aspx?id=27672",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Alex%20Kranzler%22&btnI=",
       "performance_grade": "— DNP",
       "grade_reason": "",
@@ -2123,7 +2147,7 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "player not in box"
         },
         {
@@ -2329,7 +2353,7 @@
       "team": "Arkansas Travelers",
       "level": "Pro",
       "stats_summary": "1-3, HR, 2 RBI, R",
-      "game_context": "Springfield Cardinals 0, Arkansas Travelers 4 | Bottom 5",
+      "game_context": "Springfield Cardinals 0, Arkansas Travelers 4 | Top 6",
       "game_status": "Live",
       "game_time": "6:10 PM ET",
       "game_date": "2026-05-20",
@@ -2843,7 +2867,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 4, San Jose Giants 2 | Top 4",
+      "game_context": "Stockton Ports 4, San Jose Giants 2 | Bottom 4",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-21",
@@ -2938,7 +2962,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tacoma Rainiers 6, Salt Lake Bees 0 | End 5",
+      "game_context": "Tacoma Rainiers 6, Salt Lake Bees 0 | Top 6",
       "game_status": "Live",
       "game_time": "8:35 PM ET",
       "game_date": "2026-05-21",
@@ -2972,7 +2996,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Athletics 1, ACL Guardians 2 | Top 3",
+      "game_context": "ACL Athletics 1, ACL Guardians 3 | Bottom 3",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-21",
@@ -3177,7 +3201,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "In lineup — batting 7th (LF)",
-      "game_context": "Vancouver Canadians 0, Spokane Indians 0 | Top 2",
+      "game_context": "Vancouver Canadians 0, Spokane Indians 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-21",
@@ -3441,7 +3465,7 @@
       "team": "Auburn",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "LSU 0, Auburn 0 | Bottom 3",
+      "game_context": "LSU 0, Auburn 0 | Top 4",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-20",
@@ -3503,7 +3527,7 @@
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660392",
+      "box_score_url": "https://ohiostatebuckeyes.com/boxscore.aspx?id=22471",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Luke%20Fithian%22&btnI=",
       "performance_grade": "— DNP",
       "grade_reason": "",
@@ -3515,7 +3539,7 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
+          "source": "Sidearm",
           "outcome": "player not in box"
         },
         {
@@ -3762,8 +3786,8 @@
       "player_name": "Braxton Fulford",
       "team": "Oklahoma City Comets",
       "level": "Pro",
-      "stats_summary": "1-2, 2 RBI, 2 R, BB",
-      "game_context": "Reno Aces 1, Oklahoma City Comets 5 | Bottom 7",
+      "stats_summary": "1-3, 2 RBI, 2 R, BB",
+      "game_context": "Reno Aces 1, Oklahoma City Comets 5 | Top 8",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-20",
@@ -3939,7 +3963,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Boston Red Sox 4, Kansas City Royals 3 | Top 8",
+      "game_context": "Boston Red Sox 4, Kansas City Royals 3 | Middle 8",
       "game_status": "Live",
       "game_time": "7:40 PM ET",
       "game_date": "2026-05-20",
@@ -4000,32 +4024,33 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 10,
+        "Game found, not in box score": 11,
         "No game listed today": 1,
-        "found stats": 10
+        "found stats": 9
       },
       "StatBroadcast": {
-        "player not in box": 9,
-        "No game listed today": 10,
+        "player not in box": 7,
+        "No game listed today": 11,
         "found player": 8
       },
       "ESPN": {
         "No game listed today": 3,
         "Game found, not in box score": 7,
-        "found stats": 1
+        "found stats": 1,
+        "Stale data — skipped": 1
       },
       "NCAA.com": {
         "Game found, not in box score": 6,
-        "Stale data — skipped": 3,
+        "Stale data — skipped": 4,
         "stale (yesterday)": 1
       },
       "Sidearm": {
-        "No game listed today": 10,
-        "player not in box": 1
+        "No game listed today": 11,
+        "player not in box": 4
       },
       "NCAA.org": {
         "Game found, not in box score": 6,
-        "Stale data — skipped": 3,
+        "Stale data — skipped": 4,
         "stale (yesterday)": 1
       }
     },
@@ -4042,6 +4067,7 @@
       "Jack Cebert",
       "Justin Riemer",
       "Tanner Gordon",
+      "Ty Finkbeiner",
       "Alex Kranzler",
       "Austin Amaral",
       "Davis Sharpe",
@@ -4068,11 +4094,11 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 3,
+          "success": 6,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 6,
+          "success": 1,
           "blocked": 0
         }
       }
