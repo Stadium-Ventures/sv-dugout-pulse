@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T20:35:32.531122+00:00",
+  "generated_at": "2026-05-21T20:50:02.099265+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -39,10 +39,10 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
+      "stats_summary": "Game at 6:30 PM",
       "game_context": "USC Upstate vs Winthrop",
       "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "game_time": "6:30 PM",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -157,8 +157,8 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "4.0 IP, 2 H, 0 ER, 6 K, 3 BB",
-      "game_context": "App State 2, Coastal 4 | Inn 6",
+      "stats_summary": "4.0 IP, 2 H, 6 K, 3 BB",
+      "game_context": "Appalachian State 2, Coastal Carolina 5 | Bottom 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -169,19 +169,15 @@
       "performance_grade": "✅ Good",
       "grade_reason": "6 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -511,22 +507,30 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Game at 4:30 PM",
-      "game_context": "Florida vs Alabama",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM",
+      "stats_summary": "0-1, K",
+      "game_context": "Florida 0, Alabama 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869485",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660627",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -820,7 +824,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1034,7 +1038,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1286,7 +1290,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1967,23 +1971,47 @@
       "player_name": "Will Rhine",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 4:30 PM",
-      "game_context": "Florida vs Alabama",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Florida 0, Alabama 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "8:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869485",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660627",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Will%20Rhine%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Will%20Rhine%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -2273,22 +2301,30 @@
       "player_name": "Brady Neal",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 4:30 PM",
-      "game_context": "Florida vs Alabama",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM",
+      "stats_summary": "1-1",
+      "game_context": "Florida 0, Alabama 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869485",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660627",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brady%20Neal%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Brady%20Neal%22%20Alabama&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -2577,7 +2613,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2620,23 +2656,47 @@
       "player_name": "Evan Taylor",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 4:30 PM",
-      "game_context": "Florida vs Alabama",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Florida 0, Alabama 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "8:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869485",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660627",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Evan%20Taylor%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Evan%20Taylor%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3085,22 +3145,30 @@
       "player_name": "Bryce Fowler",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 4:30 PM",
-      "game_context": "Florida vs Alabama",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM",
+      "stats_summary": "0-1",
+      "game_context": "Florida 0, Alabama 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869485",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660627",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bryce%20Fowler%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Bryce%20Fowler%22%20Alabama&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -3470,7 +3538,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3601,23 +3669,47 @@
       "player_name": "Zack Johnson",
       "team": "Alabama",
       "level": "NCAA",
-      "stats_summary": "Game at 4:30 PM",
-      "game_context": "Florida vs Alabama",
-      "game_status": "Scheduled",
-      "game_time": "4:30 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Florida 0, Alabama 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "8:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869485",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660627",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Zack%20Johnson%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Zack%20Johnson%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3898,33 +3990,35 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 16,
-        "Game found, not in box score": 13,
-        "No game listed today": 1
+        "found stats": 11,
+        "No game listed today": 1,
+        "Game found, not in box score": 18
       },
       "StatBroadcast": {
-        "Couldn't reach site": 11,
-        "No game listed today": 9,
-        "found player": 1
+        "found player": 2,
+        "Couldn't reach site": 16,
+        "No game listed today": 12
       },
       "ESPN": {
-        "found stats": 4,
-        "Game found, not in box score": 5,
+        "found stats": 6,
+        "Game found, not in box score": 8,
         "No game listed today": 5
       },
       "NCAA.com": {
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 5,
         "Game found, not in box score": 5,
         "No game listed today": 2,
         "found stats": 1
       },
       "Sidearm": {
-        "No game listed today": 9,
+        "No game listed today": 12,
         "player not in box": 2,
         "found player": 1
       },
       "NCAA.org": {
-        "No game listed today": 9
+        "Stale data — skipped": 6,
+        "No game listed today": 4,
+        "Game found, not in box score": 2
       }
     },
     "blocked_sources": [],
@@ -3935,8 +4029,11 @@
       "Adam McKelvey",
       "Caleb Daniel",
       "Henry Zatkowski",
+      "Will Rhine",
       "Drew Bellis",
-      "Michael Gillen"
+      "Evan Taylor",
+      "Michael Gillen",
+      "Zack Johnson"
     ],
     "total_clients": 84,
     "proxy_pool": {
@@ -3948,11 +4045,12 @@
       "active": "proxy-server.scraperapi.com",
       "dead": [
         "geo.iproyal.com",
-        "p.webshare.io"
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
@@ -3960,8 +4058,8 @@
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 8,
-          "blocked": 0
+          "success": 9,
+          "blocked": 1
         }
       }
     }
