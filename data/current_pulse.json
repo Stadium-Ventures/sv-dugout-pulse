@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T19:35:18.149160+00:00",
+  "generated_at": "2026-05-21T19:50:05.968959+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -157,8 +157,8 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "4.0 IP, 6 K, 3 BB",
-      "game_context": "Appalachian State 0, Coastal Carolina 3 | Bottom 4",
+      "stats_summary": "4.0 IP, 2 H, 0 ER, 6 K, 3 BB",
+      "game_context": "App State 0, Coastal 3 | Inn 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -169,15 +169,19 @@
       "performance_grade": "✅ Good",
       "grade_reason": "6 strikeouts with good command",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -796,7 +800,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1010,7 +1014,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1262,7 +1266,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -2138,17 +2142,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Home run",
+      "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2525,16 +2537,16 @@
       "player_name": "Drew Bellis",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Oklahoma State 12, UCF 6 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Oklahoma State 12, UCF 6 | Final",
+      "game_status": "Final",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660035",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Drew%20Bellis%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Drew%20Bellis%22%20UCF&f=live",
       "data_source": "D1Baseball",
@@ -2545,7 +2557,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3141,7 +3153,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "5.0 IP, 10 H, 6 ER, 4 K, 1 BB",
-      "game_context": "Rhode Island 10, Saint Joseph's 7 | Inn 8",
+      "game_context": "Rhode Island 14, Saint Joseph's 7 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -3453,16 +3465,16 @@
       "player_name": "Michael Gillen",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Oklahoma State 12, UCF 6 | Bottom 9",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Oklahoma State 12, UCF 6 | Final",
+      "game_status": "Final",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660035",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Michael%20Gillen%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Gillen%22%20UCF&f=live",
       "data_source": "D1Baseball",
@@ -3473,7 +3485,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3921,25 +3933,25 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 18,
-        "No game listed today": 1,
-        "Game found, not in box score": 11
+        "found stats": 16,
+        "Game found, not in box score": 13,
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "found player": 3,
-        "player not in box": 5,
+        "Couldn't reach site": 11,
         "No game listed today": 9,
-        "Couldn't reach site": 4
+        "found player": 1
       },
       "ESPN": {
-        "found stats": 3,
+        "found stats": 4,
         "Game found, not in box score": 5,
-        "No game listed today": 4
+        "No game listed today": 5
       },
       "NCAA.com": {
         "Stale data — skipped": 4,
         "Game found, not in box score": 3,
-        "No game listed today": 2
+        "No game listed today": 2,
+        "found stats": 1
       },
       "Sidearm": {
         "No game listed today": 9,
@@ -3973,20 +3985,21 @@
       "active": "proxy-server.scraperapi.com",
       "dead": [
         "geo.iproyal.com",
-        "p.webshare.io"
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 3,
+          "success": 0,
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 5,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
         }
       }
     }
