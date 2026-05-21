@@ -824,7 +824,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1038,7 +1038,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1290,7 +1290,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -4113,7 +4113,7 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 7,
+    "blocked_event_count": 8,
     "blocked_clients": [
       "Henry Zatkowski",
       "Mason Eckelman",
@@ -4156,7 +4156,7 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
@@ -4165,7 +4165,7 @@
         },
         "proxy-server.scraperapi.com": {
           "success": 0,
-          "blocked": 8
+          "blocked": 9
         }
       }
     }
