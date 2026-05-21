@@ -33189,5 +33189,66 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-21T15:05:19.029573+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Henry Zatkowski"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 20,
+        "Game found, not in box score": 9,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "player not in box": 4,
+        "No game listed today": 9,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 6,
+        "found stats": 1,
+        "Stale data — skipped": 3
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 5,
+        "Stale data — skipped": 2,
+        "No game listed today": 2
+      },
+      "StatBroadcast": {
+        "No game listed today": 9,
+        "player not in box": 5,
+        "found player": 3
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 6,
+        "Stale data — skipped": 2,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 6,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
