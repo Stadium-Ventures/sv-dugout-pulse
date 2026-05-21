@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T07:19:59.493688+00:00",
+  "generated_at": "2026-05-21T07:35:38.775094+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -59,7 +59,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -169,7 +169,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1246,7 +1246,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -2007,7 +2007,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "Washington 7, Michigan 1 | Final",
       "game_status": "Final",
-      "game_time": "10:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-20",
       "is_yesterday": false,
       "next_game": null,
@@ -2024,7 +2024,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -2032,7 +2032,7 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "Sidearm",
@@ -2168,7 +2168,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3053,7 +3053,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3326,7 +3326,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3488,7 +3488,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -4033,7 +4033,7 @@
         "found stats": 9
       },
       "StatBroadcast": {
-        "player not in box": 7,
+        "Couldn't reach site": 7,
         "No game listed today": 11,
         "found player": 9
       },
@@ -4043,8 +4043,7 @@
         "found stats": 1
       },
       "NCAA.com": {
-        "Game found, not in box score": 9,
-        "Stale data — skipped": 1,
+        "Game found, not in box score": 10,
         "stale (yesterday)": 1
       },
       "Sidearm": {
@@ -4052,8 +4051,7 @@
         "player not in box": 4
       },
       "NCAA.org": {
-        "Game found, not in box score": 10,
-        "stale (yesterday)": 1
+        "Game found, not in box score": 11
       }
     },
     "blocked_sources": [],
@@ -4088,12 +4086,24 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 7,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
         }
       }
     }
