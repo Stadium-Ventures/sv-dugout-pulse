@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T16:05:51.626346+00:00",
+  "generated_at": "2026-05-21T16:20:22.310310+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -220,9 +220,9 @@
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
-      "stats_summary": "Game at 12:05 PM ET",
-      "game_context": "Louisville Bats vs Columbus Clippers | 12:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Louisville Bats 0, Columbus Clippers 0 | End 1",
+      "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
@@ -236,7 +236,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/816800",
       "player_profile_url": "https://www.mlb.com/player/695534",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Chase%20Petty%22%20Reds&f=live",
       "data_source": "MLB Stats API",
@@ -804,7 +804,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 0, Georgia Tech 1 | Top 4",
+      "game_context": "Virginia 2, Georgia Tech 1 | Bottom 4",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-21",
@@ -1018,7 +1018,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Virginia 0, Georgia Tech 1 | Top 4",
+      "game_context": "Virginia 2, Georgia Tech 1 | Bottom 4",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-21",
@@ -1270,7 +1270,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 0, Georgia Tech 1 | Top 4",
+      "game_context": "Virginia 2, Georgia Tech 1 | Bottom 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -1448,7 +1448,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "1-2, K",
-      "game_context": "Virginia 0, Georgia Tech 1 | Top 4",
+      "game_context": "Virginia 2, Georgia Tech 1 | Bottom 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -2371,8 +2371,8 @@
       "team": "Mercer",
       "level": "NCAA",
       "stats_summary": "1-3, BB, K, 2B",
-      "game_context": "The Citadel 5, Mercer 0 | Top 9",
-      "game_status": "Live",
+      "game_context": "The Citadel 9, Mercer 2 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-21",
       "is_yesterday": false,
@@ -2548,23 +2548,47 @@
       "player_name": "Drew Bellis",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "Oklahoma State vs UCF",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Oklahoma State 1, UCF 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869495",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660035",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Drew%20Bellis%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Drew%20Bellis%22%20UCF&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3475,23 +3499,47 @@
       "player_name": "Michael Gillen",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "Oklahoma State vs UCF",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Oklahoma State 1, UCF 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869495",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660035",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Michael%20Gillen%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Gillen%22%20UCF&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3919,33 +3967,33 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 20,
-        "Game found, not in box score": 9,
+        "found stats": 18,
+        "Game found, not in box score": 11,
         "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 4,
-        "No game listed today": 9,
+        "No game listed today": 11,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 6,
         "found stats": 1,
-        "Game found, not in box score": 3
+        "Game found, not in box score": 5
       },
       "NCAA.com": {
         "Game found, not in box score": 5,
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 4,
         "No game listed today": 2
       },
       "StatBroadcast": {
-        "No game listed today": 9,
-        "player not in box": 5,
+        "No game listed today": 11,
+        "player not in box": 7,
         "found player": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 6,
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 4,
         "stale (yesterday)": 1
       }
     },
@@ -3956,7 +4004,9 @@
     "fallback_clients": [
       "Adam McKelvey",
       "Caleb Daniel",
-      "Henry Zatkowski"
+      "Henry Zatkowski",
+      "Drew Bellis",
+      "Michael Gillen"
     ],
     "total_clients": 85,
     "proxy_pool": {
@@ -3969,7 +4019,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 6,
+          "success": 8,
           "blocked": 0
         }
       }
