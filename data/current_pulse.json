@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T16:51:58.598787+00:00",
+  "generated_at": "2026-05-21T17:05:17.671898+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -221,7 +221,7 @@
       "team": "Louisville Bats",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisville Bats 1, Columbus Clippers 0 | Bottom 3",
+      "game_context": "Louisville Bats 1, Columbus Clippers 1 | Bottom 4",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-21",
@@ -804,7 +804,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 4, Georgia Tech 4 | Top 5",
+      "game_context": "Virginia 6, Georgia Tech 4 | Bottom 5",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-21",
@@ -1018,7 +1018,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Virginia 4, Georgia Tech 4 | Top 5",
+      "game_context": "Virginia 6, Georgia Tech 4 | Bottom 5",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-21",
@@ -1270,7 +1270,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 4, Georgia Tech 4 | Top 5",
+      "game_context": "Virginia 6, Georgia Tech 4 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -1448,7 +1448,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "2-3, HR, 2 RBI, R, K",
-      "game_context": "Virginia 4, Georgia Tech 4 | Top 5",
+      "game_context": "Virginia 6, Georgia Tech 4 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -2549,7 +2549,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Oklahoma State 1, UCF 1 | Top 3",
+      "game_context": "Oklahoma State 1, UCF 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
@@ -3195,7 +3195,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "1.0 IP, H, K",
-      "game_context": "Rhode Island 0, Saint Josephs 0 | Bottom 1",
+      "game_context": "Rhode Island 0, Saint Josephs 1 | Bottom 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -3504,7 +3504,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Oklahoma State 1, UCF 1 | Top 3",
+      "game_context": "Oklahoma State 1, UCF 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
@@ -4019,15 +4019,17 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 3,
+          "success": 4,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 5,
+          "success": 4,
           "blocked": 0
         }
       }
