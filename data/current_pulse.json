@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T18:19:50.026830+00:00",
+  "generated_at": "2026-05-21T18:34:08.239970+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -157,8 +157,8 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "1.0 IP, K, 2 BB",
-      "game_context": "Appalachian State 0, Coastal Carolina 0 | Bottom 1",
+      "stats_summary": "1.0 IP, 0 ER, 1 K, 2 BB",
+      "game_context": "App State 0, Coastal 0 | Inn 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -169,15 +169,19 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "1 IP, 0 ER",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -194,7 +198,7 @@
       "team": "Louisville Bats",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Louisville Bats 4, Columbus Clippers 2 | Middle 8",
+      "game_context": "Louisville Bats 4, Columbus Clippers 2 | Top 9",
       "game_status": "Live",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-21",
@@ -777,9 +781,9 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 10, Georgia Tech 12 | Bottom 8",
+      "game_context": "Virginia 10, Georgia Tech 16 | Bottom 8",
       "game_status": "Live",
-      "game_time": "3:00 PM ET",
+      "game_time": "11:00 AM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -796,7 +800,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -816,7 +820,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -991,9 +995,9 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Virginia 10, Georgia Tech 12 | Bottom 8",
+      "game_context": "Virginia 10, Georgia Tech 16 | Bottom 8",
       "game_status": "Live",
-      "game_time": "3:00 PM ET",
+      "game_time": "11:00 AM ET",
       "game_date": "2026-05-21",
       "is_yesterday": false,
       "next_game": null,
@@ -1010,7 +1014,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1030,7 +1034,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1243,7 +1247,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 10, Georgia Tech 12 | Bottom 8",
+      "game_context": "Virginia 10, Georgia Tech 16 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -1262,7 +1266,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1282,7 +1286,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1421,7 +1425,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "3-4, HR, 3 RBI, R, BB, K",
-      "game_context": "Virginia 10, Georgia Tech 12 | Bottom 8",
+      "game_context": "Virginia 10, Georgia Tech 16 | Inn 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -1432,15 +1436,19 @@
       "performance_grade": "🔥 Standout",
       "grade_reason": "Home run + 3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2031,7 +2039,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2134,17 +2142,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Home run",
+      "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2522,7 +2538,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Oklahoma State 5, UCF 5 | Top 7",
+      "game_context": "Oklahoma State 5, UCF 5 | Bottom 7",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
@@ -2561,7 +2577,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3137,7 +3153,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "5.0 IP, 10 H, 6 ER, 4 K, 1 BB",
-      "game_context": "Rhode Island 6, Saint Joseph's 1 | Inn 5",
+      "game_context": "Rhode Island 10, Saint Joseph's 1 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-21",
@@ -3216,7 +3232,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3377,7 +3393,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3433,7 +3449,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3450,7 +3466,7 @@
       "team": "UCF",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Oklahoma State 5, UCF 5 | Top 7",
+      "game_context": "Oklahoma State 5, UCF 5 | Bottom 7",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-21",
@@ -3489,7 +3505,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3822,7 +3838,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Memphis Redbirds 0, Iowa Cubs 0 | Bottom 5",
+      "game_context": "Memphis Redbirds 1, Iowa Cubs 0 | Bottom 6",
       "game_status": "Live",
       "game_time": "1:08 PM ET",
       "game_date": "2026-05-21",
@@ -3917,25 +3933,25 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 19,
-        "No game listed today": 1,
-        "Game found, not in box score": 10
+        "found stats": 16,
+        "Game found, not in box score": 13,
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "found player": 4,
-        "player not in box": 3,
+        "Couldn't reach site": 11,
         "No game listed today": 9,
-        "Couldn't reach site": 5
+        "found player": 1
       },
       "ESPN": {
-        "found stats": 2,
+        "found stats": 4,
         "Game found, not in box score": 5,
-        "No game listed today": 4
+        "No game listed today": 5
       },
       "NCAA.com": {
         "Stale data — skipped": 4,
         "Game found, not in box score": 3,
-        "No game listed today": 2
+        "No game listed today": 2,
+        "found stats": 1
       },
       "Sidearm": {
         "No game listed today": 9,
@@ -3943,7 +3959,8 @@
         "found player": 1
       },
       "NCAA.org": {
-        "No game listed today": 9
+        "Stale data — skipped": 5,
+        "Game found, not in box score": 4
       }
     },
     "blocked_sources": [],
@@ -3967,8 +3984,7 @@
       "active": "proxy-server.scraperapi.com",
       "dead": [
         "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
@@ -3976,12 +3992,12 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 3,
+          "success": 0,
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
-          "success": 2,
-          "blocked": 1
+          "success": 9,
+          "blocked": 0
         }
       }
     }
