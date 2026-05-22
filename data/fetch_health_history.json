@@ -42525,5 +42525,66 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T21:20:04.866752+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Myles Bailey",
+      "Lee Sowers"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 11,
+        "Game found, not in box score": 15,
+        "Stale data — skipped": 2,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "player not in box": 8,
+        "No game listed today": 12,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 13,
+        "Game found, not in box score": 4,
+        "found stats": 1
+      },
+      "NCAA.com": {
+        "No game listed today": 2,
+        "found stats": 5,
+        "Stale data — skipped": 1,
+        "Game found, not in box score": 9
+      },
+      "StatBroadcast": {
+        "No game listed today": 12,
+        "player not in box": 7,
+        "found player": 3
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 9,
+        "Stale data — skipped": 1,
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 7,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
