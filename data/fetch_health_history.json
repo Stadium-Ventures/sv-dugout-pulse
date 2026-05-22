@@ -40702,5 +40702,79 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T14:20:05.350171+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Braydon Kersey",
+      "Drew Bellis"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 14,
+        "No game listed today": 1,
+        "Game found, not in box score": 13
+      },
+      "ESPN": {
+        "found stats": 2,
+        "No game listed today": 12
+      },
+      "Sidearm": {
+        "player not in box": 7,
+        "No game listed today": 9,
+        "found player": 1
+      },
+      "NCAA.com": {
+        "found stats": 3,
+        "Game found, not in box score": 8,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "player not in box": 3,
+        "No game listed today": 9,
+        "found player": 1,
+        "blocked (Cloudflare 403)": 2,
+        "Couldn't reach site": 1
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 7,
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 3
+        }
+      }
+    }
   }
 ]

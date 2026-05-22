@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T14:04:50.833047+00:00",
+  "generated_at": "2026-05-22T14:20:05.350171+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -814,7 +814,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -999,7 +999,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1251,7 +1251,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1421,35 +1421,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Home run + 3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2364,7 +2344,7 @@
       "team": "Mercer",
       "level": "NCAA",
       "stats_summary": "0-0, BB",
-      "game_context": "The Citadel 4, Mercer 1 | Inn 3",
+      "game_context": "The Citadel 7, Mercer 2 | Inn 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -3862,45 +3842,44 @@
     }
   ],
   "health": {
-    "severity": "critical",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 13,
+        "found stats": 14,
         "No game listed today": 1,
-        "Game found, not in box score": 14
+        "Game found, not in box score": 13
       },
       "ESPN": {
         "found stats": 2,
-        "No game listed today": 13
+        "No game listed today": 12
       },
       "Sidearm": {
         "player not in box": 7,
-        "No game listed today": 10,
+        "No game listed today": 9,
         "found player": 1
       },
       "NCAA.com": {
         "found stats": 3,
         "Game found, not in box score": 8,
-        "No game listed today": 2
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 5,
-        "No game listed today": 10,
-        "Couldn't reach site": 2
+        "player not in box": 3,
+        "No game listed today": 9,
+        "found player": 1,
+        "blocked (Cloudflare 403)": 2,
+        "Couldn't reach site": 1
       },
       "NCAA.org": {
         "Game found, not in box score": 7,
-        "found stats": 3
+        "found stats": 2
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 5,
+    "blocked_event_count": 2,
     "blocked_clients": [
-      "Adam McKelvey",
-      "Caleb Daniel",
-      "Joe Tiroly",
       "Braydon Kersey",
       "Drew Bellis"
     ],
@@ -3921,7 +3900,7 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
@@ -3930,7 +3909,7 @@
         },
         "proxy-server.scraperapi.com": {
           "success": 0,
-          "blocked": 4
+          "blocked": 3
         }
       }
     }
