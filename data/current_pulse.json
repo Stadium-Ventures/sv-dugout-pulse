@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T05:05:16.000091+00:00",
+  "generated_at": "2026-05-22T05:20:07.153845+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -59,7 +59,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1321,7 +1321,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1984,7 +1984,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2253,25 +2253,17 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "1-for-4",
+      "grade_reason": "Home run",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2672,7 +2664,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3351,7 +3343,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3407,7 +3399,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3540,7 +3532,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3652,7 +3644,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -4121,30 +4113,28 @@
     }
   ],
   "health": {
-    "severity": "critical",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 20,
-        "found stats": 7,
+        "Game found, not in box score": 19,
+        "found stats": 8,
         "No game listed today": 1,
         "Stale data — skipped": 2
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 8,
+        "player not in box": 13,
         "No game listed today": 17,
-        "found player": 6,
-        "player not in box": 5,
-        "Couldn't reach site": 3
+        "found player": 7,
+        "Couldn't reach site": 2
       },
       "ESPN": {
-        "No game listed today": 8,
+        "No game listed today": 7,
         "found stats": 5,
         "Game found, not in box score": 10
       },
       "NCAA.com": {
         "Game found, not in box score": 14,
         "No game listed today": 2,
-        "found stats": 1,
         "stale (yesterday)": 1
       },
       "Sidearm": {
@@ -4157,19 +4147,9 @@
         "stale (yesterday)": 2
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 8,
-    "blocked_clients": [
-      "Henry Zatkowski",
-      "Ty Finkbeiner",
-      "Ben Tryon",
-      "Drew Bellis",
-      "Eamon McDermott",
-      "Ethan Lay",
-      "Lucas Steele"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
@@ -4203,24 +4183,18 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
+      "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 9
+          "success": 14,
+          "blocked": 0
         }
       }
     }
