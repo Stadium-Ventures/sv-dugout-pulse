@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T11:49:45.731158+00:00",
+  "generated_at": "2026-05-22T12:08:14.630122+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1605,35 +1605,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2521,7 +2501,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3206,35 +3186,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3361,7 +3321,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3830,44 +3790,36 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 17,
+        "found stats": 19,
         "No game listed today": 1,
-        "Game found, not in box score": 10
+        "Game found, not in box score": 8
       },
       "ESPN": {
         "found stats": 1,
-        "No game listed today": 10
+        "No game listed today": 8
       },
       "StatBroadcast": {
-        "found player": 4,
-        "player not in box": 6,
-        "No game listed today": 10,
-        "blocked (Cloudflare 403)": 2,
-        "Couldn't reach site": 2
+        "found player": 6,
+        "player not in box": 8,
+        "No game listed today": 8
       },
       "NCAA.com": {
-        "Game found, not in box score": 9,
+        "Game found, not in box score": 7,
         "No game listed today": 1
       },
       "Sidearm": {
-        "No game listed today": 10
+        "No game listed today": 8
       },
       "NCAA.org": {
-        "Game found, not in box score": 8,
-        "found stats": 2
+        "Game found, not in box score": 8
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 2,
-    "blocked_clients": [
-      "Mason Eckelman",
-      "Drew Bellis"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [],
     "total_clients": 84,
@@ -3877,24 +3829,18 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
+      "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
+        "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 3,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 4
+          "success": 12,
+          "blocked": 0
         }
       }
     }
