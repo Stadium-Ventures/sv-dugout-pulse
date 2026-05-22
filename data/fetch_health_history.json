@@ -40342,5 +40342,75 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T13:11:03.064779+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Joe Tiroly",
+      "Mason Eckelman",
+      "Lee Ellis"
+    ],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 13,
+        "No game listed today": 1,
+        "Game found, not in box score": 14
+      },
+      "ESPN": {
+        "found stats": 1,
+        "No game listed today": 14
+      },
+      "StatBroadcast": {
+        "Couldn't reach site": 14,
+        "No game listed today": 11
+      },
+      "NCAA.com": {
+        "found stats": 3,
+        "Game found, not in box score": 9,
+        "No game listed today": 2
+      },
+      "Sidearm": {
+        "No game listed today": 11
+      },
+      "NCAA.org": {
+        "No game listed today": 11
+      },
+      "game log": {
+        "found stats": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 1
+        }
+      }
+    }
   }
 ]
