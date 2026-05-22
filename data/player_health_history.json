@@ -11813,7 +11813,7 @@
   },
   {
     "date": "2026-05-22",
-    "updated_at": "2026-05-22T22:05:06.967750+00:00",
+    "updated_at": "2026-05-22T22:20:02.008950+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -11971,7 +11971,7 @@
         "team": "New Hampshire Fisher Cats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12059,7 +12059,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12070,12 +12070,13 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "StatBroadcast"
         ]
       },
       {
@@ -12152,12 +12153,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -12224,7 +12224,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12295,8 +12295,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -12312,12 +12312,17 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -12326,8 +12331,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
