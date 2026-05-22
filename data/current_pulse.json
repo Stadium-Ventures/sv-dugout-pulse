@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T19:34:57.710183+00:00",
+  "generated_at": "2026-05-22T19:49:57.612308+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -179,10 +179,10 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM ET",
-      "game_context": "Louisiana vs Coastal",
+      "stats_summary": "Game at 8:00 PM",
+      "game_context": "Coastal Carolina vs Louisiana",
       "game_status": "Scheduled",
-      "game_time": "4:00 PM ET",
+      "game_time": "8:00 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -191,14 +191,10 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -2515,10 +2511,10 @@
       "player_name": "Davis Sharpe",
       "team": "Akron RubberDucks",
       "level": "Pro",
-      "stats_summary": "Game at 7:00 PM ET",
-      "game_context": "Akron RubberDucks vs Harrisburg Senators | 7:00 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "7:00 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": {
@@ -2529,9 +2525,9 @@
         "time": "7:00 PM ET",
         "display": "@ Harrisburg Senators - Sat 05/23 7:00 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/818683",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/681571",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Davis%20Sharpe%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -3351,7 +3347,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3898,9 +3894,8 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 13,
+        "found stats": 14,
         "Game found, not in box score": 14,
-        "Stale data — skipped": 1,
         "No game listed today": 1
       },
       "Sidearm": {
@@ -3910,7 +3905,7 @@
       },
       "ESPN": {
         "No game listed today": 13,
-        "found stats": 2,
+        "found stats": 1,
         "Game found, not in box score": 1
       },
       "NCAA.com": {
@@ -3925,9 +3920,8 @@
         "found player": 2
       },
       "NCAA.org": {
-        "Game found, not in box score": 8,
-        "found stats": 2,
-        "Stale data — skipped": 1
+        "Game found, not in box score": 9,
+        "found stats": 2
       }
     },
     "blocked_sources": [],
@@ -3943,10 +3937,16 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 5,
           "blocked": 0
         }
