@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T17:49:48.835368+00:00",
+  "generated_at": "2026-05-22T18:04:49.536376+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -3160,10 +3160,10 @@
       "player_name": "Duke McCarron",
       "team": "Saint Josephs",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM ET",
-      "game_context": "TBA vs Saint Joseph's",
+      "stats_summary": "Game at 6:00 PM",
+      "game_context": "Saint Josephs vs George Mason",
       "game_status": "Scheduled",
-      "game_time": "6:00 PM ET",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -3172,8 +3172,13 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Duke%20McCarron%22%20Saint%20Josephs&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
+      "data_source": "D1Baseball",
+      "fetch_diagnostic": [
+        {
+          "source": "D1Baseball",
+          "outcome": "found stats"
+        }
+      ],
       "stats_captured_at": null,
       "stats_captured_status": null,
       "is_client": true,
@@ -3303,7 +3308,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Virginia Tech 4, North Carolina 6 | Bottom 8",
+      "game_context": "Virginia Tech 4, North Carolina 10 | Top 9",
       "game_status": "Live",
       "game_time": "11:00 AM ET",
       "game_date": "2026-05-22",
@@ -3889,7 +3894,7 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 13,
+        "found stats": 14,
         "Game found, not in box score": 14,
         "No game listed today": 1
       },
