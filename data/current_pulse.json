@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T12:19:39.511953+00:00",
+  "generated_at": "2026-05-22T12:34:46.942204+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -520,15 +520,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-5",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -806,7 +814,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -991,7 +999,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1243,7 +1251,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1413,15 +1421,35 @@
       "performance_grade": "— No Data",
       "grade_reason": "Home run + 3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1984,7 +2012,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -2247,17 +2275,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Brady%20Neal%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Home run + 3 RBI",
+      "grade_reason": "3 RBI",
       "social_search_url": "https://x.com/search?q=%22Brady%20Neal%22%20Alabama&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2604,7 +2640,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3084,15 +3120,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Bryce%20Fowler%22%20Alabama&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3532,7 +3576,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3830,41 +3874,43 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found stats": 17,
+        "found stats": 13,
         "No game listed today": 1,
-        "Game found, not in box score": 10
+        "Game found, not in box score": 14
       },
       "ESPN": {
         "found stats": 1,
-        "No game listed today": 10
+        "No game listed today": 14
       },
       "StatBroadcast": {
-        "found player": 4,
-        "player not in box": 6,
-        "No game listed today": 10,
-        "blocked (Cloudflare 403)": 2,
-        "Couldn't reach site": 2
+        "blocked (Cloudflare 403)": 5,
+        "Couldn't reach site": 9,
+        "No game listed today": 11
       },
       "NCAA.com": {
+        "found stats": 3,
         "Game found, not in box score": 9,
-        "No game listed today": 1
+        "No game listed today": 2
       },
       "Sidearm": {
-        "No game listed today": 10
+        "No game listed today": 11
       },
       "NCAA.org": {
         "Game found, not in box score": 8,
-        "found stats": 2
+        "found stats": 3
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 2,
+    "blocked_event_count": 5,
     "blocked_clients": [
+      "Kyle Jones",
+      "Caleb Daniel",
+      "Joe Tiroly",
       "Mason Eckelman",
       "Drew Bellis"
     ],
@@ -3889,12 +3935,12 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 4,
+          "success": 0,
           "blocked": 1
         },
         "proxy-server.scraperapi.com": {
           "success": 0,
-          "blocked": 4
+          "blocked": 6
         }
       }
     }
