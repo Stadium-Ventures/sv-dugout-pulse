@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T19:05:00.924790+00:00",
+  "generated_at": "2026-05-22T19:20:01.655707+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -179,10 +179,10 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
-      "game_context": "Coastal Carolina vs Louisiana",
+      "stats_summary": "Game at 4:00 PM ET",
+      "game_context": "Louisiana vs Coastal",
       "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "game_time": "4:00 PM ET",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -191,10 +191,14 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -1930,10 +1934,10 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
+      "stats_summary": "Game at 9:30 PM",
       "game_context": "Michigan vs Nebraska",
       "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "game_time": "9:30 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -3894,8 +3898,9 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 14,
+        "found stats": 13,
         "Game found, not in box score": 14,
+        "Stale data — skipped": 1,
         "No game listed today": 1
       },
       "Sidearm": {
@@ -3905,7 +3910,7 @@
       },
       "ESPN": {
         "No game listed today": 13,
-        "found stats": 1,
+        "found stats": 2,
         "Game found, not in box score": 1
       },
       "NCAA.com": {
