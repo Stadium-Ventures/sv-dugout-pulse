@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T13:49:33.574259+00:00",
+  "generated_at": "2026-05-22T14:04:50.833047+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -156,7 +156,7 @@
       "team": "Coastal Carolina",
       "level": "NCAA",
       "stats_summary": "Game at 4:00 PM",
-      "game_context": "Coastal Carolina vs ",
+      "game_context": "Coastal Carolina vs Louisiana",
       "game_status": "Scheduled",
       "game_time": "4:00 PM",
       "game_date": "2026-05-22",
@@ -527,8 +527,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -579,10 +579,10 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 7:00 PM",
+      "stats_summary": "Game at 3:00 PM",
       "game_context": "Pittsburgh vs Florida State",
       "game_status": "Scheduled",
-      "game_time": "7:00 PM",
+      "game_time": "3:00 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -814,7 +814,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1640,8 +1640,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1792,10 +1792,10 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 6:00 PM",
       "game_context": "Sacramento State vs Utah Tech",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -2011,8 +2011,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2284,8 +2284,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2363,22 +2363,30 @@
       "player_name": "Braydon Kersey",
       "team": "Mercer",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
-      "game_context": "The Citadel vs Mercer",
-      "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "stats_summary": "0-0, BB",
+      "game_context": "The Citadel 4, Mercer 1 | Inn 3",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869653",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660614",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Braydon%20Kersey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -2639,8 +2647,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3127,8 +3135,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3206,10 +3214,10 @@
       "player_name": "Ethan Lay",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 6:00 PM",
       "game_context": "Sacramento State vs Utah Tech",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "6:00 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -3257,8 +3265,8 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3294,10 +3302,10 @@
       "player_name": "Lee Sowers",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM",
+      "stats_summary": "Game at 11:00 AM",
       "game_context": "Virginia Tech vs North Carolina",
       "game_status": "Scheduled",
-      "game_time": "3:00 PM",
+      "game_time": "11:00 AM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -3566,37 +3574,17 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Zack%20Johnson%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "",
+      "grade_reason": "Hitless in 4 at-bats",
       "social_search_url": "https://x.com/search?q=%22Zack%20Johnson%22%20Alabama&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3882,24 +3870,26 @@
         "Game found, not in box score": 14
       },
       "ESPN": {
-        "found stats": 1,
-        "No game listed today": 14
+        "found stats": 2,
+        "No game listed today": 13
       },
-      "StatBroadcast": {
-        "blocked (Cloudflare 403)": 5,
-        "Couldn't reach site": 9,
-        "No game listed today": 11
+      "Sidearm": {
+        "player not in box": 7,
+        "No game listed today": 10,
+        "found player": 1
       },
       "NCAA.com": {
         "found stats": 3,
-        "Game found, not in box score": 9,
+        "Game found, not in box score": 8,
         "No game listed today": 2
       },
-      "Sidearm": {
-        "No game listed today": 11
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 5,
+        "No game listed today": 10,
+        "Couldn't reach site": 2
       },
       "NCAA.org": {
-        "Game found, not in box score": 8,
+        "Game found, not in box score": 7,
         "found stats": 3
       }
     },
@@ -3908,10 +3898,10 @@
     ],
     "blocked_event_count": 5,
     "blocked_clients": [
-      "Kyle Jones",
+      "Adam McKelvey",
       "Caleb Daniel",
       "Joe Tiroly",
-      "Mason Eckelman",
+      "Braydon Kersey",
       "Drew Bellis"
     ],
     "carry_forward_clients": [],
@@ -3940,7 +3930,7 @@
         },
         "proxy-server.scraperapi.com": {
           "success": 0,
-          "blocked": 6
+          "blocked": 4
         }
       }
     }
