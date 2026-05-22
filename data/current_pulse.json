@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-05-22T19:49:57.612308+00:00",
+  "generated_at": "2026-05-22T20:05:05.441982+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
-      "stats_summary": "Game at 4:00 PM",
+      "stats_summary": "Game at 5:00 PM",
       "game_context": "Arkansas vs Texas",
       "game_status": "Scheduled",
-      "game_time": "4:00 PM",
+      "game_time": "5:00 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -211,10 +211,10 @@
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
-      "stats_summary": "Game at 7:05 PM ET",
-      "game_context": "Louisville Bats vs Columbus Clippers | 7:05 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "7:05 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": {
@@ -225,9 +225,9 @@
         "time": "7:05 PM ET",
         "display": "@ Columbus Clippers - Sat 05/23 7:05 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/816802",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/695534",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Chase%20Petty%22%20Reds&f=live",
       "data_source": "MLB Stats API",
@@ -3937,16 +3937,10 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
           "success": 5,
           "blocked": 0
         }
