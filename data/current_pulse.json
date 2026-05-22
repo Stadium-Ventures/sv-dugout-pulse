@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-05-22T22:53:34.461191+00:00",
+  "generated_at": "2026-05-22T23:04:49.972171+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
       "stats_summary": "0-2, K",
-      "game_context": "Arkansas 6, Texas 1 | End 3",
+      "game_context": "Arkansas 6, Texas 1 | Inn 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/index.html?id=660628&_cfip=2601:640:8d00:a3a0:88ec:b7ba:5cbf:2497",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869486",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Stale data — skipped"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "found player"
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -151,11 +151,11 @@
       "player_name": "Bruce Littleton",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 8:00 PM ET",
+      "stats_summary": "Game at 8:00 PM",
       "game_context": "Troy vs Southern Miss",
       "game_status": "Scheduled",
-      "game_time": "8:00 PM ET",
-      "game_date": "2026-05-23",
+      "game_time": "8:00 PM",
+      "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869512",
@@ -163,14 +163,10 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -187,23 +183,47 @@
       "player_name": "Cam Flukey",
       "team": "Coastal Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 8:00 PM",
-      "game_context": "Coastal Carolina vs Louisiana",
-      "game_status": "Scheduled",
-      "game_time": "8:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Coastal Carolina 0, Louisiana 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "8:00 PM ET",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869513",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=660414",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Cam%20Flukey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cam%20Flukey%22%20Coastal%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -342,7 +362,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | Top 2",
+      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-22",
@@ -437,7 +457,7 @@
       "team": "Saint Mary's",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Pacific 5, Saint Mary's 4 | Inn 5",
+      "game_context": "Pacific 5, Saint Mary's 5 | Inn 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -612,7 +632,7 @@
       "team": "Florida State",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Pittsburgh 4, Florida State 1 | Top 5",
+      "game_context": "Pittsburgh 5, Florida State 1 | Bottom 5",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-22",
@@ -961,7 +981,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Hartford Yard Goats 2, New Hampshire Fisher Cats 1 | Bottom 3",
+      "game_context": "Hartford Yard Goats 2, New Hampshire Fisher Cats 1 | Top 4",
       "game_status": "Live",
       "game_time": "6:03 PM ET",
       "game_date": "2026-05-22",
@@ -1119,7 +1139,7 @@
       "team": "Jupiter Hammerheads",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Daytona Tortugas 0, Jupiter Hammerheads 0 | Top 2",
+      "game_context": "Daytona Tortugas 0, Jupiter Hammerheads 0 | End 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-22",
@@ -1795,7 +1815,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 3",
+      "game_context": "Palm Beach Cardinals 2, St. Lucie Mets 0 | Bottom 3",
       "game_status": "Live",
       "game_time": "6:10 PM ET",
       "game_date": "2026-05-22",
@@ -1828,8 +1848,8 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "0-1, K",
-      "game_context": "Utah Tech 1, Sacramento State 1 | Bottom 3",
+      "stats_summary": "0-2, K",
+      "game_context": "Utah Tech 1, Sacramento State 2 | Bottom 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -1838,7 +1858,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=659010",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
@@ -2151,7 +2171,7 @@
       "team": "Dallas Baptist",
       "level": "NCAA",
       "stats_summary": "2-4, HR, RBI, 2 R, K",
-      "game_context": "Dallas Baptist 7, Missouri State 2 | Top 8",
+      "game_context": "Dallas Baptist 8, Missouri State 3 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -2839,7 +2859,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 3",
+      "game_context": "Palm Beach Cardinals 2, St. Lucie Mets 0 | Bottom 3",
       "game_status": "Live",
       "game_time": "6:10 PM ET",
       "game_date": "2026-05-22",
@@ -2940,11 +2960,11 @@
       "player_name": "Sam Mitchell",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Game at 8:00 PM ET",
+      "stats_summary": "Game at 8:00 PM",
       "game_context": "Troy vs Southern Miss",
       "game_status": "Scheduled",
-      "game_time": "8:00 PM ET",
-      "game_date": "2026-05-23",
+      "game_time": "8:00 PM",
+      "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869512",
@@ -2952,14 +2972,10 @@
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "ESPN",
           "outcome": "found stats"
         }
       ],
@@ -3031,7 +3047,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 1 | Bottom 1",
+      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 2 | Middle 2",
       "game_status": "Live",
       "game_time": "6:30 PM ET",
       "game_date": "2026-05-22",
@@ -3170,7 +3186,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "George Mason 2, Saint Josephs 1 | Bottom 4",
+      "game_context": "George Mason 2, Saint Josephs 4 | Top 5",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-22",
@@ -3253,7 +3269,7 @@
       "team": "Sacramento State",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Utah Tech 1, Sacramento State 1 | Bottom 3",
+      "game_context": "Utah Tech 1, Sacramento State 2 | Bottom 3",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-22",
@@ -3951,37 +3967,38 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
+        "Stale data — skipped": 1,
+        "Game found, not in box score": 18,
         "found stats": 9,
-        "Game found, not in box score": 17,
-        "Stale data — skipped": 2,
         "No game listed today": 1
       },
-      "StatBroadcast": {
-        "found player": 5,
-        "No game listed today": 14,
-        "player not in box": 9
+      "ESPN": {
+        "found stats": 2,
+        "No game listed today": 13,
+        "Stale data — skipped": 1,
+        "Game found, not in box score": 4
       },
       "Sidearm": {
         "player not in box": 8,
-        "No game listed today": 14,
+        "No game listed today": 15,
         "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 13,
-        "found stats": 3,
-        "Game found, not in box score": 4
       },
       "NCAA.com": {
         "No game listed today": 2,
+        "Stale data — skipped": 4,
         "found stats": 3,
-        "Stale data — skipped": 3,
         "Game found, not in box score": 9
+      },
+      "StatBroadcast": {
+        "No game listed today": 15,
+        "player not in box": 10,
+        "found player": 4
       },
       "NCAA.org": {
         "Game found, not in box score": 9,
+        "stale (yesterday)": 2,
         "Stale data — skipped": 2,
-        "found stats": 2,
-        "stale (yesterday)": 1
+        "found stats": 2
       }
     },
     "blocked_sources": [],
@@ -3989,6 +4006,7 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Cam Flukey",
       "Dax Kilby",
       "Myles Bailey",
       "Cade Doughty",
@@ -4004,17 +4022,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 9,
+          "success": 11,
           "blocked": 0
         }
       }
