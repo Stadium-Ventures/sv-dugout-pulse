@@ -36530,5 +36530,110 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T01:40:17.913931+00:00",
+    "severity": "critical",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 8,
+    "blocked_clients": [
+      "Henry Zatkowski",
+      "Sam Harry",
+      "Will Rhine",
+      "Ben Tryon",
+      "Drew Bellis",
+      "Eamon McDermott",
+      "Lucas Steele"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Aaron Watson",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Carter Johnson",
+      "Henry Zatkowski",
+      "Jack Cebert",
+      "Justin Riemer",
+      "Will Rhine",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Kade Brown",
+      "Najer Victor",
+      "Ryan DeSanto",
+      "Ethan Lay",
+      "Michael Gillen",
+      "Peyton Glavine",
+      "Zack Johnson"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 20,
+        "found stats": 6,
+        "No game listed today": 1,
+        "Stale data — skipped": 3
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 8,
+        "No game listed today": 17,
+        "found player": 5,
+        "player not in box": 2,
+        "Couldn't reach site": 6
+      },
+      "ESPN": {
+        "No game listed today": 8,
+        "found stats": 6,
+        "Game found, not in box score": 10
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 14,
+        "No game listed today": 2,
+        "found stats": 1,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 17,
+        "player not in box": 4,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 1,
+        "Game found, not in box score": 13,
+        "stale (yesterday)": 2,
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 9
+        }
+      }
+    }
   }
 ]
