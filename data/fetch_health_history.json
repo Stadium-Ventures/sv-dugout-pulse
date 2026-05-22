@@ -43223,5 +43223,79 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T23:49:53.916044+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Mason Eckelman",
+      "Lee Ellis"
+    ],
+    "fallback_clients": [
+      "Cam Flukey",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Myles Bailey",
+      "Cade Doughty",
+      "Michael Dattalo",
+      "Xavier Kolhosser",
+      "Duke McCarron",
+      "Ethan Lay",
+      "Lee Sowers",
+      "Peyton Glavine"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 10,
+        "Game found, not in box score": 18,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "found player": 5,
+        "No game listed today": 15,
+        "player not in box": 10
+      },
+      "Sidearm": {
+        "player not in box": 8,
+        "No game listed today": 15,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 13,
+        "Stale data — skipped": 1,
+        "found stats": 1,
+        "Game found, not in box score": 4
+      },
+      "NCAA.com": {
+        "No game listed today": 2,
+        "Stale data — skipped": 4,
+        "found stats": 3,
+        "Game found, not in box score": 9
+      },
+      "NCAA.org": {
+        "No game listed today": 15
+      },
+      "game log": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 12,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
