@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-05-22T20:49:54.300658+00:00",
+  "generated_at": "2026-05-22T21:05:04.618706+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 5:32 PM",
       "game_context": "Arkansas vs Texas",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "5:32 PM",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
@@ -429,7 +429,7 @@
       "team": "Saint Mary's",
       "level": "NCAA",
       "stats_summary": "Game at 5:00 PM ET",
-      "game_context": "Saint Mary's vs Pacific",
+      "game_context": "Pacific vs Saint Mary's",
       "game_status": "Scheduled",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-22",
@@ -603,23 +603,47 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 3:00 PM - LIGHTNING DELAY",
-      "game_context": "Pittsburgh vs Florida State",
-      "game_status": "Scheduled",
-      "game_time": "3:00 PM - LIGHTNING DELAY",
+      "stats_summary": "Game in progress",
+      "game_context": "Pittsburgh 0, Florida State 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "3:00 PM ET",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869470",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=657493",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -2114,16 +2138,16 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
-      "game_context": "Dallas Baptist vs Missouri State",
-      "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "stats_summary": "In lineup",
+      "game_context": "Dallas Baptist 0, Missouri State 0 | Top 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869528",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660429",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
       "data_source": "D1Baseball",
@@ -2131,6 +2155,10 @@
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3859,32 +3887,34 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 14,
-        "Game found, not in box score": 14,
+        "found stats": 13,
+        "Game found, not in box score": 15,
         "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 8,
-        "No game listed today": 11,
+        "No game listed today": 12,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 13,
         "found stats": 1,
-        "Game found, not in box score": 1
+        "Game found, not in box score": 2
       },
       "NCAA.com": {
         "No game listed today": 2,
         "found stats": 3,
+        "Stale data — skipped": 1,
         "Game found, not in box score": 9
       },
       "StatBroadcast": {
-        "No game listed today": 11,
-        "player not in box": 6,
-        "found player": 2
+        "No game listed today": 12,
+        "player not in box": 7,
+        "found player": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 9,
+        "Stale data — skipped": 1,
         "found stats": 2
       }
     },
@@ -3893,6 +3923,7 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Myles Bailey",
       "Lee Sowers"
     ],
     "total_clients": 83,
@@ -3905,7 +3936,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 5,
+          "success": 6,
           "blocked": 0
         }
       }
