@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T14:35:00.077045+00:00",
+  "generated_at": "2026-05-22T14:49:57.915174+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -37,23 +37,47 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 11:00 AM",
-      "game_context": "USC Upstate vs ",
-      "game_status": "Scheduled",
-      "game_time": "11:00 AM",
-      "game_date": "2026-05-22",
+      "stats_summary": "No game data",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -814,7 +838,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -999,7 +1023,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1251,7 +1275,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1421,35 +1445,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Home run + 3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2364,7 +2368,7 @@
       "team": "Mercer",
       "level": "NCAA",
       "stats_summary": "0-1, BB",
-      "game_context": "The Citadel 7, Mercer 2 | Inn 4",
+      "game_context": "The Citadel 7, Mercer 2 | Middle 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -2375,19 +2379,15 @@
       "performance_grade": "✅ Good",
       "grade_reason": "Reached base early",
       "social_search_url": "https://x.com/search?q=%22Braydon%20Kersey%22%20Mercer&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2565,7 +2565,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3303,7 +3303,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress",
-      "game_context": "Virginia Tech 0, North Carolina 0 | Top 1",
+      "game_context": "Virginia Tech 0, North Carolina 0 | Top 1",
       "game_status": "Live",
       "game_time": "11:00 AM ET",
       "game_date": "2026-05-22",
@@ -3322,7 +3322,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3437,7 +3437,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3886,51 +3886,43 @@
     }
   ],
   "health": {
-    "severity": "critical",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "found stats": 12,
-        "No game listed today": 1,
-        "Game found, not in box score": 15
-      },
-      "ESPN": {
-        "found stats": 2,
-        "No game listed today": 13,
-        "Stale data — skipped": 1
+        "found stats": 13,
+        "Game found, not in box score": 14,
+        "No game listed today": 1
       },
       "Sidearm": {
-        "player not in box": 7,
+        "player not in box": 8,
         "No game listed today": 11,
         "found player": 1
       },
+      "ESPN": {
+        "No game listed today": 13,
+        "found stats": 1,
+        "Stale data — skipped": 1
+      },
       "NCAA.com": {
+        "No game listed today": 2,
         "found stats": 3,
         "Game found, not in box score": 8,
-        "No game listed today": 2,
         "Stale data — skipped": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 3,
         "No game listed today": 11,
-        "blocked (Cloudflare 403)": 5
+        "player not in box": 6,
+        "found player": 2
       },
       "NCAA.org": {
-        "Game found, not in box score": 7,
-        "found stats": 3,
+        "Game found, not in box score": 8,
+        "found stats": 2,
         "Stale data — skipped": 1
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 5,
-    "blocked_clients": [
-      "Caleb Daniel",
-      "Joe Tiroly",
-      "Braydon Kersey",
-      "Drew Bellis",
-      "Lee Sowers"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Lee Sowers"
@@ -3942,24 +3934,12 @@
         "geo.iproyal.com",
         "proxy-server.scraperapi.com"
       ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 5
+          "success": 6,
+          "blocked": 0
         }
       }
     }
