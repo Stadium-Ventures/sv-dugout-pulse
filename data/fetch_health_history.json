@@ -42708,5 +42708,84 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T22:05:06.916842+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 4,
+    "blocked_clients": [
+      "Ben Tryon",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Lee Sowers"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Myles Bailey",
+      "Duke McCarron",
+      "Lee Sowers"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 9,
+        "Game found, not in box score": 17,
+        "Stale data — skipped": 2,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "found player": 3,
+        "No game listed today": 13,
+        "player not in box": 4,
+        "blocked (Cloudflare 403)": 4,
+        "Couldn't reach site": 1
+      },
+      "Sidearm": {
+        "player not in box": 8,
+        "No game listed today": 13,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 13,
+        "Game found, not in box score": 5,
+        "found stats": 2
+      },
+      "NCAA.com": {
+        "No game listed today": 2,
+        "found stats": 5,
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 9
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 9,
+        "Stale data — skipped": 1,
+        "found stats": 2,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 3,
+          "blocked": 5
+        }
+      }
+    }
   }
 ]

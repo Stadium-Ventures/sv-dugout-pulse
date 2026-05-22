@@ -1,31 +1,31 @@
 {
-  "generated_at": "2026-05-22T21:53:42.701011+00:00",
+  "generated_at": "2026-05-22T22:05:06.916842+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Arkansas 3, Texas 0 | Inn 1",
+      "game_context": "Arkansas 3, Texas 0 | Bottom 1",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869486",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/index.html?id=660628&_cfip=2601:640:8d00:a3a0:88ec:b7ba:5cbf:2497",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Aiden%20Robbins%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Aiden%20Robbins%22%20Texas&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         },
         {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -441,7 +441,7 @@
       "team": "Saint Mary's",
       "level": "NCAA",
       "stats_summary": "0-0",
-      "game_context": "Pacific 0, Saint Mary's 1 | Inn 2",
+      "game_context": "Pacific 0, Saint Mary's 3 | Inn 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -616,7 +616,7 @@
       "team": "Florida State",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Pittsburgh 4, Florida State 1 | Top 2",
+      "game_context": "Pittsburgh 4, Florida State 1 | Bottom 2",
       "game_status": "Live",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-22",
@@ -2150,8 +2150,8 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "0-1",
-      "game_context": "Dallas Baptist 2, Missouri State 2 | Top 4",
+      "stats_summary": "1-2, HR, RBI, R",
+      "game_context": "Dallas Baptist 3, Missouri St 2 | Inn 4",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -2159,18 +2159,22 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660429",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Home run",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2570,7 +2574,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3173,23 +3177,47 @@
       "player_name": "Duke McCarron",
       "team": "Saint Josephs",
       "level": "NCAA",
-      "stats_summary": "Game at 6:00 PM",
-      "game_context": "Saint Josephs vs George Mason",
-      "game_status": "Scheduled",
-      "game_time": "6:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "George Mason 0, Saint Josephs 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "6:00 PM ET",
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869595",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660784",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Duke%20McCarron%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Duke%20McCarron%22%20Saint%20Josephs&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3340,7 +3368,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3455,7 +3483,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3904,47 +3932,58 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Stale data — skipped": 3,
-        "Game found, not in box score": 15,
-        "found stats": 10,
+        "found stats": 9,
+        "Game found, not in box score": 17,
+        "Stale data — skipped": 2,
         "No game listed today": 1
       },
-      "ESPN": {
-        "found stats": 2,
+      "StatBroadcast": {
+        "found player": 3,
         "No game listed today": 13,
-        "Game found, not in box score": 4
+        "player not in box": 4,
+        "blocked (Cloudflare 403)": 4,
+        "Couldn't reach site": 1
       },
       "Sidearm": {
         "player not in box": 8,
-        "No game listed today": 12,
+        "No game listed today": 13,
         "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 13,
+        "Game found, not in box score": 5,
+        "found stats": 2
       },
       "NCAA.com": {
         "No game listed today": 2,
         "found stats": 5,
-        "Stale data — skipped": 1,
+        "Stale data — skipped": 2,
         "Game found, not in box score": 9
-      },
-      "StatBroadcast": {
-        "No game listed today": 12,
-        "player not in box": 7,
-        "found player": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 9,
         "Stale data — skipped": 1,
-        "found stats": 2
+        "found stats": 2,
+        "stale (yesterday)": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 4,
+    "blocked_clients": [
+      "Ben Tryon",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Lee Sowers"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Myles Bailey",
+      "Duke McCarron",
       "Lee Sowers"
     ],
     "total_clients": 83,
@@ -3953,12 +3992,19 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 7,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 3,
+          "blocked": 5
         }
       }
     }
