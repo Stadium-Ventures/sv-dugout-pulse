@@ -11813,7 +11813,7 @@
   },
   {
     "date": "2026-05-22",
-    "updated_at": "2026-05-22T14:20:05.398952+00:00",
+    "updated_at": "2026-05-22T14:35:00.125888+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -12331,12 +12331,17 @@
         "team": "North Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
