@@ -42926,5 +42926,79 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T22:48:33.681447+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Cade Doughty",
+      "Michael Dattalo",
+      "Xavier Kolhosser",
+      "Duke McCarron",
+      "Ethan Lay",
+      "Lee Sowers"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 9,
+        "Game found, not in box score": 17,
+        "Stale data — skipped": 2,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "found player": 5,
+        "No game listed today": 14,
+        "player not in box": 9
+      },
+      "Sidearm": {
+        "player not in box": 8,
+        "No game listed today": 14,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 13,
+        "found stats": 3,
+        "Game found, not in box score": 4
+      },
+      "NCAA.com": {
+        "No game listed today": 2,
+        "found stats": 3,
+        "Stale data — skipped": 3,
+        "Game found, not in box score": 9
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 9,
+        "Stale data — skipped": 2,
+        "found stats": 2,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 5,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 6,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
