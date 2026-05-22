@@ -36089,5 +36089,99 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-22T00:19:55.765587+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Carter Johnson",
+      "Henry Zatkowski",
+      "Jack Cebert",
+      "Justin Riemer",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Davis Sharpe",
+      "Drew Bellis",
+      "Evan Taylor",
+      "Xavier Kolhosser",
+      "Xavier Kolhosser",
+      "Ethan Lay",
+      "Michael Gillen",
+      "Peyton Glavine",
+      "Zack Johnson"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 17,
+        "found stats": 12,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 1,
+        "No game listed today": 15,
+        "found player": 9,
+        "player not in box": 12,
+        "Couldn't reach site": 2
+      },
+      "ESPN": {
+        "No game listed today": 5,
+        "found stats": 3,
+        "Game found, not in box score": 10
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 9,
+        "Stale data — skipped": 3,
+        "No game listed today": 2,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 15,
+        "player not in box": 2,
+        "found player": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 5,
+        "Game found, not in box score": 8,
+        "stale (yesterday)": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": "proxy-server.scraperapi.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io",
+        "proxy-server.scraperapi.com"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 9,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 6,
+          "blocked": 1
+        },
+        "proxy-server.scraperapi.com": {
+          "success": 0,
+          "blocked": 2
+        }
+      }
+    }
   }
 ]
