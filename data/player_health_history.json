@@ -12425,7 +12425,7 @@
   },
   {
     "date": "2026-05-23",
-    "updated_at": "2026-05-23T22:05:01.864986+00:00",
+    "updated_at": "2026-05-23T22:14:49.405021+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -12634,7 +12634,7 @@
         "team": "Jupiter Hammerheads",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12711,13 +12711,11 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
+        "game_status": "Live",
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Sterlin Thompson",
@@ -12779,13 +12777,12 @@
         "team": "Dallas Baptist",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Live",
-        "captured": false,
-        "blocked": true,
-        "source": "ESPN",
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -12872,8 +12869,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -12929,13 +12926,11 @@
         "team": "Sacramento State",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
+        "game_status": "Live",
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Lee Sowers",
@@ -12943,8 +12938,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -12961,12 +12956,11 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN",
           "StatBroadcast"
         ]
       },
