@@ -12425,7 +12425,7 @@
   },
   {
     "date": "2026-05-23",
-    "updated_at": "2026-05-23T14:04:52.007230+00:00",
+    "updated_at": "2026-05-23T14:19:47.558387+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -12778,11 +12778,15 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
           "StatBroadcast"
         ]
       },

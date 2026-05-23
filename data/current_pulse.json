@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T14:04:51.951906+00:00",
+  "generated_at": "2026-05-23T14:19:47.502009+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -207,7 +207,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -672,7 +672,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1910,7 +1910,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1930,7 +1930,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2068,10 +2068,10 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Dallas Baptist 0, Jacksonville State 0 | Top 1",
+      "stats_summary": "Game in progress",
+      "game_context": "Dallas Baptist 0, Jacksonville State 0 | Top 1",
       "game_status": "Live",
-      "game_time": null,
+      "game_time": "11:00 AM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
@@ -2084,11 +2084,31 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2992,7 +3012,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "Did Not Play",
-      "game_context": "Saint Josephs 0, VCU 2 | Bottom 1",
+      "game_context": "Saint Josephs 0, VCU 2 | Bottom 1 - RAIN DELAY",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
@@ -3031,7 +3051,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3655,42 +3675,50 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 12,
+        "Game found, not in box score": 6,
+        "found stats": 11,
         "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 4,
-        "No game listed today": 4,
+        "No game listed today": 5,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 4,
         "found stats": 1,
+        "Stale data — skipped": 1,
         "Game found, not in box score": 1
       },
       "NCAA.com": {
         "found stats": 1,
         "Game found, not in box score": 3,
-        "No game listed today": 1
+        "No game listed today": 1,
+        "stale (yesterday)": 1
       },
       "StatBroadcast": {
-        "No game listed today": 4,
-        "player not in box": 1,
-        "found player": 1
+        "No game listed today": 5,
+        "blocked (Cloudflare 403)": 2
       },
       "NCAA.org": {
-        "No game listed today": 4
+        "Game found, not in box score": 4,
+        "No game listed today": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 2,
+    "blocked_clients": [
+      "Ty Finkbeiner",
+      "Ben Tryon"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Ben Tryon",
       "Duke McCarron"
     ],
     "total_clients": 83,
@@ -3699,12 +3727,19 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 3
         }
       }
     }
