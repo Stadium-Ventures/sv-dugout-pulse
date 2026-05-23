@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T19:35:09.106104+00:00",
+  "generated_at": "2026-05-23T19:49:51.387179+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -136,7 +136,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 0, Southern Miss 0 | Bottom 1",
+      "game_context": "Troy 0, Southern Miss 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "1:30 PM ET",
       "game_date": "2026-05-23",
@@ -597,27 +597,27 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "0-3, K",
-      "game_context": "Florida 6, Georgia 4 | Inn 6",
+      "stats_summary": "0-4, K",
+      "game_context": "Florida 7, Georgia 4 | Middle 7",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869488",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660630",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-3",
+      "performance_grade": "🚩 Off Day",
+      "grade_reason": "Hitless in 4 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "ESPN",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         },
         {
-          "source": "ESPN",
-          "outcome": "found stats"
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -859,7 +859,7 @@
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Reds 5, ACL Dodgers 1 | Bottom 3",
+      "game_context": "ACL Reds 5, ACL Dodgers 1 | Top 4",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-23",
@@ -912,7 +912,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -932,7 +932,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1126,7 +1126,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1146,7 +1146,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1986,7 +1986,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2144,8 +2144,8 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "0-2, 2 R",
-      "game_context": "Dallas Baptist 3, Jax State 3 | Inn 6",
+      "stats_summary": "1-3, 2 R",
+      "game_context": "Dallas Baptist 4, Jax State 3 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
@@ -2154,7 +2154,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660785",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-2",
+      "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
       "data_source": "ESPN",
       "fetch_diagnostic": [
@@ -2830,7 +2830,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "ACL Guardians 0, ACL Rangers 5 | Bottom 5",
+      "game_context": "ACL Guardians 1, ACL Rangers 5 | Bottom 6",
       "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-23",
@@ -2864,7 +2864,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 0, Southern Miss 0 | Bottom 1",
+      "game_context": "Troy 0, Southern Miss 0 | Bottom 2",
       "game_status": "Live",
       "game_time": "1:30 PM ET",
       "game_date": "2026-05-23",
@@ -3095,8 +3095,8 @@
       "player_name": "Duke McCarron",
       "team": "Saint Josephs",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Saint Josephs 3, VCU 13 | Top 8",
+      "stats_summary": "Did Not Play",
+      "game_context": "Saint Josephs 3, VCU 13 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
@@ -3238,7 +3238,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Pittsburgh 2, North Carolina 2 | Bottom 1",
+      "game_context": "Pittsburgh 2, North Carolina 3 | Top 2",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-23",
@@ -3783,13 +3783,12 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "critical",
     "by_source": {
       "D1Baseball": {
         "Game found, not in box score": 11,
-        "found stats": 5,
-        "No game listed today": 1,
-        "Stale data — skipped": 1
+        "found stats": 6,
+        "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 4,
@@ -3799,7 +3798,7 @@
       "ESPN": {
         "No game listed today": 4,
         "Game found, not in box score": 6,
-        "found stats": 3
+        "found stats": 2
       },
       "NCAA.com": {
         "found stats": 1,
@@ -3808,21 +3807,23 @@
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 1,
+        "Couldn't reach site": 2,
         "No game listed today": 9,
-        "player not in box": 3,
-        "blocked (Cloudflare 403)": 3
+        "found player": 1,
+        "blocked (Cloudflare 403)": 5
       },
       "NCAA.org": {
-        "Stale data — skipped": 5,
-        "Game found, not in box score": 4
+        "Stale data — skipped": 3,
+        "Game found, not in box score": 6
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 3,
+    "blocked_event_count": 5,
     "blocked_clients": [
+      "Caleb Daniel",
+      "Ty Finkbeiner",
       "Ben Tryon",
       "Sam Mitchell",
       "Lee Sowers"
@@ -3851,12 +3852,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 4
+          "success": 1,
+          "blocked": 6
         }
       }
     }
