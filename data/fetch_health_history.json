@@ -1,69 +1,5 @@
 [
   {
-    "generated_at": "2026-05-16T17:32:11.161010+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Henry Zatkowski",
-      "Ty Finkbeiner",
-      "Brisen Tweedy",
-      "Drew Bellis",
-      "Sam Mitchell",
-      "Duke McCarron",
-      "Michael Gillen"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 30,
-        "found game, no player": 13,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "player not in box": 2,
-        "no game found": 12,
-        "found player": 1
-      },
-      "ESPN": {
-        "no game found": 2,
-        "scheduled (ignored)": 2,
-        "found stats": 2,
-        "found game, no player": 8
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 12
-      },
-      "StatBroadcast": {
-        "no game found": 12,
-        "player not in box": 11,
-        "found player": 5
-      },
-      "NCAA.org": {
-        "no game found": 12
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 16,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-16T17:47:10.234404+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -47514,6 +47450,67 @@
       "stats": {
         "p.webshare.io": {
           "success": 4,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-23T17:39:07.778065+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Duke McCarron"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 7,
+        "found stats": 10,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "player not in box": 3,
+        "No game listed today": 6,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 4,
+        "found stats": 1,
+        "Game found, not in box score": 3
+      },
+      "NCAA.com": {
+        "found stats": 1,
+        "Game found, not in box score": 3,
+        "Stale data — skipped": 2,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "No game listed today": 6,
+        "found player": 2,
+        "player not in box": 4
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 4,
+        "Stale data — skipped": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 5,
           "blocked": 0
         }
       }
