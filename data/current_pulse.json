@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T17:04:59.065256+00:00",
+  "generated_at": "2026-05-23T17:19:39.439723+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -49,10 +49,10 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
+      "stats_summary": "Game at 3:00 PM",
       "game_context": "USC Upstate vs High Point",
       "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "game_time": "3:00 PM",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
@@ -573,23 +573,27 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Florida vs Georgia",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "0-1",
+      "game_context": "Florida 1, Georgia 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869488",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660630",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -865,7 +869,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Miami 0, Georgia Tech 7 | Top 6",
+      "game_context": "Miami 2, Georgia Tech 7 | Bottom 6",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
@@ -974,9 +978,9 @@
       "player_name": "Cade Doughty",
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
-      "stats_summary": "Game at 1:05 PM ET",
-      "game_context": "Hartford Yard Goats vs New Hampshire Fisher Cats | 1:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Hartford Yard Goats 0, New Hampshire Fisher Cats 0 | Middle 1",
+      "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
@@ -990,7 +994,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818542",
       "player_profile_url": "https://www.mlb.com/player/683103",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cade%20Doughty%22%20Jays&f=live",
       "data_source": "MLB Stats API",
@@ -1079,7 +1083,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Miami 0, Georgia Tech 7 | Top 6",
+      "game_context": "Miami 2, Georgia Tech 7 | Bottom 6",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
@@ -3039,7 +3043,7 @@
       "player_name": "Duke McCarron",
       "team": "Saint Josephs",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
+      "stats_summary": "Game in progress — hasn't pitched",
       "game_context": "Saint Josephs 0, VCU 0 | Bottom 1 - WEATHER DELAY, RESUMES 1:00",
       "game_status": "Live",
       "game_time": null,
@@ -3181,10 +3185,10 @@
       "player_name": "Lee Sowers",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 5:00 PM",
+      "stats_summary": "Game at 3:00 PM",
       "game_context": "Pittsburgh vs North Carolina",
       "game_status": "Scheduled",
-      "game_time": "5:00 PM",
+      "game_time": "3:00 PM",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
@@ -3728,8 +3732,8 @@
       },
       "StatBroadcast": {
         "No game listed today": 6,
-        "player not in box": 3,
-        "found player": 1
+        "found player": 2,
+        "player not in box": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 4,
@@ -3742,6 +3746,7 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Adam McKelvey",
+      "Cade Doughty",
       "Caleb Daniel",
       "Duke McCarron"
     ],
@@ -3755,7 +3760,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 3,
+          "success": 4,
           "blocked": 0
         }
       }
