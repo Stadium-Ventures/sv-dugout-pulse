@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T11:35:04.301461+00:00",
+  "generated_at": "2026-05-23T12:05:05.877033+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -142,7 +142,7 @@
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869516",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
@@ -207,7 +207,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -672,7 +672,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1934,7 +1934,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2790,7 +2790,7 @@
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": null,
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869516",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
       "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
@@ -3031,7 +3031,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3118,7 +3118,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3710,8 +3710,7 @@
         "player not in box": 1
       },
       "NCAA.org": {
-        "Game found, not in box score": 4,
-        "Stale data — skipped": 1
+        "No game listed today": 5
       }
     },
     "blocked_sources": [],
@@ -3727,16 +3726,10 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
