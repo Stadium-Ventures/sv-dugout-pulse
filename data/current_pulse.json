@@ -81,7 +81,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -191,7 +191,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -247,7 +247,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -695,7 +695,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -934,7 +934,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1119,7 +1119,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1371,7 +1371,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1733,7 +1733,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "game log",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -1761,11 +1761,15 @@
         },
         {
           "source": "NCAA.org",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": null,
-      "stats_captured_status": null,
+      "stats_captured_at": "2026-05-22T01:50:02.647063+00:00",
+      "stats_captured_status": "Final",
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -2070,7 +2074,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2160,7 +2164,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2678,7 +2682,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2761,7 +2765,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3068,7 +3072,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3317,7 +3321,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3404,7 +3408,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3432,7 +3436,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "game log",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3460,11 +3464,15 @@
         },
         {
           "source": "NCAA.org",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": null,
-      "stats_captured_status": null,
+      "stats_captured_at": "2026-05-22T01:50:02.647063+00:00",
+      "stats_captured_status": "Final",
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -3516,7 +3524,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3572,7 +3580,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3655,7 +3663,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -4122,7 +4130,10 @@
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
-    "carry_forward_clients": [],
+    "carry_forward_clients": [
+      "Mason Eckelman",
+      "Lee Ellis"
+    ],
     "fallback_clients": [
       "Cam Flukey",
       "Dax Kilby",
@@ -4151,10 +4162,8 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
           "success": 4,
