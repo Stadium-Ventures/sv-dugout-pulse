@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T06:26:05.664397+00:00",
+  "generated_at": "2026-05-23T06:40:52.179550+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1521,35 +1521,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Home run + 3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2031,7 +2011,7 @@
       "team": "Michigan",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Michigan 4, Nebraska 6 | End 7",
+      "game_context": "Michigan 4, Nebraska 6 | Bottom 8",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-22",
@@ -4087,35 +4067,34 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 5,
-        "Game found, not in box score": 23,
+        "found stats": 6,
+        "Game found, not in box score": 22,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "found player": 4,
-        "No game listed today": 20,
-        "player not in box": 10,
-        "Couldn't reach site": 1
+        "found player": 5,
+        "No game listed today": 19,
+        "player not in box": 10
       },
       "Sidearm": {
         "player not in box": 13,
-        "No game listed today": 20,
+        "No game listed today": 19,
         "found player": 1
       },
       "ESPN": {
-        "No game listed today": 14,
+        "No game listed today": 13,
         "Game found, not in box score": 9,
         "found stats": 1
       },
       "NCAA.com": {
-        "No game listed today": 4,
+        "No game listed today": 3,
         "Game found, not in box score": 16,
         "found stats": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 14,
         "stale (yesterday)": 2,
-        "found stats": 3,
+        "found stats": 2,
         "Stale data — skipped": 1
       }
     },
