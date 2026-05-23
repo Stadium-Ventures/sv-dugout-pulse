@@ -4130,11 +4130,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 9,
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 8,
           "blocked": 0
         }
       }
