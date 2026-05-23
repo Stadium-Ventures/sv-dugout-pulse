@@ -11813,7 +11813,7 @@
   },
   {
     "date": "2026-05-22",
-    "updated_at": "2026-05-23T01:20:03.572427+00:00",
+    "updated_at": "2026-05-23T01:34:53.520935+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -12089,7 +12089,7 @@
       },
       {
         "name": "Sterlin Thompson",
-        "team": "Albuquerque Isotopes",
+        "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
         "game_status": "Scheduled",
@@ -12128,9 +12128,10 @@
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "D1Baseball",
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN"
         ]
       },
       {
@@ -12306,17 +12307,10 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Ethan Lay",
@@ -12324,17 +12318,10 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
+        "captured": false,
         "blocked": false,
-        "source": "D1Baseball",
-        "sources_tried": [
-          "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
-        ]
+        "source": "",
+        "sources_tried": []
       },
       {
         "name": "Lee Sowers",
@@ -12359,12 +12346,17 @@
         "team": "Auburn",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
