@@ -12425,19 +12425,24 @@
   },
   {
     "date": "2026-05-23",
-    "updated_at": "2026-05-23T22:14:49.405021+00:00",
+    "updated_at": "2026-05-23T22:20:06.534508+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Final",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -12700,7 +12705,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12835,7 +12840,7 @@
         "team": "Palm Beach Cardinals",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12938,8 +12943,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -12956,11 +12961,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
