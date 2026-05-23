@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T17:39:07.778065+00:00",
+  "generated_at": "2026-05-23T17:49:48.887194+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -574,7 +574,7 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "0-1",
-      "game_context": "Florida 1, Georgia 0 | Bottom 2",
+      "game_context": "Florida 1, Georgia 0 | Inn 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
@@ -585,15 +585,19 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -869,7 +873,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Miami 2, Georgia Tech 8 | Bottom 7",
+      "game_context": "Miami 2, Georgia Tech 9 | Top 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
@@ -888,7 +892,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -979,7 +983,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Hartford Yard Goats 0, New Hampshire Fisher Cats 2 | Top 2",
+      "game_context": "Hartford Yard Goats 1, New Hampshire Fisher Cats 2 | Bottom 2",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-23",
@@ -1083,7 +1087,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Miami 2, Georgia Tech 8 | Bottom 7",
+      "game_context": "Miami 2, Georgia Tech 9 | Top 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
@@ -1102,7 +1106,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1962,7 +1966,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2120,10 +2124,10 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "In lineup",
-      "game_context": "Dallas Baptist 0, Jacksonville State 0 | Top 1",
+      "stats_summary": "Game in progress",
+      "game_context": "Dallas Baptist 0, Jacksonville State 0 | Top 1",
       "game_status": "Live",
-      "game_time": null,
+      "game_time": "1:42 PM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
@@ -2136,11 +2140,31 @@
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3044,7 +3068,7 @@
       "team": "Saint Josephs",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Saint Josephs 0, VCU 2 | Top 3",
+      "game_context": "Saint Josephs 0, VCU 2 | Top 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
@@ -3063,7 +3087,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3707,47 +3731,59 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 7,
-        "found stats": 10,
+        "Game found, not in box score": 9,
+        "found stats": 8,
         "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 3,
-        "No game listed today": 6,
+        "No game listed today": 7,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 4,
-        "found stats": 1,
-        "Game found, not in box score": 3
+        "found stats": 2,
+        "Game found, not in box score": 3,
+        "Stale data — skipped": 1
       },
       "NCAA.com": {
         "found stats": 1,
         "Game found, not in box score": 3,
         "Stale data — skipped": 2,
-        "No game listed today": 1
+        "No game listed today": 1,
+        "stale (yesterday)": 1
       },
       "StatBroadcast": {
-        "No game listed today": 6,
-        "found player": 2,
-        "player not in box": 4
+        "No game listed today": 7,
+        "blocked (Cloudflare 403)": 5,
+        "Couldn't reach site": 1
       },
       "NCAA.org": {
         "Game found, not in box score": 4,
-        "Stale data — skipped": 2
+        "Stale data — skipped": 2,
+        "No game listed today": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 5,
+    "blocked_clients": [
+      "Kyle Jones",
+      "Caleb Daniel",
+      "Ty Finkbeiner",
+      "Ben Tryon",
+      "Duke McCarron"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Adam McKelvey",
       "Cade Doughty",
       "Caleb Daniel",
+      "Ben Tryon",
       "Duke McCarron"
     ],
     "total_clients": 83,
@@ -3756,12 +3792,19 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 5,
-          "blocked": 0
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 6
         }
       }
     }
