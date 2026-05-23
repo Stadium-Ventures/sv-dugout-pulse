@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T17:49:48.887194+00:00",
+  "generated_at": "2026-05-23T18:04:57.170826+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -573,8 +573,8 @@
       "player_name": "Kyle Jones",
       "team": "Florida",
       "level": "NCAA",
-      "stats_summary": "0-1",
-      "game_context": "Florida 1, Georgia 0 | Inn 3",
+      "stats_summary": "0-2",
+      "game_context": "Florida 6, Georgia 0 | Inn 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-23",
@@ -583,7 +583,7 @@
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660630",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Kyle%20Jones%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
       "data_source": "ESPN",
       "fetch_diagnostic": [
@@ -873,7 +873,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Miami 2, Georgia Tech 9 | Top 8",
+      "game_context": "Miami 3, Georgia Tech 9 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
@@ -983,7 +983,7 @@
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Hartford Yard Goats 1, New Hampshire Fisher Cats 2 | Bottom 2",
+      "game_context": "Hartford Yard Goats 1, New Hampshire Fisher Cats 2 | End 3",
       "game_status": "Live",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-23",
@@ -1087,7 +1087,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Miami 2, Georgia Tech 9 | Top 8",
+      "game_context": "Miami 3, Georgia Tech 9 | Bottom 8",
       "game_status": "Live",
       "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
@@ -2124,19 +2124,19 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game in progress",
-      "game_context": "Dallas Baptist 0, Jacksonville State 0 | Top 1",
+      "stats_summary": "0-1, R",
+      "game_context": "Dallas Baptist 2, Jax State 1 | Inn 2",
       "game_status": "Live",
-      "game_time": "1:42 PM ET",
+      "game_time": null,
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660785",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -2148,23 +2148,7 @@
         },
         {
           "source": "ESPN",
-          "outcome": "Stale data — skipped"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "stale (yesterday)"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2825,9 +2809,9 @@
       "player_name": "Ryan DeSanto",
       "team": "ACL Guardians",
       "level": "Pro",
-      "stats_summary": "Game at 2:00 PM ET",
-      "game_context": "ACL Guardians vs ACL Rangers | 2:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "ACL Guardians 0, ACL Rangers 0 | Top 1",
+      "game_status": "Live",
       "game_time": "2:00 PM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
@@ -2841,7 +2825,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844461",
       "player_profile_url": "https://www.mlb.com/player/823756",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ryan%20DeSanto%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -3740,31 +3724,28 @@
       },
       "Sidearm": {
         "player not in box": 3,
-        "No game listed today": 7,
+        "No game listed today": 6,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 4,
-        "found stats": 2,
-        "Game found, not in box score": 3,
-        "Stale data — skipped": 1
+        "found stats": 3,
+        "Game found, not in box score": 3
       },
       "NCAA.com": {
         "found stats": 1,
         "Game found, not in box score": 3,
         "Stale data — skipped": 2,
-        "No game listed today": 1,
-        "stale (yesterday)": 1
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "No game listed today": 7,
+        "No game listed today": 6,
         "blocked (Cloudflare 403)": 5,
         "Couldn't reach site": 1
       },
       "NCAA.org": {
         "Game found, not in box score": 4,
-        "Stale data — skipped": 2,
-        "No game listed today": 1
+        "Stale data — skipped": 2
       }
     },
     "blocked_sources": [
@@ -3783,7 +3764,7 @@
       "Adam McKelvey",
       "Cade Doughty",
       "Caleb Daniel",
-      "Ben Tryon",
+      "Ryan DeSanto",
       "Duke McCarron"
     ],
     "total_clients": 83,
