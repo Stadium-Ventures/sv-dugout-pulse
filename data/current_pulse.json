@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T10:05:08.104055+00:00",
+  "generated_at": "2026-05-23T10:19:59.513501+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -207,7 +207,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -672,7 +672,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1934,7 +1934,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3031,7 +3031,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3118,7 +3118,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3710,7 +3710,8 @@
         "player not in box": 1
       },
       "NCAA.org": {
-        "No game listed today": 5
+        "Game found, not in box score": 4,
+        "Stale data — skipped": 1
       }
     },
     "blocked_sources": [],
@@ -3726,10 +3727,16 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
