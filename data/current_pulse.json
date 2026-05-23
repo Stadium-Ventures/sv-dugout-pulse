@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T10:19:59.513501+00:00",
+  "generated_at": "2026-05-23T10:35:00.744172+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -1914,7 +1914,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3683,7 +3683,7 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
         "Game found, not in box score": 6,
@@ -3707,16 +3707,20 @@
       },
       "StatBroadcast": {
         "No game listed today": 5,
-        "player not in box": 1
+        "blocked (Cloudflare 403)": 1
       },
       "NCAA.org": {
         "Game found, not in box score": 4,
         "Stale data — skipped": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Ty Finkbeiner"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Duke McCarron"
@@ -3729,6 +3733,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -3737,8 +3742,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 2
         }
       }
     }
