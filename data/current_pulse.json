@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T12:05:05.877033+00:00",
+  "generated_at": "2026-05-23T12:19:53.150495+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -49,10 +49,10 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 AM",
+      "stats_summary": "Game at 1:00 PM",
       "game_context": "USC Upstate vs High Point",
       "game_status": "Scheduled",
-      "game_time": "9:00 AM",
+      "game_time": "1:00 PM",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
@@ -207,7 +207,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -672,7 +672,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1756,27 +1756,23 @@
       "player_name": "Sam Harry",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
+      "stats_summary": "Game at 5:00 PM",
+      "game_context": "Sacramento State vs Tarleton",
+      "game_status": "Scheduled",
+      "game_time": "5:00 PM",
+      "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Harry%22&btnI=",
-      "performance_grade": "— No Data",
-      "grade_reason": "Hitless in 4 at-bats",
+      "performance_grade": "🕒 Scheduled",
+      "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Harry%22%20Sacramento%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
           "outcome": "found stats"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1934,7 +1930,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2072,10 +2068,10 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game at 10:00 AM",
+      "stats_summary": "Game at 11:00 AM",
       "game_context": "Dallas Baptist vs Jacksonville State",
       "game_status": "Scheduled",
-      "game_time": "10:00 AM",
+      "game_time": "11:00 AM",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
@@ -3031,7 +3027,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3074,51 +3070,23 @@
       "player_name": "Ethan Lay",
       "team": "Sacramento State",
       "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
+      "stats_summary": "Game at 5:00 PM",
+      "game_context": "Sacramento State vs Tarleton",
+      "game_status": "Scheduled",
+      "game_time": "5:00 PM",
+      "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ethan%20Lay%22&btnI=",
-      "performance_grade": "— No Data",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ethan%20Lay%22%20Sacramento%20State&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "player not in box"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3686,31 +3654,31 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 6,
-        "found stats": 11,
+        "Game found, not in box score": 5,
+        "found stats": 12,
         "No game listed today": 1
       },
       "Sidearm": {
-        "player not in box": 6,
-        "No game listed today": 5,
-        "found player": 2
+        "player not in box": 4,
+        "No game listed today": 4,
+        "found player": 1
       },
       "ESPN": {
-        "No game listed today": 5,
+        "No game listed today": 4,
         "found stats": 1,
         "Game found, not in box score": 1
       },
       "NCAA.com": {
         "found stats": 1,
-        "Game found, not in box score": 4,
+        "Game found, not in box score": 3,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "No game listed today": 5,
+        "No game listed today": 4,
         "player not in box": 1
       },
       "NCAA.org": {
-        "No game listed today": 5
+        "Game found, not in box score": 4
       }
     },
     "blocked_sources": [],
