@@ -45709,5 +45709,76 @@
         }
       }
     }
+  },
+  {
+    "generated_at": "2026-05-23T08:03:48.734204+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Mason Eckelman",
+      "Lee Ellis"
+    ],
+    "fallback_clients": [
+      "Aaron Watson",
+      "Justin Riemer",
+      "Tanner Gordon",
+      "Kade Brown",
+      "Ryan DeSanto",
+      "Brennan Orf",
+      "Duke McCarron"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 8,
+        "Game found, not in box score": 19,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "found player": 5,
+        "No game listed today": 16,
+        "player not in box": 5
+      },
+      "Sidearm": {
+        "player not in box": 15,
+        "No game listed today": 16,
+        "found player": 1
+      },
+      "ESPN": {
+        "Game found, not in box score": 8,
+        "found stats": 1,
+        "No game listed today": 11
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 14,
+        "found stats": 3,
+        "No game listed today": 2
+      },
+      "NCAA.org": {
+        "stale (yesterday)": 1,
+        "Game found, not in box score": 11,
+        "No game listed today": 2,
+        "Stale data — skipped": 2
+      },
+      "game log": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 5,
+          "blocked": 0
+        }
+      }
+    }
   }
 ]
