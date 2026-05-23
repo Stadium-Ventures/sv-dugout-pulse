@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T15:04:41.607799+00:00",
+  "generated_at": "2026-05-23T15:12:59.449680+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -864,23 +864,47 @@
       "player_name": "Adam McKelvey",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Miami vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Miami 0, Georgia Tech 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869471",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=657494",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Adam%20McKelvey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Adam%20McKelvey%22%20Georgia%20Tech&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1054,23 +1078,47 @@
       "player_name": "Caleb Daniel",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 1:00 PM",
-      "game_context": "Miami vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "1:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Miami 0, Georgia Tech 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "1:00 PM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869471",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=657494",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Caleb%20Daniel%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Caleb%20Daniel%22%20Georgia%20Tech&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "player not in box"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3658,32 +3706,34 @@
     "severity": "ok",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 12,
+        "Game found, not in box score": 7,
+        "found stats": 10,
         "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 4,
-        "No game listed today": 4,
+        "No game listed today": 6,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 4,
         "found stats": 1,
-        "Game found, not in box score": 1
+        "Game found, not in box score": 3
       },
       "NCAA.com": {
         "found stats": 1,
         "Game found, not in box score": 3,
+        "Stale data — skipped": 2,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "No game listed today": 4,
-        "player not in box": 1,
+        "No game listed today": 6,
+        "player not in box": 3,
         "found player": 1
       },
       "NCAA.org": {
-        "Game found, not in box score": 4
+        "Game found, not in box score": 4,
+        "Stale data — skipped": 2
       }
     },
     "blocked_sources": [],
@@ -3691,6 +3741,8 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Adam McKelvey",
+      "Caleb Daniel",
       "Duke McCarron"
     ],
     "total_clients": 83,
@@ -3699,17 +3751,11 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 2,
+          "success": 3,
           "blocked": 0
         }
       }
