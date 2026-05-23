@@ -1,163 +1,5 @@
 [
   {
-    "generated_at": "2026-05-16T18:32:23.169895+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Myles Bailey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Henry Zatkowski",
-      "Ty Finkbeiner",
-      "Alex Kranzler",
-      "Brady St. Pierre",
-      "Brisen Tweedy",
-      "Brooks Wright",
-      "Drew Bellis",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Duke McCarron",
-      "Lee Sowers",
-      "Luke Fithian",
-      "Michael Gillen"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 23,
-        "found game, no player": 20,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "player not in box": 2,
-        "no game found": 18,
-        "found player": 1
-      },
-      "ESPN": {
-        "no game found": 2,
-        "found game, no player": 16,
-        "found stats": 3
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 18
-      },
-      "StatBroadcast": {
-        "no game found": 18,
-        "player not in box": 17,
-        "found player": 8,
-        "fetch failed": 1
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 17,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 14,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 11,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
-    "generated_at": "2026-05-16T18:34:48.530549+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Myles Bailey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Henry Zatkowski",
-      "Ty Finkbeiner",
-      "Alex Kranzler",
-      "Brady St. Pierre",
-      "Brisen Tweedy",
-      "Brooks Wright",
-      "Drew Bellis",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Duke McCarron",
-      "Lee Sowers",
-      "Luke Fithian",
-      "Michael Gillen"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 23,
-        "found game, no player": 20,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "player not in box": 2,
-        "no game found": 18,
-        "found player": 1
-      },
-      "ESPN": {
-        "no game found": 2,
-        "found game, no player": 16,
-        "found stats": 3
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 18
-      },
-      "StatBroadcast": {
-        "no game found": 18,
-        "player not in box": 15,
-        "found player": 8,
-        "fetch failed": 3
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 17,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 7,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 16,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-16T18:47:20.844515+00:00",
     "severity": "warning",
     "blocked_sources": [],
@@ -47460,6 +47302,68 @@
   },
   {
     "generated_at": "2026-05-23T18:19:44.141118+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Adam McKelvey",
+      "Cade Doughty",
+      "Caleb Daniel",
+      "Ryan DeSanto",
+      "Duke McCarron"
+    ],
+    "total_clients": 83,
+    "by_source": {
+      "D1Baseball": {
+        "Game found, not in box score": 7,
+        "found stats": 10,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "player not in box": 4,
+        "No game listed today": 6,
+        "found player": 1
+      },
+      "ESPN": {
+        "No game listed today": 4,
+        "found stats": 1,
+        "Game found, not in box score": 3
+      },
+      "NCAA.com": {
+        "found stats": 1,
+        "Game found, not in box score": 3,
+        "Stale data — skipped": 2,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "No game listed today": 6,
+        "found player": 2,
+        "player not in box": 3
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 4,
+        "Stale data — skipped": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "p.webshare.io",
+      "dead": [],
+      "stats": {
+        "p.webshare.io": {
+          "success": 4,
+          "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-23T18:34:49.958773+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
