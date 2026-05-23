@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T05:59:37.888937+00:00",
+  "generated_at": "2026-05-23T06:11:10.859553+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -81,7 +81,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -191,7 +191,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -247,7 +247,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -695,7 +695,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -934,7 +934,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1119,7 +1119,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1371,7 +1371,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1521,35 +1521,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Home run + 3 hits + 3 RBI",
       "social_search_url": "https://x.com/search?q=%22Joe%20Tiroly%22%20Virginia&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -1733,7 +1713,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-4",
       "social_search_url": "https://x.com/search?q=%22Mason%20Eckelman%22%20Ohio%20State&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -1761,15 +1741,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-22T01:50:02.647063+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -2034,27 +2010,23 @@
       "player_name": "Ty Finkbeiner",
       "team": "Michigan",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Michigan 2, Nebraska 4 | Top 7",
-      "game_status": "Live",
+      "stats_summary": "Game today",
+      "game_context": "Michigan vs Nebraska",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-22",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660399",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869735",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ty%20Finkbeiner%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ty%20Finkbeiner%22%20Michigan&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Stale data — skipped"
         },
         {
           "source": "ESPN",
@@ -2074,7 +2046,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2164,7 +2136,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2682,7 +2654,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2765,7 +2737,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3072,7 +3044,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3321,7 +3293,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3408,7 +3380,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3436,7 +3408,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "0-for-2",
       "social_search_url": "https://x.com/search?q=%22Lee%20Ellis%22%20Ohio%20State&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3464,15 +3436,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-22T01:50:02.647063+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -3524,7 +3492,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3580,7 +3548,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3663,7 +3631,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -4095,45 +4063,41 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 5,
-        "Game found, not in box score": 23,
-        "No game listed today": 1
+        "found stats": 6,
+        "Game found, not in box score": 21,
+        "No game listed today": 1,
+        "Stale data — skipped": 1
       },
       "StatBroadcast": {
-        "found player": 4,
-        "No game listed today": 20,
-        "player not in box": 10,
-        "Couldn't reach site": 1
+        "found player": 5,
+        "No game listed today": 19,
+        "player not in box": 9
       },
       "Sidearm": {
         "player not in box": 13,
-        "No game listed today": 20,
+        "No game listed today": 19,
         "found player": 1
       },
       "ESPN": {
-        "No game listed today": 14,
+        "No game listed today": 13,
         "Game found, not in box score": 9,
         "found stats": 1
       },
       "NCAA.com": {
-        "No game listed today": 4,
+        "No game listed today": 3,
         "Game found, not in box score": 16,
         "found stats": 3
       },
       "NCAA.org": {
-        "Game found, not in box score": 15,
-        "stale (yesterday)": 1,
-        "found stats": 3,
-        "Stale data — skipped": 1
+        "Game found, not in box score": 14,
+        "stale (yesterday)": 2,
+        "found stats": 3
       }
     },
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
-    "carry_forward_clients": [
-      "Mason Eckelman",
-      "Lee Ellis"
-    ],
+    "carry_forward_clients": [],
     "fallback_clients": [
       "Cam Flukey",
       "Dax Kilby",
@@ -4143,7 +4107,6 @@
       "Cade Doughty",
       "Justin Riemer",
       "Tanner Gordon",
-      "Ty Finkbeiner",
       "Kade Brown",
       "Michael Dattalo",
       "Ryan DeSanto",
@@ -4166,11 +4129,7 @@
       "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 4,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 5,
+          "success": 8,
           "blocked": 0
         }
       }
