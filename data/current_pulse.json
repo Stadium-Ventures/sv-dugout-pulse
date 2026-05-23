@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T13:19:44.089955+00:00",
+  "generated_at": "2026-05-23T13:34:49.529896+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -207,7 +207,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -672,7 +672,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -1930,7 +1930,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2068,23 +2068,47 @@
       "player_name": "Ben Tryon",
       "team": "Dallas Baptist",
       "level": "NCAA",
-      "stats_summary": "Game at 11:00 AM",
-      "game_context": "Dallas Baptist vs Jacksonville State",
-      "game_status": "Scheduled",
-      "game_time": "11:00 AM",
+      "stats_summary": "Game in progress",
+      "game_context": "Dallas Baptist 0, Jacksonville State 0 | Top 1",
+      "game_status": "Live",
+      "game_time": "11:00 AM ET",
       "game_date": "2026-05-23",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869529",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660785",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "stale (yesterday)"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3027,7 +3051,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3654,42 +3678,46 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 12,
+        "Game found, not in box score": 6,
+        "found stats": 11,
         "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 4,
-        "No game listed today": 4,
+        "No game listed today": 5,
         "found player": 1
       },
       "ESPN": {
         "No game listed today": 4,
         "found stats": 1,
+        "Stale data — skipped": 1,
         "Game found, not in box score": 1
       },
       "NCAA.com": {
         "found stats": 1,
         "Game found, not in box score": 3,
-        "No game listed today": 1
+        "No game listed today": 1,
+        "stale (yesterday)": 1
       },
       "StatBroadcast": {
-        "No game listed today": 4,
-        "blocked (Cloudflare 403)": 1
+        "No game listed today": 5,
+        "blocked (Cloudflare 403)": 2
       },
       "NCAA.org": {
-        "Game found, not in box score": 4
+        "No game listed today": 5
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 1,
+    "blocked_event_count": 2,
     "blocked_clients": [
-      "Ty Finkbeiner"
+      "Ty Finkbeiner",
+      "Ben Tryon"
     ],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Ben Tryon",
       "Duke McCarron"
     ],
     "total_clients": 83,
@@ -3710,7 +3738,7 @@
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 2
+          "blocked": 3
         }
       }
     }
