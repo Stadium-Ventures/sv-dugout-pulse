@@ -12425,7 +12425,7 @@
   },
   {
     "date": "2026-05-23",
-    "updated_at": "2026-05-23T04:25:57.552916+00:00",
+    "updated_at": "2026-05-23T04:40:56.262132+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -12580,7 +12580,7 @@
         "team": "ACL Reds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12602,7 +12602,7 @@
         "team": "Asheville Tourists",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Cancelled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12704,7 +12704,7 @@
         "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Player challenge",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12715,7 +12715,7 @@
         "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Player challenge",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12911,7 +12911,7 @@
         "team": "Vancouver Canadians",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -12976,14 +12976,17 @@
         "team": "Auburn",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
-        "source": "NCAA.com",
+        "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
           "ESPN",
-          "NCAA.com"
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
