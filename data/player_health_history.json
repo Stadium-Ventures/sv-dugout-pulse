@@ -12425,7 +12425,7 @@
   },
   {
     "date": "2026-05-23",
-    "updated_at": "2026-05-23T21:49:53.094623+00:00",
+    "updated_at": "2026-05-23T22:05:01.864986+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -12780,11 +12780,12 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
+          "ESPN",
           "StatBroadcast"
         ]
       },
@@ -12871,8 +12872,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -12942,8 +12943,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -12959,12 +12960,14 @@
         "team": "Auburn",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "D1Baseball",
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
+        "source": "ESPN",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "StatBroadcast"
         ]
       },
       {
