@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T21:34:47.724912+00:00",
+  "generated_at": "2026-05-24T21:55:53.667938+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -66,20 +66,53 @@
       "player_name": "Andrew Kummer",
       "team": "USC Upstate",
       "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Longwood 4, USC Upstate 1 | Final",
-      "game_status": "Final",
+      "stats_summary": "Did Not Play",
+      "game_context": "Longwood 0, USC Upstate 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657210",
+      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=657211",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Andrew%20Kummer%22&btnI=",
       "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Andrew%20Kummer%22%20USC%20Upstate&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
+      "data_source": "D1Baseball",
+      "fetch_diagnostic": [
+        {
+          "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Game found, not in box score"
+        }
+      ],
       "stats_captured_at": null,
       "stats_captured_status": null,
       "is_client": false,
@@ -87,8 +120,7 @@
         "draft_class": "2028",
         "position": "RHP",
         "roster_priority": 1
-      },
-      "game_number": 1
+      }
     },
     {
       "player_name": "Bo Lowrance",
@@ -148,8 +180,8 @@
       "player_name": "Bruce Littleton",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Louisiana 2, Southern Miss 11 | Top 9",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Louisiana 7, Southern Miss 11 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-24",
@@ -160,8 +192,41 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
+      "data_source": "D1Baseball",
+      "fetch_diagnostic": [
+        {
+          "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Game found, not in box score"
+        }
+      ],
       "stats_captured_at": null,
       "stats_captured_status": null,
       "is_client": false,
@@ -169,36 +234,7 @@
         "draft_class": "2028",
         "position": "LHP",
         "roster_priority": 1
-      },
-      "game_number": 1
-    },
-    {
-      "player_name": "Bruce Littleton",
-      "team": "Southern Miss",
-      "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Troy 2, Southern Miss 6 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-05-24",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660419",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": false,
-      "tags": {
-        "draft_class": "2028",
-        "position": "LHP",
-        "roster_priority": 1
-      },
-      "game_number": 2
+      }
     },
     {
       "player_name": "Cam Flukey",
@@ -319,8 +355,8 @@
       "player_name": "David Hagaman",
       "team": "Hillsboro Hops",
       "level": "Pro",
-      "stats_summary": "4.2 IP, 2 H, 0 ER, 5 K, 2 BB",
-      "game_context": "Hillsboro Hops 5, Eugene Emeralds 0 | Bottom 5",
+      "stats_summary": "5.0 IP, 2 H, 0 ER, 5 K, 4 BB",
+      "game_context": "Hillsboro Hops 5, Eugene Emeralds 0 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-24",
@@ -336,7 +372,7 @@
       "box_score_url": "https://www.mlb.com/gameday/819420",
       "player_profile_url": "https://www.mlb.com/player/701908",
       "performance_grade": "✅ Good",
-      "grade_reason": "5 strikeouts with good command",
+      "grade_reason": "Scoreless in 5 IP",
       "social_search_url": "https://x.com/search?q=%22David%20Hagaman%22%20Diamondbacks&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -516,7 +552,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "1-1, R",
-      "game_context": "Ontario Tower Buzzers 1, Inland Empire 66ers 0 | Bottom 2",
+      "game_context": "Ontario Tower Buzzers 1, Inland Empire 66ers 0 | Top 3",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-24",
@@ -561,15 +597,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -837,7 +881,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1015,7 +1059,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1748,8 +1792,8 @@
       "player_name": "Sterlin Thompson",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "1-2",
-      "game_context": "Colorado Rockies 0, Arizona Diamondbacks 7 | Bottom 5",
+      "stats_summary": "1-3",
+      "game_context": "Colorado Rockies 0, Arizona Diamondbacks 7 | Middle 6",
       "game_status": "Live",
       "game_time": "4:10 PM ET",
       "game_date": "2026-05-24",
@@ -1764,8 +1808,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/825081",
       "player_profile_url": "https://www.mlb.com/player/694514",
-      "performance_grade": "✅ Good",
-      "grade_reason": "Productive game",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Sterlin%20Thompson%22%20Rockies&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1783,7 +1827,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Colorado Rockies 0, Arizona Diamondbacks 7 | Bottom 5",
+      "game_context": "Colorado Rockies 0, Arizona Diamondbacks 7 | Middle 6",
       "game_status": "Live",
       "game_time": "4:10 PM ET",
       "game_date": "2026-05-24",
@@ -1817,7 +1861,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "1-2, BB",
-      "game_context": "Hillsboro Hops 5, Eugene Emeralds 0 | Bottom 5",
+      "game_context": "Hillsboro Hops 5, Eugene Emeralds 0 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-24",
@@ -2000,9 +2044,9 @@
       "player_name": "Austin Amaral",
       "team": "Wilmington Blue Rocks",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Jersey Shore BlueClaws 0, Wilmington Blue Rocks 4 | End 6",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Jersey Shore BlueClaws 1, Wilmington Blue Rocks 4 | Final",
+      "game_status": "Final",
       "game_time": "12:05 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -2016,7 +2060,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/821840",
       "player_profile_url": "https://www.mlb.com/player/694544",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Austin%20Amaral%22%20Nationals&f=live",
       "data_source": "MLB Stats API",
@@ -2055,7 +2099,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2588,7 +2632,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Stockton Ports 4, San Jose Giants 4 | Top 6",
+      "game_context": "Stockton Ports 4, San Jose Giants 4 | Middle 7",
       "game_status": "Live",
       "game_time": "4:00 PM ET",
       "game_date": "2026-05-24",
@@ -2683,7 +2727,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tacoma Rainiers 1, Salt Lake Bees 5 | Bottom 4",
+      "game_context": "Tacoma Rainiers 1, Salt Lake Bees 5 | Middle 5",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-24",
@@ -2750,8 +2794,8 @@
       "player_name": "Sam Mitchell",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Louisiana 2, Southern Miss 11 | Top 9",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Louisiana 7, Southern Miss 11 | Top 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-24",
@@ -2762,8 +2806,41 @@
       "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
+      "data_source": "D1Baseball",
+      "fetch_diagnostic": [
+        {
+          "source": "D1Baseball",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Game found, not in box score"
+        }
+      ],
       "stats_captured_at": null,
       "stats_captured_status": null,
       "is_client": true,
@@ -2771,36 +2848,7 @@
         "draft_class": "2028",
         "position": "Pitcher",
         "roster_priority": 3
-      },
-      "game_number": 1
-    },
-    {
-      "player_name": "Sam Mitchell",
-      "team": "Southern Miss",
-      "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Troy 2, Southern Miss 6 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-05-24",
-      "is_yesterday": false,
-      "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660419",
-      "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": true,
-      "tags": {
-        "draft_class": "2028",
-        "position": "Pitcher",
-        "roster_priority": 3
-      },
-      "game_number": 2
+      }
     },
     {
       "player_name": "Tanner Chun",
@@ -2921,8 +2969,8 @@
       "player_name": "Brennan Orf",
       "team": "Vancouver Canadians",
       "level": "Pro",
-      "stats_summary": "0-2, K",
-      "game_context": "Vancouver Canadians 4, Spokane Indians 5 | Bottom 4",
+      "stats_summary": "0-2, BB, K",
+      "game_context": "Vancouver Canadians 6, Spokane Indians 5 | Bottom 5",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-24",
@@ -3110,7 +3158,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3156,17 +3204,37 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Extra-base hit (double)",
+      "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3406,8 +3474,8 @@
       "team": "Oklahoma City Comets",
       "level": "Pro",
       "stats_summary": "0-2, R, 2 BB, 2 K",
-      "game_context": "Reno Aces 2, Oklahoma City Comets 5 | Top 9",
-      "game_status": "Live",
+      "game_context": "Reno Aces 3, Oklahoma City Comets 5 | Final",
+      "game_status": "Final",
       "game_time": "3:05 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -3640,37 +3708,44 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "No game listed today": 1,
-        "found stats": 2,
-        "Game found, not in box score": 4
-      },
-      "ESPN": {
-        "No game listed today": 2,
-        "Game found, not in box score": 3
-      },
-      "NCAA.com": {
-        "found stats": 2,
-        "Game found, not in box score": 3
+        "Game found, not in box score": 9,
+        "No game listed today": 1
       },
       "StatBroadcast": {
-        "found player": 2,
-        "player not in box": 3,
-        "No game listed today": 3,
-        "Couldn't reach site": 1
+        "Couldn't reach site": 8,
+        "No game listed today": 7,
+        "blocked (Cloudflare 403)": 4
+      },
+      "ESPN": {
+        "No game listed today": 5,
+        "Game found, not in box score": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 6,
+        "found stats": 3,
+        "No game listed today": 1
       },
       "Sidearm": {
-        "No game listed today": 3
+        "No game listed today": 7
       },
       "NCAA.org": {
-        "Game found, not in box score": 3
+        "Game found, not in box score": 6,
+        "found stats": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 4,
+    "blocked_clients": [
+      "Kyle Jones",
+      "Caleb Daniel",
+      "Ben Tryon",
+      "Lucas Steele"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
@@ -3682,10 +3757,11 @@
       "Austin Amaral",
       "Kade Brown",
       "Najer Victor",
+      "Sam Mitchell",
       "Xavier Kolhosser",
       "Lee Sowers"
     ],
-    "total_clients": 86,
+    "total_clients": 85,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
@@ -3693,6 +3769,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -3701,8 +3778,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 12,
-          "blocked": 0
+          "success": 0,
+          "blocked": 10
         }
       }
     }

@@ -13006,18 +13006,25 @@
   },
   {
     "date": "2026-05-24",
-    "updated_at": "2026-05-24T21:34:47.779759+00:00",
+    "updated_at": "2026-05-24T21:55:53.723403+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Final",
-        "captured": false,
+        "game_status": "Live",
+        "captured": true,
         "blocked": false,
-        "source": "",
-        "sources_tried": []
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
       },
       {
         "name": "Bruce Littleton",
@@ -13025,21 +13032,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
+        "captured": true,
         "blocked": false,
-        "source": "",
-        "sources_tried": []
-      },
-      {
-        "name": "Bruce Littleton",
-        "team": "Southern Miss",
-        "level": "NCAA",
-        "tier": null,
-        "game_status": "Final",
-        "captured": false,
-        "blocked": false,
-        "source": "",
-        "sources_tried": []
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
       },
       {
         "name": "Chase Petty",
@@ -13164,8 +13167,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Final",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -13324,7 +13327,7 @@
         "team": "Wilmington Blue Rocks",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -13402,21 +13405,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
+        "captured": true,
         "blocked": false,
-        "source": "",
-        "sources_tried": []
-      },
-      {
-        "name": "Sam Mitchell",
-        "team": "Southern Miss",
-        "level": "NCAA",
-        "tier": null,
-        "game_status": "Final",
-        "captured": false,
-        "blocked": false,
-        "source": "",
-        "sources_tried": []
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
       },
       {
         "name": "Xavier Kolhosser",
@@ -13485,7 +13484,7 @@
         "team": "Oklahoma City Comets",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
