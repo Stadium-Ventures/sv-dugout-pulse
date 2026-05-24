@@ -1,6 +1,40 @@
 {
-  "generated_at": "2026-05-24T14:05:03.903907+00:00",
+  "generated_at": "2026-05-24T14:19:56.740129+00:00",
   "players": [
+    {
+      "player_name": "Aaron Watson",
+      "team": "ACL Reds",
+      "level": "Pro",
+      "stats_summary": "Next: @ ACL Rangers - Mon 05/25 9:00 PM ET",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Mon 05/25",
+        "date_full": "2026-05-25",
+        "opponent": "ACL Rangers",
+        "home_away": "@",
+        "time": "9:00 PM ET",
+        "display": "@ ACL Rangers - Mon 05/25 9:00 PM ET"
+      },
+      "box_score_url": null,
+      "player_profile_url": "https://www.mlb.com/player/826209",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Aaron%20Watson%22%20Reds&f=live",
+      "data_source": "",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 1
+      }
+    },
     {
       "player_name": "Aiden Robbins",
       "team": "Texas",
@@ -119,7 +153,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 0, Southern Miss 0 | Top 1",
+      "game_context": "Troy 0, Southern Miss 0 | Bottom 1",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -142,7 +176,7 @@
         },
         {
           "source": "ESPN",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "NCAA.com",
@@ -312,10 +346,10 @@
       "fetch_diagnostic": null,
       "stats_captured_at": null,
       "stats_captured_status": null,
-      "is_client": false,
+      "is_client": true,
       "tags": {
         "draft_class": "",
-        "position": "RHP",
+        "position": "Pitcher",
         "roster_priority": 1
       }
     },
@@ -531,23 +565,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -792,40 +818,6 @@
       }
     },
     {
-      "player_name": "Aaron Watson",
-      "team": "ACL Reds",
-      "level": "Pro",
-      "stats_summary": "Next: @ ACL Rangers - Mon 05/25 9:00 PM ET",
-      "game_context": "",
-      "game_status": "N/A",
-      "game_time": null,
-      "game_date": null,
-      "is_yesterday": false,
-      "next_game": {
-        "date": "Mon 05/25",
-        "date_full": "2026-05-25",
-        "opponent": "ACL Rangers",
-        "home_away": "@",
-        "time": "9:00 PM ET",
-        "display": "@ ACL Rangers - Mon 05/25 9:00 PM ET"
-      },
-      "box_score_url": null,
-      "player_profile_url": "https://www.mlb.com/player/826209",
-      "performance_grade": "— No Data",
-      "grade_reason": "",
-      "social_search_url": "https://x.com/search?q=%22Aaron%20Watson%22%20Reds&f=live",
-      "data_source": "",
-      "fetch_diagnostic": null,
-      "stats_captured_at": null,
-      "stats_captured_status": null,
-      "is_client": true,
-      "tags": {
-        "draft_class": "N/A",
-        "position": "Pitcher",
-        "roster_priority": 2
-      }
-    },
-    {
       "player_name": "Adam McKelvey",
       "team": "Georgia Tech",
       "level": "NCAA",
@@ -915,10 +907,10 @@
       "player_name": "Cade Doughty",
       "team": "New Hampshire Fisher Cats",
       "level": "Pro",
-      "stats_summary": "Game at 1:05 PM ET",
-      "game_context": "Hartford Yard Goats vs New Hampshire Fisher Cats | 1:05 PM ET",
-      "game_status": "Scheduled",
-      "game_time": "1:05 PM ET",
+      "stats_summary": "Game cancelled",
+      "game_context": "",
+      "game_status": "Cancelled",
+      "game_time": null,
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": {
@@ -929,9 +921,9 @@
         "time": "6:05 PM ET",
         "display": "@ Somerset Patriots - Tue 05/26 6:05 PM ET"
       },
-      "box_score_url": "https://www.mlb.com/gameday/818537",
+      "box_score_url": null,
       "player_profile_url": "https://www.mlb.com/player/683103",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Cade%20Doughty%22%20Jays&f=live",
       "data_source": "MLB Stats API",
@@ -2009,25 +2001,17 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "2 hits",
+      "grade_reason": "2 extra-base hits",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -2750,7 +2734,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 0, Southern Miss 0 | Top 1",
+      "game_context": "Troy 0, Southern Miss 0 | Bottom 1",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -2773,7 +2757,7 @@
         },
         {
           "source": "ESPN",
-          "outcome": "Stale data — skipped"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "NCAA.com",
@@ -3638,22 +3622,23 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 4,
-        "Game found, not in box score": 5,
+        "found stats": 6,
+        "Game found, not in box score": 3,
         "No game listed today": 1
       },
       "StatBroadcast": {
         "Couldn't reach site": 1,
         "No game listed today": 3,
-        "blocked (Cloudflare 403)": 4
+        "found player": 2,
+        "blocked (Cloudflare 403)": 2
       },
       "ESPN": {
-        "Stale data — skipped": 2,
-        "No game listed today": 4
+        "Game found, not in box score": 2,
+        "No game listed today": 2
       },
       "NCAA.com": {
         "Stale data — skipped": 2,
-        "found stats": 3,
+        "found stats": 1,
         "No game listed today": 1
       },
       "Sidearm": {
@@ -3667,10 +3652,8 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 4,
+    "blocked_event_count": 2,
     "blocked_clients": [
-      "Kyle Jones",
-      "Ben Tryon",
       "Sam Mitchell",
       "Lucas Steele"
     ],
@@ -3678,7 +3661,7 @@
     "fallback_clients": [
       "Sam Mitchell"
     ],
-    "total_clients": 85,
+    "total_clients": 86,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
@@ -3695,8 +3678,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 6
+          "success": 2,
+          "blocked": 4
         }
       }
     }
