@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T23:25:55.191402+00:00",
+  "generated_at": "2026-05-24T23:40:19.904223+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -67,7 +67,7 @@
       "team": "USC Upstate",
       "level": "NCAA",
       "stats_summary": "Did Not Play",
-      "game_context": "Longwood 1, USC Upstate 6 | Top 5",
+      "game_context": "Longwood 1, USC Upstate 8 | Bottom 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-24",
@@ -552,7 +552,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "3-4, RBI, 2 R, SB",
-      "game_context": "Ontario Tower Buzzers 9, Inland Empire 66ers 3 | Top 7",
+      "game_context": "Ontario Tower Buzzers 9, Inland Empire 66ers 3 | End 7",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-24",
@@ -597,23 +597,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -719,7 +711,7 @@
       "team": "Fayetteville Woodpeckers",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fredericksburg Nationals 9, Fayetteville Woodpeckers 0 | Middle 5",
+      "game_context": "Fredericksburg Nationals 9, Fayetteville Woodpeckers 1 | Top 6",
       "game_status": "Live",
       "game_time": "2:05 PM ET",
       "game_date": "2026-05-24",
@@ -881,7 +873,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1059,7 +1051,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -2150,9 +2142,9 @@
       "player_name": "Blake Rambusch",
       "team": "Arkansas Travelers",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 1st (2B)",
-      "game_context": "Springfield Cardinals vs Arkansas Travelers | 7:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "0-1, K",
+      "game_context": "Springfield Cardinals 0, Arkansas Travelers 0 | Top 2",
+      "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -2166,8 +2158,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/817572",
       "player_profile_url": "https://www.mlb.com/player/800683",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Blake%20Rambusch%22%20Mariners&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2462,9 +2454,9 @@
       "player_name": "Davis Sharpe",
       "team": "Akron RubberDucks",
       "level": "Pro",
-      "stats_summary": "Game at 5:05 PM ET",
-      "game_context": "Akron RubberDucks vs Harrisburg Senators | 5:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Akron RubberDucks 0, Harrisburg Senators 0 | Top 1",
+      "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -2478,7 +2470,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/818683",
       "player_profile_url": "https://www.mlb.com/player/681571",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Davis%20Sharpe%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -2632,8 +2624,8 @@
       "player_name": "Jake Munroe",
       "team": "Tri-City Dust Devils",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 4th (3B)",
-      "game_context": "Tri-City Dust Devils 0, Everett AquaSox 0 | Bottom 1",
+      "stats_summary": "1-1, HR, RBI, R",
+      "game_context": "Tri-City Dust Devils 4, Everett AquaSox 0 | Middle 2",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-24",
@@ -2648,8 +2640,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/819359",
       "player_profile_url": "https://www.mlb.com/player/827719",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Home run",
       "social_search_url": "https://x.com/search?q=%22Jake%20Munroe%22%20Angels&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2762,7 +2754,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tacoma Rainiers 8, Salt Lake Bees 12 | Bottom 8",
+      "game_context": "Tacoma Rainiers 8, Salt Lake Bees 12 | Top 9",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-24",
@@ -3193,7 +3185,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3241,7 +3233,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3269,15 +3261,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-24T02:53:21.452557+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -3344,7 +3332,7 @@
       "team": "Columbus Clingstones",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Columbus Clingstones 2, Pensacola Blue Wahoos 0 | Bottom 1",
+      "game_context": "Columbus Clingstones 4, Pensacola Blue Wahoos 0 | Middle 2",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-24",
@@ -3750,21 +3738,24 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 9,
-        "No game listed today": 1
+        "Game found, not in box score": 8,
+        "No game listed today": 1,
+        "found stats": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 8,
+        "Couldn't reach site": 6,
         "No game listed today": 7,
-        "blocked (Cloudflare 403)": 4
+        "found player": 1,
+        "player not in box": 2,
+        "blocked (Cloudflare 403)": 3
       },
       "ESPN": {
-        "No game listed today": 5,
+        "No game listed today": 4,
         "Game found, not in box score": 5
       },
       "NCAA.com": {
         "Game found, not in box score": 6,
-        "found stats": 3,
+        "found stats": 2,
         "No game listed today": 1
       },
       "Sidearm": {
@@ -3772,25 +3763,19 @@
       },
       "NCAA.org": {
         "Game found, not in box score": 6,
-        "No game listed today": 1
-      },
-      "game log": {
         "found stats": 1
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 4,
+    "blocked_event_count": 3,
     "blocked_clients": [
-      "Kyle Jones",
-      "Caleb Daniel",
       "Ben Tryon",
+      "Lee Sowers",
       "Lucas Steele"
     ],
-    "carry_forward_clients": [
-      "Lucas Steele"
-    ],
+    "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
       "Adam McKelvey",
@@ -3799,6 +3784,7 @@
       "Tanner Gordon",
       "Austin Amaral",
       "Austin Amaral",
+      "Davis Sharpe",
       "Davis Sharpe",
       "Najer Victor",
       "Sam Mitchell",
@@ -3823,8 +3809,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 10
+          "success": 2,
+          "blocked": 9
         }
       }
     }
