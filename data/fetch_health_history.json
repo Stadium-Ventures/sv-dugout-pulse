@@ -44411,14 +44411,14 @@
     }
   },
   {
-    "generated_at": "2026-05-24T22:25:06.180418+00:00",
+    "generated_at": "2026-05-24T22:36:26.254864+00:00",
     "severity": "warning",
     "blocked_sources": [
       "StatBroadcast"
     ],
     "blocked_event_count": 4,
     "blocked_clients": [
-      "Kyle Jones",
+      "Adam McKelvey",
       "Caleb Daniel",
       "Ben Tryon",
       "Lucas Steele"
@@ -44432,7 +44432,6 @@
       "Tanner Gordon",
       "Austin Amaral",
       "Austin Amaral",
-      "Kade Brown",
       "Najer Victor",
       "Sam Mitchell",
       "Xavier Kolhosser",
@@ -44441,21 +44440,23 @@
     "total_clients": 85,
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 9,
-        "No game listed today": 1
+        "Game found, not in box score": 8,
+        "No game listed today": 1,
+        "found stats": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 8,
+        "Couldn't reach site": 6,
         "No game listed today": 7,
+        "found player": 1,
         "blocked (Cloudflare 403)": 4
       },
       "ESPN": {
-        "No game listed today": 5,
+        "No game listed today": 4,
         "Game found, not in box score": 5
       },
       "NCAA.com": {
         "Game found, not in box score": 6,
-        "found stats": 3,
+        "found stats": 2,
         "No game listed today": 1
       },
       "Sidearm": {
@@ -44478,12 +44479,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 1,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 10
+          "blocked": 8
         }
       }
     }
