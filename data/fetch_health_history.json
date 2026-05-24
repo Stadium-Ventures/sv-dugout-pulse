@@ -1,72 +1,5 @@
 [
   {
-    "generated_at": "2026-05-17T12:31:49.689638+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 2,
-    "blocked_clients": [
-      "Riley Goodman"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 29,
-        "found stats": 11,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "player not in box": 26,
-        "no game found": 23,
-        "found player": 11
-      },
-      "ESPN": {
-        "no game found": 30
-      },
-      "NCAA.com": {
-        "found game, no player": 23,
-        "found stats": 7
-      },
-      "StatBroadcast": {
-        "no game found": 23,
-        "blocked (Cloudflare 403)": 2,
-        "fetch failed": 1
-      },
-      "NCAA.org": {
-        "found game, no player": 4,
-        "no game found": 18,
-        "found stats": 1
-      },
-      "game log": {
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 4
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-17T12:46:57.176853+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -45027,6 +44960,67 @@
         "geo.iproyal.com": {
           "success": 5,
           "blocked": 0
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-24T12:34:45.825940+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 3,
+    "blocked_clients": [
+      "Kyle Jones",
+      "Ben Tryon",
+      "Lucas Steele"
+    ],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 6,
+        "No game listed today": 1,
+        "Game found, not in box score": 3
+      },
+      "ESPN": {
+        "No game listed today": 4
+      },
+      "NCAA.com": {
+        "found stats": 3,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "blocked (Cloudflare 403)": 3,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "No game listed today": 1
+      },
+      "NCAA.org": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
+          "blocked": 5
         }
       }
     }
