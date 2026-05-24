@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T03:08:20.348421+00:00",
+  "generated_at": "2026-05-24T03:23:05.091804+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -545,7 +545,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Ontario Tower Buzzers 5, Inland Empire 66ers 0 | Bottom 4",
+      "game_context": "Ontario Tower Buzzers 5, Inland Empire 66ers 0 | End 5",
       "game_status": "Live",
       "game_time": "9:35 PM ET",
       "game_date": "2026-05-24",
@@ -1806,8 +1806,8 @@
       "player_name": "Sterlin Thompson",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "0-1",
-      "game_context": "Colorado Rockies 0, Arizona Diamondbacks 3 | Bottom 3",
+      "stats_summary": "0-1, BB",
+      "game_context": "Colorado Rockies 2, Arizona Diamondbacks 3 | Top 4",
       "game_status": "Live",
       "game_time": "10:10 PM ET",
       "game_date": "2026-05-24",
@@ -1822,8 +1822,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/825080",
       "player_profile_url": "https://www.mlb.com/player/694514",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-1",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Reached base early",
       "social_search_url": "https://x.com/search?q=%22Sterlin%20Thompson%22%20Rockies&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1841,7 +1841,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Colorado Rockies 0, Arizona Diamondbacks 3 | Bottom 3",
+      "game_context": "Colorado Rockies 2, Arizona Diamondbacks 3 | Top 4",
       "game_status": "Live",
       "game_time": "10:10 PM ET",
       "game_date": "2026-05-24",
@@ -2605,7 +2605,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "1-2, R",
-      "game_context": "Tri-City Dust Devils 3, Everett AquaSox 0 | Top 4",
+      "game_context": "Tri-City Dust Devils 3, Everett AquaSox 1 | End 4",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-24",
@@ -2734,7 +2734,7 @@
       "team": "Salt Lake Bees",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Tacoma Rainiers 5, Salt Lake Bees 3 | Bottom 8",
+      "game_context": "Tacoma Rainiers 5, Salt Lake Bees 3 | Bottom 9",
       "game_status": "Live",
       "game_time": "8:35 PM ET",
       "game_date": "2026-05-24",
@@ -3780,11 +3780,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 6,
+          "success": 3,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 3,
           "blocked": 0
         }
       }
