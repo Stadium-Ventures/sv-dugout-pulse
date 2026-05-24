@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T04:53:01.147100+00:00",
+  "generated_at": "2026-05-24T05:08:03.918526+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -69,7 +69,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -1807,8 +1807,8 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "0-3, RBI, BB",
-      "game_context": "Colorado Rockies 4, Arizona Diamondbacks 5 | Bottom 8",
-      "game_status": "Live",
+      "game_context": "Colorado Rockies 4, Arizona Diamondbacks 5 | Final",
+      "game_status": "Final",
       "game_time": "10:10 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -1840,9 +1840,9 @@
       "player_name": "Tanner Gordon",
       "team": "Colorado Rockies",
       "level": "Pro",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Colorado Rockies 4, Arizona Diamondbacks 5 | Bottom 8",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Colorado Rockies 4, Arizona Diamondbacks 5 | Final",
+      "game_status": "Final",
       "game_time": "10:10 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -1856,7 +1856,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/825080",
       "player_profile_url": "https://www.mlb.com/player/685299",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Tanner%20Gordon%22%20Rockies&f=live",
       "data_source": "MLB Stats API",
@@ -2605,7 +2605,7 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "2-4, HR, RBI, 2 R, K",
-      "game_context": "Tri-City Dust Devils 7, Everett AquaSox 3 | Top 9",
+      "game_context": "Tri-City Dust Devils 7, Everett AquaSox 3 | Bottom 9",
       "game_status": "Live",
       "game_time": "10:05 PM ET",
       "game_date": "2026-05-24",
@@ -3191,7 +3191,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3742,22 +3742,17 @@
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "blocked (Cloudflare 403)": 2,
+        "player not in box": 7,
         "No game listed today": 10,
-        "player not in box": 5,
         "found player": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 10
       }
     },
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 2,
-    "blocked_clients": [
-      "Lee Sowers"
-    ],
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
@@ -3787,17 +3782,16 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 2,
-          "blocked": 3
+          "success": 6,
+          "blocked": 0
         }
       }
     }
