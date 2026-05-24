@@ -46086,7 +46086,7 @@
     }
   },
   {
-    "generated_at": "2026-05-24T01:53:25.170231+00:00",
+    "generated_at": "2026-05-24T02:01:51.684173+00:00",
     "severity": "warning",
     "blocked_sources": [],
     "blocked_event_count": 0,
@@ -46138,7 +46138,7 @@
         "found player": 3
       },
       "NCAA.org": {
-        "No game listed today": 10
+        "Game found, not in box score": 10
       }
     },
     "proxy_pool": {
@@ -46146,11 +46146,17 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
-          "success": 9,
+          "success": 4,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 5,
           "blocked": 0
         }
       }
