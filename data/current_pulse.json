@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T13:50:15.861987+00:00",
+  "generated_at": "2026-05-24T14:05:03.903907+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -119,7 +119,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 0, Southern Miss 0 | Top 1",
+      "game_context": "Troy 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -138,7 +138,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -531,15 +531,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2001,17 +2009,25 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Ben%20Tryon%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "2 extra-base hits",
+      "grade_reason": "2 hits",
       "social_search_url": "https://x.com/search?q=%22Ben%20Tryon%22%20Dallas%20Baptist&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2734,7 +2750,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 0, Southern Miss 0 | Top 1",
+      "game_context": "Troy 0, Southern Miss 0 | Top 1",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -2753,7 +2769,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3622,23 +3638,22 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 6,
-        "Game found, not in box score": 3,
+        "found stats": 4,
+        "Game found, not in box score": 5,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "player not in box": 2,
+        "Couldn't reach site": 1,
         "No game listed today": 3,
-        "found player": 2,
-        "blocked (Cloudflare 403)": 1
+        "blocked (Cloudflare 403)": 4
       },
       "ESPN": {
         "Stale data — skipped": 2,
-        "No game listed today": 2
+        "No game listed today": 4
       },
       "NCAA.com": {
         "Stale data — skipped": 2,
-        "found stats": 1,
+        "found stats": 3,
         "No game listed today": 1
       },
       "Sidearm": {
@@ -3652,8 +3667,11 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 1,
+    "blocked_event_count": 4,
     "blocked_clients": [
+      "Kyle Jones",
+      "Ben Tryon",
+      "Sam Mitchell",
       "Lucas Steele"
     ],
     "carry_forward_clients": [],
@@ -3677,8 +3695,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 3
+          "success": 0,
+          "blocked": 6
         }
       }
     }
