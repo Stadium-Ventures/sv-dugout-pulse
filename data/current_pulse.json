@@ -593,15 +593,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3699,9 +3707,8 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 8,
-        "No game listed today": 1,
-        "found stats": 1
+        "Game found, not in box score": 9,
+        "No game listed today": 1
       },
       "StatBroadcast": {
         "Couldn't reach site": 6,
@@ -3710,12 +3717,12 @@
         "blocked (Cloudflare 403)": 4
       },
       "ESPN": {
-        "No game listed today": 4,
+        "No game listed today": 5,
         "Game found, not in box score": 5
       },
       "NCAA.com": {
         "Game found, not in box score": 6,
-        "found stats": 2,
+        "found stats": 3,
         "No game listed today": 1
       },
       "Sidearm": {
