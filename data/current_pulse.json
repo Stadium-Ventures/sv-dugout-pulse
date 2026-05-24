@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T16:35:03.252214+00:00",
+  "generated_at": "2026-05-24T16:49:47.446784+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -153,7 +153,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 1, Southern Miss 6 | Bottom 7",
+      "game_context": "Troy 1, Southern Miss 6 | Top 8",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -235,9 +235,9 @@
       "player_name": "Chase Petty",
       "team": "Louisville Bats",
       "level": "Pro",
-      "stats_summary": "Game at 1:05 PM ET",
-      "game_context": "Louisville Bats vs Columbus Clippers | 1:05 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "No game data",
+      "game_context": "Louisville Bats vs Columbus Clippers | Delayed Start",
+      "game_status": "Delayed Start",
       "game_time": "1:05 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -251,7 +251,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/816806",
       "player_profile_url": "https://www.mlb.com/player/695534",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Chase%20Petty%22%20Reds&f=live",
       "data_source": "MLB Stats API",
@@ -358,7 +358,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | End 2",
+      "game_context": "Clearwater Threshers 0, Tampa Tarpons 2 | End 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
@@ -565,15 +565,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -822,7 +830,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "North Carolina 1, Georgia Tech 1 | Bottom 2",
+      "game_context": "North Carolina 1, Georgia Tech 1 | Top 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
@@ -841,7 +849,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -1000,7 +1008,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "North Carolina 1, Georgia Tech 1 | Bottom 2",
+      "game_context": "North Carolina 1, Georgia Tech 1 | Top 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
@@ -1019,7 +1027,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -1082,9 +1090,9 @@
       "player_name": "Carter Johnson",
       "team": "Jupiter Hammerheads",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 3rd (3B)",
-      "game_context": "Daytona Tortugas vs Jupiter Hammerheads | 12:30 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "0-1, K",
+      "game_context": "Daytona Tortugas 0, Jupiter Hammerheads 0 | Top 2",
+      "game_status": "Live",
       "game_time": "12:30 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -1098,8 +1106,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820547",
       "player_profile_url": "https://www.mlb.com/player/815793",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Carter%20Johnson%22%20Marlins&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -1692,7 +1700,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-1, K",
-      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 2",
+      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 3",
       "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-24",
@@ -2653,7 +2661,7 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 2",
+      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 3",
       "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-24",
@@ -2755,7 +2763,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 1, Southern Miss 6 | Bottom 7",
+      "game_context": "Troy 1, Southern Miss 6 | Top 8",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -2865,7 +2873,7 @@
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 1 | Top 2",
+      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 1 | Bottom 3",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
@@ -3095,7 +3103,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "North Carolina 1, Georgia Tech 1 | Bottom 2",
+      "game_context": "North Carolina 1, Georgia Tech 1 | Top 3",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-24",
@@ -3114,7 +3122,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3162,7 +3170,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3190,15 +3198,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-24T02:53:21.452557+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -3668,27 +3672,25 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found stats": 2,
-        "Game found, not in box score": 7,
+        "found stats": 1,
+        "Game found, not in box score": 8,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 1,
+        "Couldn't reach site": 3,
         "No game listed today": 6,
-        "found player": 1,
-        "player not in box": 2,
-        "blocked (Cloudflare 403)": 4
+        "blocked (Cloudflare 403)": 5
       },
       "ESPN": {
         "Game found, not in box score": 5,
-        "No game listed today": 3
+        "No game listed today": 4
       },
       "NCAA.com": {
         "Stale data — skipped": 4,
-        "found stats": 2,
+        "found stats": 3,
         "Game found, not in box score": 1,
         "No game listed today": 1
       },
@@ -3697,25 +3699,21 @@
       },
       "NCAA.org": {
         "Stale data — skipped": 5,
-        "No game listed today": 1
-      },
-      "game log": {
         "found stats": 1
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 4,
+    "blocked_event_count": 5,
     "blocked_clients": [
+      "Kyle Jones",
+      "Caleb Daniel",
       "Ben Tryon",
       "Sam Mitchell",
-      "Lee Sowers",
       "Lucas Steele"
     ],
-    "carry_forward_clients": [
-      "Lucas Steele"
-    ],
+    "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
       "Adam McKelvey",
@@ -3737,12 +3735,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 2,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 6
+          "blocked": 7
         }
       }
     }

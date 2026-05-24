@@ -13006,7 +13006,7 @@
   },
   {
     "date": "2026-05-24",
-    "updated_at": "2026-05-24T16:35:03.308931+00:00",
+    "updated_at": "2026-05-24T16:49:47.501241+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -13044,7 +13044,7 @@
         "team": "Louisville Bats",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Delayed Start",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -13162,8 +13162,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": true,
-        "blocked": false,
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
@@ -13179,7 +13179,7 @@
         "team": "Jupiter Hammerheads",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -13451,8 +13451,8 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
-        "blocked": true,
+        "captured": true,
+        "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
           "D1Baseball",
