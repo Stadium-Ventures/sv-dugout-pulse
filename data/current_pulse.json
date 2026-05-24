@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T16:05:02.078104+00:00",
+  "generated_at": "2026-05-24T16:19:55.647792+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -153,7 +153,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 1, Southern Miss 6 | Bottom 5",
+      "game_context": "Troy 1, Southern Miss 6 | Bottom 6",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -358,7 +358,7 @@
       "team": "Tampa Tarpons",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | Top 1",
+      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | Top 2",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
@@ -829,23 +829,47 @@
       "player_name": "Adam McKelvey",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "North Carolina vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "North Carolina 1, Georgia Tech 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869475",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=657496",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Adam%20McKelvey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Adam%20McKelvey%22%20Georgia%20Tech&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -983,23 +1007,47 @@
       "player_name": "Caleb Daniel",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "North Carolina vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "North Carolina 1, Georgia Tech 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869475",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=657496",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Caleb%20Daniel%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Caleb%20Daniel%22%20Georgia%20Tech&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Stale data — skipped"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1651,9 +1699,9 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 2nd (SS)",
-      "game_context": "Palm Beach Cardinals vs St. Lucie Mets | 12:10 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "0-1, K",
+      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 1",
+      "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -1667,8 +1715,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820347",
       "player_profile_url": "https://www.mlb.com/player/805550",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "😐 Routine",
+      "grade_reason": "0-for-1",
       "social_search_url": "https://x.com/search?q=%22Ryan%20Weingartner%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2613,8 +2661,8 @@
       "team": "Palm Beach Cardinals",
       "level": "Pro",
       "stats_summary": "In lineup — batting 4th (1B)",
-      "game_context": "Palm Beach Cardinals vs St. Lucie Mets | 12:10 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Palm Beach Cardinals 0, St. Lucie Mets 0 | Top 1",
+      "game_status": "Live",
       "game_time": "12:10 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -2628,7 +2676,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820347",
       "player_profile_url": "https://www.mlb.com/player/809633",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
@@ -2715,7 +2763,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 1, Southern Miss 6 | Bottom 5",
+      "game_context": "Troy 1, Southern Miss 6 | Bottom 6",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -2824,9 +2872,9 @@
       "player_name": "Xavier Kolhosser",
       "team": "Fort Myers Mighty Mussels",
       "level": "Pro",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "Fort Myers Mighty Mussels vs Dunedin Blue Jays | 12:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Fort Myers Mighty Mussels 0, Dunedin Blue Jays 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -2840,7 +2888,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820667",
       "player_profile_url": "https://www.mlb.com/player/828492",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Xavier%20Kolhosser%22%20Twins&f=live",
       "data_source": "MLB Stats API",
@@ -3054,23 +3102,47 @@
       "player_name": "Lee Sowers",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM",
-      "game_context": "North Carolina vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "North Carolina 1, Georgia Tech 0 | Bottom 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401869475",
+      "box_score_url": "https://stats.statbroadcast.com/statmonitr/?id=657496",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Sowers%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lee%20Sowers%22%20North%20Carolina&f=live",
       "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "Couldn't reach site"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3600,41 +3672,43 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "found stats": 4,
-        "Game found, not in box score": 5,
+        "found stats": 1,
+        "Game found, not in box score": 8,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "Couldn't reach site": 1,
-        "No game listed today": 3,
-        "blocked (Cloudflare 403)": 4
+        "Couldn't reach site": 3,
+        "No game listed today": 6,
+        "blocked (Cloudflare 403)": 5
       },
       "ESPN": {
-        "Game found, not in box score": 2,
+        "Game found, not in box score": 5,
         "No game listed today": 4
       },
       "NCAA.com": {
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 4,
         "found stats": 3,
+        "Game found, not in box score": 1,
         "No game listed today": 1
       },
       "Sidearm": {
-        "No game listed today": 3
+        "No game listed today": 6
       },
       "NCAA.org": {
-        "Stale data — skipped": 2,
+        "Stale data — skipped": 5,
         "found stats": 1
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 4,
+    "blocked_event_count": 5,
     "blocked_clients": [
       "Kyle Jones",
+      "Caleb Daniel",
       "Ben Tryon",
       "Sam Mitchell",
       "Lucas Steele"
@@ -3642,7 +3716,11 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
-      "Sam Mitchell"
+      "Adam McKelvey",
+      "Caleb Daniel",
+      "Sam Mitchell",
+      "Xavier Kolhosser",
+      "Lee Sowers"
     ],
     "total_clients": 85,
     "proxy_pool": {
@@ -3662,7 +3740,7 @@
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 6
+          "blocked": 7
         }
       }
     }
