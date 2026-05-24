@@ -152,7 +152,7 @@
       "player_name": "Bruce Littleton",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
+      "stats_summary": "No game data",
       "game_context": "Troy 2, Southern Miss 6 | Final",
       "game_status": "Final",
       "game_time": "2:00 PM ET",
@@ -161,7 +161,7 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660419",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Bruce%20Littleton%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
@@ -202,7 +202,8 @@
         "draft_class": "2028",
         "position": "LHP",
         "roster_priority": 1
-      }
+      },
+      "game_number": 1
     },
     {
       "player_name": "Cam Flukey",
@@ -2719,7 +2720,7 @@
       "player_name": "Sam Mitchell",
       "team": "Southern Miss",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
+      "stats_summary": "No game data",
       "game_context": "Troy 2, Southern Miss 6 | Final",
       "game_status": "Final",
       "game_time": "2:00 PM ET",
@@ -2728,7 +2729,7 @@
       "next_game": null,
       "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660419",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Sam%20Mitchell%22%20Southern%20Miss&f=live",
       "data_source": "D1Baseball",
@@ -2769,7 +2770,8 @@
         "draft_class": "2028",
         "position": "Pitcher",
         "roster_priority": 3
-      }
+      },
+      "game_number": 1
     },
     {
       "player_name": "Tanner Chun",
@@ -3649,10 +3651,15 @@
         "Game found, not in box score": 3
       },
       "NCAA.com": {
-        "Stale data — skipped": 4,
         "found stats": 2,
         "Game found, not in box score": 1,
         "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "found player": 2,
+        "player not in box": 3,
+        "No game listed today": 3,
+        "Couldn't reach site": 1
       },
       "Sidearm": {
         "No game listed today": 6
@@ -3677,7 +3684,6 @@
       "Adam McKelvey",
       "Caleb Daniel",
       "Jack Cebert",
-      "Sam Mitchell",
       "Xavier Kolhosser",
       "Lee Sowers"
     ],
