@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T11:04:50.754736+00:00",
+  "generated_at": "2026-05-24T11:19:57.437000+00:00",
   "players": [
     {
       "player_name": "Aiden Robbins",
@@ -507,15 +507,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3077,7 +3085,7 @@
       "performance_grade": "— No Data",
       "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "game log",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3105,15 +3113,11 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "game log",
           "outcome": "found stats"
         }
       ],
-      "stats_captured_at": "2026-05-24T02:53:21.452557+00:00",
-      "stats_captured_status": "Final",
+      "stats_captured_at": null,
+      "stats_captured_status": null,
       "is_client": true,
       "tags": {
         "draft_class": "2026",
@@ -3586,43 +3590,38 @@
     "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 7,
+        "found stats": 6,
         "No game listed today": 1,
-        "Game found, not in box score": 2
+        "Game found, not in box score": 3
       },
       "ESPN": {
-        "No game listed today": 3
+        "No game listed today": 4
       },
       "NCAA.com": {
-        "found stats": 2,
+        "found stats": 3,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "found player": 1,
-        "blocked (Cloudflare 403)": 2,
+        "blocked (Cloudflare 403)": 3,
         "No game listed today": 1
       },
       "Sidearm": {
         "No game listed today": 1
       },
       "NCAA.org": {
-        "No game listed today": 1
-      },
-      "game log": {
         "found stats": 1
       }
     },
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 2,
+    "blocked_event_count": 3,
     "blocked_clients": [
+      "Kyle Jones",
       "Ben Tryon",
       "Lucas Steele"
     ],
-    "carry_forward_clients": [
-      "Lucas Steele"
-    ],
+    "carry_forward_clients": [],
     "fallback_clients": [],
     "total_clients": 85,
     "proxy_pool": {
@@ -3637,12 +3636,12 @@
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 1,
+          "success": 0,
           "blocked": 1
         },
         "geo.iproyal.com": {
           "success": 0,
-          "blocked": 4
+          "blocked": 5
         }
       }
     }
