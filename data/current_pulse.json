@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T15:49:42.998081+00:00",
+  "generated_at": "2026-05-24T16:05:02.078104+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -153,7 +153,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 1, Southern Miss 4 | Bottom 5",
+      "game_context": "Troy 1, Southern Miss 6 | Bottom 5",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -172,7 +172,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -357,9 +357,9 @@
       "player_name": "Dax Kilby",
       "team": "Tampa Tarpons",
       "level": "Pro",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "Clearwater Threshers vs Tampa Tarpons | 12:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Clearwater Threshers 0, Tampa Tarpons 0 | Top 1",
+      "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-24",
       "is_yesterday": false,
@@ -373,7 +373,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820277",
       "player_profile_url": "https://www.mlb.com/player/828076",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
@@ -565,15 +565,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -1976,7 +1984,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2707,7 +2715,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Troy 1, Southern Miss 4 | Bottom 5",
+      "game_context": "Troy 1, Southern Miss 6 | Bottom 5",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-24",
@@ -2726,7 +2734,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3088,17 +3096,37 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "Extra-base hit (double)",
+      "grade_reason": "1-for-3",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3572,39 +3600,48 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
-        "found stats": 6,
-        "Game found, not in box score": 3,
+        "found stats": 4,
+        "Game found, not in box score": 5,
         "No game listed today": 1
       },
       "StatBroadcast": {
-        "player not in box": 2,
-        "No game listed today": 2,
-        "found player": 2,
-        "Couldn't reach site": 1
+        "Couldn't reach site": 1,
+        "No game listed today": 3,
+        "blocked (Cloudflare 403)": 4
       },
       "ESPN": {
         "Game found, not in box score": 2,
-        "No game listed today": 2
+        "No game listed today": 4
       },
       "NCAA.com": {
         "Stale data — skipped": 2,
-        "found stats": 2
+        "found stats": 3,
+        "No game listed today": 1
       },
       "Sidearm": {
-        "No game listed today": 2
+        "No game listed today": 3
       },
       "NCAA.org": {
-        "Stale data — skipped": 2
+        "Stale data — skipped": 2,
+        "found stats": 1
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 4,
+    "blocked_clients": [
+      "Kyle Jones",
+      "Ben Tryon",
+      "Sam Mitchell",
+      "Lucas Steele"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Dax Kilby",
       "Sam Mitchell"
     ],
     "total_clients": 85,
@@ -3624,8 +3661,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 6,
-          "blocked": 1
+          "success": 0,
+          "blocked": 6
         }
       }
     }
