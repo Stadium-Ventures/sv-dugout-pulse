@@ -1,69 +1,5 @@
 [
   {
-    "generated_at": "2026-05-17T15:06:07.541423+00:00",
-    "severity": "ok",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 27,
-        "found stats": 13,
-        "no game found": 1
-      },
-      "Sidearm": {
-        "player not in box": 26,
-        "no game found": 23,
-        "found player": 11
-      },
-      "ESPN": {
-        "no game found": 28
-      },
-      "NCAA.com": {
-        "found game, no player": 23,
-        "found stats": 5
-      },
-      "StatBroadcast": {
-        "no game found": 23,
-        "blocked (Cloudflare 403)": 1,
-        "found player": 2
-      },
-      "NCAA.org": {
-        "no game found": 3,
-        "found game, no player": 20
-      },
-      "game log": {
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 3
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-17T15:17:20.143386+00:00",
     "severity": "ok",
     "blocked_sources": [
@@ -45048,6 +44984,79 @@
         },
         "geo.iproyal.com": {
           "success": 1,
+          "blocked": 5
+        }
+      }
+    }
+  },
+  {
+    "generated_at": "2026-05-24T15:16:05.369427+00:00",
+    "severity": "warning",
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 3,
+    "blocked_clients": [
+      "Ben Tryon",
+      "Sam Mitchell",
+      "Lucas Steele"
+    ],
+    "carry_forward_clients": [
+      "Lucas Steele"
+    ],
+    "fallback_clients": [
+      "Sam Mitchell"
+    ],
+    "total_clients": 86,
+    "by_source": {
+      "D1Baseball": {
+        "found stats": 5,
+        "Game found, not in box score": 4,
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "Couldn't reach site": 1,
+        "No game listed today": 3,
+        "found player": 1,
+        "blocked (Cloudflare 403)": 3
+      },
+      "ESPN": {
+        "Game found, not in box score": 2,
+        "No game listed today": 3
+      },
+      "NCAA.com": {
+        "Stale data — skipped": 2,
+        "found stats": 2,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "No game listed today": 3
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 2,
+        "No game listed today": 1
+      },
+      "game log": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "geo.iproyal.com",
+        "p.webshare.io"
+      ],
+      "stats": {
+        "p.webshare.io": {
+          "success": 1,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
+          "success": 0,
           "blocked": 5
         }
       }
