@@ -13006,19 +13006,24 @@
   },
   {
     "date": "2026-05-24",
-    "updated_at": "2026-05-24T18:05:37.839336+00:00",
+    "updated_at": "2026-05-24T18:20:15.595012+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
         "team": "USC Upstate",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -13027,10 +13032,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
+        "captured": true,
         "blocked": false,
-        "source": "",
-        "sources_tried": []
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
       },
       {
         "name": "Chase Petty",
@@ -13132,7 +13144,7 @@
         "team": "Asheville Tourists",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -13382,10 +13394,17 @@
         "level": "NCAA",
         "tier": null,
         "game_status": "Live",
-        "captured": false,
+        "captured": true,
         "blocked": false,
-        "source": "",
-        "sources_tried": []
+        "source": "D1Baseball",
+        "sources_tried": [
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
+        ]
       },
       {
         "name": "Xavier Kolhosser",
@@ -13465,7 +13484,7 @@
         "team": "Memphis Redbirds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
