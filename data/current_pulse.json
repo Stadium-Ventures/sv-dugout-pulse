@@ -69,7 +69,7 @@
       "stats_summary": "Did Not Play",
       "game_context": "Longwood 4, USC Upstate 1 | Top 8",
       "game_status": "Live",
-      "game_time": "2:00 PM ET",
+      "game_time": null,
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
@@ -116,7 +116,8 @@
         "draft_class": "2028",
         "position": "RHP",
         "roster_priority": 1
-      }
+      },
+      "game_number": 1
     },
     {
       "player_name": "Bo Lowrance",
@@ -3149,37 +3150,17 @@
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
       "performance_grade": "— No Data",
-      "grade_reason": "1-for-3",
+      "grade_reason": "Extra-base hit (double)",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "NCAA.org",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
           "outcome": "found stats"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -3653,7 +3634,7 @@
     }
   ],
   "health": {
-    "severity": "warning",
+    "severity": "ok",
     "by_source": {
       "D1Baseball": {
         "Game found, not in box score": 6,
@@ -3707,7 +3688,7 @@
       "Xavier Kolhosser",
       "Lee Sowers"
     ],
-    "total_clients": 86,
+    "total_clients": 87,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
@@ -3715,7 +3696,6 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
-        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
