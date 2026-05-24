@@ -13006,7 +13006,7 @@
   },
   {
     "date": "2026-05-24",
-    "updated_at": "2026-05-24T13:04:53.855977+00:00",
+    "updated_at": "2026-05-24T13:20:10.852029+00:00",
     "players": [
       {
         "name": "Andrew Kummer",
@@ -13026,12 +13026,17 @@
         "team": "Southern Miss",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -13395,12 +13400,17 @@
         "team": "Southern Miss",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
+        "game_status": "Live",
+        "captured": false,
+        "blocked": true,
         "source": "D1Baseball",
         "sources_tried": [
-          "D1Baseball"
+          "D1Baseball",
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
