@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T18:04:12.962599+00:00",
+  "generated_at": "2026-05-25T18:15:37.784175+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -3018,7 +3018,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3559,8 +3559,7 @@
       },
       "StatBroadcast": {
         "No game listed today": 5,
-        "blocked (Cloudflare 403)": 2,
-        "Couldn't reach site": 1
+        "blocked (Cloudflare 403)": 3
       },
       "NCAA.org": {
         "Game found, not in box score": 5
@@ -3569,10 +3568,11 @@
     "blocked_sources": [
       "StatBroadcast"
     ],
-    "blocked_event_count": 2,
+    "blocked_event_count": 3,
     "blocked_clients": [
       "Adam McKelvey",
-      "Caleb Daniel"
+      "Caleb Daniel",
+      "Lee Sowers"
     ],
     "carry_forward_clients": [],
     "fallback_clients": [],
