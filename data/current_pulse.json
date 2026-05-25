@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T19:49:07.398012+00:00",
+  "generated_at": "2026-05-25T20:08:49.690783+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -204,7 +204,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -795,7 +795,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -815,7 +815,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -973,7 +973,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -993,7 +993,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2698,7 +2698,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3018,7 +3018,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -3038,7 +3038,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3539,7 +3539,7 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
         "found stats": 1,
@@ -3559,15 +3559,20 @@
       },
       "StatBroadcast": {
         "No game listed today": 5,
-        "player not in box": 3
+        "Couldn't reach site": 2,
+        "blocked (Cloudflare 403)": 1
       },
       "NCAA.org": {
-        "Game found, not in box score": 5
+        "No game listed today": 5
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Caleb Daniel"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [],
     "total_clients": 84,
@@ -3578,6 +3583,7 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
@@ -3586,8 +3592,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
+          "success": 0,
+          "blocked": 2
         }
       }
     }
