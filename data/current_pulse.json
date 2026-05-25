@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T04:19:58.000443+00:00",
+  "generated_at": "2026-05-25T04:35:07.754525+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -192,7 +192,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -565,15 +565,23 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "D1Baseball",
+      "data_source": "NCAA.com",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "found player"
+          "outcome": "blocked (Cloudflare 403)"
+        },
+        {
+          "source": "ESPN",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -841,7 +849,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
+          "outcome": "Couldn't reach site"
         },
         {
           "source": "ESPN",
@@ -861,7 +869,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1039,7 +1047,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2866,7 +2874,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3239,7 +3247,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3776,9 +3784,8 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 9,
-        "No game listed today": 1,
-        "found stats": 1
+        "Game found, not in box score": 10,
+        "No game listed today": 1
       },
       "Sidearm": {
         "player not in box": 4,
@@ -3786,21 +3793,21 @@
       },
       "ESPN": {
         "Game found, not in box score": 5,
-        "No game listed today": 5
+        "No game listed today": 6
       },
       "NCAA.com": {
         "Game found, not in box score": 5,
-        "found stats": 2,
+        "found stats": 3,
         "No game listed today": 3
       },
       "StatBroadcast": {
         "No game listed today": 8,
-        "found player": 1,
         "blocked (Cloudflare 403)": 5,
-        "Couldn't reach site": 2
+        "Couldn't reach site": 3
       },
       "NCAA.org": {
-        "No game listed today": 8
+        "Game found, not in box score": 5,
+        "No game listed today": 3
       },
       "game log": {
         "found stats": 3
@@ -3811,7 +3818,7 @@
     ],
     "blocked_event_count": 5,
     "blocked_clients": [
-      "Adam McKelvey",
+      "Kyle Jones",
       "Caleb Daniel",
       "Sam Harry",
       "Ben Tryon",
@@ -3855,8 +3862,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 5
+          "success": 0,
+          "blocked": 6
         }
       }
     }
