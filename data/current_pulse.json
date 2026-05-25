@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T04:05:02.945337+00:00",
+  "generated_at": "2026-05-25T04:19:58.000443+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -155,7 +155,7 @@
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660419",
+      "box_score_url": "https://southernmiss.com/boxscore.aspx?id=12142",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Bruce%20Littleton%22&btnI=",
       "performance_grade": "— DNP",
       "grade_reason": "",
@@ -167,12 +167,12 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -565,23 +565,15 @@
       "performance_grade": "— No Data",
       "grade_reason": "Hitless in 5 at-bats",
       "social_search_url": "https://x.com/search?q=%22Kyle%20Jones%22%20Florida&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "D1Baseball",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
-          "outcome": "Game found, not in box score"
+          "outcome": "found stats"
         },
         {
           "source": "StatBroadcast",
-          "outcome": "blocked (Cloudflare 403)"
-        },
-        {
-          "source": "ESPN",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "found player"
         }
       ],
       "stats_captured_at": null,
@@ -849,7 +841,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -2837,7 +2829,7 @@
       "game_date": "2026-05-24",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://stats.statbroadcast.com/broadcast/?id=660419",
+      "box_score_url": "https://southernmiss.com/boxscore.aspx?id=12142",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Sam%20Mitchell%22&btnI=",
       "performance_grade": "— DNP",
       "grade_reason": "",
@@ -2849,12 +2841,12 @@
           "outcome": "Game found, not in box score"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
-          "source": "StatBroadcast",
-          "outcome": "Couldn't reach site"
+          "source": "Sidearm",
+          "outcome": "player not in box"
         },
         {
           "source": "ESPN",
@@ -3784,25 +3776,28 @@
     "severity": "critical",
     "by_source": {
       "D1Baseball": {
-        "Game found, not in box score": 10,
-        "No game listed today": 1
+        "Game found, not in box score": 9,
+        "No game listed today": 1,
+        "found stats": 1
       },
-      "StatBroadcast": {
-        "Couldn't reach site": 7,
-        "No game listed today": 8,
-        "blocked (Cloudflare 403)": 5
+      "Sidearm": {
+        "player not in box": 4,
+        "No game listed today": 8
       },
       "ESPN": {
         "Game found, not in box score": 5,
-        "No game listed today": 6
+        "No game listed today": 5
       },
       "NCAA.com": {
         "Game found, not in box score": 5,
-        "found stats": 3,
+        "found stats": 2,
         "No game listed today": 3
       },
-      "Sidearm": {
-        "No game listed today": 8
+      "StatBroadcast": {
+        "No game listed today": 8,
+        "found player": 1,
+        "blocked (Cloudflare 403)": 5,
+        "Couldn't reach site": 2
       },
       "NCAA.org": {
         "No game listed today": 8
@@ -3816,7 +3811,7 @@
     ],
     "blocked_event_count": 5,
     "blocked_clients": [
-      "Kyle Jones",
+      "Adam McKelvey",
       "Caleb Daniel",
       "Sam Harry",
       "Ben Tryon",
@@ -3860,8 +3855,8 @@
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 8
+          "success": 1,
+          "blocked": 5
         }
       }
     }
