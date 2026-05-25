@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T00:49:46.618017+00:00",
+  "generated_at": "2026-05-25T01:04:47.484201+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -1363,7 +1363,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-2, SB",
-      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Middle 5",
+      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Top 6",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-24",
@@ -1451,7 +1451,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Middle 5",
+      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Top 6",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-24",
@@ -1485,7 +1485,7 @@
       "team": "Midland RockHounds",
       "level": "Pro",
       "stats_summary": "1-2, K",
-      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Middle 5",
+      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Top 6",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-24",
@@ -1546,7 +1546,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "0-2, K",
-      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Middle 5",
+      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Top 6",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-24",
@@ -1878,7 +1878,7 @@
       "team": "Corpus Christi Hooks",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Middle 5",
+      "game_context": "Midland RockHounds 0, Corpus Christi Hooks 0 | Top 6",
       "game_status": "Live",
       "game_time": "7:35 PM ET",
       "game_date": "2026-05-24",
@@ -2106,8 +2106,8 @@
       "player_name": "Blake Rambusch",
       "team": "Arkansas Travelers",
       "level": "Pro",
-      "stats_summary": "0-2, K",
-      "game_context": "Springfield Cardinals 1, Arkansas Travelers 0 | Top 6",
+      "stats_summary": "0-3, K",
+      "game_context": "Springfield Cardinals 1, Arkansas Travelers 1 | Top 7",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-24",
@@ -2123,7 +2123,7 @@
       "box_score_url": "https://www.mlb.com/gameday/817572",
       "player_profile_url": "https://www.mlb.com/player/800683",
       "performance_grade": "😐 Routine",
-      "grade_reason": "0-for-2",
+      "grade_reason": "0-for-3",
       "social_search_url": "https://x.com/search?q=%22Blake%20Rambusch%22%20Mariners&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -2419,7 +2419,7 @@
       "team": "Akron RubberDucks",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Akron RubberDucks 0, Harrisburg Senators 1 | Middle 6",
+      "game_context": "Akron RubberDucks 0, Harrisburg Senators 3 | End 6",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-24",
@@ -2588,8 +2588,8 @@
       "player_name": "Jake Munroe",
       "team": "Tri-City Dust Devils",
       "level": "Pro",
-      "stats_summary": "3-3, HR, RBI, R",
-      "game_context": "Tri-City Dust Devils 5, Everett AquaSox 1 | Middle 7",
+      "stats_summary": "3-4, HR, RBI, R",
+      "game_context": "Tri-City Dust Devils 6, Everett AquaSox 1 | Bottom 8",
       "game_status": "Live",
       "game_time": "7:05 PM ET",
       "game_date": "2026-05-24",
@@ -3145,7 +3145,7 @@
         },
         {
           "source": "StatBroadcast",
-          "outcome": "player not in box"
+          "outcome": "blocked (Cloudflare 403)"
         },
         {
           "source": "ESPN",
@@ -3272,7 +3272,7 @@
       "team": "Columbus Clingstones",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Columbus Clingstones 4, Pensacola Blue Wahoos 5 | Bottom 5",
+      "game_context": "Columbus Clingstones 4, Pensacola Blue Wahoos 7 | End 6",
       "game_status": "Live",
       "game_time": "5:05 PM ET",
       "game_date": "2026-05-24",
@@ -3675,7 +3675,7 @@
     }
   ],
   "health": {
-    "severity": "ok",
+    "severity": "warning",
     "by_source": {
       "D1Baseball": {
         "No game listed today": 1,
@@ -3692,9 +3692,10 @@
       },
       "StatBroadcast": {
         "found player": 2,
-        "player not in box": 3,
+        "player not in box": 2,
         "No game listed today": 3,
-        "Couldn't reach site": 1
+        "Couldn't reach site": 1,
+        "blocked (Cloudflare 403)": 1
       },
       "Sidearm": {
         "No game listed today": 3
@@ -3703,9 +3704,13 @@
         "Game found, not in box score": 3
       }
     },
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
+    "blocked_sources": [
+      "StatBroadcast"
+    ],
+    "blocked_event_count": 1,
+    "blocked_clients": [
+      "Lee Sowers"
+    ],
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
@@ -3730,16 +3735,17 @@
       ],
       "active": "geo.iproyal.com",
       "dead": [
+        "geo.iproyal.com",
         "p.webshare.io"
       ],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
+          "success": 7,
           "blocked": 1
         },
         "geo.iproyal.com": {
-          "success": 11,
-          "blocked": 0
+          "success": 0,
+          "blocked": 2
         }
       }
     }
