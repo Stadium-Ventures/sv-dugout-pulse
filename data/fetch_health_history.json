@@ -1,48 +1,5 @@
 [
   {
-    "generated_at": "2026-05-18T16:46:51.997891+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found game, no player": 2,
-        "found stats": 1
-      },
-      "Sidearm": {
-        "player not in box": 2,
-        "no game found": 2,
-        "found player": 1
-      },
-      "ESPN": {
-        "no game found": 2
-      },
-      "NCAA.com": {
-        "found game, no player": 2
-      },
-      "StatBroadcast": {
-        "no game found": 2
-      },
-      "NCAA.org": {
-        "no game found": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-18T16:51:19.243340+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -44403,6 +44360,49 @@
           "blocked": 0
         }
       }
+    }
+  },
+  {
+    "generated_at": "2026-05-25T16:49:12.412607+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Lee Sowers"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 6
+      },
+      "ESPN": {
+        "No game listed today": 6
+      },
+      "NCAA.com": {
+        "found stats": 1,
+        "Game found, not in box score": 4,
+        "No game listed today": 1
+      },
+      "Sidearm": {
+        "No game listed today": 5
+      },
+      "StatBroadcast": {
+        "No game listed today": 5
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 5
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
     }
   }
 ]
