@@ -1,0 +1,52 @@
+name: Monday Hitter Recap Email
+
+# Fires Mondays at 11:30 UTC (7:30 AM EDT / 6:30 AM EST).
+# The daily historical aggregation at 11:00 UTC rebuilds window_7d.json
+# to include Sunday's games; this email runs 30 min later so the recap
+# always includes the prior Sunday.
+on:
+  schedule:
+    - cron: "30 11 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (skip sending; render HTML to job log)"
+        type: boolean
+        default: false
+      to:
+        description: "Override recipient(s), comma-separated. Empty = default list."
+        type: string
+        default: ""
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo (latest main so windows are fresh)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Send Monday email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          TO_OVERRIDE: ${{ inputs.to }}
+        run: |
+          set -eo pipefail
+          ARGS=()
+          if [ "${DRY_RUN:-false}" = "true" ]; then
+            ARGS+=("--dry-run")
+          fi
+          if [ -n "${TO_OVERRIDE:-}" ]; then
+            IFS=',' read -ra TOS <<< "${TO_OVERRIDE}"
+            for t in "${TOS[@]}"; do
+              ARGS+=("--to" "$(echo "$t" | xargs)")
+            done
+          fi
+          python -m scripts.monday_email "${ARGS[@]}"
