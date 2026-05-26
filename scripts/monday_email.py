@@ -289,6 +289,9 @@ def send_via_resend(subject: str, html: str, to: list[str], api_key: str) -> dic
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
+            # Cloudflare in front of api.resend.com 403s urllib's default UA (CF error 1010).
+            "User-Agent": "sv-dugout-pulse/1.0 (+https://github.com/Stadium-Ventures/sv-dugout-pulse)",
+            "Accept": "application/json",
         },
         method="POST",
     )
