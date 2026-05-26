@@ -1,69 +1,5 @@
 [
   {
-    "generated_at": "2026-05-19T22:46:54.256808+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Jack Cebert",
-      "Riley Goodman",
-      "Ty Finkbeiner",
-      "Davis Sharpe",
-      "Kade Brown",
-      "Eamon McDermott",
-      "Luke Fithian"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 3
-      },
-      "StatBroadcast": {
-        "player not in box": 5,
-        "No game listed today": 5,
-        "found player": 1
-      },
-      "ESPN": {
-        "Game found, not in box score": 5
-      },
-      "NCAA.com": {
-        "Stale data — skipped": 4,
-        "Game found, not in box score": 1
-      },
-      "Sidearm": {
-        "No game listed today": 5
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 4,
-        "Game found, not in box score": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 5,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-19T23:02:10.168729+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -43005,6 +42941,33 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Austin Amaral",
+      "Davis Sharpe"
+    ],
+    "total_clients": 84,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-26T22:52:38.086709+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
       "Cade Doughty",
       "Jack Cebert",
       "Austin Amaral",
