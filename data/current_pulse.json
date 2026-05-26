@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-26T02:49:03.357400+00:00",
+  "generated_at": "2026-05-26T03:03:56.287193+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
       "team": "ACL Reds",
       "level": "Pro",
       "stats_summary": "5.0 IP, 8 H, 3 ER, 3 K",
-      "game_context": "ACL Reds 0, ACL Rangers 6 | Top 7",
+      "game_context": "ACL Reds 4, ACL Rangers 6 | Top 7",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-26",
@@ -1707,7 +1707,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "0-2, 2 K",
-      "game_context": "Colorado Rockies 2, Los Angeles Dodgers 1 | Top 6",
+      "game_context": "Colorado Rockies 3, Los Angeles Dodgers 1 | Top 7",
       "game_status": "Live",
       "game_time": "9:10 PM ET",
       "game_date": "2026-05-26",
@@ -1741,7 +1741,7 @@
       "team": "Colorado Rockies",
       "level": "Pro",
       "stats_summary": "5.0 IP, 6 H, 1 ER, 3 K, 1 BB",
-      "game_context": "Colorado Rockies 2, Los Angeles Dodgers 1 | Top 6",
+      "game_context": "Colorado Rockies 3, Los Angeles Dodgers 1 | Top 7",
       "game_status": "Live",
       "game_time": "9:10 PM ET",
       "game_date": "2026-05-26",
@@ -2621,7 +2621,7 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "4.0 IP, 2 H, 2 ER, 4 K, 2 BB",
-      "game_context": "ACL Dodgers 3, ACL Guardians 3 | Bottom 6",
+      "game_context": "ACL Dodgers 3, ACL Guardians 3 | Middle 7",
       "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-26",
@@ -3576,10 +3576,16 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
