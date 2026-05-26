@@ -1,54 +1,5 @@
 [
   {
-    "generated_at": "2026-05-19T14:17:00.490601+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Eamon McDermott"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 7,
-        "found game, no player": 1
-      },
-      "StatBroadcast": {
-        "player not in box": 1,
-        "no game found": 1
-      },
-      "ESPN": {
-        "found game, no player": 1
-      },
-      "NCAA.com": {
-        "scheduled (ignored)": 1
-      },
-      "Sidearm": {
-        "no game found": 1
-      },
-      "NCAA.org": {
-        "scheduled (ignored)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-19T14:32:00.212604+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -44334,6 +44285,26 @@
   },
   {
     "generated_at": "2026-05-26T14:16:53.487185+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 84,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-26T14:31:57.592056+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
