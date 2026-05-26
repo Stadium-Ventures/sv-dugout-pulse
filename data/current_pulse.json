@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T00:34:10.492346+00:00",
+  "generated_at": "2026-05-26T00:48:53.262126+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -204,7 +204,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -815,7 +815,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -993,7 +993,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -2620,7 +2620,7 @@
       "player_name": "Ryan DeSanto",
       "team": "ACL Guardians",
       "level": "Pro",
-      "stats_summary": "Game at 9:00 PM ET",
+      "stats_summary": "On the mound",
       "game_context": "ACL Dodgers vs ACL Guardians | 9:00 PM ET",
       "game_status": "Scheduled",
       "game_time": "9:00 PM ET",
@@ -2698,7 +2698,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3038,7 +3038,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3562,7 +3562,7 @@
         "player not in box": 3
       },
       "NCAA.org": {
-        "Game found, not in box score": 5
+        "No game listed today": 5
       }
     },
     "blocked_sources": [],
@@ -3576,10 +3576,16 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "p.webshare.io",
-      "dead": [],
+      "active": "geo.iproyal.com",
+      "dead": [
+        "p.webshare.io"
+      ],
       "stats": {
         "p.webshare.io": {
+          "success": 0,
+          "blocked": 1
+        },
+        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
