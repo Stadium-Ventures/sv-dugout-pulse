@@ -427,11 +427,13 @@ def main(argv=None):
     p.add_argument("--save", metavar="PATH")
     p.add_argument("--to", action="append")
     p.add_argument("--today", help="Override today's date (YYYY-MM-DD).")
+    p.add_argument("--subject-suffix", default="",
+                   help="Appended to the subject — useful to escape Gmail threading on test sends.")
     args = p.parse_args(argv)
 
     today = date.fromisoformat(args.today) if args.today else date.today()
     payload = build_payload(today)
-    subject = render_subject(payload)
+    subject = render_subject(payload) + (args.subject_suffix or "")
     html = render_html(payload)
     recipients = args.to or DEFAULT_RECIPIENTS
 

@@ -17,6 +17,10 @@ on:
         description: "Override recipient(s), comma-separated. Empty = default list."
         type: string
         default: ""
+      subject_suffix:
+        description: "Appended to subject (useful to break Gmail threading on test sends)."
+        type: string
+        default: ""
 
 jobs:
   send:
@@ -37,6 +41,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           DRY_RUN: ${{ inputs.dry_run }}
           TO_OVERRIDE: ${{ inputs.to }}
+          SUBJECT_SUFFIX: ${{ inputs.subject_suffix }}
         run: |
           set -eo pipefail
           ARGS=()
@@ -48,5 +53,8 @@ jobs:
             for t in "${TOS[@]}"; do
               ARGS+=("--to" "$(echo "$t" | xargs)")
             done
+          fi
+          if [ -n "${SUBJECT_SUFFIX:-}" ]; then
+            ARGS+=("--subject-suffix" "${SUBJECT_SUFFIX}")
           fi
           python -m scripts.monday_email "${ARGS[@]}"
