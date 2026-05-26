@@ -1,70 +1,5 @@
 [
   {
-    "generated_at": "2026-05-19T19:32:00.116535+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Davis Sharpe",
-      "Kade Brown",
-      "Eamon McDermott"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 6,
-        "Stale data — skipped": 1,
-        "Game found, not in box score": 1
-      },
-      "ESPN": {
-        "Game found, not in box score": 2
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Stale data — skipped": 1
-      },
-      "StatBroadcast": {
-        "Couldn't reach site": 1,
-        "No game listed today": 1
-      },
-      "Sidearm": {
-        "No game listed today": 1
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-19T19:47:01.241667+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -43551,6 +43486,28 @@
   },
   {
     "generated_at": "2026-05-26T19:31:42.780696+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Davis Sharpe"
+    ],
+    "total_clients": 84,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-26T19:36:02.850058+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
