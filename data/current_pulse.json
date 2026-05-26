@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T00:48:53.262126+00:00",
+  "generated_at": "2026-05-26T01:03:56.056046+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -204,7 +204,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -815,7 +815,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -993,7 +993,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2621,8 +2621,8 @@
       "team": "ACL Guardians",
       "level": "Pro",
       "stats_summary": "On the mound",
-      "game_context": "ACL Dodgers vs ACL Guardians | 9:00 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "ACL Dodgers 0, ACL Guardians 0 | Top 1",
+      "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-05-26",
       "is_yesterday": false,
@@ -2636,7 +2636,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844554",
       "player_profile_url": "https://www.mlb.com/player/823756",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Ryan%20DeSanto%22%20Guardians&f=live",
       "data_source": "MLB Stats API",
@@ -2698,7 +2698,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3038,7 +3038,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3562,7 +3562,7 @@
         "player not in box": 3
       },
       "NCAA.org": {
-        "No game listed today": 5
+        "Game found, not in box score": 5
       }
     },
     "blocked_sources": [],
@@ -3576,16 +3576,10 @@
         "p.webshare.io",
         "geo.iproyal.com"
       ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
+      "active": "p.webshare.io",
+      "dead": [],
       "stats": {
         "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
           "success": 1,
           "blocked": 0
         }
