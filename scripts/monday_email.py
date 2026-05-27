@@ -134,37 +134,59 @@ def _last_full_week_label(today: date | None = None) -> str:
 
 CSS = """
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-         color: #1f2328; background: #f6f8fa; margin: 0; padding: 0; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 16px 40px; }
-  h1 { font-size: 22px; margin: 0 0 4px 0; letter-spacing: -0.01em; }
-  .sub { color: #6e7781; font-size: 13px; margin: 0 0 28px 0; }
-  h2 { font-size: 17px; margin: 32px 0 4px 0; }
-  h3 { font-size: 13px; margin: 18px 0 6px 0; color: #57606a; font-weight: 600;
-       text-transform: uppercase; letter-spacing: 0.04em; }
+         color: #1f2328; background: #f6f8fa; margin: 0; padding: 0;
+         -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 16px 40px; }
+  h1 { font-size: 24px; margin: 0 0 4px 0; letter-spacing: -0.01em; }
+  .sub { color: #6e7781; font-size: 14px; margin: 0 0 28px 0; }
+  h2 { font-size: 19px; margin: 36px 0 4px 0; letter-spacing: -0.01em; }
+  h3 { font-size: 13px; margin: 22px 0 8px 0; color: #57606a; font-weight: 600;
+       text-transform: uppercase; letter-spacing: 0.05em; }
   table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff;
-          border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
-  th, td { padding: 9px 10px; font-size: 13px; text-align: right;
-           border-bottom: 1px solid #eaeef2; }
-  th { background: #f6f8fa; font-weight: 600; color: #57606a;
-       font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+          border: 1px solid #c8d1da; border-radius: 8px; overflow: hidden;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  th, td { padding: 11px 12px; font-size: 14px; text-align: right;
+           border-bottom: 1px solid #e4e9ee; vertical-align: middle; }
+  th { background: #eef2f6; font-weight: 700; color: #424a53;
+       font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+       border-bottom: 2px solid #c8d1da; }
   th.l, td.l { text-align: left; }
-  td.player { font-weight: 600; color: #1f2328; }
-  td.team { color: #6e7781; font-size: 12px; }
-  td.grade { font-size: 15px; width: 22px; text-align: center; padding: 9px 4px; }
+  td.player { font-weight: 700; color: #0d1117; font-size: 14.5px; }
+  td.team { color: #57606a; font-size: 12.5px; }
   tr:last-child td { border-bottom: none; }
-  tr.hot { background: #fff8e6; }
-  tr.alt { background: #fcfcfd; }
-  .dnp { color: #6e7781; font-size: 12px; margin: 8px 2px 0; line-height: 1.5; }
-  .dnp strong { color: #57606a; }
+  tr:nth-child(even) td { background: #fbfcfd; }
+  .pill { display: inline-block; padding: 3px 8px; border-radius: 999px;
+          font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em;
+          text-transform: uppercase; line-height: 1.4; }
+  .pill-hot { background: #ffe6cc; color: #b14a00; }
+  .pill-solid { background: #d8efd8; color: #1a6b1a; }
+  .pill-steady { background: #e1e4e8; color: #4d555c; }
+  .pill-cold { background: #d8e7f7; color: #1a4a85; }
+  .pill-na { background: #f3f4f6; color: #8b949e; }
+  .section-divider td { background: #eef2f6 !important; padding: 8px 12px;
+                        text-align: left; font-size: 11px; color: #424a53;
+                        font-weight: 700; text-transform: uppercase;
+                        letter-spacing: 0.06em; }
+  .dnp { color: #57606a; font-size: 12.5px; margin: 10px 2px 0; line-height: 1.5; }
+  .dnp strong { color: #424a53; }
   .empty { color: #8b949e; font-style: italic; font-size: 13px; padding: 14px;
-           text-align: center; background: #fff; border: 1px dashed #d0d7de;
+           text-align: center; background: #fff; border: 1px dashed #c8d1da;
            border-radius: 8px; }
   .footer { color: #8b949e; font-size: 11px; margin-top: 36px; text-align: center; }
-  .legend { color: #6e7781; font-size: 12px; margin: 14px 0 0;
-            padding: 10px 12px; background: #fff; border: 1px solid #eaeef2;
-            border-radius: 6px; }
-  .legend li { margin: 2px 0; }
+  .legend { color: #424a53; font-size: 12.5px; margin: 16px 0 0;
+            padding: 12px 14px; background: #fff; border: 1px solid #e4e9ee;
+            border-radius: 8px; line-height: 1.55; }
+  .legend li { margin: 3px 0; }
 """
+
+# Map "🔥 Hot" -> ("HOT", "hot" CSS class). The leading emoji is dropped.
+GRADE_PILL = {
+    "🔥 Hot": ("HOT", "hot"),
+    "✅ Solid": ("SOLID", "solid"),
+    "😐 Steady": ("STEADY", "steady"),
+    "🥶 Cold": ("COLD", "cold"),
+    "— Insufficient": ("—", "na"),
+}
 
 
 def _fmt(v, default="—"):
@@ -173,12 +195,11 @@ def _fmt(v, default="—"):
     return str(v)
 
 
-def _grade_emoji(grade: str | None) -> str:
+def _grade_pill(grade: str | None) -> str:
     if not grade:
         return ""
-    # window_grade looks like "🔥 Hot" — take the leading emoji character.
-    parts = grade.split(" ", 1)
-    return parts[0] if parts else ""
+    label, cls = GRADE_PILL.get(grade, ("—", "na"))
+    return f'<span class="pill pill-{cls}">{label}</span>'
 
 
 def _hitter_row(rec: dict, level: str, window_key: str) -> str:
@@ -186,30 +207,29 @@ def _hitter_row(rec: dict, level: str, window_key: str) -> str:
     if not w:
         return ""
     s = w.get("stats", {})
-    grade = w.get("window_grade") if window_key == "week" else ""
-    cls = "hot" if grade == "🔥 Hot" else ""
+    grade = w.get("window_grade") or ""
     cells = [
-        f'<td class="grade">{_grade_emoji(grade)}</td>',
+        f'<td>{_grade_pill(grade)}</td>',
         f'<td class="l player">{w["player_name"]}</td>',
         f'<td class="l team">{w["team"]}</td>',
         f'<td>{_fmt(w.get("games_played"))}</td>',
         f'<td>{_fmt(s.get("pa"))}</td>',
-        f'<td>{_fmt(s.get("avg"))}</td>',
-        f'<td>{_fmt(s.get("obp"))}</td>',
-        f'<td>{_fmt(s.get("slg"))}</td>',
-        f'<td>{_fmt(s.get("ops"))}</td>',
     ]
     if level == "Pro":
         ops_plus = _ops_plus(s)
         cells.append(f'<td>{ops_plus if ops_plus is not None else "—"}</td>')
     cells.extend([
+        f'<td>{_fmt(s.get("avg"))}</td>',
+        f'<td>{_fmt(s.get("obp"))}</td>',
+        f'<td>{_fmt(s.get("slg"))}</td>',
+        f'<td>{_fmt(s.get("ops"))}</td>',
         f'<td>{_fmt(s.get("hr"))}</td>',
         f'<td>{_fmt(s.get("rbi"))}</td>',
         f'<td>{_fmt(s.get("sb"))}</td>',
         f'<td>{_fmt(s.get("bb_pct"))}</td>',
         f'<td>{_fmt(s.get("k_pct"))}</td>',
     ])
-    return f'<tr class="{cls}">' + "".join(cells) + "</tr>"
+    return '<tr>' + "".join(cells) + "</tr>"
 
 
 def _pitcher_row(rec: dict, window_key: str) -> str:
@@ -217,10 +237,9 @@ def _pitcher_row(rec: dict, window_key: str) -> str:
     if not w:
         return ""
     s = w.get("stats", {})
-    grade = w.get("window_grade") if window_key == "week" else ""
-    cls = "hot" if grade == "🔥 Hot" else ""
+    grade = w.get("window_grade") or ""
     cells = [
-        f'<td class="grade">{_grade_emoji(grade)}</td>',
+        f'<td>{_grade_pill(grade)}</td>',
         f'<td class="l player">{w["player_name"]}</td>',
         f'<td class="l team">{w["team"]}</td>',
         f'<td>{_fmt(w.get("games_played"))}</td>',
@@ -234,19 +253,20 @@ def _pitcher_row(rec: dict, window_key: str) -> str:
         f'<td>{_fmt(s.get("k_pct"))}</td>',
         f'<td>{_fmt(s.get("bb_pct"))}</td>',
     ]
-    return f'<tr class="{cls}">' + "".join(cells) + "</tr>"
+    return '<tr>' + "".join(cells) + "</tr>"
 
 
 def _hitter_section(level: str, played: list[dict], dnp_names: list[str]) -> str:
     if not played and not dnp_names:
         return ""
 
-    extra_col = "<th>OPS+</th>" if level == "Pro" else ""
+    ops_plus_col = "<th>OPS+</th>" if level == "Pro" else ""
     header = (
         '<thead><tr>'
-        '<th></th><th class="l">Player</th><th class="l">Team</th>'
-        '<th>G</th><th>PA</th><th>AVG</th><th>OBP</th><th>SLG</th><th>OPS</th>'
-        f'{extra_col}'
+        '<th>Grade</th><th class="l">Player</th><th class="l">Team</th>'
+        '<th>G</th><th>PA</th>'
+        f'{ops_plus_col}'
+        '<th>AVG</th><th>OBP</th><th>SLG</th><th>OPS</th>'
         '<th>HR</th><th>RBI</th><th>SB</th><th>BB%</th><th>K%</th>'
         '</tr></thead>'
     )
@@ -257,9 +277,9 @@ def _hitter_section(level: str, played: list[dict], dnp_names: list[str]) -> str
     section = f'''<h3>Hitters</h3>
 <table>{header}
 <tbody>
-<tr><td colspan="20" style="background:#f6f8fa;padding:6px 12px;text-align:left;font-size:11px;color:#57606a;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Last week</td></tr>
+<tr class="section-divider"><td colspan="20">Last Week</td></tr>
 {week_rows}
-<tr><td colspan="20" style="background:#f6f8fa;padding:6px 12px;text-align:left;font-size:11px;color:#57606a;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Season-to-date</td></tr>
+<tr class="section-divider"><td colspan="20">Season-to-Date</td></tr>
 {season_rows}
 </tbody></table>'''
 
@@ -275,7 +295,7 @@ def _pitcher_section(played: list[dict], dnp_names: list[str]) -> str:
 
     header = (
         '<thead><tr>'
-        '<th></th><th class="l">Player</th><th class="l">Team</th>'
+        '<th>Grade</th><th class="l">Player</th><th class="l">Team</th>'
         '<th>G</th><th>IP</th><th>ERA</th><th>WHIP</th><th>K</th><th>BB</th>'
         '<th>K/9</th><th>BB/9</th><th>K%</th><th>BB%</th>'
         '</tr></thead>'
@@ -287,9 +307,9 @@ def _pitcher_section(played: list[dict], dnp_names: list[str]) -> str:
     section = f'''<h3>Pitchers</h3>
 <table>{header}
 <tbody>
-<tr><td colspan="20" style="background:#f6f8fa;padding:6px 12px;text-align:left;font-size:11px;color:#57606a;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Last week</td></tr>
+<tr class="section-divider"><td colspan="20">Last Week</td></tr>
 {week_rows}
-<tr><td colspan="20" style="background:#f6f8fa;padding:6px 12px;text-align:left;font-size:11px;color:#57606a;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Season-to-date</td></tr>
+<tr class="section-divider"><td colspan="20">Season-to-Date</td></tr>
 {season_rows}
 </tbody></table>'''
 
@@ -365,7 +385,11 @@ def render_html(payload: dict) -> str:
         body_parts.append(_pitcher_section(p_played, p_dnp))
 
     legend_items = [
-        "🔥 Hot · ✅ Solid · 😐 Steady · 🥶 Cold — based on last 7 days vs role baselines.",
+        ('<span class="pill pill-hot">HOT</span> · '
+         '<span class="pill pill-solid">SOLID</span> · '
+         '<span class="pill pill-steady">STEADY</span> · '
+         '<span class="pill pill-cold">COLD</span> — Last Week grade is the last 7 days; '
+         'Season-to-Date grade is full-season relative to role baselines.'),
     ]
     if payload["sections"].get("Pro", {}).get("hitters"):
         legend_items.append("OPS+ is a wRC+ proxy (100 = MLB average) using fixed league constants.")
