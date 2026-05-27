@@ -1,71 +1,5 @@
 [
   {
-    "generated_at": "2026-05-20T14:32:24.509205+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Eamon McDermott"
-    ],
-    "total_clients": 87,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 17,
-        "No game listed today": 1,
-        "Game found, not in box score": 3
-      },
-      "ESPN": {
-        "found stats": 1,
-        "No game listed today": 2,
-        "Game found, not in box score": 1
-      },
-      "StatBroadcast": {
-        "Couldn't reach site": 1,
-        "No game listed today": 3,
-        "found player": 2,
-        "player not in box": 1
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 3
-      },
-      "Sidearm": {
-        "No game listed today": 3,
-        "player not in box": 1
-      },
-      "NCAA.org": {
-        "No game listed today": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-20T14:47:28.924999+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -40601,6 +40535,27 @@
   },
   {
     "generated_at": "2026-05-27T14:31:56.185103+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-27T14:46:47.932030+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
