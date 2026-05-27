@@ -45,7 +45,7 @@ def _aggregate_month(start: date, end: date) -> list[dict]:
     """
     # Late imports — these pull in scrapers we only need on the monthly cron.
     from main import get_all_players
-    from src.historical_stats import HistoricalStatsAggregator
+    from src.historical_stats import WindowStatsAggregator
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
     players = get_all_players()
@@ -54,7 +54,7 @@ def _aggregate_month(start: date, end: date) -> list[dict]:
 
     sys.stderr.write(f"[monthly_email] aggregating {len(players)} players for {start} -> {end}\n")
 
-    agg = HistoricalStatsAggregator()
+    agg = WindowStatsAggregator()
     out: list[dict] = []
 
     def _process(player):
