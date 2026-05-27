@@ -44,7 +44,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends \
             libpango-1.0-0 libpangoft2-1.0-0 \
             fonts-liberation fonts-noto-color-emoji
-          pip install --quiet weasyprint==62.3
+          # 62.3 throws "'super' object has no attribute 'transform'" against
+          # current tinycss2/cssselect2; latest stable works.
+          pip install --quiet weasyprint
 
       - name: Send Monday email
         env:
