@@ -1,83 +1,5 @@
 [
   {
-    "generated_at": "2026-05-20T01:58:45.660920+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Garrett Whitlock",
-      "Aaron Watson",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Riley Goodman",
-      "Ty Finkbeiner",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Kade Brown",
-      "Najer Victor",
-      "Ryan DeSanto",
-      "Brennan Orf",
-      "Eamon McDermott",
-      "Luke Fithian",
-      "Peyton Glavine"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 3
-      },
-      "StatBroadcast": {
-        "Couldn't reach site": 5,
-        "No game listed today": 5,
-        "found player": 1
-      },
-      "ESPN": {
-        "Game found, not in box score": 5
-      },
-      "NCAA.com": {
-        "Stale data — skipped": 2,
-        "Game found, not in box score": 3
-      },
-      "Sidearm": {
-        "No game listed today": 5
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 2,
-        "Game found, not in box score": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-20T02:04:35.375992+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -42476,6 +42398,37 @@
   },
   {
     "generated_at": "2026-05-27T01:58:35.294469+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Aaron Watson",
+      "David Hagaman",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Austin Amaral",
+      "Davis Sharpe",
+      "Ryan DeSanto",
+      "Xavier Kolhosser"
+    ],
+    "total_clients": 84,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-27T02:01:46.879710+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
