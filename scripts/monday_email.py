@@ -30,7 +30,7 @@ DEFAULT_RECIPIENTS = [
 ]
 
 FROM_ADDRESS = "Dugout Pulse <noreply@stadium-ventures.com>"
-SUBJECT_TEMPLATE = "Dugout Pulse — Weekly Recap, {week}"
+SUBJECT_TEMPLATE = "Dugout Pulse — Weekly Recap, {period}"
 
 PITCHER_POS = {"Pitcher", "LHP", "RHP", "Two-Way"}
 LEVEL_ORDER = ["Pro", "NCAA", "HS"]
@@ -268,7 +268,9 @@ def _pitcher_row(rec: dict, window_key: str) -> str:
     return '<tr>' + "".join(cells) + "</tr>"
 
 
-def _hitter_section(level: str, played: list[dict], dnp_names: list[str]) -> str:
+def _hitter_section(level: str, played: list[dict], dnp_names: list[str],
+                    recent_label: str = "Last Week", season_label: str = "Season-to-Date",
+                    recent_dnp_phrase: str = "Did not play last week") -> str:
     if not played and not dnp_names:
         return ""
 
@@ -289,19 +291,21 @@ def _hitter_section(level: str, played: list[dict], dnp_names: list[str]) -> str
     section = f'''<h3>Hitters</h3>
 <table>{header}
 <tbody>
-<tr class="section-divider"><td colspan="20">Last Week</td></tr>
+<tr class="section-divider"><td colspan="20">{recent_label}</td></tr>
 {week_rows}
-<tr class="section-divider"><td colspan="20">Season-to-Date</td></tr>
+<tr class="section-divider"><td colspan="20">{season_label}</td></tr>
 {season_rows}
 </tbody></table>'''
 
     if dnp_names:
-        section += f'<div class="dnp"><strong>Did not play last week:</strong> {", ".join(dnp_names)}</div>'
+        section += f'<div class="dnp"><strong>{recent_dnp_phrase}:</strong> {", ".join(dnp_names)}</div>'
 
     return section
 
 
-def _pitcher_section(played: list[dict], dnp_names: list[str]) -> str:
+def _pitcher_section(played: list[dict], dnp_names: list[str],
+                     recent_label: str = "Last Week", season_label: str = "Season-to-Date",
+                     recent_dnp_phrase: str = "Did not pitch last week") -> str:
     if not played and not dnp_names:
         return ""
 
@@ -319,14 +323,14 @@ def _pitcher_section(played: list[dict], dnp_names: list[str]) -> str:
     section = f'''<h3>Pitchers</h3>
 <table>{header}
 <tbody>
-<tr class="section-divider"><td colspan="20">Last Week</td></tr>
+<tr class="section-divider"><td colspan="20">{recent_label}</td></tr>
 {week_rows}
-<tr class="section-divider"><td colspan="20">Season-to-Date</td></tr>
+<tr class="section-divider"><td colspan="20">{season_label}</td></tr>
 {season_rows}
 </tbody></table>'''
 
     if dnp_names:
-        section += f'<div class="dnp"><strong>Did not pitch last week:</strong> {", ".join(dnp_names)}</div>'
+        section += f'<div class="dnp"><strong>{recent_dnp_phrase}:</strong> {", ".join(dnp_names)}</div>'
 
     return section
 
@@ -450,7 +454,7 @@ def _glance(sections: dict) -> list[dict]:
     return out
 
 
-def _render_topline(sections: dict) -> str:
+def _render_topline(sections: dict, standouts_label: str, glance_label: str) -> str:
     standouts = _standouts(sections)
     glance = _glance(sections)
 
@@ -467,7 +471,7 @@ def _render_topline(sections: dict) -> str:
             )
         parts.append(
             '<div class="topline-card">'
-            '<h3 style="margin-top:0;">Standouts (Last Week)</h3>'
+            f'<h3 style="margin-top:0;">{standouts_label}</h3>'
             f'<ul class="standouts">{"".join(items)}</ul>'
             '</div>'
         )
@@ -488,7 +492,7 @@ def _render_topline(sections: dict) -> str:
             )
         parts.append(
             '<div class="topline-card">'
-            '<h3 style="margin-top:0;">Week at a Glance</h3>'
+            f'<h3 style="margin-top:0;">{glance_label}</h3>'
             '<table class="glance"><thead><tr>'
             '<th class="l">Level</th><th>Hot</th><th>Solid</th><th>Steady</th>'
             '<th>Cold</th><th>DNP</th><th>Total</th>'
@@ -526,7 +530,17 @@ def build_payload(today: date | None = None) -> dict:
             sections[level]["hitters"].append(rec)
 
     return {
-        "week_label": _last_full_week_label(today),
+        "title": "Weekly Recap",
+        "subtitle_prefix": "Week of",
+        "period_label": _last_full_week_label(today),
+        "recent_section_label": "Last Week",
+        "season_section_label": "Season-to-Date",
+        "standouts_section_label": "Standouts (Last Week)",
+        "glance_section_label": "Week at a Glance",
+        "dnp_hitter_phrase": "Did not play last week",
+        "dnp_pitcher_phrase": "Did not pitch last week",
+        "subject_template": "Dugout Pulse — Weekly Recap, {period}",
+        "pdf_filename_prefix": "dugout-pulse-week-of",
         "sections": sections,
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
@@ -535,7 +549,16 @@ def build_payload(today: date | None = None) -> dict:
 def render_html(payload: dict) -> str:
     body_parts = []
 
-    topline = _render_topline(payload["sections"])
+    recent_label = payload.get("recent_section_label", "Last Week")
+    season_label = payload.get("season_section_label", "Season-to-Date")
+    dnp_hit = payload.get("dnp_hitter_phrase", "Did not play last week")
+    dnp_pit = payload.get("dnp_pitcher_phrase", "Did not pitch last week")
+
+    topline = _render_topline(
+        payload["sections"],
+        standouts_label=payload.get("standouts_section_label", "Standouts (Last Week)"),
+        glance_label=payload.get("glance_section_label", "Week at a Glance"),
+    )
     if topline:
         body_parts.append(topline)
 
@@ -549,15 +572,24 @@ def render_html(payload: dict) -> str:
         h_played, h_dnp = _split_played_vs_insufficient(sec["hitters"], is_pitcher_side=False)
         p_played, p_dnp = _split_played_vs_insufficient(sec["pitchers"], is_pitcher_side=True)
 
-        body_parts.append(_hitter_section(lvl, h_played, h_dnp))
-        body_parts.append(_pitcher_section(p_played, p_dnp))
+        body_parts.append(_hitter_section(
+            lvl, h_played, h_dnp,
+            recent_label=recent_label, season_label=season_label,
+            recent_dnp_phrase=dnp_hit,
+        ))
+        body_parts.append(_pitcher_section(
+            p_played, p_dnp,
+            recent_label=recent_label, season_label=season_label,
+            recent_dnp_phrase=dnp_pit,
+        ))
 
     legend_items = [
         ('<span class="pill pill-hot">HOT</span> · '
          '<span class="pill pill-solid">SOLID</span> · '
          '<span class="pill pill-steady">STEADY</span> · '
-         '<span class="pill pill-cold">COLD</span> — Last Week grade is the last 7 days; '
-         'Season-to-Date grade is full-season relative to role baselines.'),
+         '<span class="pill pill-cold">COLD</span> — '
+         f'{recent_label} grade reflects the period shown; '
+         f'{season_label} grade is full-season relative to role baselines.'),
     ]
     if payload["sections"].get("Pro", {}).get("hitters"):
         legend_items.append("OPS+ is a wRC+ proxy (100 = MLB average) using fixed league constants.")
@@ -566,12 +598,16 @@ def render_html(payload: dict) -> str:
 
     legend = '<ul class="legend">' + "".join(f"<li>{item}</li>" for item in legend_items) + '</ul>'
 
+    title = payload.get("title", "Weekly Recap")
+    period_label = payload.get("period_label", "")
+    subtitle_prefix = payload.get("subtitle_prefix", "Week of")
+
     return f"""<!doctype html>
-<html><head><meta charset="utf-8"><title>Dugout Pulse — Weekly Recap</title>
+<html><head><meta charset="utf-8"><title>Dugout Pulse — {title}</title>
 <style>{CSS}</style></head>
 <body><div class="wrap">
-<h1>Dugout Pulse — Weekly Recap</h1>
-<div class="sub">Week of {payload['week_label']}</div>
+<h1>Dugout Pulse — {title}</h1>
+<div class="sub">{subtitle_prefix} {period_label}</div>
 {''.join(body_parts)}
 {legend}
 <div class="footer">Generated {payload['generated_at']}</div>
@@ -580,7 +616,8 @@ def render_html(payload: dict) -> str:
 
 
 def render_subject(payload: dict) -> str:
-    return SUBJECT_TEMPLATE.format(week=payload["week_label"])
+    template = payload.get("subject_template", "Dugout Pulse — Weekly Recap, {period}")
+    return template.format(period=payload.get("period_label", ""))
 
 
 # ---------- PDF ----------
@@ -660,7 +697,7 @@ def main(argv=None):
         for lvl in LEVEL_ORDER
     }
     sys.stderr.write(
-        f"[monday_email] week={payload['week_label']} "
+        f"[monday_email] period={payload['period_label']} "
         f"recipients={recipients} counts={counts}\n"
     )
 
@@ -680,7 +717,9 @@ def main(argv=None):
     if pdf_bytes:
         sys.stderr.write(f"[monday_email] PDF: {len(pdf_bytes)} bytes\n")
 
-    pdf_filename = f"dugout-pulse-week-of-{payload['week_label'].replace(' ', '-').replace(',', '').replace('–', '-')}.pdf".lower()
+    safe_period = payload['period_label'].replace(' ', '-').replace(',', '').replace('–', '-').lower()
+    pdf_prefix = payload.get("pdf_filename_prefix", "dugout-pulse-week-of")
+    pdf_filename = f"{pdf_prefix}-{safe_period}.pdf"
     result = send_via_resend(subject, html, recipients, api_key,
                              pdf_bytes=pdf_bytes, pdf_filename=pdf_filename)
     sys.stderr.write(f"[monday_email] sent: {result}\n")

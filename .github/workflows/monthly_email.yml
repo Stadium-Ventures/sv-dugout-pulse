@@ -1,0 +1,87 @@
+name: Monthly Recap Email
+
+# Fires on the 1st of each month at 11:30 UTC (7:30 AM EDT / 6:30 EST).
+# Lands after the daily 11:00 UTC historical aggregation, so the
+# Season-to-Date column reflects through the last day of the prior month.
+on:
+  schedule:
+    - cron: "30 11 1 * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (skip sending; render HTML to job log)"
+        type: boolean
+        default: false
+      to:
+        description: "Override recipient(s), comma-separated. Empty = default list."
+        type: string
+        default: ""
+      subject_suffix:
+        description: "Appended to subject (useful to break Gmail threading on test sends)."
+        type: string
+        default: ""
+      today_override:
+        description: "Override today's date as YYYY-MM-DD (so we aggregate the calendar month before this date — useful for testing without waiting for the 1st)."
+        type: string
+        default: ""
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repo (latest main so windows are fresh)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pipeline deps
+        # The monthly email runs the historical aggregator inline so it needs
+        # the same scrapers the pulse workflow uses.
+        run: pip install --quiet -r requirements.txt
+
+      - name: Install PDF-rendering deps
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libpango-1.0-0 libpangoft2-1.0-0 \
+            fonts-liberation fonts-noto-color-emoji
+          pip install --quiet weasyprint
+
+      - name: Send Monthly email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ROSTER_URL: ${{ secrets.ROSTER_URL }}
+          RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
+          SB_PROXY_URL: ""
+          SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
+          SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          TO_OVERRIDE: ${{ inputs.to }}
+          SUBJECT_SUFFIX: ${{ inputs.subject_suffix }}
+          TODAY_OVERRIDE: ${{ inputs.today_override }}
+        run: |
+          set -eo pipefail
+          ARGS=()
+          if [ "${DRY_RUN:-false}" = "true" ]; then
+            ARGS+=("--dry-run")
+          fi
+          if [ -n "${TO_OVERRIDE:-}" ]; then
+            IFS=',' read -ra TOS <<< "${TO_OVERRIDE}"
+            for t in "${TOS[@]}"; do
+              ARGS+=("--to" "$(echo "$t" | xargs)")
+            done
+          fi
+          if [ -n "${SUBJECT_SUFFIX:-}" ]; then
+            ARGS+=("--subject-suffix" "${SUBJECT_SUFFIX}")
+          fi
+          if [ -n "${TODAY_OVERRIDE:-}" ]; then
+            ARGS+=("--today" "${TODAY_OVERRIDE}")
+          fi
+          python -m scripts.monthly_email "${ARGS[@]}"

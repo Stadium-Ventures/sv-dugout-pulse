@@ -1012,12 +1012,13 @@ class WindowStatsAggregator:
             stats, game_log_entries = self.mlb_fetcher.fetch_window(
                 name, team, position, start_date, end_date, mlb_id=mlb_id
             )
-        elif level == "NCAA" and window == "7d":
+        elif level == "NCAA" and window == "season":
+            stats = self.d1b_fetcher.get_season_stats(name, team, position)
+        elif level == "NCAA":
+            # Any non-season window (7d, month, custom) uses the game log.
             stats, game_log_entries = self.ncaa_log.get_window_stats(
                 name, team, position, start_date, end_date
             )
-        elif level == "NCAA" and window == "season":
-            stats = self.d1b_fetcher.get_season_stats(name, team, position)
         elif level == "HS":
             try:
                 if self.hs_log is None:
