@@ -36,6 +36,16 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install PDF-rendering deps
+        # WeasyPrint needs pango + cairo from apt; emoji rendering needs Noto.
+        # Liberation fonts cover the table body.
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            libpango-1.0-0 libpangoft2-1.0-0 \
+            fonts-liberation fonts-noto-color-emoji
+          pip install --quiet weasyprint==62.3
+
       - name: Send Monday email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}

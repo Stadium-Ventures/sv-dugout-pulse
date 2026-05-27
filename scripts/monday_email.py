@@ -177,6 +177,18 @@ CSS = """
             padding: 12px 14px; background: #fff; border: 1px solid #e4e9ee;
             border-radius: 8px; line-height: 1.55; }
   .legend li { margin: 3px 0; }
+  .topline { display: block; margin-bottom: 28px; }
+  .topline-card { background: #fff; border: 1px solid #c8d1da; border-radius: 8px;
+                  padding: 14px 18px 16px; margin-bottom: 14px;
+                  box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+  .standouts { list-style: none; padding: 0; margin: 0; }
+  .standouts li { padding: 6px 0; border-bottom: 1px solid #f0f3f6;
+                  font-size: 14px; line-height: 1.45; }
+  .standouts li:last-child { border-bottom: none; }
+  table.glance { margin-top: 4px; }
+  table.glance th { font-size: 11px; }
+  table.glance td { font-size: 13.5px; padding: 8px 10px; }
+  table.glance .pill { min-width: 22px; text-align: center; }
 """
 
 # Map "🔥 Hot" -> ("HOT", "hot" CSS class). The leading emoji is dropped.
@@ -338,6 +350,157 @@ def _split_played_vs_insufficient(records: list[dict], is_pitcher_side: bool) ->
     return played, dnp_names
 
 
+def _hitter_score(w: dict) -> float:
+    return _ops_value(w)
+
+
+def _pitcher_score(w: dict) -> float:
+    """Innings + run-prevention (Kent's rubric — not K:BB)."""
+    ip = _ip(w)
+    if ip <= 0:
+        return -99.0
+    era = _parse_rate(w.get("stats", {}).get("era"))
+    if era is None:
+        era = 9.99
+    return ip * 2.0 - era
+
+
+def _hitter_line(w: dict, level: str) -> str:
+    s = w.get("stats", {})
+    slash = f'{_fmt(s.get("avg"))}/{_fmt(s.get("obp"))}/{_fmt(s.get("slg"))}'
+    extras = []
+    for label, key in [("HR", "hr"), ("RBI", "rbi"), ("SB", "sb")]:
+        v = s.get(key)
+        if v not in (None, "", "--", 0, "0"):
+            extras.append(f"{v} {label}")
+    if level == "Pro":
+        op = _ops_plus(s)
+        if op is not None:
+            extras.append(f"OPS+ {op}")
+    return slash + (" · " + ", ".join(extras) if extras else "")
+
+
+def _pitcher_line(w: dict) -> str:
+    s = w.get("stats", {})
+    parts = [f'{_fmt(s.get("ip"))} IP', f'{_fmt(s.get("era"))} ERA']
+    for label, key in [("K", "k"), ("BB", "bb")]:
+        v = s.get(key)
+        if v not in (None, "", "--"):
+            parts.append(f"{v} {label}")
+    whip = s.get("whip")
+    if whip not in (None, "", "--"):
+        parts.append(f"WHIP {whip}")
+    return ", ".join(parts)
+
+
+def _standouts(sections: dict, max_n: int = 6) -> list[dict]:
+    """Top HOT performers, interleaved hitters + pitchers."""
+    hitters_out, pitchers_out = [], []
+    for level in LEVEL_ORDER:
+        sec = sections[level]
+        for h in sec["hitters"]:
+            w = h["week"]
+            if w.get("window_grade") != "🔥 Hot" or _pa(w) < 5:
+                continue
+            hitters_out.append({
+                "kind": "hitter", "level": level,
+                "player": w["player_name"], "team": w["team"],
+                "score": _hitter_score(w),
+                "line": _hitter_line(w, level),
+            })
+        for p in sec["pitchers"]:
+            w = p["week"]
+            if w.get("window_grade") != "🔥 Hot" or _ip(w) < 2:
+                continue
+            pitchers_out.append({
+                "kind": "pitcher", "level": level,
+                "player": w["player_name"], "team": w["team"],
+                "score": _pitcher_score(w),
+                "line": _pitcher_line(w),
+            })
+    hitters_out.sort(key=lambda x: -x["score"])
+    pitchers_out.sort(key=lambda x: -x["score"])
+    merged = []
+    while (hitters_out or pitchers_out) and len(merged) < max_n:
+        if hitters_out:
+            merged.append(hitters_out.pop(0))
+        if len(merged) < max_n and pitchers_out:
+            merged.append(pitchers_out.pop(0))
+    return merged
+
+
+def _glance(sections: dict) -> list[dict]:
+    """Per-level grade counts (week)."""
+    out = []
+    for level in LEVEL_ORDER:
+        sec = sections[level]
+        counts = {"hot": 0, "solid": 0, "steady": 0, "cold": 0, "dnp": 0}
+        total = len(sec["hitters"]) + len(sec["pitchers"])
+        if total == 0:
+            continue
+        for kind_recs in (sec["hitters"], sec["pitchers"]):
+            for r in kind_recs:
+                g = r["week"].get("window_grade", "")
+                if g == "🔥 Hot": counts["hot"] += 1
+                elif g == "✅ Solid": counts["solid"] += 1
+                elif g == "😐 Steady": counts["steady"] += 1
+                elif g == "🥶 Cold": counts["cold"] += 1
+                else: counts["dnp"] += 1
+        out.append({"level": level, "total": total, **counts})
+    return out
+
+
+def _render_topline(sections: dict) -> str:
+    standouts = _standouts(sections)
+    glance = _glance(sections)
+
+    parts = []
+
+    if standouts:
+        items = []
+        for s in standouts:
+            kind_label = "Hitter" if s["kind"] == "hitter" else "Pitcher"
+            items.append(
+                f'<li><strong>{s["player"]}</strong> '
+                f'<span style="color:#57606a;">({s["team"]}, {s["level"]} {kind_label})</span> '
+                f'<span style="color:#1f2328;">— {s["line"]}</span></li>'
+            )
+        parts.append(
+            '<div class="topline-card">'
+            '<h3 style="margin-top:0;">Standouts (Last Week)</h3>'
+            f'<ul class="standouts">{"".join(items)}</ul>'
+            '</div>'
+        )
+
+    if glance:
+        rows = []
+        for g in glance:
+            rows.append(
+                f'<tr>'
+                f'<td class="l"><strong>{g["level"]}</strong></td>'
+                f'<td><span class="pill pill-hot">{g["hot"]}</span></td>'
+                f'<td><span class="pill pill-solid">{g["solid"]}</span></td>'
+                f'<td><span class="pill pill-steady">{g["steady"]}</span></td>'
+                f'<td><span class="pill pill-cold">{g["cold"]}</span></td>'
+                f'<td><span class="pill pill-na">{g["dnp"]}</span></td>'
+                f'<td style="color:#6e7781;">{g["total"]}</td>'
+                f'</tr>'
+            )
+        parts.append(
+            '<div class="topline-card">'
+            '<h3 style="margin-top:0;">Week at a Glance</h3>'
+            '<table class="glance"><thead><tr>'
+            '<th class="l">Level</th><th>Hot</th><th>Solid</th><th>Steady</th>'
+            '<th>Cold</th><th>DNP</th><th>Total</th>'
+            f'</tr></thead><tbody>{"".join(rows)}</tbody></table>'
+            '</div>'
+        )
+
+    if not parts:
+        return ""
+    return '<div class="topline">' + "".join(parts) + '</div>'
+
+
 def build_payload(today: date | None = None) -> dict:
     today = today or date.today()
     week = _load_window(WINDOW_7D)
@@ -371,6 +534,11 @@ def build_payload(today: date | None = None) -> dict:
 
 def render_html(payload: dict) -> str:
     body_parts = []
+
+    topline = _render_topline(payload["sections"])
+    if topline:
+        body_parts.append(topline)
+
     for lvl in LEVEL_ORDER:
         sec = payload["sections"][lvl]
         if not sec["hitters"] and not sec["pitchers"]:
@@ -415,16 +583,39 @@ def render_subject(payload: dict) -> str:
     return SUBJECT_TEMPLATE.format(week=payload["week_label"])
 
 
+# ---------- PDF ----------
+
+def render_pdf(html: str) -> bytes | None:
+    """Render HTML to PDF via weasyprint. Returns None if weasyprint isn't installed."""
+    try:
+        from weasyprint import HTML  # type: ignore
+    except ImportError:
+        sys.stderr.write("[monday_email] weasyprint not installed — skipping PDF attachment\n")
+        return None
+    return HTML(string=html).write_pdf()
+
+
 # ---------- Resend send ----------
 
-def send_via_resend(subject: str, html: str, to: list[str], api_key: str) -> dict:
+def send_via_resend(subject: str, html: str, to: list[str], api_key: str,
+                    pdf_bytes: bytes | None = None,
+                    pdf_filename: str = "weekly_recap.pdf") -> dict:
     import urllib.request, urllib.error
-    body = json.dumps({
+    import base64
+
+    payload: dict = {
         "from": FROM_ADDRESS,
         "to": to,
         "subject": subject,
         "html": html,
-    }).encode("utf-8")
+    }
+    if pdf_bytes:
+        payload["attachments"] = [{
+            "filename": pdf_filename,
+            "content": base64.b64encode(pdf_bytes).decode("ascii"),
+        }]
+
+    body = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         "https://api.resend.com/emails",
         data=body,
@@ -484,7 +675,14 @@ def main(argv=None):
     api_key = os.environ.get("RESEND_API_KEY", "").strip()
     if not api_key:
         raise SystemExit("RESEND_API_KEY env var is not set.")
-    result = send_via_resend(subject, html, recipients, api_key)
+
+    pdf_bytes = render_pdf(html)
+    if pdf_bytes:
+        sys.stderr.write(f"[monday_email] PDF: {len(pdf_bytes)} bytes\n")
+
+    pdf_filename = f"dugout-pulse-week-of-{payload['week_label'].replace(' ', '-').replace(',', '').replace('–', '-')}.pdf".lower()
+    result = send_via_resend(subject, html, recipients, api_key,
+                             pdf_bytes=pdf_bytes, pdf_filename=pdf_filename)
     sys.stderr.write(f"[monday_email] sent: {result}\n")
 
 
