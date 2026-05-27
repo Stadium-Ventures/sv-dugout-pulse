@@ -1,69 +1,5 @@
 [
   {
-    "generated_at": "2026-05-20T22:20:07.787527+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Cade Doughty",
-      "Justin Riemer",
-      "Tanner Gordon",
-      "Alex Kranzler",
-      "Eamon McDermott",
-      "Luke Fithian"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 7,
-        "found stats": 13,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "player not in box": 6,
-        "No game listed today": 7,
-        "found player": 8
-      },
-      "ESPN": {
-        "No game listed today": 3,
-        "Game found, not in box score": 4,
-        "found stats": 1
-      },
-      "NCAA.com": {
-        "Stale data — skipped": 2,
-        "Game found, not in box score": 4,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 7,
-        "player not in box": 1
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 2,
-        "Game found, not in box score": 4,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 9,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-20T22:34:52.597994+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -39281,6 +39217,31 @@
   },
   {
     "generated_at": "2026-05-27T22:16:55.756129+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Cade Doughty",
+      "Jack Cebert",
+      "Austin Amaral"
+    ],
+    "total_clients": 84,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-27T22:31:36.570889+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
