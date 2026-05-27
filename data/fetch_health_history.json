@@ -1,55 +1,5 @@
 [
   {
-    "generated_at": "2026-05-20T09:02:42.042597+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 87,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 18,
-        "No game listed today": 1,
-        "Game found, not in box score": 2
-      },
-      "ESPN": {
-        "found stats": 1,
-        "No game listed today": 2
-      },
-      "StatBroadcast": {
-        "player not in box": 1,
-        "No game listed today": 2
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 2
-      },
-      "Sidearm": {
-        "No game listed today": 2,
-        "player not in box": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-20T09:17:21.888004+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -41379,6 +41329,26 @@
   },
   {
     "generated_at": "2026-05-27T09:01:45.819065+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-27T09:16:56.370549+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
