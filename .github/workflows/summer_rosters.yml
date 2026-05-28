@@ -36,6 +36,11 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
+          # Pointstreak (Northwoods backend) is Incapsula-gated; reuse the
+          # SB residential proxy pool to punch through.
+          SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
+          SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+          SB_HTTP_PROXY_3: ${{ secrets.SB_HTTP_PROXY_3 }}
         run: |
           set -eo pipefail
           if [ "${{ inputs.dry_run }}" = "true" ]; then

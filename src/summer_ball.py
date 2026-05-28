@@ -42,6 +42,8 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+import os
+
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
@@ -54,7 +56,7 @@ SUMMER_ROSTER_PATH = REPO_ROOT / "data" / "summer_ball_rosters.json"
 
 
 # =============================================================================
-# Shared HTTP
+# Plain (unproxied) HTTP — for league sites that aren't WAF-gated
 # =============================================================================
 
 def _make_session() -> requests.Session:
@@ -75,6 +77,71 @@ def _make_session() -> requests.Session:
 
 
 _http = _make_session()
+
+
+# =============================================================================
+# Residential-proxy fetch — for WAF-gated sources (Pointstreak, Cape Cod, etc.)
+#
+# Pointstreak is Incapsula-gated; plain `requests` returns 404. Reuse the
+# Webshare/IPRoyal/ScraperAPI pool we already use for StatBroadcast.
+# =============================================================================
+
+_PROXY_POOL_ENV = ("SB_HTTP_PROXY", "SB_HTTP_PROXY_2", "SB_HTTP_PROXY_3")
+
+
+def _residential_proxy_pool() -> list[str]:
+    return [v for v in (os.environ.get(k, "").strip() for k in _PROXY_POOL_ENV) if v]
+
+
+def _proxy_label(proxy: str) -> str:
+    if not proxy:
+        return "direct"
+    try:
+        from urllib.parse import urlparse
+        return urlparse(proxy).hostname or "?"
+    except Exception:
+        return "?"
+
+
+def fetch_via_residential_proxy(url: str, timeout: int = 20) -> tuple[Optional[str], dict]:
+    """Fetch a URL through residential proxy + Chrome TLS impersonation.
+
+    Rotates through the proxy pool on 403 / 5xx, returns the first successful
+    body. Returns (None, diagnostics) if every proxy was rejected.
+
+    ScraperAPI proxies use plain `requests` with verify=False (their own
+    proxy mode handles TLS); residential providers use curl_cffi chrome120.
+    Diagnostics tells the caller which proxy worked + how many attempts.
+    """
+    pool = _residential_proxy_pool()
+    diagnostics: dict = {"attempts": [], "active": None}
+    if not pool:
+        diagnostics["error"] = "no_residential_proxies_configured"
+        return None, diagnostics
+
+    for proxy in pool:
+        label = _proxy_label(proxy)
+        try:
+            if "scraperapi" in proxy.lower():
+                import urllib3
+                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+                sess = requests.Session()
+                sess.proxies = {"http": proxy, "https": proxy}
+                resp = sess.get(url, verify=False, timeout=timeout)
+            else:
+                from curl_cffi import requests as _cr  # local import
+                sess = _cr.Session(impersonate="chrome120",
+                                   proxies={"http": proxy, "https": proxy})
+                resp = sess.get(url, timeout=timeout)
+            status = resp.status_code
+            diagnostics["attempts"].append({"proxy": label, "status": status})
+            if 200 <= status < 300 and resp.text:
+                diagnostics["active"] = label
+                return resp.text, diagnostics
+        except Exception as e:
+            diagnostics["attempts"].append({"proxy": label, "error": str(e)[:120]})
+    diagnostics["error"] = "all_proxies_failed"
+    return None, diagnostics
 
 
 def _normalize_name(name: str) -> str:
@@ -166,53 +233,109 @@ class SummerLeague:
 # -----------------------------------------------------------------------------
 
 class NorthwoodsLeague(SummerLeague):
-    """Northwoods League stats live at northwoodsleague.com/baseball/statistics/.
+    """Northwoods League stats are iframed from Pointstreak.
 
-    The public batting/pitching pages list every active player (one row each)
-    with their summer team and (in most cases) college affiliation.
+    Pointstreak is Incapsula-gated, so the actual fetch goes through the
+    residential proxy pool (same one we use for StatBroadcast). The
+    Northwoods League's own site is NOT WAF-gated, so we use that to
+    discover the current season's leagueid/seasonid before falling back
+    to a known default.
     """
 
     name = "Northwoods League"
     short_name = "Northwoods"
 
-    BATTING_URL = "https://northwoodsleague.com/baseball/statistics/?type=batting&sort=AVG"
-    PITCHING_URL = "https://northwoodsleague.com/baseball/statistics/?type=pitching&sort=ERA"
+    HOST_URL = "https://northwoodsleague.com/baseball/statistics/?type=batting&sort=AVG"
+    # Known fallback IDs from the 2026 season iframe; auto-discovery below
+    # overrides these if the iframe URL has changed.
+    _DEFAULT_LEAGUE_ID = 120
+    _DEFAULT_SEASON_ID = 31974
+
+    def _resolve_ids(self) -> tuple[int, int]:
+        try:
+            html = _http.get(self.HOST_URL, timeout=15).text
+            m = re.search(r"pointstreak\.com[^\"']*leagueid=(\d+)[^\"']*seasonid=(\d+)", html)
+            if m:
+                return int(m.group(1)), int(m.group(2))
+        except Exception:
+            logger.exception("Northwoods: leagueid/seasonid discovery failed")
+        return self._DEFAULT_LEAGUE_ID, self._DEFAULT_SEASON_ID
 
     def discover_rosters(self) -> list[PlayerEntry]:
+        league_id, season_id = self._resolve_ids()
         entries: dict[str, PlayerEntry] = {}
-        for url in (self.BATTING_URL, self.PITCHING_URL):
-            html = _http.get(url, timeout=20).text
-            soup = BeautifulSoup(html, "html.parser")
-            # Stat tables are typically <table> with <tr><td>Player</td><td>Team</td>...
-            for table in soup.find_all("table"):
-                head_text = " ".join(th.get_text(" ", strip=True).lower()
-                                     for th in table.find_all("th"))
-                if "player" not in head_text or "team" not in head_text:
-                    continue
-                headers = [th.get_text(strip=True).lower() for th in table.find_all("th")]
-                for row in table.find_all("tr"):
-                    cells = row.find_all("td")
-                    if len(cells) < 2:
-                        continue
-                    cell_map = dict(zip(headers, [c.get_text(" ", strip=True) for c in cells]))
-                    player = cell_map.get("player") or cell_map.get("name") or ""
-                    team = cell_map.get("team") or ""
-                    college = cell_map.get("college") or cell_map.get("school") or ""
-                    if not player or not team:
-                        continue
-                    key = _normalize_name(player)
-                    if key in entries:
-                        continue
-                    entries[key] = PlayerEntry(
-                        name=_normalize_name(player),
-                        college=_normalize_college(college),
-                        summer_team=team,
-                        league=self.short_name,
-                        profile_url=url,
-                        raw_name=player,
-                        raw_college=college,
-                    )
+        for view in ("batting", "pitching"):
+            url = (
+                f"https://pointstreak.com/stats.html"
+                f"?leagueid={league_id}&seasonid={season_id}&view={view}"
+            )
+            html, diag = fetch_via_residential_proxy(url, timeout=25)
+            if not html:
+                logger.warning("Northwoods %s: all proxies failed (%s)", view, diag)
+                continue
+            entries.update(_parse_pointstreak_table(
+                html, league=self.short_name, profile_url=url,
+            ))
         return list(entries.values())
+
+
+def _parse_pointstreak_table(
+    html: str, *, league: str, profile_url: str
+) -> dict[str, PlayerEntry]:
+    """Pull (player, team) pairs from a Pointstreak stats page.
+
+    Pointstreak's HTML uses <table> with <tr> rows; player name is usually
+    the first text cell, team is one of the later cells. We pick out the
+    leftmost cell containing letters + a space as the name, then the next
+    cell that looks like a team name.
+    """
+    out: dict[str, PlayerEntry] = {}
+    soup = BeautifulSoup(html, "html.parser")
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if len(rows) < 3:
+            continue
+        # First non-blank row with mostly <th> is the header
+        headers: list[str] = []
+        for row in rows:
+            th_cells = row.find_all("th")
+            if th_cells:
+                headers = [t.get_text(strip=True).lower() for t in th_cells]
+                break
+        if not headers or "player" not in " ".join(headers):
+            continue
+        # find column indices
+        try:
+            name_col = next(i for i, h in enumerate(headers) if "player" in h or h == "name")
+        except StopIteration:
+            continue
+        team_col = next((i for i, h in enumerate(headers) if "team" in h), None)
+        college_col = next(
+            (i for i, h in enumerate(headers) if "college" in h or h == "school"),
+            None,
+        )
+        for row in rows:
+            cells = row.find_all("td")
+            if len(cells) <= name_col:
+                continue
+            name = cells[name_col].get_text(" ", strip=True)
+            if not name or any(c.isdigit() for c in name) and len(name) < 4:
+                continue
+            team = cells[team_col].get_text(" ", strip=True) if team_col is not None and len(cells) > team_col else ""
+            college = cells[college_col].get_text(" ", strip=True) if college_col is not None and len(cells) > college_col else ""
+            key = _normalize_name(name)
+            if not key or key in out:
+                continue
+            out[key] = PlayerEntry(
+                name=key,
+                college=_normalize_college(college),
+                summer_team=team,
+                league=league,
+                profile_url=profile_url,
+                raw_name=name,
+                raw_college=college,
+            )
+    return out
 
 
 # -----------------------------------------------------------------------------
