@@ -539,14 +539,134 @@ LEAGUES: list[SummerLeague] = [
 
 
 # =============================================================================
+# The Baseball Cube — cross-league fallback aggregator
+# =============================================================================
+#
+# Baseball Cube aggregates summer-ball player data across many leagues with
+# college affiliation included on the player profile. Used as a fallback
+# lookup AFTER per-league discovery — for each NCAA client that didn't
+# match in any league's roster, we ask the Cube directly. This unlocks
+# leagues whose own sites we haven't implemented (or whose WAF blocks us).
+#
+# Data is next-day at best — perfect for the Monday recap (which uses the
+# 4 AM ET snapshot), not used for live in-game stats.
+
+class BaseballCubeLookup:
+    """Search Baseball Cube for an NCAA player and infer their summer team."""
+
+    BASE = "https://www.thebaseballcube.com"
+    name = "The Baseball Cube"
+    short_name = "BaseballCube"
+
+    def find_player(self, full_name: str, college: str) -> Optional[PlayerEntry]:
+        """Return a PlayerEntry if the Cube knows this NCAA player and they
+        have an active summer team, else None.
+
+        URL patterns are best-effort — Cube has changed its routing more
+        than once. We rely on residential proxy + curl_cffi to clear
+        Cloudflare's challenge, then look for summer-league mentions in
+        the player profile.
+        """
+        from urllib.parse import quote_plus
+        q = quote_plus(full_name)
+        search_url = f"{self.BASE}/content/search/?search={q}"
+        html, diag = fetch_via_residential_proxy(search_url, timeout=25)
+        if not html:
+            logger.info("BaseballCube: search blocked for %s (%s)",
+                        full_name, diag.get("error"))
+            return None
+
+        soup = BeautifulSoup(html, "html.parser")
+        # Find search-result links to player profiles. Cube uses /content/player/
+        # for the modern path; older links go to /players/profile.asp.
+        candidate_urls: list[str] = []
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            if "/content/player/" in href or "profile.asp" in href:
+                if href.startswith("/"):
+                    href = self.BASE + href
+                candidate_urls.append(href)
+            if len(candidate_urls) >= 8:  # cap candidates per search
+                break
+
+        target_college = _normalize_college(college)
+        for url in candidate_urls:
+            phtml, _ = fetch_via_residential_proxy(url, timeout=25)
+            if not phtml:
+                continue
+            psoup = BeautifulSoup(phtml, "html.parser")
+            body_text = psoup.get_text(" ", strip=True)
+            # Confirm we're on the right player by college affiliation.
+            if target_college and target_college not in _normalize_college(body_text):
+                continue
+            # Look for the summer league section. Cube tags it variously —
+            # "Summer League", "Cape Cod", "Northwoods" etc. appear as
+            # section labels next to a team name.
+            summer_team, summer_league = _extract_baseballcube_summer_assignment(body_text)
+            if not summer_team:
+                continue
+            return PlayerEntry(
+                name=_normalize_name(full_name),
+                college=_normalize_college(college),
+                summer_team=summer_team,
+                league=summer_league or "Summer (via Baseball Cube)",
+                source_id=url,
+                profile_url=url,
+                raw_name=full_name,
+                raw_college=college,
+            )
+        return None
+
+
+_SUMMER_LEAGUE_PHRASES = [
+    ("Cape Cod Baseball League", "Cape Cod"),
+    ("Cape Cod League", "Cape Cod"),
+    ("Northwoods League", "Northwoods"),
+    ("Coastal Plain League", "Coastal Plain"),
+    ("New England Collegiate Baseball League", "NECBL"),
+    ("Appalachian League", "Appalachian"),
+    ("Alaska Baseball League", "Alaska"),
+    ("Florida Collegiate Summer League", "Florida Collegiate"),
+    ("Prospect League", "Prospect"),
+    ("Valley Baseball League", "Valley"),
+    ("California Collegiate League", "California Collegiate"),
+    ("Great Lakes Summer Collegiate", "Great Lakes"),
+]
+
+
+def _extract_baseballcube_summer_assignment(body_text: str) -> tuple[str, str]:
+    """Look for a known summer-league phrase in the profile body text,
+    then grab the team name that appears nearby. Best-effort — Cube's
+    layout changes; we tighten this once we see real failures."""
+    for phrase, short in _SUMMER_LEAGUE_PHRASES:
+        idx = body_text.find(phrase)
+        if idx < 0:
+            continue
+        # Look 200 chars on either side for a team-ish token.
+        window = body_text[max(0, idx - 200):idx + 200]
+        m = re.search(r"([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3})\s+\(.*?\)?\s*" + re.escape(phrase),
+                      window)
+        if m:
+            return m.group(1).strip(), short
+        # Fallback: take the token right after the league phrase.
+        after = body_text[idx + len(phrase):idx + len(phrase) + 80]
+        m2 = re.match(r"\s*[—\-:|]?\s*([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3})", after)
+        if m2:
+            return m2.group(1).strip(), short
+    return "", ""
+
+
+# =============================================================================
 # Aggregator + transparency
 # =============================================================================
 
 class SummerBallAggregator:
     """Coordinates per-league discovery + writes the daily roster snapshot."""
 
-    def __init__(self, leagues: Optional[list[SummerLeague]] = None):
+    def __init__(self, leagues: Optional[list[SummerLeague]] = None,
+                 cube: Optional[BaseballCubeLookup] = None):
         self.leagues = leagues if leagues is not None else LEAGUES
+        self.cube = cube if cube is not None else BaseballCubeLookup()
 
     def discover_all(self) -> tuple[list[PlayerEntry], list[LeagueHealth]]:
         all_players: list[PlayerEntry] = []
@@ -671,9 +791,40 @@ class SummerBallAggregator:
 
             unmatched.append({"player_name": ncaa_full_name, "college": c.get("team")})
 
+        # Second-pass lookup via The Baseball Cube for any still-unmatched
+        # clients. Cube includes college affiliation on player profiles, so
+        # matches found here are high-confidence (name+college, like our
+        # primary path).
+        cube_status: dict = {"attempted": 0, "matched": 0, "blocked": 0, "errors": 0}
+        if self.cube and unmatched:
+            still_unmatched: list[dict] = []
+            for u in unmatched:
+                cube_status["attempted"] += 1
+                try:
+                    entry = self.cube.find_player(u["player_name"], u["college"])
+                except Exception as e:
+                    logger.exception("BaseballCube lookup failed for %s", u["player_name"])
+                    cube_status["errors"] += 1
+                    still_unmatched.append(u)
+                    continue
+                if entry is None:
+                    still_unmatched.append(u)
+                    continue
+                cube_status["matched"] += 1
+                matched.append({
+                    "player_name": u["player_name"],
+                    "college": u["college"],
+                    "summer_team": entry.summer_team,
+                    "league": entry.league,
+                    "match_strength": "via Baseball Cube (next-day)",
+                    "profile_url": entry.profile_url,
+                })
+            unmatched = still_unmatched
+
         snapshot = {
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "league_health": [h.to_dict() for h in health],
+            "baseballcube": cube_status,
             "ncaa_clients_total": len(ncaa_clients),
             "ncaa_clients_matched": len(matched),
             "ncaa_clients_possible": len(possible_matches),
