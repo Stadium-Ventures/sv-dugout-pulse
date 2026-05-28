@@ -259,23 +259,31 @@ class NorthwoodsLeague(SummerLeague):
     _DEFAULT_LEAGUE_ID = 120
     _DEFAULT_SEASON_ID = 31974
 
-    def _resolve_ids(self) -> tuple[int, int]:
+    def _resolve_ids(self) -> tuple[str, int, int]:
+        """Return (host, leagueid, seasonid).
+
+        Northwoods iframes from bbstats.pointstreak.com (not the apex domain
+        — apex 404s). Discover the host from the iframe src too.
+        """
         try:
             html = _http.get(self.HOST_URL, timeout=15).text
-            m = re.search(r"pointstreak\.com[^\"']*leagueid=(\d+)[^\"']*seasonid=(\d+)", html)
+            m = re.search(
+                r"([a-z0-9.-]+\.pointstreak\.com)[^\"']*leagueid=(\d+)[^\"']*seasonid=(\d+)",
+                html,
+            )
             if m:
-                return int(m.group(1)), int(m.group(2))
+                return m.group(1), int(m.group(2)), int(m.group(3))
         except Exception:
-            logger.exception("Northwoods: leagueid/seasonid discovery failed")
-        return self._DEFAULT_LEAGUE_ID, self._DEFAULT_SEASON_ID
+            logger.exception("Northwoods: host/leagueid/seasonid discovery failed")
+        return "bbstats.pointstreak.com", self._DEFAULT_LEAGUE_ID, self._DEFAULT_SEASON_ID
 
     def discover_rosters(self) -> list[PlayerEntry]:
-        league_id, season_id = self._resolve_ids()
-        logger.info("Northwoods: using leagueid=%s seasonid=%s", league_id, season_id)
+        host, league_id, season_id = self._resolve_ids()
+        logger.info("Northwoods: using host=%s leagueid=%s seasonid=%s", host, league_id, season_id)
         entries: dict[str, PlayerEntry] = {}
         for view in ("batting", "pitching"):
             url = (
-                f"https://pointstreak.com/stats.html"
+                f"https://{host}/stats.html"
                 f"?leagueid={league_id}&seasonid={season_id}&view={view}"
             )
             html, diag = fetch_via_residential_proxy(url, timeout=25)
