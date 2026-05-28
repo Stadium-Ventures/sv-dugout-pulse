@@ -1,12 +1,22 @@
 name: Summer Ball Roster Refresh
 
-# Runs daily at 08:00 UTC (4 AM ET, after overnight backfill, before live
-# pulse cycle starts at 10 AM ET). Discovers which NCAA clients are playing
-# in each summer league and writes data/summer_ball_rosters.json with per-
-# league health + match results.
+# Runs four times a day. Per-league discovery is cheap; the real reason
+# for multiple passes is The Baseball Cube. Cube's "next-day stats"
+# claim is best-effort — yesterday's box scores often don't appear
+# until mid-morning or later, and individual profiles fill in across
+# the day. Each pass re-checks every still-unmatched NCAA client, so
+# whichever pass catches Cube's update window wins.
+#
+# 08:00 UTC = 4 AM ET   — earliest Cube update window
+# 13:00 UTC = 9 AM ET   — after Cube's typical batch finishes
+# 17:00 UTC = 1 PM ET   — afternoon catch-up
+# 22:00 UTC = 6 PM ET   — last pass before evening games begin
 on:
   schedule:
     - cron: "0 8 * * *"
+    - cron: "0 13 * * *"
+    - cron: "0 17 * * *"
+    - cron: "0 22 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
