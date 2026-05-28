@@ -175,6 +175,34 @@ def _normalize_college(college: str) -> str:
     return s
 
 
+def _initial_last_key(name: str) -> str:
+    """Build "F. Last"-style key from a full or abbreviated name.
+
+    Inputs we handle:
+      "Aiden Robbins"   -> "a robbins"
+      "Robbins, A"      -> "a robbins"
+      "Robbins, Aiden"  -> "a robbins"
+      "A. J. Smith"     -> "a smith"   (first initial of first token)
+      "JJ Smith"        -> "j smith"
+    """
+    if not name:
+        return ""
+    raw = name.strip()
+    # "Last, First" form -> swap
+    if "," in raw:
+        last, first = [p.strip() for p in raw.split(",", 1)]
+        if not first or not last:
+            return ""
+        first_initial = first[0]
+    else:
+        parts = raw.split()
+        if len(parts) < 2:
+            return ""
+        first_initial = parts[0][0]
+        last = parts[-1]
+    return _normalize_name(f"{first_initial} {last}")
+
+
 # =============================================================================
 # Data shape
 # =============================================================================
@@ -240,33 +268,24 @@ class SummerLeague:
 # Northwoods League
 # -----------------------------------------------------------------------------
 
-class NorthwoodsLeague(SummerLeague):
-    """Northwoods League stats are iframed from Pointstreak.
+class PointstreakBackedLeague(SummerLeague):
+    """Base class for leagues that publish stats via Pointstreak iframe.
 
-    Pointstreak is Incapsula-gated, so the actual fetch goes through the
-    residential proxy pool (same one we use for StatBroadcast). The
-    Northwoods League's own site is NOT WAF-gated, so we use that to
-    discover the current season's leagueid/seasonid before falling back
-    to a known default.
+    Subclasses set `host_url` (the league's own site, used to auto-discover
+    the current leagueid/seasonid from the iframe src) and known fallback
+    `_DEFAULT_LEAGUE_ID` / `_DEFAULT_SEASON_ID` for when discovery fails.
     """
 
-    name = "Northwoods League"
-    short_name = "Northwoods"
-
-    HOST_URL = "https://northwoodsleague.com/baseball/statistics/?type=batting&sort=AVG"
-    # Known fallback IDs from the 2026 season iframe; auto-discovery below
-    # overrides these if the iframe URL has changed.
-    _DEFAULT_LEAGUE_ID = 120
-    _DEFAULT_SEASON_ID = 31974
+    host_url: str = ""              # league site to scrape for iframe src
+    _DEFAULT_HOST: str = "bbstats.pointstreak.com"
+    _DEFAULT_LEAGUE_ID: int = 0
+    _DEFAULT_SEASON_ID: int = 0
 
     def _resolve_ids(self) -> tuple[str, int, int]:
-        """Return (host, leagueid, seasonid).
-
-        Northwoods iframes from bbstats.pointstreak.com (not the apex domain
-        — apex 404s). Discover the host from the iframe src too.
-        """
+        if not self.host_url:
+            return self._DEFAULT_HOST, self._DEFAULT_LEAGUE_ID, self._DEFAULT_SEASON_ID
         try:
-            html = _http.get(self.HOST_URL, timeout=15).text
+            html = _http.get(self.host_url, timeout=15).text
             m = re.search(
                 r"([a-z0-9.-]+\.pointstreak\.com)[^\"']*leagueid=(\d+)[^\"']*seasonid=(\d+)",
                 html,
@@ -274,12 +293,20 @@ class NorthwoodsLeague(SummerLeague):
             if m:
                 return m.group(1), int(m.group(2)), int(m.group(3))
         except Exception:
-            logger.exception("Northwoods: host/leagueid/seasonid discovery failed")
-        return "bbstats.pointstreak.com", self._DEFAULT_LEAGUE_ID, self._DEFAULT_SEASON_ID
+            logger.exception("%s: host/leagueid/seasonid discovery failed", self.short_name)
+        return self._DEFAULT_HOST, self._DEFAULT_LEAGUE_ID, self._DEFAULT_SEASON_ID
 
     def discover_rosters(self) -> list[PlayerEntry]:
         host, league_id, season_id = self._resolve_ids()
-        logger.info("Northwoods: using host=%s leagueid=%s seasonid=%s", host, league_id, season_id)
+        if not league_id or not season_id:
+            raise RuntimeError(
+                f"{self.short_name}: no leagueid/seasonid (autodiscovery from "
+                f"{self.host_url or '<none>'} failed and no defaults set)"
+            )
+        logger.info(
+            "%s: using host=%s leagueid=%s seasonid=%s",
+            self.short_name, host, league_id, season_id,
+        )
         entries: dict[str, PlayerEntry] = {}
         for view in ("batting", "pitching"):
             url = (
@@ -288,21 +315,28 @@ class NorthwoodsLeague(SummerLeague):
             )
             html, diag = fetch_via_residential_proxy(url, timeout=25)
             if not html:
-                logger.warning("Northwoods %s: all proxies failed (%s)", view, diag)
+                logger.warning("%s %s: all proxies failed (%s)",
+                               self.short_name, view, diag)
                 continue
-            # Diagnostic — surface body size + first 200 chars so we can
-            # tell whether Pointstreak returned the data page, an Incapsula
-            # challenge, or a redirect.
             logger.info(
-                "Northwoods %s: fetched %d bytes via %s; head=%r",
-                view, len(html), diag.get("active"), html[:200].replace("\n", " "),
+                "%s %s: fetched %d bytes via %s",
+                self.short_name, view, len(html), diag.get("active"),
             )
             found = _parse_pointstreak_table(
                 html, league=self.short_name, profile_url=url,
             )
-            logger.info("Northwoods %s: parser extracted %d players", view, len(found))
+            logger.info("%s %s: parser extracted %d players",
+                        self.short_name, view, len(found))
             entries.update(found)
         return list(entries.values())
+
+
+class NorthwoodsLeague(PointstreakBackedLeague):
+    name = "Northwoods League"
+    short_name = "Northwoods"
+    host_url = "https://northwoodsleague.com/baseball/statistics/?type=batting&sort=AVG"
+    _DEFAULT_LEAGUE_ID = 120
+    _DEFAULT_SEASON_ID = 31974
 
 
 def _parse_pointstreak_table(
@@ -450,19 +484,31 @@ class _StubLeague(SummerLeague):
         raise NotImplementedError(f"{self.name}: scraper not yet built")
 
 
-class CoastalPlainLeague(_StubLeague):
+class CoastalPlainLeague(PointstreakBackedLeague):
+    """Pointstreak-backed. Auto-discover IDs from coastalplain.com.
+
+    Coastal Plain pulls heavily from ACC/SEC programs — high-priority for
+    SV's client roster.
+    """
     name = "Coastal Plain League"
     short_name = "Coastal Plain"
+    host_url = "https://coastalplain.com/stats/"
 
 
-class NECBL(_StubLeague):
+class NECBL(PointstreakBackedLeague):
     name = "New England Collegiate Baseball League"
     short_name = "NECBL"
+    host_url = "https://necbl.com/stats/"
 
 
-class AppalachianLeague(_StubLeague):
+class AppalachianLeague(PointstreakBackedLeague):
+    """The Appalachian League converted to wood-bat collegiate summer in 2020.
+    Stats moved to a Pointstreak-style backend; ID auto-discovery from
+    appyleague.com.
+    """
     name = "Appalachian League"
     short_name = "Appalachian"
+    host_url = "https://appyleague.com/stats/"
 
 
 class AlaskaBaseballLeague(_StubLeague):
@@ -542,66 +588,99 @@ class SummerBallAggregator:
         """
         players, health = self.discover_all()
 
-        # Build a name -> [PlayerEntry] index, then for each NCAA client try
-        # to find a unique match on (normalized_name, normalized_college).
+        # Two indexes for matching:
+        #   by_name        — exact (normalized) full-name key
+        #   by_initial_last — fuzzy "F. Last" key, catches Pointstreak's
+        #                     abbreviated names ("Robbins, A") and most
+        #                     informal variants ("JJ Smith" -> "j smith").
         by_name: dict[str, list[PlayerEntry]] = {}
+        by_initial_last: dict[str, list[PlayerEntry]] = {}
         for p in players:
             by_name.setdefault(p.name, []).append(p)
+            key = _initial_last_key(p.raw_name or p.name)
+            if key:
+                by_initial_last.setdefault(key, []).append(p)
 
         matched: list[dict] = []
+        possible_matches: list[dict] = []
         unmatched: list[dict] = []
         ambiguous: list[dict] = []
 
         for c in ncaa_clients:
-            ncaa_name = _normalize_name(c.get("player_name", ""))
+            ncaa_full_name = c.get("player_name", "")
+            ncaa_name = _normalize_name(ncaa_full_name)
             ncaa_college = _normalize_college(c.get("team", ""))
-            candidates = by_name.get(ncaa_name, [])
-            if not candidates:
-                unmatched.append({"player_name": c.get("player_name"), "college": c.get("team")})
+
+            # 1) Exact full-name match
+            exact_candidates = by_name.get(ncaa_name, [])
+            if exact_candidates:
+                college_match = [p for p in exact_candidates if p.college == ncaa_college]
+                if len(college_match) == 1:
+                    p = college_match[0]
+                    matched.append({
+                        "player_name": ncaa_full_name, "college": c.get("team"),
+                        "summer_team": p.summer_team, "league": p.league,
+                        "match_strength": "name+college", "profile_url": p.profile_url,
+                    })
+                    continue
+                if len(college_match) > 1:
+                    ambiguous.append({
+                        "player_name": ncaa_full_name, "college": c.get("team"),
+                        "candidates": [
+                            {"summer_team": x.summer_team, "league": x.league}
+                            for x in college_match
+                        ],
+                    })
+                    continue
+                if len(exact_candidates) == 1:
+                    p = exact_candidates[0]
+                    matched.append({
+                        "player_name": ncaa_full_name, "college": c.get("team"),
+                        "summer_team": p.summer_team, "league": p.league,
+                        "match_strength": "name-only", "profile_url": p.profile_url,
+                    })
+                    continue
+                # multiple exact-name candidates, no college info — fall through
+                # to ambiguous bucket below.
+                ambiguous.append({
+                    "player_name": ncaa_full_name, "college": c.get("team"),
+                    "candidates": [
+                        {"summer_team": x.summer_team, "league": x.league}
+                        for x in exact_candidates
+                    ],
+                })
                 continue
-            # Prefer college-match; if multiple, mark ambiguous; if zero, name-only.
-            college_match = [p for p in candidates if p.college == ncaa_college]
-            if len(college_match) == 1:
-                p = college_match[0]
-                matched.append({
-                    "player_name": c.get("player_name"),
-                    "college": c.get("team"),
-                    "summer_team": p.summer_team,
-                    "league": p.league,
-                    "match_strength": "name+college",
-                    "profile_url": p.profile_url,
+
+            # 2) Fuzzy initial+last match — Pointstreak's abbreviated names.
+            fuzzy_candidates = by_initial_last.get(_initial_last_key(ncaa_full_name), [])
+            if fuzzy_candidates:
+                possible_matches.append({
+                    "player_name": ncaa_full_name, "college": c.get("team"),
+                    "match_strength": "initial+last (manual review)",
+                    "candidates": [
+                        {
+                            "summer_team": x.summer_team, "league": x.league,
+                            "summer_name": x.raw_name or x.name,
+                            "summer_college": x.raw_college or x.college,
+                            "profile_url": x.profile_url,
+                        }
+                        for x in fuzzy_candidates
+                    ],
                 })
-            elif len(college_match) > 1:
-                ambiguous.append({
-                    "player_name": c.get("player_name"),
-                    "college": c.get("team"),
-                    "candidates": [{"summer_team": x.summer_team, "league": x.league} for x in college_match],
-                })
-            elif len(candidates) == 1:
-                p = candidates[0]
-                matched.append({
-                    "player_name": c.get("player_name"),
-                    "college": c.get("team"),
-                    "summer_team": p.summer_team,
-                    "league": p.league,
-                    "match_strength": "name-only",
-                    "profile_url": p.profile_url,
-                })
-            else:
-                ambiguous.append({
-                    "player_name": c.get("player_name"),
-                    "college": c.get("team"),
-                    "candidates": [{"summer_team": x.summer_team, "league": x.league} for x in candidates],
-                })
+                continue
+
+            unmatched.append({"player_name": ncaa_full_name, "college": c.get("team")})
 
         snapshot = {
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "league_health": [h.to_dict() for h in health],
             "ncaa_clients_total": len(ncaa_clients),
             "ncaa_clients_matched": len(matched),
+            "ncaa_clients_possible": len(possible_matches),
             "ncaa_clients_unmatched": len(unmatched),
             "ncaa_clients_ambiguous": len(ambiguous),
             "matched": matched,
+            "possible_matches": possible_matches,
             "unmatched": unmatched,
             "ambiguous": ambiguous,
             "all_players_count": len(players),
