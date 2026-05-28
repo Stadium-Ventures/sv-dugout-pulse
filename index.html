@@ -918,6 +918,51 @@
     body { padding: 0.5rem; }
     .header h1 { font-size: 1.4rem; }
   }
+
+  /* Summer Ball coverage banner */
+  .summer-banner {
+    margin: 12px 0 16px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #d0d7de;
+    border-left: 4px solid #1a7a30;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .summer-banner .summer-head {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; user-select: none;
+  }
+  .summer-banner .summer-title {
+    font-weight: 700; font-size: 0.95rem; color: #1f2328;
+  }
+  .summer-banner .summer-stat { color: #57606a; font-size: 0.85rem; }
+  .summer-banner .summer-stat strong { color: #1f2328; }
+  .summer-banner .summer-toggle {
+    margin-left: auto; color: #57606a; font-size: 0.8rem;
+  }
+  .summer-banner .summer-chips { margin-top: 8px; }
+  .summer-chip {
+    display: inline-block; margin: 2px 4px 2px 0; padding: 3px 8px;
+    border-radius: 999px; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .summer-chip-ok { background: #1a7a3020; color: #1a7a30; }
+  .summer-chip-failed { background: #d32f2f20; color: #d32f2f; }
+  .summer-chip-stub { background: #9e9e9e20; color: #6e7781; }
+  .summer-banner .summer-detail { display: none; margin-top: 12px; }
+  .summer-banner.expanded .summer-detail { display: block; }
+  .summer-banner.expanded .summer-toggle::after { content: ' ▲'; }
+  .summer-banner:not(.expanded) .summer-toggle::after { content: ' ▼'; }
+  .summer-list { margin: 6px 0 0 0; padding-left: 18px; font-size: 0.85rem; }
+  .summer-list li { padding: 3px 0; }
+  .summer-list .college { color: #57606a; }
+  .summer-list .meta { color: #57606a; font-size: 0.8rem; }
+  .summer-section-title {
+    font-weight: 700; font-size: 0.8rem; color: #424a53;
+    text-transform: uppercase; letter-spacing: 0.05em; margin-top: 10px;
+  }
 </style>
 </head>
 <body>
@@ -937,6 +982,7 @@
   </nav>
 </div>
 <div class="stale-banner" id="staleBanner"></div>
+<div class="summer-banner" id="summerBanner" hidden></div>
 <div class="time-tabs" role="tablist" aria-label="Time window">
   <button class="time-tab active" data-window="today" role="tab" aria-selected="true">Today</button>
   <button class="time-tab" data-window="yesterday" role="tab" aria-selected="false">Yesterday</button>
@@ -2329,6 +2375,98 @@ async function fetchHeartbeat() {
     // Heartbeat unavailable — hearts won't render, that's fine
   }
 }
+
+// Summer ball coverage banner — refreshed daily 4 AM ET by the
+// summer_rosters workflow. Mirrors the email banner so the website
+// has the same at-a-glance view.
+function _summerChip(h) {
+  const cls = h.status === 'ok' ? 'summer-chip-ok'
+            : h.status === 'failed' ? 'summer-chip-failed'
+            : 'summer-chip-stub';
+  return `<span class="summer-chip ${cls}">${h.league} · ${h.player_count}</span>`;
+}
+
+function _summerEscape(s) {
+  return String(s ?? '').replace(/[&<>"]/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
+  })[c]);
+}
+
+async function loadSummerBanner() {
+  const el = document.getElementById('summerBanner');
+  if (!el) return;
+  let snap;
+  try {
+    const resp = await fetch('data/summer_ball_rosters.json?t=' + Date.now());
+    if (!resp.ok) return;
+    snap = await resp.json();
+  } catch (e) { return; }
+  if (!snap) return;
+
+  const matched = snap.ncaa_clients_matched || 0;
+  const possible = snap.ncaa_clients_possible || 0;
+  const unmatched = snap.ncaa_clients_unmatched || 0;
+  const total = snap.ncaa_clients_total || 0;
+  const health = snap.league_health || [];
+
+  const chips = health.map(_summerChip).join('');
+
+  const matchedHtml = (snap.matched || []).slice(0, 20).map(m =>
+    `<li><strong>${_summerEscape(m.player_name)}</strong> `
+    + `<span class="college">(${_summerEscape(m.college)})</span> → `
+    + `<strong>${_summerEscape(m.summer_team)}</strong> `
+    + `<span class="meta">(${_summerEscape(m.league)})</span></li>`
+  ).join('');
+
+  const possibleHtml = (snap.possible_matches || []).slice(0, 20).map(p => {
+    const cands = (p.candidates || []).slice(0, 3).map(c =>
+      `${_summerEscape(c.summer_name)} → ${_summerEscape(c.summer_team)} (${_summerEscape(c.league)})`
+    ).join(', ');
+    return `<li><strong>${_summerEscape(p.player_name)}</strong> `
+      + `<span class="college">(${_summerEscape(p.college)})</span> — `
+      + `<span class="meta">possible: ${cands}</span></li>`;
+  }).join('');
+
+  const detailParts = [];
+  if (matchedHtml) {
+    detailParts.push(
+      `<div class="summer-section-title">Confirmed assignments</div>`
+      + `<ul class="summer-list">${matchedHtml}</ul>`
+    );
+  }
+  if (possibleHtml) {
+    detailParts.push(
+      `<div class="summer-section-title">Possible matches (manual review)</div>`
+      + `<ul class="summer-list">${possibleHtml}</ul>`
+    );
+  }
+  if (!detailParts.length) {
+    detailParts.push(
+      `<div class="meta" style="margin-top:8px;color:#57606a;font-size:0.85rem;">`
+      + `No NCAA client matches yet — most summer leagues haven't published full rosters. `
+      + `Snapshot refreshes daily at 4 AM ET.</div>`
+    );
+  }
+
+  el.innerHTML = `
+    <div class="summer-head" onclick="document.getElementById('summerBanner').classList.toggle('expanded')">
+      <div>
+        <div class="summer-title">Summer Ball Coverage</div>
+        <div class="summer-stat">
+          <strong>${matched}</strong> confirmed ·
+          <strong>${possible}</strong> possible ·
+          <strong>${unmatched}</strong> unmatched
+          <span style="color:#8b949e;"> (of ${total} NCAA clients)</span>
+        </div>
+      </div>
+      <span class="summer-toggle">details</span>
+    </div>
+    <div class="summer-chips">${chips}</div>
+    <div class="summer-detail">${detailParts.join('')}</div>
+  `;
+  el.hidden = false;
+}
+loadSummerBanner();
 
 // Load data — supports both envelope {generated_at, players} and legacy array
 (async () => {
