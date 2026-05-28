@@ -1,93 +1,5 @@
 [
   {
-    "generated_at": "2026-05-21T04:19:47.872070+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Cam Flukey",
-      "Dax Kilby",
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Justin Riemer",
-      "Tanner Gordon",
-      "Ty Finkbeiner",
-      "Alex Kranzler",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Xavier Kolhosser",
-      "Eamon McDermott",
-      "Lucas Steele",
-      "Luke Fithian",
-      "Peyton Glavine"
-    ],
-    "total_clients": 86,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 12,
-        "No game listed today": 1,
-        "found stats": 8
-      },
-      "StatBroadcast": {
-        "Couldn't reach site": 8,
-        "No game listed today": 11,
-        "found player": 8
-      },
-      "ESPN": {
-        "No game listed today": 3,
-        "Game found, not in box score": 8,
-        "found stats": 2
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 6,
-        "Stale data — skipped": 4,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 11,
-        "player not in box": 4
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 7,
-        "Stale data — skipped": 3,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 1
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-21T04:34:53.195782+00:00",
     "severity": "warning",
     "blocked_sources": [],
@@ -38086,6 +37998,40 @@
       "Austin Amaral",
       "Davis Sharpe",
       "Kade Brown",
+      "Najer Victor",
+      "Peyton Glavine",
+      "Peyton Glavine"
+    ],
+    "total_clients": 85,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-28T04:31:41.859506+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Aaron Watson",
+      "David Hagaman",
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Tanner Gordon",
+      "Austin Amaral",
+      "Davis Sharpe",
       "Najer Victor",
       "Peyton Glavine",
       "Peyton Glavine"
