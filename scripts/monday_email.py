@@ -631,15 +631,17 @@ def build_payload(today: date | None = None) -> dict:
 def _render_summer_banner() -> str:
     """Read data/summer_ball_rosters.json and render a coverage banner.
 
-    Returns "" when the file is missing (pre-roster-discovery state).
-    Always visible during summer when the file exists so Kent + Tom can
-    eyeball coverage at a glance and spot regressions.
+    Returns "" when the file is missing (pre-roster-discovery state) or
+    when its dependencies aren't installed (defensive — never fail the send
+    just because the banner can't render).
     """
+    snapshot_path = REPO_ROOT / "data" / "summer_ball_rosters.json"
+    if not snapshot_path.exists():
+        return ""
     try:
-        from src.summer_ball import load_snapshot, TIER_ORDER as _unused  # type: ignore
+        snap = json.loads(snapshot_path.read_text())
     except Exception:
-        from src.summer_ball import load_snapshot  # type: ignore
-    snap = load_snapshot()
+        return ""
     if not snap:
         return ""
 
