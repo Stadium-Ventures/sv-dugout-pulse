@@ -392,15 +392,17 @@ class CapeCodLeague(SummerLeague):
         entries: list[PlayerEntry] = []
         for slug in self.TEAM_SLUGS:
             url = f"{self.BASE}/teams/{slug}/roster/"
+            # capecodbaseball.org returns 403 to plain requests (likely
+            # WAF on datacenter ASN). Route through residential proxy.
+            html, diag = fetch_via_residential_proxy(url, timeout=25)
+            if not html:
+                logger.info("CapeCod: %s -> all proxies failed (%s)",
+                            slug, diag.get("error"))
+                continue
+            logger.info("CapeCod %s: %d bytes via %s",
+                        slug, len(html), diag.get("active"))
             try:
-                # Cape Cod's cert chain doesn't validate cleanly on Actions
-                # runner; the site itself isn't TLS-sensitive content, so
-                # skipping verification is acceptable here.
-                resp = _http.get(url, timeout=20, verify=False)
-                if resp.status_code != 200:
-                    logger.info("CapeCod: %s -> HTTP %s", slug, resp.status_code)
-                    continue
-                soup = BeautifulSoup(resp.text, "html.parser")
+                soup = BeautifulSoup(html, "html.parser")
                 # Look for any roster-table heuristic: a table whose rows
                 # contain (name, position, college/year). Iterate broadly.
                 for row in soup.find_all("tr"):
