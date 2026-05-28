@@ -78,6 +78,14 @@ def _make_session() -> requests.Session:
 
 _http = _make_session()
 
+# Cape Cod's cert chain isn't trusted by the Actions runner store; silence
+# the urllib3 InsecureRequestWarning for the targeted verify=False call.
+try:
+    import urllib3 as _urllib3
+    _urllib3.disable_warnings(_urllib3.exceptions.InsecureRequestWarning)
+except Exception:
+    pass
+
 
 # =============================================================================
 # Residential-proxy fetch — for WAF-gated sources (Pointstreak, Cape Cod, etc.)
@@ -263,6 +271,7 @@ class NorthwoodsLeague(SummerLeague):
 
     def discover_rosters(self) -> list[PlayerEntry]:
         league_id, season_id = self._resolve_ids()
+        logger.info("Northwoods: using leagueid=%s seasonid=%s", league_id, season_id)
         entries: dict[str, PlayerEntry] = {}
         for view in ("batting", "pitching"):
             url = (
@@ -273,9 +282,18 @@ class NorthwoodsLeague(SummerLeague):
             if not html:
                 logger.warning("Northwoods %s: all proxies failed (%s)", view, diag)
                 continue
-            entries.update(_parse_pointstreak_table(
+            # Diagnostic — surface body size + first 200 chars so we can
+            # tell whether Pointstreak returned the data page, an Incapsula
+            # challenge, or a redirect.
+            logger.info(
+                "Northwoods %s: fetched %d bytes via %s; head=%r",
+                view, len(html), diag.get("active"), html[:200].replace("\n", " "),
+            )
+            found = _parse_pointstreak_table(
                 html, league=self.short_name, profile_url=url,
-            ))
+            )
+            logger.info("Northwoods %s: parser extracted %d players", view, len(found))
+            entries.update(found)
         return list(entries.values())
 
 
@@ -367,7 +385,10 @@ class CapeCodLeague(SummerLeague):
         for slug in self.TEAM_SLUGS:
             url = f"{self.BASE}/teams/{slug}/roster/"
             try:
-                resp = _http.get(url, timeout=20)
+                # Cape Cod's cert chain doesn't validate cleanly on Actions
+                # runner; the site itself isn't TLS-sensitive content, so
+                # skipping verification is acceptable here.
+                resp = _http.get(url, timeout=20, verify=False)
                 if resp.status_code != 200:
                     logger.info("CapeCod: %s -> HTTP %s", slug, resp.status_code)
                     continue
