@@ -1,0 +1,56 @@
+name: Summer Ball Roster Refresh
+
+# Runs daily at 08:00 UTC (4 AM ET, after overnight backfill, before live
+# pulse cycle starts at 10 AM ET). Discovers which NCAA clients are playing
+# in each summer league and writes data/summer_ball_rosters.json with per-
+# league health + match results.
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run discovery without writing the roster file."
+        type: boolean
+        default: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install --quiet -r requirements.txt
+
+      - name: Refresh summer rosters
+        env:
+          ROSTER_URL: ${{ secrets.ROSTER_URL }}
+          RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
+        run: |
+          set -eo pipefail
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            python -m scripts.refresh_summer_rosters --dry
+          else
+            python -m scripts.refresh_summer_rosters
+          fi
+
+      - name: Commit roster snapshot
+        if: ${{ inputs.dry_run != 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/summer_ball_rosters.json
+          git diff --staged --quiet || git commit -m "Refresh summer ball rosters [bot]"
+          git fetch origin main
+          git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
+          git push
