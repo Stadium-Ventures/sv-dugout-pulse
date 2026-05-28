@@ -1,103 +1,5 @@
 [
   {
-    "generated_at": "2026-05-21T23:25:09.482870+00:00",
-    "severity": "critical",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 7,
-    "blocked_clients": [
-      "Henry Zatkowski",
-      "Mason Eckelman",
-      "Ben Tryon",
-      "Drew Bellis",
-      "Eamon McDermott",
-      "Lucas Steele"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Carter Johnson",
-      "Henry Zatkowski",
-      "Jack Cebert",
-      "Ty Finkbeiner",
-      "Will Rhine",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Xavier Kolhosser",
-      "Michael Gillen",
-      "Peyton Glavine",
-      "Zack Johnson"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 19,
-        "found stats": 10,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "blocked (Cloudflare 403)": 7,
-        "No game listed today": 14,
-        "found player": 5,
-        "player not in box": 7,
-        "Couldn't reach site": 3
-      },
-      "ESPN": {
-        "No game listed today": 6,
-        "found stats": 5,
-        "Game found, not in box score": 9
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 9,
-        "Stale data — skipped": 3,
-        "No game listed today": 2,
-        "found stats": 1
-      },
-      "Sidearm": {
-        "No game listed today": 14,
-        "player not in box": 2,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 5,
-        "Game found, not in box score": 8,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 5,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 8
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-21T23:34:58.239383+00:00",
     "severity": "ok",
     "blocked_sources": [
@@ -34703,6 +34605,33 @@
   },
   {
     "generated_at": "2026-05-28T23:16:39.379196+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Austin Amaral",
+      "Davis Sharpe"
+    ],
+    "total_clients": 86,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-28T23:31:47.761826+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
