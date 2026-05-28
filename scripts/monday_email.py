@@ -222,8 +222,23 @@ CSS = """
   table.glance { margin-top: 4px; }
   table.glance th { font-size: 11px; }
   table.glance td { font-size: 13.5px; padding: 8px 10px; }
-  table.glance td.gcount { text-align: center; padding: 8px 12px; }
-  table.glance .glance-num { font-weight: 700; }
+  table.glance td.gcount { text-align: center; padding: 8px 12px; font-weight: 700;
+                           font-variant-numeric: tabular-nums; }
+  /* Per-tier column tint, paired with the circle in the header — gives a
+     vertical visual anchor so each number is unambiguously "the COLD column" */
+  table.glance th.col-elite,  table.glance td.col-elite  { background: #f0f7f1; }
+  table.glance th.col-hot,    table.glance td.col-hot    { background: #f4f9ec; }
+  table.glance th.col-steady, table.glance td.col-steady { background: #fffaeb; }
+  table.glance th.col-cool,   table.glance td.col-cool   { background: #fff3e6; }
+  table.glance th.col-cold,   table.glance td.col-cold   { background: #fdebec; }
+  table.glance th.col-dnp,    table.glance td.col-dnp    { background: #f3f4f6; }
+  table.glance tr:nth-child(even) td { background: inherit; }
+  /* Repeated column header row (for after the Season-to-Date divider) */
+  tr.col-header td { background: #f6f8fa; font-weight: 700; color: #424a53;
+                     font-size: 11px; text-transform: uppercase;
+                     letter-spacing: 0.06em; padding: 9px 10px; text-align: right;
+                     border-bottom: 1px solid #c8d1da; border-top: 1px solid #c8d1da; }
+  tr.col-header td.l { text-align: left; }
 """
 
 def _fmt(v, default="—"):
@@ -321,15 +336,25 @@ def _hitter_section(level: str, played: list[dict], dnp_names: list[str],
     if not played and not dnp_names:
         return ""
 
-    ops_plus_col = "<th>OPS+</th>" if level == "Pro" else ""
+    ops_plus_col_th = "<th>OPS+</th>" if level == "Pro" else ""
+    ops_plus_col_td = '<td>OPS+</td>' if level == "Pro" else ""
     header = (
         '<thead><tr>'
         '<th class="grade-cell"></th><th class="l">Player</th><th class="l">Team</th>'
         '<th>G</th><th>PA</th>'
-        f'{ops_plus_col}'
+        f'{ops_plus_col_th}'
         '<th>AVG</th><th>OBP</th><th>SLG</th><th>OPS</th>'
         '<th>HR</th><th>RBI</th><th>SB</th><th>BB%</th><th>K%</th>'
         '</tr></thead>'
+    )
+    repeat_header_row = (
+        '<tr class="col-header">'
+        '<td></td><td class="l">Player</td><td class="l">Team</td>'
+        '<td>G</td><td>PA</td>'
+        f'{ops_plus_col_td}'
+        '<td>AVG</td><td>OBP</td><td>SLG</td><td>OPS</td>'
+        '<td>HR</td><td>RBI</td><td>SB</td><td>BB%</td><td>K%</td>'
+        '</tr>'
     )
 
     week_rows = "\n".join(_hitter_row(r, level, "week") for r in played) or '<tr><td colspan="20" class="empty">No client hitters with playing time.</td></tr>'
@@ -341,6 +366,7 @@ def _hitter_section(level: str, played: list[dict], dnp_names: list[str],
 <tr class="section-divider"><td colspan="20">{recent_label}</td></tr>
 {week_rows}
 <tr class="section-divider"><td colspan="20">{season_label}</td></tr>
+{repeat_header_row}
 {season_rows}
 </tbody></table>'''
 
@@ -363,6 +389,13 @@ def _pitcher_section(played: list[dict], dnp_names: list[str],
         '<th>K/9</th><th>BB/9</th><th>K%</th><th>BB%</th>'
         '</tr></thead>'
     )
+    repeat_header_row = (
+        '<tr class="col-header">'
+        '<td></td><td class="l">Player</td><td class="l">Team</td>'
+        '<td>G</td><td>IP</td><td>ERA</td><td>WHIP</td><td>K</td><td>BB</td>'
+        '<td>K/9</td><td>BB/9</td><td>K%</td><td>BB%</td>'
+        '</tr>'
+    )
 
     week_rows = "\n".join(_pitcher_row(r, "week") for r in played) or '<tr><td colspan="20" class="empty">No client pitchers with appearances.</td></tr>'
     season_rows = "\n".join(_pitcher_row(r, "season") for r in played)
@@ -373,6 +406,7 @@ def _pitcher_section(played: list[dict], dnp_names: list[str],
 <tr class="section-divider"><td colspan="20">{recent_label}</td></tr>
 {week_rows}
 <tr class="section-divider"><td colspan="20">{season_label}</td></tr>
+{repeat_header_row}
 {season_rows}
 </tbody></table>'''
 
@@ -523,13 +557,13 @@ def _render_topline(sections: dict, standouts_label: str, glance_label: str) -> 
         # Glance table: one row per level, one column per tier (with the same
         # colored circle in the header so Kent's eye maps column->color).
         tier_th = "".join(
-            f'<th>{_grade_circle(t)}<div style="font-size:10px;color:#6e7781;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">{TIER_LABEL[t]}</div></th>'
+            f'<th class="col-{t}">{_grade_circle(t)}<div style="font-size:10px;color:#6e7781;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">{TIER_LABEL[t]}</div></th>'
             for t in TIER_ORDER
         )
         rows = []
         for g in glance:
             tier_tds = "".join(
-                f'<td class="gcount"><span class="glance-num">{g[t]}</span></td>'
+                f'<td class="gcount col-{t}">{g[t]}</td>'
                 for t in TIER_ORDER
             )
             rows.append(
@@ -641,7 +675,16 @@ def render_html(payload: dict) -> str:
          f'Cool/Cold flag underperformance. Same scale applied to {recent_label} and {season_label}.'),
     ]
     if payload["sections"].get("Pro", {}).get("hitters"):
-        legend_items.append("OPS+ is a wRC+ proxy (100 = MLB average) using fixed league constants.")
+        legend_items.append(
+            "<strong>OPS+ for Pro hitters</strong> is a wRC+ proxy "
+            "(100 = MLB average, higher is better) computed as: "
+            f"<code style='background:#f6f8fa;padding:2px 5px;border-radius:3px;font-size:12px;'>"
+            f"OPS+ = 100 × (OBP / {LG_OBP_2026:.3f} + SLG / {LG_SLG_2026:.3f} − 1)</code>. "
+            f"The two constants are fixed MLB-wide averages for 2026 "
+            f"(lgOBP {LG_OBP_2026:.3f}, lgSLG {LG_SLG_2026:.3f}); they don't "
+            "adjust per league level or park, so MiLB OPS+ tends to read a bit "
+            "high vs MLB OPS+ but is directionally accurate. Correlates ~0.95 with FanGraphs wRC+."
+        )
     if payload["sections"].get("HS", {}).get("hitters") or payload["sections"].get("HS", {}).get("pitchers"):
         legend_items.append("HS stats come from a manually-maintained sheet — only as fresh as the latest entry.")
 
