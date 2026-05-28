@@ -35,18 +35,49 @@ SUBJECT_TEMPLATE = "Dugout Pulse — Weekly Recap, {period}"
 PITCHER_POS = {"Pitcher", "LHP", "RHP", "Two-Way"}
 LEVEL_ORDER = ["Pro", "NCAA", "HS"]
 LEVEL_HEADER = {
-    "Pro": "⚾ Pro",
-    "NCAA": "🎓 NCAA",
-    "HS": "🏫 HS",
+    "Pro": "Pro",
+    "NCAA": "NCAA",
+    "HS": "HS",
 }
 
-# Sort order for window_grade values. Grades not in this list fall to the end.
-GRADE_RANK = {
-    "🔥 Hot": 0,
-    "✅ Solid": 1,
-    "😐 Steady": 2,
-    "🥶 Cold": 3,
+# 5-tier circle rating system (Kent's 5/28 ask). We re-grade in the email
+# layer from raw stats rather than reading window_grade, so the 4-tier
+# dashboard scheme stays untouched.
+#
+# Tier order is best -> worst -> dnp; matches the sort order for played players.
+TIER_ELITE, TIER_HOT, TIER_STEADY, TIER_COOL, TIER_COLD, TIER_DNP = \
+    "elite", "hot", "steady", "cool", "cold", "dnp"
+TIER_ORDER = [TIER_ELITE, TIER_HOT, TIER_STEADY, TIER_COOL, TIER_COLD, TIER_DNP]
+TIER_RANK = {t: i for i, t in enumerate(TIER_ORDER)}
+
+TIER_LABEL = {
+    TIER_ELITE:  "Elite",
+    TIER_HOT:    "Hot",
+    TIER_STEADY: "Steady",
+    TIER_COOL:   "Cool",
+    TIER_COLD:   "Cold",
+    TIER_DNP:    "DNP",
 }
+
+# Hitter OPS thresholds (inclusive lower bound).
+HITTER_TIER_THRESHOLDS = [
+    (1.200, TIER_ELITE),
+    (1.000, TIER_HOT),
+    (0.700, TIER_STEADY),
+    (0.550, TIER_COOL),
+    (0.000, TIER_COLD),
+]
+# Pitcher ERA thresholds (inclusive upper bound; lower is better).
+PITCHER_TIER_THRESHOLDS = [
+    (1.500, TIER_ELITE),
+    (2.500, TIER_HOT),
+    (4.000, TIER_STEADY),
+    (5.500, TIER_COOL),
+    (99.99, TIER_COLD),
+]
+
+# Legacy: still need to detect "Insufficient" records from window_grader.py
+# so we can route them to the DNP collapse list (no grade circle, no row).
 INSUFFICIENT_GRADE = "— Insufficient"
 
 # OPS+ proxy constants (2026 MLB-wide). Correlates ~0.95 with true wRC+.
@@ -105,8 +136,9 @@ def _ops_plus(stats: dict) -> int | None:
     return round(100.0 * (obp / LG_OBP_2026 + slg / LG_SLG_2026 - 1.0))
 
 
-def _grade_rank(p: dict) -> int:
-    return GRADE_RANK.get(p.get("window_grade"), 99)
+def _grade_rank(p: dict, is_pitcher: bool = False) -> int:
+    """Tier rank for sorting (best tier first). Defaults to hitter scale."""
+    return TIER_RANK.get(_tier_for_record(p, is_pitcher), len(TIER_ORDER))
 
 
 def _load_window(path: Path) -> list[dict]:
@@ -155,14 +187,16 @@ CSS = """
   td.team { color: #57606a; font-size: 12.5px; }
   tr:last-child td { border-bottom: none; }
   tr:nth-child(even) td { background: #fbfcfd; }
-  .pill { display: inline-block; padding: 3px 8px; border-radius: 999px;
-          font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em;
-          text-transform: uppercase; line-height: 1.4; }
-  .pill-hot { background: #ffe6cc; color: #b14a00; }
-  .pill-solid { background: #d8efd8; color: #1a6b1a; }
-  .pill-steady { background: #e1e4e8; color: #4d555c; }
-  .pill-cold { background: #d8e7f7; color: #1a4a85; }
-  .pill-na { background: #f3f4f6; color: #8b949e; }
+  td.grade-cell { text-align: center; width: 30px; padding: 9px 6px; }
+  .grade-circle { display: inline-block; width: 14px; height: 14px;
+                  border-radius: 50%; vertical-align: middle;
+                  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.08); }
+  .gc-elite  { background: #1a7a30; }
+  .gc-hot    { background: #7cb342; }
+  .gc-steady { background: #fbc02d; }
+  .gc-cool   { background: #fb8c00; }
+  .gc-cold   { background: #d32f2f; }
+  .gc-dnp    { background: #c0c4c8; }
   .section-divider td { background: #eef2f6 !important; padding: 8px 12px;
                         text-align: left; font-size: 11px; color: #424a53;
                         font-weight: 700; text-transform: uppercase;
@@ -188,18 +222,9 @@ CSS = """
   table.glance { margin-top: 4px; }
   table.glance th { font-size: 11px; }
   table.glance td { font-size: 13.5px; padding: 8px 10px; }
-  table.glance .pill { min-width: 22px; text-align: center; }
+  table.glance td.gcount { text-align: center; padding: 8px 12px; }
+  table.glance .glance-num { font-weight: 700; }
 """
-
-# Map "🔥 Hot" -> ("HOT", "hot" CSS class). The leading emoji is dropped.
-GRADE_PILL = {
-    "🔥 Hot": ("HOT", "hot"),
-    "✅ Solid": ("SOLID", "solid"),
-    "😐 Steady": ("STEADY", "steady"),
-    "🥶 Cold": ("COLD", "cold"),
-    "— Insufficient": ("—", "na"),
-}
-
 
 def _fmt(v, default="—"):
     if v in (None, "", "--"):
@@ -207,11 +232,33 @@ def _fmt(v, default="—"):
     return str(v)
 
 
-def _grade_pill(grade: str | None) -> str:
-    if not grade:
-        return ""
-    label, cls = GRADE_PILL.get(grade, ("—", "na"))
-    return f'<span class="pill pill-{cls}">{label}</span>'
+def _tier_for_record(rec: dict, is_pitcher: bool) -> str:
+    """Derive 5-tier circle code from raw stats. DNP if insufficient sample."""
+    if not rec:
+        return TIER_DNP
+    grade = rec.get("window_grade")
+    if grade == INSUFFICIENT_GRADE:
+        return TIER_DNP
+    stats = rec.get("stats") or {}
+    if is_pitcher:
+        era = _parse_rate(stats.get("era"))
+        if era is None:
+            return TIER_DNP
+        for upper, tier in PITCHER_TIER_THRESHOLDS:
+            if era <= upper:
+                return tier
+        return TIER_COLD
+    ops = _parse_rate(stats.get("ops"))
+    if ops is None:
+        return TIER_DNP
+    for lower, tier in HITTER_TIER_THRESHOLDS:
+        if ops >= lower:
+            return tier
+    return TIER_COLD
+
+
+def _grade_circle(tier: str) -> str:
+    return f'<span class="grade-circle gc-{tier}" title="{TIER_LABEL[tier]}"></span>'
 
 
 def _hitter_row(rec: dict, level: str, window_key: str) -> str:
@@ -219,9 +266,9 @@ def _hitter_row(rec: dict, level: str, window_key: str) -> str:
     if not w:
         return ""
     s = w.get("stats", {})
-    grade = w.get("window_grade") or ""
+    tier = _tier_for_record(w, is_pitcher=False)
     cells = [
-        f'<td>{_grade_pill(grade)}</td>',
+        f'<td class="grade-cell">{_grade_circle(tier)}</td>',
         f'<td class="l player">{w["player_name"]}</td>',
         f'<td class="l team">{w["team"]}</td>',
         f'<td>{_fmt(w.get("games_played"))}</td>',
@@ -249,9 +296,9 @@ def _pitcher_row(rec: dict, window_key: str) -> str:
     if not w:
         return ""
     s = w.get("stats", {})
-    grade = w.get("window_grade") or ""
+    tier = _tier_for_record(w, is_pitcher=True)
     cells = [
-        f'<td>{_grade_pill(grade)}</td>',
+        f'<td class="grade-cell">{_grade_circle(tier)}</td>',
         f'<td class="l player">{w["player_name"]}</td>',
         f'<td class="l team">{w["team"]}</td>',
         f'<td>{_fmt(w.get("games_played"))}</td>',
@@ -277,7 +324,7 @@ def _hitter_section(level: str, played: list[dict], dnp_names: list[str],
     ops_plus_col = "<th>OPS+</th>" if level == "Pro" else ""
     header = (
         '<thead><tr>'
-        '<th>Grade</th><th class="l">Player</th><th class="l">Team</th>'
+        '<th class="grade-cell"></th><th class="l">Player</th><th class="l">Team</th>'
         '<th>G</th><th>PA</th>'
         f'{ops_plus_col}'
         '<th>AVG</th><th>OBP</th><th>SLG</th><th>OPS</th>'
@@ -311,7 +358,7 @@ def _pitcher_section(played: list[dict], dnp_names: list[str],
 
     header = (
         '<thead><tr>'
-        '<th>Grade</th><th class="l">Player</th><th class="l">Team</th>'
+        '<th class="grade-cell"></th><th class="l">Player</th><th class="l">Team</th>'
         '<th>G</th><th>IP</th><th>ERA</th><th>WHIP</th><th>K</th><th>BB</th>'
         '<th>K/9</th><th>BB/9</th><th>K%</th><th>BB%</th>'
         '</tr></thead>'
@@ -346,9 +393,9 @@ def _split_played_vs_insufficient(records: list[dict], is_pitcher_side: bool) ->
             played.append(rec)
 
     if is_pitcher_side:
-        played.sort(key=lambda r: (_grade_rank(r["week"]), -_ip(r["week"]), r["week"]["player_name"]))
+        played.sort(key=lambda r: (_grade_rank(r["week"], is_pitcher=True), -_ip(r["week"]), r["week"]["player_name"]))
     else:
-        played.sort(key=lambda r: (_grade_rank(r["week"]), -_ops_value(r["week"]), r["week"]["player_name"]))
+        played.sort(key=lambda r: (_grade_rank(r["week"], is_pitcher=False), -_ops_value(r["week"]), r["week"]["player_name"]))
 
     dnp_names = sorted(r["week"]["player_name"] for r in dnp)
     return played, dnp_names
@@ -404,7 +451,7 @@ def _standouts(sections: dict, max_n: int = 6) -> list[dict]:
         sec = sections[level]
         for h in sec["hitters"]:
             w = h["week"]
-            if w.get("window_grade") != "🔥 Hot" or _pa(w) < 5:
+            if _tier_for_record(w, is_pitcher=False) not in (TIER_ELITE, TIER_HOT) or _pa(w) < 5:
                 continue
             hitters_out.append({
                 "kind": "hitter", "level": level,
@@ -414,7 +461,7 @@ def _standouts(sections: dict, max_n: int = 6) -> list[dict]:
             })
         for p in sec["pitchers"]:
             w = p["week"]
-            if w.get("window_grade") != "🔥 Hot" or _ip(w) < 2:
+            if _tier_for_record(w, is_pitcher=True) not in (TIER_ELITE, TIER_HOT) or _ip(w) < 2:
                 continue
             pitchers_out.append({
                 "kind": "pitcher", "level": level,
@@ -434,22 +481,18 @@ def _standouts(sections: dict, max_n: int = 6) -> list[dict]:
 
 
 def _glance(sections: dict) -> list[dict]:
-    """Per-level grade counts (week)."""
+    """Per-level 5-tier counts (week)."""
     out = []
     for level in LEVEL_ORDER:
         sec = sections[level]
-        counts = {"hot": 0, "solid": 0, "steady": 0, "cold": 0, "dnp": 0}
+        counts = {t: 0 for t in TIER_ORDER}
         total = len(sec["hitters"]) + len(sec["pitchers"])
         if total == 0:
             continue
-        for kind_recs in (sec["hitters"], sec["pitchers"]):
-            for r in kind_recs:
-                g = r["week"].get("window_grade", "")
-                if g == "🔥 Hot": counts["hot"] += 1
-                elif g == "✅ Solid": counts["solid"] += 1
-                elif g == "😐 Steady": counts["steady"] += 1
-                elif g == "🥶 Cold": counts["cold"] += 1
-                else: counts["dnp"] += 1
+        for r in sec["hitters"]:
+            counts[_tier_for_record(r["week"], is_pitcher=False)] += 1
+        for r in sec["pitchers"]:
+            counts[_tier_for_record(r["week"], is_pitcher=True)] += 1
         out.append({"level": level, "total": total, **counts})
     return out
 
@@ -477,16 +520,22 @@ def _render_topline(sections: dict, standouts_label: str, glance_label: str) -> 
         )
 
     if glance:
+        # Glance table: one row per level, one column per tier (with the same
+        # colored circle in the header so Kent's eye maps column->color).
+        tier_th = "".join(
+            f'<th>{_grade_circle(t)}<div style="font-size:10px;color:#6e7781;margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">{TIER_LABEL[t]}</div></th>'
+            for t in TIER_ORDER
+        )
         rows = []
         for g in glance:
+            tier_tds = "".join(
+                f'<td class="gcount"><span class="glance-num">{g[t]}</span></td>'
+                for t in TIER_ORDER
+            )
             rows.append(
                 f'<tr>'
                 f'<td class="l"><strong>{g["level"]}</strong></td>'
-                f'<td><span class="pill pill-hot">{g["hot"]}</span></td>'
-                f'<td><span class="pill pill-solid">{g["solid"]}</span></td>'
-                f'<td><span class="pill pill-steady">{g["steady"]}</span></td>'
-                f'<td><span class="pill pill-cold">{g["cold"]}</span></td>'
-                f'<td><span class="pill pill-na">{g["dnp"]}</span></td>'
+                f'{tier_tds}'
                 f'<td style="color:#6e7781;">{g["total"]}</td>'
                 f'</tr>'
             )
@@ -494,8 +543,7 @@ def _render_topline(sections: dict, standouts_label: str, glance_label: str) -> 
             '<div class="topline-card">'
             f'<h3 style="margin-top:0;">{glance_label}</h3>'
             '<table class="glance"><thead><tr>'
-            '<th class="l">Level</th><th>Hot</th><th>Solid</th><th>Steady</th>'
-            '<th>Cold</th><th>DNP</th><th>Total</th>'
+            f'<th class="l">Level</th>{tier_th}<th>Total</th>'
             f'</tr></thead><tbody>{"".join(rows)}</tbody></table>'
             '</div>'
         )
@@ -583,13 +631,14 @@ def render_html(payload: dict) -> str:
             recent_dnp_phrase=dnp_pit,
         ))
 
+    circle_legend = " &nbsp; ".join(
+        f'{_grade_circle(t)} <span style="vertical-align:middle;">{TIER_LABEL[t]}</span>'
+        for t in TIER_ORDER
+    )
     legend_items = [
-        ('<span class="pill pill-hot">HOT</span> · '
-         '<span class="pill pill-solid">SOLID</span> · '
-         '<span class="pill pill-steady">STEADY</span> · '
-         '<span class="pill pill-cold">COLD</span> — '
-         f'{recent_label} grade reflects the period shown; '
-         f'{season_label} grade is full-season relative to role baselines.'),
+        (f'{circle_legend} &nbsp; — &nbsp; '
+         f'Hitters graded on OPS; pitchers on ERA. Elite/Hot are above-MLB-average; '
+         f'Cool/Cold flag underperformance. Same scale applied to {recent_label} and {season_label}.'),
     ]
     if payload["sections"].get("Pro", {}).get("hitters"):
         legend_items.append("OPS+ is a wRC+ proxy (100 = MLB average) using fixed league constants.")
