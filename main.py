@@ -405,6 +405,31 @@ def _build_profile_url(player: dict, stats: dict) -> str | None:
 # almost certainly a parser bug — clamp aggressively and log so we can debug.
 _MAX_SINGLE_GAME_HR = 4
 
+# Per-game sanity caps. If a stat exceeds these, the row is almost
+# certainly a season aggregate leaking into a per-game field (parser
+# bug). When more than one cap fires simultaneously, treat the entire
+# stat line as unreliable: skip alerts + flag the entry for QA.
+#
+# Bounds are generous to avoid false positives on extra-inning outliers:
+#   AB     >  9  — never seen legitimately at any level
+#   hits   >  7  — MLB single-game record is 7 (Wilbert Robinson 1892);
+#                  modern record is 6. NCAA's single-game record is 7.
+#   K (batter) > 6  — NCAA single-game K record for a batter is 6.
+#   RBI    > 12  — MLB single-game RBI record is 12.
+#   walks  >  6  — NCAA outlier cap.
+#   SB     >  6  — Otis Nixon's 6-SB game is the MLB max.
+_PER_GAME_CAPS = {
+    "at_bats": 9,
+    "hits": 7,
+    "strikeouts_batter": 6,  # batter-side K (pitcher Ks have their own cap)
+    "rbi": 12,
+    "walks": 6,
+    "stolen_bases": 6,
+    "doubles": 4,
+    "triples": 3,
+    "runs": 6,
+}
+
 
 def _patch_summary_stat(summary: str, label: str, old_val: int, new_val: int) -> str:
     """Replace an `{old_val} {label}` token in stats_summary with the clamped value.
@@ -498,6 +523,43 @@ def _sanitize_stats(stats: dict) -> dict:
         summary = _patch_summary_stat(summary, "HR", hr, h)
         stats["home_runs"] = h
 
+    # ---- Multi-stat sanity: detect a season-aggregate masquerading as a
+    # single-game line. If ≥2 per-game caps are simultaneously busted, the
+    # entire row is almost certainly garbage (the Kyle Jones / NCAA Regional
+    # 2026-05-29 case had AB=210, hits=64, RBI=37, K=43 — every cap busted).
+    # Flag _implausible so downstream consumers (alerts) skip the row
+    # entirely, rather than firing "4 HR game!" on season totals.
+    is_pitcher_line = stats.get("is_pitcher_line", False)
+    caps_busted: list[str] = []
+    for field, cap in _PER_GAME_CAPS.items():
+        # Skip batter-K check when the row is the pitcher side; that's a
+        # legitimate pitcher stat path with its own logic.
+        if field == "strikeouts_batter":
+            if is_pitcher_line:
+                continue
+            v = stats.get("strikeouts")
+        else:
+            v = stats.get(field)
+        if v is None:
+            continue
+        try:
+            v = int(v)
+        except (ValueError, TypeError):
+            continue
+        if v > cap:
+            caps_busted.append(f"{field}={v} (cap {cap})")
+
+    if len(caps_busted) >= 2:
+        logger.error(
+            "Implausible single-game stat line for player=%r team=%r — caps busted: %s. "
+            "Treating as garbage; downstream alerts will skip. raw=%s",
+            stats.get("_player_name"), stats.get("_team"),
+            ", ".join(caps_busted),
+            {k: v for k, v in stats.items() if not k.startswith("_") and k != "stats_summary"},
+        )
+        stats["_implausible"] = True
+        stats["_implausible_reason"] = ", ".join(caps_busted)
+
     if summary != stats.get("stats_summary"):
         stats["stats_summary"] = summary
 
@@ -506,8 +568,14 @@ def _sanitize_stats(stats: dict) -> dict:
 
 def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
     """Assemble a single player's output record."""
-    # Final game + "In lineup" = started but pulled before batting
-    summary = stats.get("stats_summary", "No game data")
+    # If _sanitize_stats flagged the row as a season-aggregate leaking into
+    # per-game (≥2 caps busted), don't render the garbage line on cards.
+    # Surface as unavailable instead — a later pulse run from a different
+    # source path can replace this with real data.
+    if stats.get("_implausible"):
+        summary = "Stats unavailable — source returned aggregate"
+    else:
+        summary = stats.get("stats_summary", "No game data")
     summary_lower = (summary or "").lower()
     if stats.get("game_status") == "Final" and ("in lineup" in summary_lower or "in starting" in summary_lower):
         summary = "Started — 0 PA"

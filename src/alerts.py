@@ -218,6 +218,19 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     if game_status == "N/A":
         return
 
+    # Skip if main.py's _sanitize_stats flagged this row as a likely
+    # season-aggregate masquerading as a single-game line (Kyle Jones / NCAA
+    # Regional 2026-05-29: AB=210, hits=64, RBI=37 — fired "MULTI-HR 4 HR!"
+    # off season totals). The flag is set when ≥2 per-game caps are busted
+    # simultaneously, which is a strong signal that the parser pulled the
+    # wrong row.
+    if stats.get("_implausible"):
+        logger.warning(
+            "Skipping alerts for %s — stats line flagged implausible (%s)",
+            name, stats.get("_implausible_reason", "?"),
+        )
+        return
+
     # Clear sticky out-of-lineup flag when a player returns to the lineup.
     # This ensures we alert again if they go out a second time later.
     _ool_key = f"ool_active|{name}"
