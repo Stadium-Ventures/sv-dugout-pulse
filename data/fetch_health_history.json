@@ -1,87 +1,5 @@
 [
   {
-    "generated_at": "2026-05-22T07:35:13.656852+00:00",
-    "severity": "warning",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Kellon Lindsey",
-      "Aaron Watson",
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Carter Johnson",
-      "Henry Zatkowski",
-      "Jack Cebert",
-      "Justin Riemer",
-      "Tanner Gordon",
-      "Ty Finkbeiner",
-      "Will Rhine",
-      "Davis Sharpe",
-      "Drew Bellis",
-      "Evan Taylor",
-      "Kade Brown",
-      "Najer Victor",
-      "Ryan DeSanto",
-      "Ethan Lay",
-      "Michael Gillen",
-      "Peyton Glavine",
-      "Zack Johnson"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 19,
-        "found stats": 8,
-        "No game listed today": 1,
-        "Stale data — skipped": 2
-      },
-      "StatBroadcast": {
-        "player not in box": 13,
-        "No game listed today": 17,
-        "found player": 7,
-        "Couldn't reach site": 2
-      },
-      "ESPN": {
-        "No game listed today": 7,
-        "found stats": 5,
-        "Game found, not in box score": 10
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 14,
-        "No game listed today": 2,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 17,
-        "player not in box": 4,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 15,
-        "stale (yesterday)": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 14,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-22T07:50:17.314331+00:00",
     "severity": "warning",
     "blocked_sources": [],
@@ -32550,6 +32468,39 @@
   },
   {
     "generated_at": "2026-05-29T07:31:54.157781+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "David Hagaman",
+      "Garrett Whitlock",
+      "Kellon Lindsey",
+      "Cade Doughty",
+      "Jack Cebert",
+      "Austin Amaral",
+      "Davis Sharpe",
+      "Kade Brown",
+      "Najer Victor",
+      "Ryan DeSanto",
+      "Brennan Orf"
+    ],
+    "total_clients": 86,
+    "by_source": {},
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-29T07:46:45.344247+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
