@@ -1,84 +1,5 @@
 [
   {
-    "generated_at": "2026-05-22T22:05:06.916842+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 4,
-    "blocked_clients": [
-      "Ben Tryon",
-      "Drew Bellis",
-      "Duke McCarron",
-      "Lee Sowers"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Myles Bailey",
-      "Duke McCarron",
-      "Lee Sowers"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 9,
-        "Game found, not in box score": 17,
-        "Stale data — skipped": 2,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "found player": 3,
-        "No game listed today": 13,
-        "player not in box": 4,
-        "blocked (Cloudflare 403)": 4,
-        "Couldn't reach site": 1
-      },
-      "Sidearm": {
-        "player not in box": 8,
-        "No game listed today": 13,
-        "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 13,
-        "Game found, not in box score": 5,
-        "found stats": 2
-      },
-      "NCAA.com": {
-        "No game listed today": 2,
-        "found stats": 5,
-        "Stale data — skipped": 2,
-        "Game found, not in box score": 9
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 9,
-        "Stale data — skipped": 1,
-        "found stats": 2,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 3,
-          "blocked": 5
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-22T22:20:01.958693+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -31218,6 +31139,55 @@
       },
       "NCAA.org": {
         "Stale data — skipped": 2,
+        "Game found, not in box score": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-29T22:19:04.155223+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Sam Mitchell",
+      "Lee Sowers",
+      "Lucas Steele"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 16,
+        "No game listed today": 1,
+        "Game found, not in box score": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 6
+      },
+      "Sidearm": {
+        "No game listed today": 6
+      },
+      "StatBroadcast": {
+        "No game listed today": 6
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 3,
         "Game found, not in box score": 3
       }
     },
