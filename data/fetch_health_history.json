@@ -1,66 +1,5 @@
 [
   {
-    "generated_at": "2026-05-22T21:53:42.701011+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Myles Bailey",
-      "Lee Sowers"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Stale data — skipped": 3,
-        "Game found, not in box score": 15,
-        "found stats": 10,
-        "No game listed today": 1
-      },
-      "ESPN": {
-        "found stats": 2,
-        "No game listed today": 13,
-        "Game found, not in box score": 4
-      },
-      "Sidearm": {
-        "player not in box": 8,
-        "No game listed today": 12,
-        "found player": 1
-      },
-      "NCAA.com": {
-        "No game listed today": 2,
-        "found stats": 5,
-        "Stale data — skipped": 1,
-        "Game found, not in box score": 9
-      },
-      "StatBroadcast": {
-        "No game listed today": 12,
-        "player not in box": 7,
-        "found player": 3
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 9,
-        "Stale data — skipped": 1,
-        "found stats": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 7,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-22T22:05:06.916842+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -31199,6 +31138,54 @@
   },
   {
     "generated_at": "2026-05-29T21:46:45.725370+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Sam Mitchell",
+      "Lucas Steele"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 17,
+        "No game listed today": 1,
+        "Game found, not in box score": 4
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 5
+      },
+      "Sidearm": {
+        "No game listed today": 5
+      },
+      "StatBroadcast": {
+        "No game listed today": 5
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 2,
+        "Game found, not in box score": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-29T22:04:09.696166+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
