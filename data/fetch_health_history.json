@@ -1,80 +1,5 @@
 [
   {
-    "generated_at": "2026-05-22T09:34:54.605023+00:00",
-    "severity": "critical",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 5,
-    "blocked_clients": [
-      "Caleb Daniel",
-      "Joe Tiroly",
-      "Mason Eckelman",
-      "Will Rhine",
-      "Drew Bellis"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 14,
-        "No game listed today": 1,
-        "Game found, not in box score": 13
-      },
-      "ESPN": {
-        "found stats": 1,
-        "No game listed today": 13
-      },
-      "StatBroadcast": {
-        "found player": 1,
-        "Couldn't reach site": 4,
-        "No game listed today": 11,
-        "blocked (Cloudflare 403)": 5,
-        "player not in box": 4
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 9,
-        "No game listed today": 2,
-        "found stats": 2
-      },
-      "Sidearm": {
-        "No game listed today": 11
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 8,
-        "found stats": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": "proxy-server.scraperapi.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io",
-        "proxy-server.scraperapi.com"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 1
-        },
-        "proxy-server.scraperapi.com": {
-          "success": 0,
-          "blocked": 6
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-22T09:48:59.063546+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -32326,6 +32251,38 @@
   },
   {
     "generated_at": "2026-05-29T09:31:30.787071+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 21,
+        "No game listed today": 1
+      },
+      "NCAA.com": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-29T09:46:15.430583+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
