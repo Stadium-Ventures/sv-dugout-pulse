@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T16:02:11.480817+00:00",
+  "generated_at": "2026-05-29T16:16:56.074700+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -363,9 +363,9 @@
       "player_name": "Dax Kilby",
       "team": "FCL Yankees",
       "level": "Pro",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "FCL Yankees vs FCL Tigers | 12:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "FCL Yankees 0, FCL Tigers 0 | End 1",
+      "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-05-29",
       "is_yesterday": false,
@@ -379,7 +379,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/843933",
       "player_profile_url": "https://www.mlb.com/player/828076",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
@@ -796,16 +796,16 @@
       "player_name": "Adam McKelvey",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "UIC vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "UIC 0, Georgia Tech 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-29",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873755",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Adam%20McKelvey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Adam%20McKelvey%22%20Georgia%20Tech&f=live",
       "data_source": "ESPN",
@@ -816,7 +816,23 @@
         },
         {
           "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -954,16 +970,16 @@
       "player_name": "Caleb Daniel",
       "team": "Georgia Tech",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "UIC vs Georgia Tech",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "UIC 0, Georgia Tech 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-29",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873755",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Caleb%20Daniel%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Caleb%20Daniel%22%20Georgia%20Tech&f=live",
       "data_source": "ESPN",
@@ -974,7 +990,23 @@
         },
         {
           "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -2089,16 +2121,16 @@
       "player_name": "Boston Torres",
       "team": "Wake Forest",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "Kentucky vs Wake Forest",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "0-0",
+      "game_context": "Kentucky 0, Wake Forest 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-29",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873784",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Boston%20Torres%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Boston%20Torres%22%20Wake%20Forest&f=live",
       "data_source": "ESPN",
@@ -3617,18 +3649,33 @@
         "No game listed today": 22
       },
       "ESPN": {
-        "found stats": 21,
-        "No game listed today": 1
+        "found stats": 19,
+        "No game listed today": 1,
+        "Game found, not in box score": 2
       },
       "NCAA.com": {
-        "found stats": 1
+        "found stats": 1,
+        "Game found, not in box score": 2
+      },
+      "Sidearm": {
+        "No game listed today": 2
+      },
+      "StatBroadcast": {
+        "No game listed today": 2
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 2
       }
     },
     "blocked_sources": [],
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Adam McKelvey",
+      "Caleb Daniel"
+    ],
     "total_clients": 85,
     "proxy_pool": {
       "pool": [
