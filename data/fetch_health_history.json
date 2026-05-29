@@ -1,72 +1,5 @@
 [
   {
-    "generated_at": "2026-05-22T22:35:03.840833+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Myles Bailey",
-      "Cade Doughty",
-      "Michael Dattalo",
-      "Duke McCarron",
-      "Ethan Lay",
-      "Lee Sowers"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 9,
-        "Game found, not in box score": 17,
-        "Stale data — skipped": 2,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "found player": 5,
-        "No game listed today": 14,
-        "player not in box": 9
-      },
-      "Sidearm": {
-        "player not in box": 8,
-        "No game listed today": 14,
-        "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 13,
-        "found stats": 3,
-        "Game found, not in box score": 4
-      },
-      "NCAA.com": {
-        "No game listed today": 2,
-        "found stats": 3,
-        "Stale data — skipped": 3,
-        "Game found, not in box score": 9
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 9,
-        "Stale data — skipped": 2,
-        "found stats": 2,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 11,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-22T22:53:34.461191+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -31140,6 +31073,58 @@
     "fallback_clients": [
       "Dax Kilby",
       "Myles Bailey",
+      "Michael Dattalo",
+      "Sam Mitchell",
+      "Lee Sowers",
+      "Lucas Steele"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 16,
+        "No game listed today": 1,
+        "Game found, not in box score": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 6
+      },
+      "Sidearm": {
+        "No game listed today": 6
+      },
+      "StatBroadcast": {
+        "No game listed today": 6
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 3,
+        "Game found, not in box score": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-29T22:46:46.428112+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Cade Doughty",
+      "Austin Amaral",
       "Michael Dattalo",
       "Sam Mitchell",
       "Lee Sowers",
