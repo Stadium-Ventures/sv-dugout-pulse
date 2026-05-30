@@ -1,71 +1,5 @@
 [
   {
-    "generated_at": "2026-05-23T13:19:44.089955+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 1,
-    "blocked_clients": [
-      "Ty Finkbeiner"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Duke McCarron"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 12,
-        "No game listed today": 1
-      },
-      "Sidearm": {
-        "player not in box": 4,
-        "No game listed today": 4,
-        "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 4,
-        "found stats": 1,
-        "Game found, not in box score": 1
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 3,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "No game listed today": 4,
-        "blocked (Cloudflare 403)": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 2
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-23T13:34:49.529896+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -30465,6 +30399,39 @@
   },
   {
     "generated_at": "2026-05-30T13:16:52.441620+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 19,
+        "No game listed today": 1,
+        "Game found, not in box score": 2
+      },
+      "NCAA.com": {
+        "found stats": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-30T13:31:57.824036+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
