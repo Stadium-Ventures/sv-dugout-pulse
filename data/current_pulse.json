@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T16:01:48.233586+00:00",
+  "generated_at": "2026-05-30T16:16:53.958454+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -364,7 +364,7 @@
       "team": "FCL Yankees",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Yankees 11, FCL Phillies 2 | Bottom 7",
+      "game_context": "FCL Yankees 12, FCL Phillies 2 | Bottom 8",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-30",
@@ -2053,16 +2053,16 @@
       "player_name": "Boston Torres",
       "team": "Wake Forest",
       "level": "NCAA",
-      "stats_summary": "Stats unavailable — source returned aggregate",
-      "game_context": "Wake Forest vs Binghamton",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "0-0",
+      "game_context": "Wake Forest 0, Binghamton 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-30",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873792",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Boston%20Torres%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Boston%20Torres%22%20Wake%20Forest&f=live",
       "data_source": "ESPN",
@@ -2348,19 +2348,19 @@
       "player_name": "Drew Bellis",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "NC State vs UCF",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "NC State 3, UCF 9 | Inn 9",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-30",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873760",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Drew%20Bellis%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Drew%20Bellis%22%20UCF&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -2372,7 +2372,19 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3130,19 +3142,19 @@
       "player_name": "Michael Gillen",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "NC State vs UCF",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "NC State 3, UCF 9 | Inn 9",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-30",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873760",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Michael%20Gillen%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Gillen%22%20UCF&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3154,7 +3166,19 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3630,7 +3654,17 @@
         "Game found, not in box score": 2
       },
       "NCAA.com": {
-        "found stats": 3
+        "found stats": 1,
+        "Game found, not in box score": 2
+      },
+      "Sidearm": {
+        "No game listed today": 2
+      },
+      "StatBroadcast": {
+        "No game listed today": 2
+      },
+      "NCAA.org": {
+        "No game listed today": 2
       }
     },
     "blocked_sources": [],
@@ -3638,7 +3672,9 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
-      "Dax Kilby"
+      "Dax Kilby",
+      "Drew Bellis",
+      "Michael Gillen"
     ],
     "total_clients": 85,
     "proxy_pool": {
