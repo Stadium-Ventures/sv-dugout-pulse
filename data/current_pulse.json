@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T21:31:53.216372+00:00",
+  "generated_at": "2026-05-30T21:45:50.573025+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -170,7 +170,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 11, Southern Miss 11 | Inn 8",
+      "game_context": "Virginia 11, Southern Miss 11 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-30",
@@ -414,7 +414,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Boston Red Sox 1, Cleveland Guardians 1 | Bottom 5",
+      "game_context": "Boston Red Sox 1, Cleveland Guardians 1 | Top 6",
       "game_status": "Live",
       "game_time": "4:10 PM ET",
       "game_date": "2026-05-30",
@@ -1219,7 +1219,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 11, Southern Miss 11 | Inn 8",
+      "game_context": "Virginia 11, Southern Miss 11 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-30",
@@ -1254,7 +1254,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1393,7 +1393,7 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "1-5, HR, 4 RBI, R, K",
-      "game_context": "Virginia 11, Southern Miss 11 | Inn 8",
+      "game_context": "Virginia 11, Southern Miss 11 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-30",
@@ -1822,7 +1822,7 @@
       "team": "Eugene Emeralds",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Eugene Emeralds 0, Vancouver Canadians 2 | Top 6",
+      "game_context": "Eugene Emeralds 0, Vancouver Canadians 2 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-30",
@@ -2747,7 +2747,7 @@
       "team": "Southern Miss",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 11, Southern Miss 11 | Inn 8",
+      "game_context": "Virginia 11, Southern Miss 11 | Inn 9",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-30",
@@ -2914,7 +2914,7 @@
       "team": "Vancouver Canadians",
       "level": "Pro",
       "stats_summary": "0-2, K",
-      "game_context": "Eugene Emeralds 0, Vancouver Canadians 2 | Top 6",
+      "game_context": "Eugene Emeralds 0, Vancouver Canadians 2 | Bottom 6",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-30",
@@ -3092,7 +3092,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "North Carolina 0, East Carolina 1 | Inn 1",
+      "game_context": "North Carolina 0, East Carolina 2 | Inn 2",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-30",
@@ -3144,7 +3144,7 @@
       "team": "Auburn",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Auburn 16, NC State 7 | Inn 6",
+      "game_context": "Auburn 17, NC State 7 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-30",
@@ -3614,7 +3614,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Boston Red Sox 1, Cleveland Guardians 1 | Bottom 5",
+      "game_context": "Boston Red Sox 1, Cleveland Guardians 1 | Top 6",
       "game_status": "Live",
       "game_time": "4:10 PM ET",
       "game_date": "2026-05-30",
@@ -3694,8 +3694,9 @@
         "No game listed today": 6
       },
       "NCAA.org": {
-        "Stale data — skipped": 5,
-        "found stats": 1
+        "Stale data — skipped": 4,
+        "found stats": 1,
+        "stale (yesterday)": 1
       }
     },
     "blocked_sources": [],
