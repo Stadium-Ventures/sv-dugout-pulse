@@ -1,85 +1,5 @@
 [
   {
-    "generated_at": "2026-05-23T17:49:48.887194+00:00",
-    "severity": "critical",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 5,
-    "blocked_clients": [
-      "Kyle Jones",
-      "Caleb Daniel",
-      "Ty Finkbeiner",
-      "Ben Tryon",
-      "Duke McCarron"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Adam McKelvey",
-      "Cade Doughty",
-      "Caleb Daniel",
-      "Ben Tryon",
-      "Duke McCarron"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 9,
-        "found stats": 8,
-        "No game listed today": 1
-      },
-      "Sidearm": {
-        "player not in box": 3,
-        "No game listed today": 7,
-        "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 4,
-        "found stats": 2,
-        "Game found, not in box score": 3,
-        "Stale data — skipped": 1
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 3,
-        "Stale data — skipped": 2,
-        "No game listed today": 1,
-        "stale (yesterday)": 1
-      },
-      "StatBroadcast": {
-        "No game listed today": 7,
-        "blocked (Cloudflare 403)": 5,
-        "Couldn't reach site": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 4,
-        "Stale data — skipped": 2,
-        "No game listed today": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 6
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-23T18:04:57.170826+00:00",
     "severity": "critical",
     "blocked_sources": [
@@ -30024,6 +29944,42 @@
     "carry_forward_clients": [],
     "fallback_clients": [
       "Dax Kilby"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 21,
+        "No game listed today": 1
+      },
+      "NCAA.com": {
+        "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-30T18:01:53.385693+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Aaron Watson",
+      "Dax Kilby",
+      "Austin Amaral"
     ],
     "total_clients": 85,
     "by_source": {
