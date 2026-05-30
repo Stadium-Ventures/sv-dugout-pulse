@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T22:44:05.082638+00:00",
+  "generated_at": "2026-05-30T22:46:51.914383+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -414,7 +414,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Boston Red Sox 3, Cleveland Guardians 1 | End 8",
+      "game_context": "Boston Red Sox 3, Cleveland Guardians 1 | Top 9",
       "game_status": "Live",
       "game_time": "4:10 PM ET",
       "game_date": "2026-05-30",
@@ -1050,7 +1050,7 @@
       "team": "Jupiter Hammerheads",
       "level": "Pro",
       "stats_summary": "0-1",
-      "game_context": "Jupiter Hammerheads 0, Fort Myers Mighty Mussels 1 | Bottom 2",
+      "game_context": "Jupiter Hammerheads 0, Fort Myers Mighty Mussels 1 | End 2",
       "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-30",
@@ -1254,7 +1254,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "stale (yesterday)"
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1692,8 +1692,8 @@
       "player_name": "Ryan Weingartner",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "0-1, SB, BB",
-      "game_context": "Lakeland Flying Tigers 0, Palm Beach Cardinals 1 | Bottom 3",
+      "stats_summary": "0-1, R, SB, BB",
+      "game_context": "Lakeland Flying Tigers 0, Palm Beach Cardinals 2 | Bottom 3",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-30",
@@ -2644,8 +2644,8 @@
       "player_name": "Michael Dattalo",
       "team": "Palm Beach Cardinals",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 4th (3B)",
-      "game_context": "Lakeland Flying Tigers 0, Palm Beach Cardinals 1 | Bottom 3",
+      "stats_summary": "1-1, 2 RBI",
+      "game_context": "Lakeland Flying Tigers 0, Palm Beach Cardinals 2 | Bottom 3",
       "game_status": "Live",
       "game_time": "6:00 PM ET",
       "game_date": "2026-05-30",
@@ -2660,8 +2660,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/820406",
       "player_profile_url": "https://www.mlb.com/player/809633",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "2 RBI",
       "social_search_url": "https://x.com/search?q=%22Michael%20Dattalo%22%20Cardinals&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -3614,7 +3614,7 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Boston Red Sox 3, Cleveland Guardians 1 | End 8",
+      "game_context": "Boston Red Sox 3, Cleveland Guardians 1 | Top 9",
       "game_status": "Live",
       "game_time": "4:10 PM ET",
       "game_date": "2026-05-30",
@@ -3694,9 +3694,8 @@
         "No game listed today": 6
       },
       "NCAA.org": {
-        "Stale data — skipped": 4,
-        "found stats": 1,
-        "stale (yesterday)": 1
+        "Stale data — skipped": 5,
+        "found stats": 1
       }
     },
     "blocked_sources": [],
