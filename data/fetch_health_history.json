@@ -1,127 +1,5 @@
 [
   {
-    "generated_at": "2026-05-23T15:04:41.607799+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Duke McCarron"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 5,
-        "found stats": 12,
-        "No game listed today": 1
-      },
-      "Sidearm": {
-        "player not in box": 4,
-        "No game listed today": 4,
-        "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 4,
-        "found stats": 1,
-        "Game found, not in box score": 1
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 3,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "No game listed today": 4,
-        "player not in box": 1,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 4
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 2,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
-    "generated_at": "2026-05-23T15:12:59.449680+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Adam McKelvey",
-      "Caleb Daniel",
-      "Duke McCarron"
-    ],
-    "total_clients": 83,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 7,
-        "found stats": 10,
-        "No game listed today": 1
-      },
-      "Sidearm": {
-        "player not in box": 4,
-        "No game listed today": 6,
-        "found player": 1
-      },
-      "ESPN": {
-        "No game listed today": 4,
-        "found stats": 1,
-        "Game found, not in box score": 3
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 3,
-        "Stale data — skipped": 2,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "No game listed today": 6,
-        "player not in box": 3,
-        "found player": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 4,
-        "Stale data — skipped": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "p.webshare.io",
-      "dead": [],
-      "stats": {
-        "p.webshare.io": {
-          "success": 3,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-23T15:19:46.541059+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -30235,6 +30113,41 @@
   },
   {
     "generated_at": "2026-05-30T15:01:58.247574+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby"
+    ],
+    "total_clients": 85,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 19,
+        "No game listed today": 1,
+        "Game found, not in box score": 2
+      },
+      "NCAA.com": {
+        "found stats": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-30T15:16:51.222501+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
