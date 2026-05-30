@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T16:36:13.169634+00:00",
+  "generated_at": "2026-05-30T16:46:55.783656+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -364,7 +364,7 @@
       "team": "FCL Yankees",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "FCL Yankees 12, FCL Phillies 4 | Top 9",
+      "game_context": "FCL Yankees 12, FCL Phillies 4 | Bottom 9",
       "game_status": "Live",
       "game_time": "10:00 AM ET",
       "game_date": "2026-05-30",
@@ -2348,16 +2348,16 @@
       "player_name": "Drew Bellis",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "NC State 3, UCF 9 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-05-30",
+      "stats_summary": "Game at 8:00 PM ET",
+      "game_context": "UCF vs Milwaukee",
+      "game_status": "Scheduled",
+      "game_time": "8:00 PM ET",
+      "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873760",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873812",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Drew%20Bellis%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Drew%20Bellis%22%20UCF&f=live",
       "data_source": "ESPN",
@@ -2368,23 +2368,7 @@
         },
         {
           "source": "ESPN",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3080,7 +3064,7 @@
       "team": "Auburn",
       "level": "NCAA",
       "stats_summary": "Game at 3:00 PM ET",
-      "game_context": "TBD vs Auburn",
+      "game_context": "NC State vs Auburn",
       "game_status": "Scheduled",
       "game_time": "3:00 PM ET",
       "game_date": "2026-05-30",
@@ -3142,16 +3126,16 @@
       "player_name": "Michael Gillen",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Did Not Play",
-      "game_context": "NC State 3, UCF 9 | Final",
-      "game_status": "Final",
-      "game_time": null,
-      "game_date": "2026-05-30",
+      "stats_summary": "Game at 8:00 PM ET",
+      "game_context": "UCF vs Milwaukee",
+      "game_status": "Scheduled",
+      "game_time": "8:00 PM ET",
+      "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873760",
+      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873812",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Michael%20Gillen%22&btnI=",
-      "performance_grade": "— DNP",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Gillen%22%20UCF&f=live",
       "data_source": "ESPN",
@@ -3162,23 +3146,7 @@
         },
         {
           "source": "ESPN",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "NCAA.com",
-          "outcome": "Game found, not in box score"
-        },
-        {
-          "source": "Sidearm",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "StatBroadcast",
-          "outcome": "No game listed today"
-        },
-        {
-          "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3649,22 +3617,11 @@
         "No game listed today": 22
       },
       "ESPN": {
-        "found stats": 19,
-        "No game listed today": 1,
-        "Game found, not in box score": 2
+        "found stats": 21,
+        "No game listed today": 1
       },
       "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 2
-      },
-      "Sidearm": {
-        "No game listed today": 2
-      },
-      "StatBroadcast": {
-        "No game listed today": 2
-      },
-      "NCAA.org": {
-        "No game listed today": 2
+        "found stats": 1
       }
     },
     "blocked_sources": [],
@@ -3672,9 +3629,7 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
-      "Dax Kilby",
-      "Drew Bellis",
-      "Michael Gillen"
+      "Dax Kilby"
     ],
     "total_clients": 85,
     "proxy_pool": {
