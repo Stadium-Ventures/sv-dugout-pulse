@@ -1,71 +1,5 @@
 [
   {
-    "generated_at": "2026-05-24T17:49:39.596137+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Adam McKelvey",
-      "Caleb Daniel",
-      "Jack Cebert",
-      "Xavier Kolhosser",
-      "Lee Sowers"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 3,
-        "No game listed today": 1,
-        "Game found, not in box score": 4
-      },
-      "ESPN": {
-        "No game listed today": 2,
-        "Game found, not in box score": 3
-      },
-      "NCAA.com": {
-        "found stats": 2,
-        "Stale data — skipped": 2,
-        "Game found, not in box score": 1
-      },
-      "StatBroadcast": {
-        "found player": 2,
-        "player not in box": 3,
-        "No game listed today": 3,
-        "Couldn't reach site": 1
-      },
-      "Sidearm": {
-        "No game listed today": 3
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 2,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 7,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-24T18:05:37.785637+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -29194,6 +29128,55 @@
       "Cade Doughty",
       "Carter Johnson",
       "Jack Cebert",
+      "Davis Sharpe"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 19,
+        "No game listed today": 3
+      },
+      "NCAA.com": {
+        "found stats": 1,
+        "Game found, not in box score": 2
+      },
+      "Sidearm": {
+        "No game listed today": 2
+      },
+      "StatBroadcast": {
+        "No game listed today": 2
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-31T18:02:02.436054+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Carter Johnson",
+      "Jack Cebert",
+      "Austin Amaral",
       "Davis Sharpe"
     ],
     "total_clients": 84,
