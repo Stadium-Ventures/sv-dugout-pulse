@@ -16183,7 +16183,7 @@
   },
   {
     "date": "2026-05-31",
-    "updated_at": "2026-05-31T21:02:02.631279+00:00",
+    "updated_at": "2026-05-31T21:17:02.196468+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -16544,7 +16544,7 @@
         "team": "Arkansas Travelers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -16597,10 +16597,11 @@
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com"
         ]
       },
       {
@@ -16633,7 +16634,7 @@
         "team": "Stockton Ports",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -16655,7 +16656,7 @@
         "team": "Salt Lake Bees",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -16702,13 +16703,17 @@
         "team": "North Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -16719,10 +16724,11 @@
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com"
         ]
       },
       {
@@ -16733,10 +16739,11 @@
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
-        "source": "ESPN",
+        "source": "NCAA.com",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com"
         ]
       },
       {
