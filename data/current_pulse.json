@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T15:02:03.072322+00:00",
+  "generated_at": "2026-05-31T15:16:59.855294+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -634,19 +634,19 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 11:00 AM ET",
-      "game_context": "Coastal Carolina vs Florida St.",
-      "game_status": "Scheduled",
-      "game_time": "11:00 AM ET",
-      "game_date": "2026-05-31",
+      "stats_summary": "No game data",
+      "game_context": "",
+      "game_status": "N/A",
+      "game_time": null,
+      "game_date": null,
       "is_yesterday": false,
       "next_game": null,
-      "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873855",
+      "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "— No Data",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
-      "data_source": "NCAA.com",
+      "data_source": "ESPN",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -658,7 +658,19 @@
         },
         {
           "source": "NCAA.com",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "No game listed today"
         }
       ],
       "stats_captured_at": null,
@@ -3622,17 +3634,18 @@
         "Game found, not in box score": 1
       },
       "NCAA.com": {
-        "found stats": 2,
-        "Game found, not in box score": 2
+        "found stats": 1,
+        "Game found, not in box score": 3
       },
       "Sidearm": {
-        "No game listed today": 2
+        "No game listed today": 3
       },
       "StatBroadcast": {
-        "No game listed today": 2
+        "No game listed today": 3
       },
       "NCAA.org": {
-        "Game found, not in box score": 2
+        "Game found, not in box score": 2,
+        "No game listed today": 1
       }
     },
     "blocked_sources": [],
