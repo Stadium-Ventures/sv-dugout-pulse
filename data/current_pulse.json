@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T05:16:28.511376+00:00",
+  "generated_at": "2026-05-31T05:32:08.494949+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -646,19 +646,19 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "No game data",
-      "game_context": "Coastal vs Florida St | Suspended",
-      "game_status": "Suspended",
+      "stats_summary": "Game today",
+      "game_context": "Coastal Carolina vs Florida St.",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-30",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873855",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
-      "data_source": "ESPN",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -682,7 +682,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -876,7 +876,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1050,7 +1050,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1298,7 +1298,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -1996,7 +1996,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2571,7 +2571,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Game found, not in box score"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -3852,8 +3852,9 @@
         "No game listed today": 14
       },
       "NCAA.org": {
-        "Game found, not in box score": 11,
-        "No game listed today": 3
+        "Game found, not in box score": 9,
+        "found stats": 1,
+        "stale (yesterday)": 4
       }
     },
     "blocked_sources": [],
