@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-31T23:02:01.783359+00:00",
+  "generated_at": "2026-05-31T23:16:49.739493+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -40,7 +40,7 @@
       "team": "Texas",
       "level": "NCAA",
       "stats_summary": "0-2, 2 K",
-      "game_context": "Texas 0, Santa Barbara 1 | Inn 4",
+      "game_context": "Texas 0, Santa Barbara 1 | Inn 5",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-05-31",
@@ -538,7 +538,7 @@
       "team": "Ontario Tower Buzzers",
       "level": "Pro",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "Visalia Rawhide 8, Ontario Tower Buzzers 3 | Bottom 9",
+      "game_context": "Visalia Rawhide 8, Ontario Tower Buzzers 7 | Bottom 9",
       "game_status": "Live",
       "game_time": "4:05 PM ET",
       "game_date": "2026-05-31",
@@ -634,16 +634,16 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 7:10 PM ET",
-      "game_context": "Florida St vs N Illinois",
-      "game_status": "Scheduled",
-      "game_time": "7:10 PM ET",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Florida St 0, N Illinois 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873857",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
       "data_source": "ESPN",
@@ -654,7 +654,23 @@
         },
         {
           "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -1234,16 +1250,16 @@
       "player_name": "Henry Zatkowski",
       "team": "Virginia",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Virginia 6, Jax State 7 | Inn 8",
-      "game_status": "Live",
+      "stats_summary": "Did Not Play",
+      "game_context": "Virginia 6, Jax State 7 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873862",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Henry%20Zatkowski%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "— DNP",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Henry%20Zatkowski%22%20Virginia&f=live",
       "data_source": "ESPN",
@@ -1409,8 +1425,8 @@
       "team": "Virginia",
       "level": "NCAA",
       "stats_summary": "2-4, R, BB",
-      "game_context": "Virginia 6, Jax State 7 | Inn 8",
-      "game_status": "Live",
+      "game_context": "Virginia 6, Jax State 7 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-05-31",
       "is_yesterday": false,
@@ -2412,19 +2428,19 @@
       "player_name": "Drew Bellis",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 2, Auburn 0 | Inn 2",
-      "game_status": "Live",
+      "stats_summary": "Game today",
+      "game_context": "UCF vs Auburn",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873813",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Drew%20Bellis%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Drew%20Bellis%22%20UCF&f=live",
-      "data_source": "ESPN",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -2448,7 +2464,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -2582,8 +2598,8 @@
       "team": "Tri-City Dust Devils",
       "level": "Pro",
       "stats_summary": "1-4",
-      "game_context": "Spokane Indians 2, Tri-City Dust Devils 4 | Top 9",
-      "game_status": "Live",
+      "game_context": "Spokane Indians 2, Tri-City Dust Devils 4 | Final",
+      "game_status": "Final",
       "game_time": "4:30 PM ET",
       "game_date": "2026-05-31",
       "is_yesterday": false,
@@ -2616,7 +2632,7 @@
       "team": "Stockton Ports",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Rancho Cucamonga Quakes 3, Stockton Ports 6 | Top 7",
+      "game_context": "Rancho Cucamonga Quakes 3, Stockton Ports 6 | Top 8",
       "game_status": "Live",
       "game_time": "5:09 PM ET",
       "game_date": "2026-05-31",
@@ -3124,7 +3140,7 @@
       "team": "North Carolina",
       "level": "NCAA",
       "stats_summary": "Game in progress — not in lineup",
-      "game_context": "East Carolina 3, North Carolina 8 | Inn 6",
+      "game_context": "East Carolina 3, North Carolina 8 | Inn 7",
       "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-05-31",
@@ -3175,19 +3191,19 @@
       "player_name": "Lucas Steele",
       "team": "Auburn",
       "level": "NCAA",
-      "stats_summary": "Game in progress — not in lineup",
-      "game_context": "UCF 2, Auburn 0 | Inn 2",
-      "game_status": "Live",
+      "stats_summary": "Game today",
+      "game_context": "UCF vs Auburn",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873813",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
-      "data_source": "ESPN",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3211,7 +3227,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3254,19 +3270,19 @@
       "player_name": "Michael Gillen",
       "team": "UCF",
       "level": "NCAA",
-      "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "UCF 2, Auburn 0 | Inn 2",
-      "game_status": "Live",
+      "stats_summary": "Game today",
+      "game_context": "UCF vs Auburn",
+      "game_status": "Scheduled",
       "game_time": null,
       "game_date": "2026-05-31",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873813",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Michael%20Gillen%22&btnI=",
-      "performance_grade": "😐 Routine",
+      "performance_grade": "🕒 Scheduled",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Michael%20Gillen%22%20UCF&f=live",
-      "data_source": "ESPN",
+      "data_source": "NCAA.org",
       "fetch_diagnostic": [
         {
           "source": "D1Baseball",
@@ -3290,7 +3306,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "found stats"
         }
       ],
       "stats_captured_at": null,
@@ -3627,7 +3643,7 @@
       "team": "Memphis Redbirds",
       "level": "Pro",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Memphis Redbirds 1, Omaha Storm Chasers 2 | Top 4",
+      "game_context": "Memphis Redbirds 2, Omaha Storm Chasers 2 | End 4",
       "game_status": "Live",
       "game_time": "6:05 PM ET",
       "game_date": "2026-05-31",
@@ -3725,24 +3741,25 @@
         "No game listed today": 22
       },
       "ESPN": {
-        "found stats": 12,
+        "found stats": 11,
         "No game listed today": 3,
-        "Game found, not in box score": 7
+        "Game found, not in box score": 8
       },
       "NCAA.com": {
         "found stats": 1,
-        "Game found, not in box score": 8,
+        "Game found, not in box score": 9,
         "Stale data — skipped": 1
       },
       "Sidearm": {
-        "No game listed today": 9
+        "No game listed today": 10
       },
       "StatBroadcast": {
-        "No game listed today": 9
+        "No game listed today": 10
       },
       "NCAA.org": {
         "Game found, not in box score": 2,
-        "Stale data — skipped": 7
+        "Stale data — skipped": 5,
+        "found stats": 3
       }
     },
     "blocked_sources": [],
@@ -3753,6 +3770,7 @@
       "David Hagaman",
       "Garrett Whitlock",
       "Kellon Lindsey",
+      "Myles Bailey",
       "Adam McKelvey",
       "Cade Doughty",
       "Caleb Daniel",
@@ -3762,14 +3780,11 @@
       "Austin Amaral",
       "Blake Rambusch",
       "Davis Sharpe",
-      "Drew Bellis",
       "Kade Brown",
       "Najer Victor",
       "Xavier Kolhosser",
       "Brennan Orf",
-      "Lee Sowers",
-      "Lucas Steele",
-      "Michael Gillen"
+      "Lee Sowers"
     ],
     "total_clients": 84,
     "proxy_pool": {
