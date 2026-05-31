@@ -1,84 +1,5 @@
 [
   {
-    "generated_at": "2026-05-24T19:49:59.549368+00:00",
-    "severity": "warning",
-    "blocked_sources": [
-      "StatBroadcast"
-    ],
-    "blocked_event_count": 4,
-    "blocked_clients": [
-      "Adam McKelvey",
-      "Caleb Daniel",
-      "Ben Tryon",
-      "Lucas Steele"
-    ],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Adam McKelvey",
-      "Caleb Daniel",
-      "Jack Cebert",
-      "Austin Amaral",
-      "Austin Amaral",
-      "Sam Mitchell",
-      "Xavier Kolhosser",
-      "Lee Sowers"
-    ],
-    "total_clients": 86,
-    "by_source": {
-      "D1Baseball": {
-        "Game found, not in box score": 8,
-        "No game listed today": 1,
-        "found stats": 1
-      },
-      "StatBroadcast": {
-        "Couldn't reach site": 6,
-        "No game listed today": 7,
-        "found player": 1,
-        "blocked (Cloudflare 403)": 4
-      },
-      "ESPN": {
-        "No game listed today": 4,
-        "Game found, not in box score": 5
-      },
-      "NCAA.com": {
-        "Stale data — skipped": 3,
-        "Game found, not in box score": 3,
-        "found stats": 2,
-        "No game listed today": 1
-      },
-      "Sidearm": {
-        "No game listed today": 7
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 4,
-        "Game found, not in box score": 2,
-        "found stats": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "geo.iproyal.com",
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 1,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 0,
-          "blocked": 8
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-24T20:05:15.124181+00:00",
     "severity": "warning",
     "blocked_sources": [
@@ -29093,6 +29014,60 @@
       },
       "NCAA.org": {
         "Stale data — skipped": 1,
+        "Game found, not in box score": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-05-31T20:02:02.397187+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Garrett Whitlock",
+      "Cade Doughty",
+      "Carter Johnson",
+      "Jack Cebert",
+      "Sterlin Thompson",
+      "Austin Amaral",
+      "Blake Rambusch",
+      "Davis Sharpe",
+      "Najer Victor",
+      "Xavier Kolhosser"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 22
+      },
+      "ESPN": {
+        "found stats": 16,
+        "No game listed today": 3,
+        "Game found, not in box score": 3
+      },
+      "NCAA.com": {
+        "found stats": 4,
+        "Game found, not in box score": 2
+      },
+      "Sidearm": {
+        "No game listed today": 2
+      },
+      "StatBroadcast": {
+        "No game listed today": 2
+      },
+      "NCAA.org": {
         "Game found, not in box score": 2
       }
     },
