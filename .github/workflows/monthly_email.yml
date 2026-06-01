@@ -1,11 +1,11 @@
 name: Monthly Recap Email
 
-# Fires on the 1st of each month at 11:30 UTC (7:30 AM EDT / 6:30 EST).
+# Triggered by cron-job.org at 7:30 AM America/New_York on the 1st of
+# each month (handles DST automatically; GitHub's native schedule is
+# UTC-only and silently skipped on first fire — see 2026-06-01 incident).
 # Lands after the daily 11:00 UTC historical aggregation, so the
 # Season-to-Date column reflects through the last day of the prior month.
 on:
-  schedule:
-    - cron: "30 11 1 * *"
   workflow_dispatch:
     inputs:
       dry_run:

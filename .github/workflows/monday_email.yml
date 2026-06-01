@@ -1,12 +1,12 @@
 name: Monday Hitter Recap Email
 
-# Fires Mondays at 11:30 UTC (7:30 AM EDT / 6:30 AM EST).
+# Triggered by cron-job.org at 7:30 AM America/New_York every Monday
+# (handles DST automatically; GitHub's native schedule is UTC-only and
+# silently skipped on first fire — see 2026-06-01 incident).
 # The daily historical aggregation at 11:00 UTC rebuilds window_7d.json
-# to include Sunday's games; this email runs 30 min later so the recap
-# always includes the prior Sunday.
+# to include Sunday's games before cron-job.org fires this at 11:30 UTC
+# (EDT) / 12:30 UTC (EST).
 on:
-  schedule:
-    - cron: "30 11 * * 1"
   workflow_dispatch:
     inputs:
       dry_run:
