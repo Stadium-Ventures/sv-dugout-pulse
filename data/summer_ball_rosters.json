@@ -1,20 +1,14 @@
 {
-  "generated_at": "2026-05-31T23:13:45.217580+00:00",
+  "generated_at": "2026-06-01T13:46:52.373226+00:00",
   "league_health": [
     {
       "league": "Northwoods",
       "status": "ok",
-      "player_count": 135,
-      "team_count": 22,
+      "player_count": 0,
+      "team_count": 0,
       "error": null,
-      "duration_ms": 11953,
-      "sample_players": [
-        "Schwartz, J",
-        "Bottcher, M",
-        "Berkey, E",
-        "Thompson, J",
-        "Michaels, L"
-      ]
+      "duration_ms": 66111,
+      "sample_players": []
     },
     {
       "league": "Cape Cod",
@@ -22,7 +16,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 132571,
+      "duration_ms": 179796,
       "sample_players": []
     },
     {
@@ -31,7 +25,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Coastal Plain: no leagueid/seasonid (autodiscovery from https://coastalplain.com/stats/ failed and no defaults set)",
-      "duration_ms": 9183,
+      "duration_ms": 2426,
       "sample_players": []
     },
     {
@@ -40,7 +34,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "NECBL: no leagueid/seasonid (autodiscovery from https://necbl.com/stats/ failed and no defaults set)",
-      "duration_ms": 133,
+      "duration_ms": 62,
       "sample_players": []
     },
     {
@@ -49,7 +43,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Appalachian: no leagueid/seasonid (autodiscovery from https://appyleague.com/stats/ failed and no defaults set)",
-      "duration_ms": 2000,
+      "duration_ms": 1671,
       "sample_players": []
     },
     {
@@ -81,33 +75,18 @@
     }
   ],
   "baseballcube": {
-    "attempted": 38,
+    "attempted": 39,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
   "ncaa_clients_matched": 0,
-  "ncaa_clients_possible": 1,
-  "ncaa_clients_unmatched": 38,
+  "ncaa_clients_possible": 0,
+  "ncaa_clients_unmatched": 39,
   "ncaa_clients_ambiguous": 0,
   "matched": [],
-  "possible_matches": [
-    {
-      "player_name": "Kyle Jones",
-      "college": "Florida",
-      "match_strength": "initial+last (manual review)",
-      "candidates": [
-        {
-          "summer_team": "TVC",
-          "league": "Northwoods",
-          "summer_name": "Jones, K",
-          "summer_college": "",
-          "profile_url": "https://northwoods.bbstats.pointstreak.com/stats.html?leagueid=120&seasonid=31974&view=pitching"
-        }
-      ]
-    }
-  ],
+  "possible_matches": [],
   "unmatched": [
     {
       "player_name": "Aiden Robbins",
@@ -116,6 +95,10 @@
     {
       "player_name": "Cam Flukey",
       "college": "Coastal Carolina"
+    },
+    {
+      "player_name": "Kyle Jones",
+      "college": "Florida"
     },
     {
       "player_name": "Myles Bailey",
@@ -263,5 +246,5 @@
     }
   ],
   "ambiguous": [],
-  "all_players_count": 135
+  "all_players_count": 0
 }
