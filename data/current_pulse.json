@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T20:31:56.771936+00:00",
+  "generated_at": "2026-06-01T20:47:03.479168+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -816,7 +816,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "Game in progress — hasn't pitched",
-      "game_context": "Georgia Tech 4, Oklahoma 3 | Inn 5",
+      "game_context": "Georgia Tech 4, Oklahoma 3 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-06-01",
@@ -851,7 +851,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "Stale data — skipped"
+          "outcome": "stale (yesterday)"
         }
       ],
       "stats_captured_at": null,
@@ -990,7 +990,7 @@
       "team": "Georgia Tech",
       "level": "NCAA",
       "stats_summary": "1-2, HR, RBI, R",
-      "game_context": "Georgia Tech 4, Oklahoma 3 | Inn 5",
+      "game_context": "Georgia Tech 4, Oklahoma 3 | Inn 6",
       "game_status": "Live",
       "game_time": null,
       "game_date": "2026-06-01",
@@ -1257,7 +1257,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -1959,7 +1959,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2463,7 +2463,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -2542,7 +2542,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3169,7 +3169,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3284,7 +3284,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3451,7 +3451,7 @@
         },
         {
           "source": "NCAA.org",
-          "outcome": "No game listed today"
+          "outcome": "Game found, not in box score"
         }
       ],
       "stats_captured_at": null,
@@ -3751,8 +3751,9 @@
         "No game listed today": 9
       },
       "NCAA.org": {
-        "Stale data — skipped": 2,
-        "No game listed today": 7
+        "Stale data — skipped": 1,
+        "stale (yesterday)": 1,
+        "Game found, not in box score": 7
       }
     },
     "blocked_sources": [],
