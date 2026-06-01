@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-01T16:02:09.513109+00:00",
+  "generated_at": "2026-06-01T16:16:57.802268+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -362,9 +362,9 @@
       "player_name": "Dax Kilby",
       "team": "FCL Yankees",
       "level": "Pro",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "FCL Yankees vs FCL Phillies | 12:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "FCL Yankees 0, FCL Phillies 2 | Bottom 1",
+      "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-06-01",
       "is_yesterday": false,
@@ -378,7 +378,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/843864",
       "player_profile_url": "https://www.mlb.com/player/828076",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Dax%20Kilby%22%20Yankees&f=live",
       "data_source": "MLB Stats API",
@@ -621,16 +621,16 @@
       "player_name": "Myles Bailey",
       "team": "Florida State",
       "level": "NCAA",
-      "stats_summary": "Game at 12:00 PM ET",
-      "game_context": "Florida St vs St John's",
-      "game_status": "Scheduled",
-      "game_time": "12:00 PM ET",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Florida St 0, St John's 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-06-01",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873858",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Myles%20Bailey%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Myles%20Bailey%22%20Florida%20State&f=live",
       "data_source": "ESPN",
@@ -641,7 +641,23 @@
         },
         {
           "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -889,8 +905,8 @@
       "player_name": "Cade Doughty",
       "team": "FCL Blue Jays",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 4th (DH)",
-      "game_context": "FCL Tigers 0, FCL Blue Jays 0 | Top 1",
+      "stats_summary": "1-1, RBI",
+      "game_context": "FCL Tigers 0, FCL Blue Jays 1 | Bottom 1",
       "game_status": "Live",
       "game_time": "12:00 PM ET",
       "game_date": "2026-06-01",
@@ -905,8 +921,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844272",
       "player_profile_url": "https://www.mlb.com/player/683103",
-      "performance_grade": "😐 Routine",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Cade%20Doughty%22%20Jays&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -3704,19 +3720,21 @@
       },
       "ESPN": {
         "No game listed today": 15,
-        "found stats": 5
+        "found stats": 4,
+        "Game found, not in box score": 1
       },
       "NCAA.com": {
         "found stats": 8,
-        "Game found, not in box score": 7
+        "Game found, not in box score": 8
       },
       "Sidearm": {
-        "No game listed today": 7
+        "No game listed today": 8
       },
       "StatBroadcast": {
-        "No game listed today": 7
+        "No game listed today": 8
       },
       "NCAA.org": {
+        "Stale data — skipped": 1,
         "Game found, not in box score": 7
       }
     },
@@ -3724,7 +3742,10 @@
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey"
+    ],
     "total_clients": 84,
     "proxy_pool": {
       "pool": [
