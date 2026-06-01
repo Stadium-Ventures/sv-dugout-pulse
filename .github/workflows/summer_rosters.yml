@@ -65,7 +65,27 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/summer_ball_rosters.json
-          git diff --staged --quiet || git commit -m "Refresh summer ball rosters [bot]"
-          git fetch origin main
-          git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
-          git push
+          if git diff --staged --quiet; then
+            echo "No roster changes to commit"
+            exit 0
+          fi
+          git commit -m "Refresh summer ball rosters [bot]"
+          # Discard any unrelated working-tree changes (e.g. roster_cache.json
+          # touched by the discovery run) so merge doesn't abort. Past failure:
+          # 2026-05-31 14:46 UTC "local changes to roster_cache.json would be
+          # overwritten by merge".
+          git checkout -- .
+          # Retry push up to 3x — pulse bot commits every 15min so race
+          # conflicts are common.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
+            if git push; then
+              echo "Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            echo "Push attempt $attempt failed, retrying..."
+            sleep 5
+          done
+          echo "All push attempts failed"
+          exit 1

@@ -772,7 +772,22 @@ class SummerBallAggregator:
                 continue
 
             # 2) Fuzzy initial+last match — Pointstreak's abbreviated names.
+            # Pointstreak publishes names as "Last, F" (no full first), so a
+            # full-name index never hits. When initial+last yields exactly one
+            # candidate across all summer leagues, treat it as matched — the
+            # 39-client roster vs. 135-Northwoods-player pool makes collisions
+            # rare. Multiple candidates still route to possible_matches for
+            # manual review.
             fuzzy_candidates = by_initial_last.get(_initial_last_key(ncaa_full_name), [])
+            if len(fuzzy_candidates) == 1:
+                p = fuzzy_candidates[0]
+                matched.append({
+                    "player_name": ncaa_full_name, "college": c.get("team"),
+                    "summer_team": p.summer_team, "league": p.league,
+                    "summer_name": p.raw_name or p.name,
+                    "match_strength": "initial+last", "profile_url": p.profile_url,
+                })
+                continue
             if fuzzy_candidates:
                 possible_matches.append({
                     "player_name": ncaa_full_name, "college": c.get("team"),
