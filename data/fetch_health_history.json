@@ -1,60 +1,5 @@
 [
   {
-    "generated_at": "2026-05-25T22:51:35.508995+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "found stats": 1,
-        "Game found, not in box score": 5
-      },
-      "Sidearm": {
-        "player not in box": 5,
-        "found player": 1,
-        "No game listed today": 5
-      },
-      "ESPN": {
-        "No game listed today": 5
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 4,
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "No game listed today": 5,
-        "player not in box": 3
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 5
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": "geo.iproyal.com",
-      "dead": [
-        "p.webshare.io"
-      ],
-      "stats": {
-        "p.webshare.io": {
-          "success": 0,
-          "blocked": 1
-        },
-        "geo.iproyal.com": {
-          "success": 1,
-          "blocked": 0
-        }
-      }
-    }
-  },
-  {
     "generated_at": "2026-05-25T23:03:53.574601+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -28555,6 +28500,55 @@
   },
   {
     "generated_at": "2026-06-01T22:46:48.298978+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Myles Bailey",
+      "Adam McKelvey"
+    ],
+    "total_clients": 84,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 20
+      },
+      "ESPN": {
+        "No game listed today": 15,
+        "found stats": 3,
+        "Game found, not in box score": 2
+      },
+      "NCAA.com": {
+        "found stats": 8,
+        "Game found, not in box score": 8,
+        "stale (yesterday)": 1
+      },
+      "Sidearm": {
+        "No game listed today": 9
+      },
+      "StatBroadcast": {
+        "No game listed today": 9
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 8,
+        "stale (yesterday)": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-01T23:01:52.881712+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
