@@ -142,8 +142,14 @@ def fetch_via_residential_proxy(url: str, timeout: int = 20) -> tuple[Optional[s
                                    proxies={"http": proxy, "https": proxy})
                 resp = sess.get(url, timeout=timeout)
             status = resp.status_code
-            diagnostics["attempts"].append({"proxy": label, "status": status})
-            if 200 <= status < 300 and resp.text:
+            body_size = len(resp.text or "")
+            diagnostics["attempts"].append(
+                {"proxy": label, "status": status, "bytes": body_size}
+            )
+            # A 200 with <5KB body is almost always a Cloudflare/Incapsula JS
+            # challenge page, not real content. Try the next proxy instead of
+            # blindly trusting status code.
+            if 200 <= status < 300 and body_size >= 5000:
                 diagnostics["active"] = label
                 return resp.text, diagnostics
         except Exception as e:
