@@ -2441,10 +2441,23 @@ async function loadSummerBanner() {
     );
   }
   if (!detailParts.length) {
+    // Distinguish "rosters haven't published" from "data source is returning
+    // empty pages." If every ok-status league has 0 players, that's not a
+    // timing issue — it's a source issue (e.g. 2026-06-02 Pointstreak->Stack
+    // Sports migration broke 5 of our scrapers).
+    const okLeagues = health.filter(h => h.status === 'ok');
+    const okWithPlayers = okLeagues.filter(h => (h.player_count || 0) > 0);
+    let emptyMsg;
+    if (okLeagues.length && !okWithPlayers.length) {
+      emptyMsg = `No NCAA client matches yet. Source pages are loading but returning no roster data — `
+        + `investigating (Pointstreak was acquired by Stack Sports; their old stats URLs now redirect). `
+        + `Snapshot refreshes 4× daily.`;
+    } else {
+      emptyMsg = `No NCAA client matches yet — most summer leagues haven't published full rosters. `
+        + `Snapshot refreshes 4× daily.`;
+    }
     detailParts.push(
-      `<div class="meta" style="margin-top:8px;color:#57606a;font-size:0.85rem;">`
-      + `No NCAA client matches yet — most summer leagues haven't published full rosters. `
-      + `Snapshot refreshes daily at 4 AM ET.</div>`
+      `<div class="meta" style="margin-top:8px;color:#57606a;font-size:0.85rem;">${emptyMsg}</div>`
     );
   }
 
