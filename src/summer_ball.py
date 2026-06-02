@@ -720,10 +720,15 @@ class NECBL(PrestoSportsLeague):
 
 
 class CalRipkenLeague(PrestoSportsLeague):
-    """Cal Ripken Sr. Collegiate Baseball League — PrestoSports."""
+    """Cal Ripken Sr. Collegiate Baseball League — PrestoSports.
+
+    Note: the league's own domain is calripkensrleague.org (with "sr" for
+    "Sr."), NOT calripkenleague.org. The .prestosports.com subdomain is
+    Cloudflare-gated; the .org domain serves the same Presto pages cleanly.
+    """
     name = "Cal Ripken Sr. Collegiate Baseball League"
     short_name = "Cal Ripken"
-    host_url = "https://calripken.prestosports.com"
+    host_url = "https://calripkensrleague.org"
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
