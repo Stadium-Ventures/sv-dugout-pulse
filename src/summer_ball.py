@@ -565,18 +565,195 @@ class CoastalPlainLeague(PointstreakBackedLeague):
     host_url = "https://coastalplain.com/stats/"
 
 
-class NECBL(SummerLeague):
-    """NECBL silently moved to PrestoSports for 2026. Adapter TBD; for now
-    this is a stub that reports the migration so the UI can show accurate
-    league health rather than a fake "ok" with 0 players.
+# -----------------------------------------------------------------------------
+# PrestoSports leagues (NECBL, Cal Ripken, PGCBL, FCBL, Prospect League)
+# -----------------------------------------------------------------------------
+#
+# PrestoSports (Clubessential Holdings) is the de-facto winner among the
+# collegiate summer leagues that moved off Pointstreak in 2025-2026. The
+# public web pages live under each league's own domain proxied to Presto,
+# so we never have to hit the *.prestosports.com subdomain directly (which
+# is Cloudflare-gated).
+#
+# Caveat: rosters do NOT include college affiliation, only hometown. That
+# means name+college matching falls through and we rely on either exact
+# full-name match or fuzzy initial+last (auto-promoted when single
+# candidate). Plan to backfill college via The Baseball Cube cross-ref.
+
+class PrestoSportsLeague(SummerLeague):
+    """Base class for leagues hosted on PrestoSports under their own domain.
+
+    Subclasses set `host_url` (e.g. "https://necbl.com") and the year is
+    auto-detected from today's date.
     """
-    name = "New England Collegiate Baseball League"
-    short_name = "NECBL"
+
+    host_url: str = ""
+    season_year: int = 0  # 0 = current year
+
+    def _year(self) -> int:
+        return self.season_year or date.today().year
+
+    def _fetch_page(self, url: str) -> str:
+        """Direct first, residential proxy fallback for Cloudflare-gated hosts.
+
+        4 of 5 PrestoSports league sites (calripken, fcbl, pgcbl, prospectleague)
+        are behind Cloudflare and return 403 or 202-challenge to plain requests.
+        Only NECBL's own domain serves directly.
+        """
+        try:
+            resp = _http.get(url, timeout=20)
+            if resp.status_code == 200 and len(resp.text) > 5000:
+                return resp.text
+        except Exception:
+            pass
+        html, diag = fetch_via_residential_proxy(url, timeout=25)
+        if html:
+            logger.info("%s: fetched %d bytes via %s",
+                        self.short_name, len(html), diag.get("active"))
+            return html
+        return ""
 
     def discover_rosters(self) -> list[PlayerEntry]:
-        raise RuntimeError(
-            "NECBL migrated to PrestoSports for 2026 — adapter pending"
-        )
+        if not self.host_url:
+            raise RuntimeError(f"{self.short_name}: host_url not set")
+        year = self._year()
+        teams_index_url = f"{self.host_url}/sports/bsb/{year}/teams"
+        html = self._fetch_page(teams_index_url)
+        if not html:
+            raise RuntimeError(
+                f"{self.short_name}: teams index returned empty "
+                f"(direct + residential proxy both failed)"
+            )
+        slugs: set[str] = set()
+        for m in re.finditer(
+            rf"/sports/bsb/{year}/teams/([a-z0-9-]+)/?[?\"' ]", html,
+        ):
+            slug = m.group(1)
+            if "allstars" in slug or "all-stars" in slug:
+                continue
+            slugs.add(slug)
+        logger.info("%s: %d team slugs discovered for %d", self.short_name, len(slugs), year)
+        entries: list[PlayerEntry] = []
+        for slug in sorted(slugs):
+            url = f"{self.host_url}/sports/bsb/{year}/teams/{slug}?view=roster"
+            html = self._fetch_page(url)
+            if not html:
+                logger.info("%s/%s: roster fetch returned empty", self.short_name, slug)
+                continue
+            count_before = len(entries)
+            entries.extend(self._parse_roster_table(html, team_slug=slug, profile_url=url))
+            logger.info("%s/%s: extracted %d players",
+                        self.short_name, slug, len(entries) - count_before)
+        return entries
+
+    @staticmethod
+    def _parse_roster_table(
+        html: str, *, team_slug: str, profile_url: str,
+    ) -> list[PlayerEntry]:
+        out: list[PlayerEntry] = []
+        soup = BeautifulSoup(html, "html.parser")
+        # PrestoSports roster table headers: "# | Name | Position | Year |
+        # Status | Height | Weight | Bats | Throws | DOB | Hometown"
+        for table in soup.find_all("table"):
+            rows = table.find_all("tr")
+            if len(rows) < 3:
+                continue
+            header_cells = rows[0].find_all(["th", "td"])
+            headers_lower = [c.get_text(strip=True).lower() for c in header_cells]
+            if "name" not in headers_lower or "position" not in headers_lower:
+                continue
+            name_idx = headers_lower.index("name")
+            for row in rows[1:]:
+                cells = row.find_all(["th", "td"])
+                if len(cells) <= name_idx:
+                    continue
+                name = cells[name_idx].get_text(" ", strip=True)
+                if not name or len(name) > 60:
+                    continue
+                # Display team name from slug (capitalize words).
+                summer_team = team_slug.replace("-", " ").title()
+                out.append(PlayerEntry(
+                    name=_normalize_name(name),
+                    college="",  # Presto rosters don't expose college
+                    summer_team=summer_team,
+                    league="",  # set by subclass via league field on entry below
+                    profile_url=profile_url,
+                    raw_name=name,
+                    raw_college="",
+                ))
+            # Stop at first roster-shaped table.
+            break
+        return out
+
+    def discover_rosters_with_league(self) -> list[PlayerEntry]:
+        entries = self.discover_rosters()
+        for e in entries:
+            e.league = self.short_name
+        return entries
+
+
+class NECBL(PrestoSportsLeague):
+    name = "New England Collegiate Baseball League"
+    short_name = "NECBL"
+    host_url = "https://necbl.com"
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        entries = super().discover_rosters()
+        for e in entries:
+            e.league = self.short_name
+        return entries
+
+
+class CalRipkenLeague(PrestoSportsLeague):
+    """Cal Ripken Sr. Collegiate Baseball League — PrestoSports."""
+    name = "Cal Ripken Sr. Collegiate Baseball League"
+    short_name = "Cal Ripken"
+    host_url = "https://calripken.prestosports.com"
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        entries = super().discover_rosters()
+        for e in entries:
+            e.league = self.short_name
+        return entries
+
+
+class PGCBL(PrestoSportsLeague):
+    """Perfect Game Collegiate Baseball League — PrestoSports since 2025."""
+    name = "Perfect Game Collegiate Baseball League"
+    short_name = "PGCBL"
+    host_url = "https://pgcbl.com"
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        entries = super().discover_rosters()
+        for e in entries:
+            e.league = self.short_name
+        return entries
+
+
+class FCBL(PrestoSportsLeague):
+    """Futures Collegiate Baseball League — PrestoSports."""
+    name = "Futures Collegiate Baseball League"
+    short_name = "FCBL"
+    host_url = "https://fcbl.prestosports.com"
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        entries = super().discover_rosters()
+        for e in entries:
+            e.league = self.short_name
+        return entries
+
+
+class ProspectLeagueBaseball(PrestoSportsLeague):
+    """Prospect League — longstanding PrestoSports customer."""
+    name = "Prospect League"
+    short_name = "Prospect"
+    host_url = "https://prospectleague.com"
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        entries = super().discover_rosters()
+        for e in entries:
+            e.league = self.short_name
+        return entries
 
 
 class AlaskaBaseballLeague(_StubLeague):
@@ -589,25 +766,24 @@ class FloridaCollegiateLeague(_StubLeague):
     short_name = "Florida"
 
 
-class ProspectLeague(_StubLeague):
-    name = "Prospect League"
-    short_name = "Prospect"
-
-
 LEAGUES: list[SummerLeague] = [
     # MLB Stats API (verified live 2026-06-02)
     CapeCodLeague(),
     AppalachianLeague(),
     MLBDraftLeague(),
+    # PrestoSports (NECBL + 4 others, verified live 2026-06-02)
+    NECBL(),
+    CalRipkenLeague(),
+    PGCBL(),
+    FCBL(),
+    ProspectLeagueBaseball(),
     # In-house / pending adapters
     NorthwoodsLeague(),
-    NECBL(),
     # Pointstreak holdouts (soft-sunset; may go dark mid-season)
     CoastalPlainLeague(),
     # Unimplemented (low priority for SV's client base)
     AlaskaBaseballLeague(),
     FloridaCollegiateLeague(),
-    ProspectLeague(),
 ]
 
 
