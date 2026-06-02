@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T15:31:50.065790+00:00",
+  "generated_at": "2026-06-02T15:42:17.696758+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -873,7 +873,7 @@
       "player_name": "Cade Doughty",
       "team": "FCL Blue Jays",
       "level": "Pro",
-      "stats_summary": "Game at 12:00 PM ET",
+      "stats_summary": "In lineup — batting 3rd (SS)",
       "game_context": "FCL Blue Jays vs FCL Yankees | 12:00 PM ET",
       "game_status": "Scheduled",
       "game_time": "12:00 PM ET",
@@ -2937,13 +2937,20 @@
       "player_name": "Lee Sowers",
       "team": "North Carolina",
       "level": "NCAA",
-      "stats_summary": "No game scheduled",
+      "stats_summary": "Next: vs USC — Fri 06/05 3:00 PM ET",
       "game_context": "",
       "game_status": "N/A",
       "game_time": null,
       "game_date": null,
       "is_yesterday": false,
-      "next_game": null,
+      "next_game": {
+        "date": "Fri 06/05",
+        "date_full": "2026-06-05",
+        "opponent": "USC",
+        "home_away": "vs",
+        "time": "3:00 PM ET",
+        "display": "vs USC — Fri 06/05 3:00 PM ET"
+      },
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lee%20Sowers%22&btnI=",
       "performance_grade": "— No Data",
@@ -2970,7 +2977,14 @@
       "game_time": null,
       "game_date": null,
       "is_yesterday": false,
-      "next_game": null,
+      "next_game": {
+        "date": "Fri 06/05",
+        "date_full": "2026-06-05",
+        "opponent": "Ole Miss",
+        "home_away": "vs",
+        "time": "8:00 PM ET",
+        "display": "vs Ole Miss — Fri 06/05 8:00 PM ET"
+      },
       "box_score_url": null,
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
       "performance_grade": "— No Data",
@@ -3209,6 +3223,32 @@
       }
     },
     {
+      "player_name": "Aiden Robbins",
+      "team": "HAR (Cape Cod)",
+      "level": "Summer",
+      "stats_summary": "No game scheduled",
+      "game_context": "Summer ball — Texas",
+      "game_status": "Off Day",
+      "game_time": null,
+      "game_date": "2026-06-02",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "https://www.mlb.com/player/828657",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Texas",
+        "summer_league": "Cape Cod"
+      }
+    },
+    {
       "player_name": "Alex Smith",
       "team": "HS",
       "level": "HS",
@@ -3233,6 +3273,32 @@
         "draft_class": "",
         "position": "Hitter",
         "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Ben Tryon",
+      "team": "WIL (MLB Draft)",
+      "level": "Summer",
+      "stats_summary": "Game at 6:35 PM ET",
+      "game_context": "West Virginia Black Bears @ Williamsport Crosscutters",
+      "game_status": "Scheduled",
+      "game_time": "6:35 PM ET",
+      "game_date": "2026-06-02",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": "https://www.mlb.com/gameday/830256",
+      "player_profile_url": "https://www.mlb.com/player/830337",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Dallas Baptist",
+        "summer_league": "MLB Draft"
       }
     },
     {
@@ -3267,6 +3333,84 @@
         "draft_class": "",
         "position": "C",
         "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Cam Flukey",
+      "team": "BOU (Cape Cod)",
+      "level": "Summer",
+      "stats_summary": "No game scheduled",
+      "game_context": "Summer ball — Coastal Carolina",
+      "game_status": "Off Day",
+      "game_time": null,
+      "game_date": "2026-06-02",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Coastal Carolina",
+        "summer_league": "Cape Cod"
+      }
+    },
+    {
+      "player_name": "Eamon McDermott",
+      "team": "Keeneswampbats (NECBL)",
+      "level": "Summer",
+      "stats_summary": "Live stats coming — adapter pending",
+      "game_context": "Summer ball — Duke",
+      "game_status": "Roster Confirmed",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "Roster snapshot",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Duke",
+        "summer_league": "NECBL"
+      }
+    },
+    {
+      "player_name": "Henry Zatkowski",
+      "team": "HYA (Cape Cod)",
+      "level": "Summer",
+      "stats_summary": "No game scheduled",
+      "game_context": "Summer ball — Virginia",
+      "game_status": "Off Day",
+      "game_time": null,
+      "game_date": "2026-06-02",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "https://www.mlb.com/player/832360",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Virginia",
+        "summer_league": "Cape Cod"
       }
     },
     {
@@ -3375,6 +3519,84 @@
         "draft_class": "",
         "position": "Hitter",
         "roster_priority": 99
+      }
+    },
+    {
+      "player_name": "Luke Fithian",
+      "team": "Newportgulls (NECBL)",
+      "level": "Summer",
+      "stats_summary": "Live stats coming — adapter pending",
+      "game_context": "Summer ball — Rutgers",
+      "game_status": "Roster Confirmed",
+      "game_time": null,
+      "game_date": null,
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "Roster snapshot",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Rutgers",
+        "summer_league": "NECBL"
+      }
+    },
+    {
+      "player_name": "Mason Eckelman",
+      "team": "FAL (Cape Cod)",
+      "level": "Summer",
+      "stats_summary": "No game scheduled",
+      "game_context": "Summer ball — Ohio State",
+      "game_status": "Off Day",
+      "game_time": null,
+      "game_date": "2026-06-02",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "https://www.mlb.com/player/806065",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Ohio State",
+        "summer_league": "Cape Cod"
+      }
+    },
+    {
+      "player_name": "Myles Bailey",
+      "team": "HYA (Cape Cod)",
+      "level": "Summer",
+      "stats_summary": "No game scheduled",
+      "game_context": "Summer ball — Florida State",
+      "game_status": "Off Day",
+      "game_time": null,
+      "game_date": "2026-06-02",
+      "is_yesterday": false,
+      "next_game": null,
+      "box_score_url": null,
+      "player_profile_url": "https://www.mlb.com/player/815343",
+      "performance_grade": "— No Data",
+      "grade_reason": "",
+      "social_search_url": "",
+      "data_source": "MLB Stats API",
+      "is_client": true,
+      "tags": {
+        "draft_class": "",
+        "position": "",
+        "roster_priority": 99,
+        "summer_college": "Florida State",
+        "summer_league": "Cape Cod"
       }
     },
     {
@@ -3501,7 +3723,7 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [],
-    "total_clients": 84,
+    "total_clients": 92,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
