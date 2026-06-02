@@ -331,12 +331,23 @@ class PointstreakBackedLeague(SummerLeague):
         return list(entries.values())
 
 
-class NorthwoodsLeague(PointstreakBackedLeague):
+class NorthwoodsLeague(SummerLeague):
+    """Northwoods runs an in-house stats system since 2020. The Pointstreak
+    iframe on their site (leagueid=120, seasonid=31974) is a 2019 archive —
+    do NOT pull from it. The live data is on northwoodsleague.com itself but
+    has no documented JSON API; HTML scraping required.
+
+    Adapter pending — research dated 2026-06-02 confirmed in-house system but
+    we haven't reverse-engineered the page structure yet.
+    """
     name = "Northwoods League"
     short_name = "Northwoods"
-    host_url = "https://northwoodsleague.com/baseball/statistics/?type=batting&sort=AVG"
-    _DEFAULT_LEAGUE_ID = 120
-    _DEFAULT_SEASON_ID = 31974
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        raise RuntimeError(
+            "Northwoods: in-house stats system at northwoodsleague.com "
+            "(post-2020); HTML adapter pending"
+        )
 
 
 def _parse_pointstreak_table(
@@ -399,80 +410,6 @@ def _parse_pointstreak_table(
 
 
 # -----------------------------------------------------------------------------
-# Cape Cod League
-# -----------------------------------------------------------------------------
-
-class CapeCodLeague(SummerLeague):
-    """Cape Cod League — capecodbaseball.org. Team rosters live at
-    /teams/{slug}/roster. Player stats at /players/{slug}.
-
-    URL discovery is brittle and will get iterated as we hit real failures.
-    """
-
-    name = "Cape Cod League"
-    short_name = "Cape Cod"
-
-    BASE = "https://capecodbaseball.org"
-    TEAMS_URL = f"{BASE}/teams/"
-
-    # Known team slugs (manually seeded; expand as needed).
-    TEAM_SLUGS = [
-        "bourne-braves", "brewster-whitecaps", "chatham-anglers", "cotuit-kettleers",
-        "falmouth-commodores", "harwich-mariners", "hyannis-harbor-hawks",
-        "orleans-firebirds", "wareham-gatemen", "yarmouth-dennis-red-sox",
-    ]
-
-    def discover_rosters(self) -> list[PlayerEntry]:
-        entries: list[PlayerEntry] = []
-        for slug in self.TEAM_SLUGS:
-            url = f"{self.BASE}/teams/{slug}/roster/"
-            # capecodbaseball.org returns 403 to plain requests (likely
-            # WAF on datacenter ASN). Route through residential proxy.
-            html, diag = fetch_via_residential_proxy(url, timeout=25)
-            if not html:
-                logger.info("CapeCod: %s -> all proxies failed (%s)",
-                            slug, diag.get("error"))
-                continue
-            logger.info("CapeCod %s: %d bytes via %s",
-                        slug, len(html), diag.get("active"))
-            try:
-                soup = BeautifulSoup(html, "html.parser")
-                # Look for any roster-table heuristic: a table whose rows
-                # contain (name, position, college/year). Iterate broadly.
-                for row in soup.find_all("tr"):
-                    cells = row.find_all("td")
-                    if len(cells) < 2:
-                        continue
-                    texts = [c.get_text(" ", strip=True) for c in cells]
-                    name_text = texts[0] if texts else ""
-                    if not name_text or len(name_text) > 60:
-                        continue
-                    # Look for a "college" cell — heuristic: contains
-                    # "University" / "College" / well-known state name.
-                    college = ""
-                    for t in texts[1:]:
-                        if any(k in t.lower() for k in (
-                            "university", "college", "state", "tech", "a&m", "polytech",
-                        )):
-                            college = t
-                            break
-                    if not college:
-                        continue
-                    entries.append(PlayerEntry(
-                        name=_normalize_name(name_text),
-                        college=_normalize_college(college),
-                        summer_team=slug.replace("-", " ").title(),
-                        league=self.short_name,
-                        profile_url=url,
-                        raw_name=name_text,
-                        raw_college=college,
-                    ))
-            except Exception:
-                logger.exception("CapeCod: error scraping %s", slug)
-        return entries
-
-
-# -----------------------------------------------------------------------------
 # Stubs — these record "not_implemented" status so the transparency page
 # shows them; we iterate from there.
 # -----------------------------------------------------------------------------
@@ -484,31 +421,162 @@ class _StubLeague(SummerLeague):
         raise NotImplementedError(f"{self.name}: scraper not yet built")
 
 
-class CoastalPlainLeague(PointstreakBackedLeague):
-    """Pointstreak-backed. Auto-discover IDs from coastalplain.com.
+# -----------------------------------------------------------------------------
+# MLB Stats API leagues (Cape Cod, Appalachian, MLB Draft League)
+# -----------------------------------------------------------------------------
+#
+# After Pointstreak's May 31, 2026 sunset we discovered MLB hosts three of our
+# target summer circuits on its official Stats API:
+#   - Cape Cod (leagueId 565) — MLB Partner League
+#   - Appalachian (leagueId 120) — MLB developmental
+#   - MLB Draft League (leagueId 5536) — MLB-owned
+#
+# The Stats API is the same backbone that powers MLB.com / minor league sites.
+# It returns full names (no "Last, F" garbage), exposes college affiliation
+# directly on player profiles, and gives live AVG/OBP/SLG/PA — no proxy, no
+# WAF, no auth.
 
-    Coastal Plain pulls heavily from ACC/SEC programs — high-priority for
-    SV's client roster.
+class MLBStatsAPILeague(SummerLeague):
+    """A summer/wood-bat league hosted on statsapi.mlb.com.
+
+    Subclasses set name, short_name, and `league_id`. Season defaults to the
+    current year.
+    """
+
+    SPORT_ID: int = 22  # "College Baseball" in MLB's catalog
+    BASE: str = "https://statsapi.mlb.com/api/v1"
+    league_id: int = 0
+    season: int = 0  # 0 = current year
+
+    def _season(self) -> int:
+        return self.season or date.today().year
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        if not self.league_id:
+            raise RuntimeError(f"{self.short_name}: league_id not set")
+        season = self._season()
+        teams_url = (
+            f"{self.BASE}/teams"
+            f"?sportIds={self.SPORT_ID}&leagueIds={self.league_id}&season={season}"
+        )
+        teams_resp = _http.get(teams_url, timeout=15).json()
+        teams = teams_resp.get("teams", []) or []
+        logger.info(
+            "%s: %d teams for %d season", self.short_name, len(teams), season,
+        )
+        entries: list[PlayerEntry] = []
+        for team in teams:
+            team_id = team.get("id")
+            team_name = team.get("name", "")
+            team_abbr = team.get("abbreviation", "")
+            if not team_id:
+                continue
+            # fullRoster is the broadest — includes pitchers + hitters; some
+            # leagues don't populate "active" until games start.
+            roster_url = (
+                f"{self.BASE}/teams/{team_id}/roster"
+                f"?season={season}&rosterType=fullRoster"
+            )
+            try:
+                roster = _http.get(roster_url, timeout=15).json().get("roster", [])
+            except Exception:
+                logger.exception(
+                    "%s: roster fetch failed for team %s (%s)",
+                    self.short_name, team_name, team_id,
+                )
+                continue
+            # Hydrate per-player college affiliation via a batch /people call.
+            player_ids = [p.get("person", {}).get("id") for p in roster]
+            player_ids = [pid for pid in player_ids if pid]
+            college_by_id: dict[int, str] = {}
+            for chunk_start in range(0, len(player_ids), 40):
+                chunk = player_ids[chunk_start:chunk_start + 40]
+                ids_csv = ",".join(str(x) for x in chunk)
+                try:
+                    people = _http.get(
+                        f"{self.BASE}/people?personIds={ids_csv}&hydrate=education",
+                        timeout=15,
+                    ).json().get("people", [])
+                except Exception:
+                    logger.exception("%s: people fetch failed", self.short_name)
+                    continue
+                for person in people:
+                    colleges = person.get("education", {}).get("colleges", [])
+                    if colleges:
+                        college_by_id[person["id"]] = colleges[0].get("name", "")
+            for p in roster:
+                person = p.get("person", {})
+                pid = person.get("id")
+                full_name = person.get("fullName", "")
+                if not full_name or not pid:
+                    continue
+                college = college_by_id.get(pid, "")
+                entries.append(PlayerEntry(
+                    name=_normalize_name(full_name),
+                    college=_normalize_college(college),
+                    summer_team=team_abbr or team_name,
+                    league=self.short_name,
+                    source_id=str(pid),
+                    profile_url=(
+                        f"https://www.mlb.com/player/{pid}"
+                    ),
+                    raw_name=full_name,
+                    raw_college=college,
+                ))
+        logger.info(
+            "%s: extracted %d players across %d teams",
+            self.short_name, len(entries), len(teams),
+        )
+        return entries
+
+
+class CapeCodLeague(MLBStatsAPILeague):
+    name = "Cape Cod Baseball League"
+    short_name = "Cape Cod"
+    league_id = 565
+
+
+class AppalachianLeague(MLBStatsAPILeague):
+    """The Appalachian League converted to wood-bat collegiate summer in 2020.
+    Now MLB-hosted on the Stats API (verified 2026-06-02 after Pointstreak
+    sunset).
+    """
+    name = "Appalachian League"
+    short_name = "Appalachian"
+    league_id = 120
+
+
+class MLBDraftLeague(MLBStatsAPILeague):
+    name = "MLB Draft League"
+    short_name = "MLB Draft"
+    league_id = 5536
+
+
+# -----------------------------------------------------------------------------
+# Legacy Pointstreak leagues (soft-sunset; held for WCL/CPL/VBL/NYCBL fallback)
+# -----------------------------------------------------------------------------
+
+class CoastalPlainLeague(PointstreakBackedLeague):
+    """Pointstreak holdout (no 2026 partner announced as of 2026-06-02).
+    Keep the URL but expect it to return stale 2025 data until they migrate.
     """
     name = "Coastal Plain League"
     short_name = "Coastal Plain"
     host_url = "https://coastalplain.com/stats/"
 
 
-class NECBL(PointstreakBackedLeague):
+class NECBL(SummerLeague):
+    """NECBL silently moved to PrestoSports for 2026. Adapter TBD; for now
+    this is a stub that reports the migration so the UI can show accurate
+    league health rather than a fake "ok" with 0 players.
+    """
     name = "New England Collegiate Baseball League"
     short_name = "NECBL"
-    host_url = "https://necbl.com/stats/"
 
-
-class AppalachianLeague(PointstreakBackedLeague):
-    """The Appalachian League converted to wood-bat collegiate summer in 2020.
-    Stats moved to a Pointstreak-style backend; ID auto-discovery from
-    appyleague.com.
-    """
-    name = "Appalachian League"
-    short_name = "Appalachian"
-    host_url = "https://appyleague.com/stats/"
+    def discover_rosters(self) -> list[PlayerEntry]:
+        raise RuntimeError(
+            "NECBL migrated to PrestoSports for 2026 — adapter pending"
+        )
 
 
 class AlaskaBaseballLeague(_StubLeague):
@@ -527,11 +595,16 @@ class ProspectLeague(_StubLeague):
 
 
 LEAGUES: list[SummerLeague] = [
-    NorthwoodsLeague(),
+    # MLB Stats API (verified live 2026-06-02)
     CapeCodLeague(),
-    CoastalPlainLeague(),
-    NECBL(),
     AppalachianLeague(),
+    MLBDraftLeague(),
+    # In-house / pending adapters
+    NorthwoodsLeague(),
+    NECBL(),
+    # Pointstreak holdouts (soft-sunset; may go dark mid-season)
+    CoastalPlainLeague(),
+    # Unimplemented (low priority for SV's client base)
     AlaskaBaseballLeague(),
     FloridaCollegiateLeague(),
     ProspectLeague(),
