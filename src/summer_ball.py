@@ -989,6 +989,7 @@ class SummerBallAggregator:
                     matched.append({
                         "player_name": ncaa_full_name, "college": c.get("team"),
                         "summer_team": p.summer_team, "league": p.league,
+                        "summer_name": p.raw_name or p.name,
                         "match_strength": "name+college", "profile_url": p.profile_url,
                     })
                     continue
@@ -1006,6 +1007,7 @@ class SummerBallAggregator:
                     matched.append({
                         "player_name": ncaa_full_name, "college": c.get("team"),
                         "summer_team": p.summer_team, "league": p.league,
+                        "summer_name": p.raw_name or p.name,
                         "match_strength": "name-only", "profile_url": p.profile_url,
                     })
                     continue
