@@ -16976,7 +16976,7 @@
   },
   {
     "date": "2026-06-02",
-    "updated_at": "2026-06-02T18:47:01.373748+00:00",
+    "updated_at": "2026-06-02T18:57:52.745459+00:00",
     "players": [
       {
         "name": "Aaron Watson",
@@ -17016,7 +17016,7 @@
         "team": "FCL Yankees",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -17060,7 +17060,7 @@
         "team": "FCL Blue Jays",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -17320,11 +17320,22 @@
         "sources_tried": []
       },
       {
-        "name": "Aiden Robbins",
-        "team": "HAR (Cape Cod)",
+        "name": "Adam McKelvey",
+        "team": "Cotuit Kettleers (Cape Cod)",
         "level": "Summer",
         "tier": null,
-        "game_status": "Off Day",
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Alex Kranzler",
+        "team": "Trenton Thunder (MLB Draft)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -17332,13 +17343,35 @@
       },
       {
         "name": "Ben Tryon",
-        "team": "WIL (MLB Draft)",
+        "team": "Williamsport Crosscutters (MLB Draft)",
         "level": "Summer",
         "tier": null,
         "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Bennett Edwards",
+        "team": "Lexington Blowfish (Coastal Plain)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Brady St. Pierre",
+        "team": "Hyannis Harbor Hawks (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
         "sources_tried": []
       },
       {
@@ -17353,69 +17386,135 @@
         "sources_tried": []
       },
       {
-        "name": "Cam Flukey",
-        "team": "BOU (Cape Cod)",
+        "name": "Braydon Kersey",
+        "team": "Wareham Gateman (Cape Cod)",
         "level": "Summer",
         "tier": null,
-        "game_status": "Off Day",
+        "game_status": "Confirmed",
         "captured": true,
         "blocked": false,
-        "source": "MLB Stats API",
+        "source": "MLB Stats API (placement)",
         "sources_tried": []
       },
       {
-        "name": "Eamon McDermott",
-        "team": "Keeneswampbats (NECBL)",
+        "name": "Brooks Wright",
+        "team": "Willmar Stringers (Northwoods)",
         "level": "Summer",
         "tier": null,
-        "game_status": "Roster Confirmed",
+        "game_status": "Confirmed",
         "captured": true,
         "blocked": false,
-        "source": "Roster snapshot (player page HTTP 405)",
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Bryson Tweedy",
+        "team": "Yarmouth-Dennis Red Sox (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "2nd Half",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Caleb Daniel",
+        "team": "Yarmouth-Dennis Red Sox (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Cole Katayama-Stall",
+        "team": "Cotuit Kettleers (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Pending, 1st Half",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Devin Diaz",
+        "team": "New Britian Bees (FCBL)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Dom Woodward",
+        "team": "Falmouth Commodores (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Pending, 2nd Half",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Drew Bellis",
+        "team": "Falmouth Commodores (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Injured",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Duke McCarron",
+        "team": "Saint Joseph's",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Shut Down",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Evan Taylor",
+        "team": "Amsterdam Mohawks (PGCBL)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
         "sources_tried": []
       },
       {
         "name": "Henry Zatkowski",
-        "team": "HYA (Cape Cod)",
+        "team": "Bourne Braves (Cape Cod)",
         "level": "Summer",
         "tier": null,
-        "game_status": "Off Day",
+        "game_status": "Shut Down",
         "captured": true,
         "blocked": false,
-        "source": "MLB Stats API",
+        "source": "Kent placements",
         "sources_tried": []
       },
       {
         "name": "Luke Fithian",
-        "team": "Newportgulls (NECBL)",
+        "team": "New Port Gulls (NECBL)",
         "level": "Summer",
         "tier": null,
-        "game_status": "Roster Confirmed",
+        "game_status": "Confirmed",
         "captured": true,
         "blocked": false,
-        "source": "Roster snapshot (player page HTTP 405)",
-        "sources_tried": []
-      },
-      {
-        "name": "Mason Eckelman",
-        "team": "FAL (Cape Cod)",
-        "level": "Summer",
-        "tier": null,
-        "game_status": "Off Day",
-        "captured": true,
-        "blocked": false,
-        "source": "MLB Stats API",
-        "sources_tried": []
-      },
-      {
-        "name": "Myles Bailey",
-        "team": "HYA (Cape Cod)",
-        "level": "Summer",
-        "tier": null,
-        "game_status": "Off Day",
-        "captured": true,
-        "blocked": false,
-        "source": "MLB Stats API",
+        "source": "Kent placements",
         "sources_tried": []
       },
       {
@@ -17430,6 +17529,61 @@
         "sources_tried": []
       },
       {
+        "name": "Riley Goodman",
+        "team": "Harwich Mariners (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Sam Harry",
+        "team": "Rochester Honkers (Northwoods)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Sammy Mitchell",
+        "team": "Hyannis Harbor Hawks (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Tanner Chun",
+        "team": "Hyannis Harbor Hawks (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Taylor Kirk",
+        "team": "Hyannis Harbor Hawks (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
         "name": "Trevor Story",
         "team": "Boston Red Sox",
         "level": "Pro",
@@ -17438,6 +17592,50 @@
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Truitt Webb",
+        "team": "Hyannis Harbor Hawks (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Ty Finkbeiner",
+        "team": "Cotuit Kettleers (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "2nd Half",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API (placement)",
+        "sources_tried": []
+      },
+      {
+        "name": "Will Rhine",
+        "team": "Brewster Whitecaps (Cape Cod)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Injured",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
+        "sources_tried": []
+      },
+      {
+        "name": "Zack Johnson",
+        "team": "Amsterdam Mohawks (PGCBL)",
+        "level": "Summer",
+        "tier": null,
+        "game_status": "Confirmed",
+        "captured": true,
+        "blocked": false,
+        "source": "Kent placements",
         "sources_tried": []
       }
     ]
