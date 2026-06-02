@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-02T01:02:00.029557+00:00",
+  "generated_at": "2026-06-02T01:16:54.155572+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
       "team": "ACL Reds",
       "level": "Pro",
-      "stats_summary": "Game at 9:00 PM ET",
-      "game_context": "ACL Reds vs ACL D-backs | 9:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "ACL Reds 2, ACL D-backs 0 | Bottom 1",
+      "game_status": "Live",
       "game_time": "9:00 PM ET",
       "game_date": "2026-06-02",
       "is_yesterday": false,
@@ -21,7 +21,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/844639",
       "player_profile_url": "https://www.mlb.com/player/826209",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Aaron%20Watson%22%20Reds&f=live",
       "data_source": "MLB Stats API",
@@ -559,8 +559,8 @@
       "team": "Florida",
       "level": "NCAA",
       "stats_summary": "2-4, 2 RBI, K",
-      "game_context": "Troy 10, Florida 2 | Inn 9",
-      "game_status": "Live",
+      "game_context": "Troy 10, Florida 2 | Final",
+      "game_status": "Final",
       "game_time": null,
       "game_date": "2026-06-01",
       "is_yesterday": false,
@@ -3185,16 +3185,16 @@
       "player_name": "Lucas Steele",
       "team": "Auburn",
       "level": "NCAA",
-      "stats_summary": "Game at 9:00 PM ET",
-      "game_context": "Milwaukee vs Auburn",
-      "game_status": "Scheduled",
-      "game_time": "9:00 PM ET",
+      "stats_summary": "Game in progress — not in lineup",
+      "game_context": "Milwaukee 0, Auburn 0 | Inn 1",
+      "game_status": "Live",
+      "game_time": null,
       "game_date": "2026-06-02",
       "is_yesterday": false,
       "next_game": null,
       "box_score_url": "https://www.espn.com/college-baseball/game/_/gameId/401873817",
       "player_profile_url": "https://www.google.com/search?q=site%3Athebaseballcube.com%20%22Lucas%20Steele%22&btnI=",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Lucas%20Steele%22%20Auburn&f=live",
       "data_source": "ESPN",
@@ -3205,7 +3205,23 @@
         },
         {
           "source": "ESPN",
-          "outcome": "found stats"
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "NCAA.com",
+          "outcome": "Game found, not in box score"
+        },
+        {
+          "source": "Sidearm",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "StatBroadcast",
+          "outcome": "No game listed today"
+        },
+        {
+          "source": "NCAA.org",
+          "outcome": "Stale data — skipped"
         }
       ],
       "stats_captured_at": null,
@@ -3736,23 +3752,24 @@
       },
       "ESPN": {
         "No game listed today": 15,
-        "found stats": 3,
-        "Game found, not in box score": 2
+        "found stats": 2,
+        "Game found, not in box score": 3
       },
       "NCAA.com": {
         "found stats": 8,
-        "Game found, not in box score": 8,
+        "Game found, not in box score": 9,
         "stale (yesterday)": 1
       },
       "Sidearm": {
-        "No game listed today": 9
+        "No game listed today": 10
       },
       "StatBroadcast": {
-        "No game listed today": 9
+        "No game listed today": 10
       },
       "NCAA.org": {
         "Game found, not in box score": 8,
-        "stale (yesterday)": 1
+        "stale (yesterday)": 1,
+        "Stale data — skipped": 1
       }
     },
     "blocked_sources": [],
@@ -3760,9 +3777,11 @@
     "blocked_clients": [],
     "carry_forward_clients": [],
     "fallback_clients": [
+      "Aaron Watson",
       "Dax Kilby",
       "Myles Bailey",
-      "Adam McKelvey"
+      "Adam McKelvey",
+      "Lucas Steele"
     ],
     "total_clients": 84,
     "proxy_pool": {
