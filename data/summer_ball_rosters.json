@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T17:56:49.598569+00:00",
+  "generated_at": "2026-06-02T19:17:37.729784+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 390,
       "team_count": 10,
       "error": null,
-      "duration_ms": 867,
+      "duration_ms": 712,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -22,7 +22,7 @@
       "player_count": 211,
       "team_count": 7,
       "error": null,
-      "duration_ms": 96,
+      "duration_ms": 404,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 178,
+      "player_count": 180,
       "team_count": 7,
       "error": null,
-      "duration_ms": 536,
+      "duration_ms": 356,
       "sample_players": [
         "Brady Shannon",
         "Carlos Sanchez",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 516,
-      "team_count": 12,
+      "player_count": 561,
+      "team_count": 13,
       "error": null,
-      "duration_ms": 219871,
+      "duration_ms": 57539,
       "sample_players": [
         "Grant Bradley",
         "Sean Britt",
@@ -67,16 +67,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 3791,
+      "duration_ms": 2454,
       "sample_players": []
     },
     {
       "league": "PGCBL",
-      "status": "failed",
+      "status": "ok",
       "player_count": 0,
       "team_count": 0,
-      "error": "PGCBL: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 35290,
+      "error": null,
+      "duration_ms": 89636,
       "sample_players": []
     },
     {
@@ -85,17 +85,23 @@
       "player_count": 0,
       "team_count": 0,
       "error": "FCBL: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 11598,
+      "duration_ms": 6004,
       "sample_players": []
     },
     {
       "league": "Prospect",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "Prospect: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 32568,
-      "sample_players": []
+      "status": "ok",
+      "player_count": 741,
+      "team_count": 20,
+      "error": null,
+      "duration_ms": 110187,
+      "sample_players": [
+        "Caynen Patterson",
+        "Sean McConachie",
+        "Hayden Wilson",
+        "Kaedin Bond",
+        "Brandon Gour"
+      ]
     },
     {
       "league": "Northwoods",
@@ -112,7 +118,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Coastal Plain: no leagueid/seasonid (autodiscovery from https://coastalplain.com/stats/ failed and no defaults set)",
-      "duration_ms": 2165,
+      "duration_ms": 1698,
       "sample_players": []
     },
     {
@@ -366,5 +372,5 @@
       ]
     }
   ],
-  "all_players_count": 1295
+  "all_players_count": 2083
 }
