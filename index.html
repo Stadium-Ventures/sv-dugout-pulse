@@ -195,6 +195,7 @@
   /* ---- Level accent (left border) ---- */
   .card.level-pro, .window-card.level-pro { border-left: 3px solid var(--accent-blue); }
   .card.level-ncaa, .window-card.level-ncaa { border-left: 3px solid var(--accent-orange); }
+  .card.level-summer, .window-card.level-summer { border-left: 3px solid #c084fc; }
 
   /* ---- Live card glow (overrides level border) ---- */
   .card.live { border-left: 3px solid var(--live-green); animation: live-glow 2.5s ease-in-out infinite; }
@@ -270,6 +271,7 @@
   .badge-pro { background: rgba(59,130,246,0.2); color: var(--accent-blue); }
   .badge-ncaa { background: rgba(245,158,11,0.2); color: var(--accent-orange); }
   .badge-hs { background: rgba(16,185,129,0.2); color: #10b981; }
+  .badge-summer { background: rgba(168,85,247,0.2); color: #c084fc; }
   .badge-t1 { background: rgba(168,85,247,0.15); color: #c084fc; }
   .badge-t2 { background: rgba(59,130,246,0.15); color: #93c5fd; }
   .badge-t3 { background: rgba(107,114,128,0.2); color: #9ca3af; }
@@ -1006,6 +1008,7 @@
     <button class="filter-btn" data-value="Pro">Pro</button>
     <button class="filter-btn" data-value="NCAA">NCAA</button>
     <button class="filter-btn" data-value="HS">HS</button>
+    <button class="filter-btn" data-value="Summer">Summer</button>
   </div>
   <div class="filter-group" data-filter="position">
     <button class="filter-btn active" data-value="all">All</button>
@@ -1315,7 +1318,7 @@ function renderCard(p) {
     : '';
 
   return `
-    <div class="card${isLive ? ' live' : ''} level-${p.level === 'Pro' ? 'pro' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
+    <div class="card${isLive ? ' live' : ''} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
         ${p.player_profile_url
@@ -1355,6 +1358,7 @@ function levelBadgeClass(level) {
   if (level === 'Pro') return 'badge-pro';
   if (level === 'NCAA') return 'badge-ncaa';
   if (level === 'HS') return 'badge-hs';
+  if (level === 'Summer') return 'badge-summer';
   return 'badge-pro';
 }
 
@@ -1362,6 +1366,7 @@ function levelBadgeLabel(level) {
   if (level === 'Pro') return '⚾ Pro';
   if (level === 'NCAA') return '🎓 NCAA';
   if (level === 'HS') return '🏫 HS';
+  if (level === 'Summer') return '☀️ Summer';
   return level;
 }
 
@@ -1573,7 +1578,7 @@ function renderWindowCard(p) {
   }
 
   return `
-    <div class="window-card level-${p.level === 'Pro' ? 'pro' : 'ncaa'}">
+    <div class="window-card level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}">
       <div class="card-top">
         ${profileUrl
           ? `<a class="player-name" href="${esc(profileUrl, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`

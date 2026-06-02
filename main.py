@@ -1213,6 +1213,20 @@ def run_live():
             today_pulse.append(na)
         else:
             today_pulse.append(p)
+
+    # Summer-ball cards. Reads data/summer_ball_rosters.json (built 4x/day
+    # by the summer_rosters workflow) and emits a card per matched player
+    # with today's/yesterday's MLB-Stats-API summer-league game state.
+    # Failures are non-fatal — the rest of the pulse should still ship.
+    try:
+        from src.summer_pulse import build_summer_pulse_entries
+        summer_entries = build_summer_pulse_entries()
+        if summer_entries:
+            logger.info("Appended %d summer-ball entries to pulse", len(summer_entries))
+            today_pulse.extend(summer_entries)
+    except Exception:
+        logger.exception("summer_pulse: build failed, continuing without summer cards")
+
     write_output(today_pulse)
     _supplement_yesterday(pulse)
 
