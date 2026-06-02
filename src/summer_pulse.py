@@ -27,6 +27,10 @@ logger = logging.getLogger(__name__)
 # Repo root — this file lives at src/, json files at data/.
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _ROSTER_PATH = _REPO_ROOT / "data" / "summer_ball_rosters.json"
+# Manual placements from Kent's spreadsheet — the source of truth for who
+# is at what summer team. Auto-scraped roster matches augment but never
+# override these. See data/summer_ball_placements.json.
+_PLACEMENTS_PATH = _REPO_ROOT / "data" / "summer_ball_placements.json"
 
 # MLB Stats API → our league short_name. Mirrors src/summer_ball.py classes.
 # Maps to the leagueId on MLB Stats API (sportId=22 = College Baseball).
@@ -67,6 +71,32 @@ def _load_roster() -> Optional[dict]:
     except Exception:
         logger.exception("summer_pulse: failed to read %s", _ROSTER_PATH)
         return None
+
+
+def _load_placements() -> list[dict]:
+    """Kent's manual placement spreadsheet -> list of placement dicts.
+
+    Each entry: player_name, school, summer_team, league, status, draft_class.
+    Filters out placeholder rows ("NEED PLACEMENT" etc.) — spreadsheet has
+    section dividers / TBD slots we don't want to render as cards.
+    """
+    if not _PLACEMENTS_PATH.exists():
+        logger.info("summer_pulse: no placements file at %s", _PLACEMENTS_PATH)
+        return []
+    try:
+        with open(_PLACEMENTS_PATH) as f:
+            data = json.load(f)
+        out = []
+        for p in data.get("placements", []):
+            name = (p.get("player_name") or "").strip()
+            # Reject all-caps placeholder rows that don't look like real names.
+            if not name or name.isupper() and len(name) > 5:
+                continue
+            out.append(p)
+        return out
+    except Exception:
+        logger.exception("summer_pulse: failed to read %s", _PLACEMENTS_PATH)
+        return []
 
 
 def _schedule_for_date(sport_id: int, target: date) -> list[dict]:
@@ -486,80 +516,365 @@ def _resolve_person_ids(matches: list[dict]) -> dict[str, int]:
 
 
 def build_summer_pulse_entries() -> list[dict]:
-    """Top-level entry point. Returns pulse entries for all matched summer
-    players (today + yesterday for MLB-API leagues; stub cards for others).
+    """Top-level entry point. Returns pulse entries for every player in
+    Kent's manual placement spreadsheet (data/summer_ball_placements.json),
+    enriched with live stats from MLB API / PrestoSports where available.
+
+    Placements are the source of truth. Auto-scraped matches supply
+    source_id / MLB person_id when names match.
     """
-    roster = _load_roster()
-    if not roster:
-        logger.info("summer_pulse: no roster file at %s", _ROSTER_PATH)
+    placements = _load_placements()
+    if not placements:
+        logger.info("summer_pulse: no placements; nothing to render")
         return []
 
-    matches: list[dict] = roster.get("matched", [])
-    if not matches:
-        return []
+    # Build name-keyed index of auto-scraped matches for source_id lookup.
+    roster = _load_roster() or {}
+    matches = roster.get("matched", [])
+    auto_by_name: dict[str, dict] = {}
+    for m in matches:
+        key = (m.get("player_name") or "").strip().lower()
+        if key:
+            auto_by_name[key] = m
 
     today = _today_et()
     yesterday = _yesterday_et()
 
-    # Pull today + yesterday games once across MLB Stats API leagues (sportId 22).
+    # Pre-fetch MLB schedule for sportId 22 once per pulse run.
     today_games = _schedule_for_date(22, today)
     yesterday_games = _schedule_for_date(22, yesterday)
     today_by_team = _build_team_index(today_games)
     yesterday_by_team = _build_team_index(yesterday_games)
 
-    person_ids = _resolve_person_ids(
-        [m for m in matches if m.get("league") in _MLB_LEAGUES]
-    )
-
-    # Build summer_team_abbr -> team_id per league. Cached so we hit MLB's
-    # team list once per league per pulse run.
-    team_id_by_abbr_by_league: dict[str, dict[str, int]] = {}
+    # MLB team-abbreviation lookup per league (placement records use team
+    # FULL names like "Williamsport Crosscutters"; MLB API gives both
+    # name and abbreviation).
+    name_to_team_id_by_league: dict[str, dict[str, int]] = {}
     for league_name in _MLB_LEAGUES:
-        team_id_by_abbr_by_league[league_name] = _team_abbr_index(league_name)
+        name_to_team_id_by_league[league_name] = _team_name_to_id(league_name)
 
     entries: list[dict] = []
-    for m in matches:
-        league = m.get("league", "")
-        player_name = m.get("player_name", "")
-        if league in _STUB_LEAGUES:
-            entries.append(_presto_entry(m))
+    for p in placements:
+        name = (p.get("player_name") or "").strip()
+        if not name:
             continue
-        if league not in _MLB_LEAGUES:
+        status = p.get("status", "")
+        league = p.get("league", "")
+        if status == "Shut Down":
+            entries.append(_status_only_card(p, reason="Shut down for season"))
+            continue
+        if status == "Injured":
+            entries.append(_status_only_card(p, reason="Injured"))
+            continue
+        if not p.get("summer_team") or not league:
+            entries.append(_status_only_card(p, reason=status or "No team yet"))
             continue
 
-        person_id = person_ids.get(player_name)
-        player_info = {"person_id": person_id}
+        auto = auto_by_name.get(name.lower(), {})
 
-        # Resolve summer team abbreviation -> team_id using the per-league
-        # index built once above.
-        summer_team_abbr = m.get("summer_team", "")
-        team_id = team_id_by_abbr_by_league.get(league, {}).get(summer_team_abbr)
-
-        if team_id and team_id in today_by_team:
-            entries.append(_build_entry(
-                m, player_info, today_by_team[team_id],
-                when_label=today.isoformat(), is_yesterday=False,
+        if league in _MLB_LEAGUES:
+            entries.append(_mlb_card_from_placement(
+                p, auto,
+                today_by_team=today_by_team,
+                yesterday_by_team=yesterday_by_team,
+                team_name_to_id=name_to_team_id_by_league.get(league, {}),
+                today=today, yesterday=yesterday,
             ))
-        elif team_id and team_id in yesterday_by_team:
-            entries.append(_build_entry(
-                m, player_info, yesterday_by_team[team_id],
-                when_label=yesterday.isoformat(), is_yesterday=True,
-            ))
+        elif league in _STUB_LEAGUES:
+            entries.append(_presto_card_from_placement(p, auto))
         else:
-            # No game today or yesterday — emit the off-day card so the player
-            # still appears on the Summer tab.
-            entries.append(_build_entry(
-                m, player_info, None,
-                when_label=today.isoformat(), is_yesterday=False,
-            ))
+            # Northwoods / Coastal Plain / etc. — no scraper, show static card.
+            entries.append(_static_placement_card(p))
 
     logger.info(
-        "summer_pulse: built %d entries (%d MLB-API, %d stub)",
-        len(entries),
-        sum(1 for e in entries if e.get("data_source") == "MLB Stats API"),
-        sum(1 for e in entries if e.get("data_source") == "Roster snapshot"),
+        "summer_pulse: built %d entries from %d placements",
+        len(entries), len(placements),
     )
     return entries
+
+
+def _team_name_to_id(league_short_name: str) -> dict[str, int]:
+    """Like _team_abbr_index but keyed by full team name (lowercased)."""
+    league_id = _MLB_LEAGUE_IDS.get(league_short_name)
+    if not league_id:
+        return {}
+    season = _today_et().year
+    try:
+        url = (
+            f"{_STATSAPI}/teams"
+            f"?sportIds=22&leagueIds={league_id}&season={season}"
+        )
+        resp = _session.get(url, timeout=15).json()
+    except Exception:
+        logger.exception("summer_pulse: team list failed for %s", league_short_name)
+        return {}
+    out: dict[str, int] = {}
+    for t in resp.get("teams", []) or []:
+        tid = t.get("id")
+        if not tid:
+            continue
+        for key in (t.get("name"), t.get("teamName"), t.get("locationName")):
+            if key:
+                out[key.lower()] = tid
+    return out
+
+
+def _mlb_card_from_placement(
+    p: dict, auto: dict, *,
+    today_by_team: dict, yesterday_by_team: dict,
+    team_name_to_id: dict[str, int],
+    today: date, yesterday: date,
+) -> dict:
+    """MLB-Stats-API path card built from a placement record."""
+    summer_team_name = (p.get("summer_team") or "").strip()
+    team_id = team_name_to_id.get(summer_team_name.lower())
+    person_id = None
+    # If we auto-matched the player, we already stored their MLB person_id.
+    src = auto.get("source_id") if auto else None
+    if src and str(src).isdigit():
+        person_id = int(src)
+    elif src:
+        # Non-numeric source_id means auto-match came from a Presto league —
+        # ignore; we'll fall back to name search.
+        person_id = None
+    if not person_id:
+        # Search MLB people by name.
+        try:
+            url = f"{_STATSAPI}/people/search?names={p['player_name'].replace(' ', '+')}&sportIds=22"
+            resp = _session.get(url, timeout=10).json()
+            people = resp.get("people", []) or []
+            if people:
+                person_id = people[0].get("id")
+        except Exception:
+            pass
+
+    info = {"person_id": person_id}
+
+    if team_id and team_id in today_by_team:
+        return _build_placement_entry(p, info, today_by_team[team_id], today, is_yesterday=False)
+    if team_id and team_id in yesterday_by_team:
+        return _build_placement_entry(p, info, yesterday_by_team[team_id], yesterday, is_yesterday=True)
+    return _build_placement_entry(p, info, None, today, is_yesterday=False)
+
+
+def _build_placement_entry(
+    p: dict, info: dict, game_block: Optional[dict],
+    when: date, is_yesterday: bool,
+) -> dict:
+    """Same shape as _build_entry but reads team/college/league/status from a
+    placement dict instead of an auto-match dict.
+    """
+    person_id = info.get("person_id")
+    status_note = p.get("status", "")
+    if not game_block:
+        sub = status_note if status_note and status_note != "Confirmed" else "No game today"
+        return {
+            "player_name": p["player_name"],
+            "team": f"{p['summer_team']} ({p['league']})",
+            "level": "Summer",
+            "stats_summary": sub,
+            "game_context": f"Summer ball — {p.get('school','')}",
+            "game_status": status_note or "Off Day",
+            "game_time": None,
+            "game_date": when.isoformat(),
+            "is_yesterday": is_yesterday,
+            "next_game": None,
+            "box_score_url": None,
+            "player_profile_url": f"https://www.mlb.com/player/{person_id}" if person_id else "",
+            "performance_grade": "— No Data",
+            "grade_reason": "",
+            "social_search_url": "",
+            "data_source": "MLB Stats API (placement)",
+            "is_client": True,
+            "tags": {
+                "draft_class": p.get("draft_class",""),
+                "position": "",
+                "roster_priority": 99,
+                "summer_college": p.get("school",""),
+                "summer_league": p.get("league",""),
+                "placement_status": status_note,
+            },
+        }
+
+    game = game_block["game"]
+    game_pk = game.get("gamePk")
+    state = game.get("status", {}).get("detailedState", "Scheduled")
+    abstract = game.get("status", {}).get("abstractGameState", "Preview")
+    home = game.get("teams", {}).get("home", {}).get("team", {}).get("name", "")
+    away = game.get("teams", {}).get("away", {}).get("team", {}).get("name", "")
+    matchup = f"{away} @ {home}"
+
+    if abstract == "Final":
+        game_status = "Final"
+    elif abstract == "Live":
+        game_status = "In Progress"
+    elif state == "Postponed":
+        game_status = "Postponed"
+    elif state == "Cancelled":
+        game_status = "Cancelled"
+    else:
+        game_status = "Scheduled"
+    game_time = _format_game_time(game.get("gameDate", ""))
+
+    summary = ""
+    if game_status in ("In Progress", "Final") and person_id:
+        line = _player_line(game_pk, person_id)
+        summary = line["summary"] if line else "Did not appear"
+    elif game_status == "Scheduled":
+        summary = f"Game at {game_time}" if game_time else "Scheduled"
+    elif game_status in ("Postponed", "Cancelled"):
+        summary = game_status
+
+    return {
+        "player_name": p["player_name"],
+        "team": f"{p['summer_team']} ({p['league']})",
+        "level": "Summer",
+        "stats_summary": summary,
+        "game_context": matchup,
+        "game_status": game_status,
+        "game_time": game_time,
+        "game_date": when.isoformat(),
+        "is_yesterday": is_yesterday,
+        "next_game": None,
+        "box_score_url": f"https://www.mlb.com/gameday/{game_pk}" if game_pk else None,
+        "player_profile_url": f"https://www.mlb.com/player/{person_id}" if person_id else "",
+        "performance_grade": "— No Data",
+        "grade_reason": "",
+        "social_search_url": "",
+        "data_source": "MLB Stats API",
+        "is_client": True,
+        "tags": {
+            "draft_class": p.get("draft_class",""),
+            "position": "",
+            "roster_priority": 99,
+            "summer_college": p.get("school",""),
+            "summer_league": p.get("league",""),
+            "placement_status": status_note,
+        },
+    }
+
+
+def _presto_card_from_placement(p: dict, auto: dict) -> dict:
+    """PrestoSports path card built from a placement record.
+
+    Uses the auto-match's source_id (player slug) when available. If not,
+    falls back to a static placement card.
+    """
+    if not auto or not auto.get("source_id"):
+        return _static_placement_card(p)
+    host = _PRESTO_HOSTS.get(p.get("league",""))
+    slug = auto["source_id"]
+    if not host:
+        return _static_placement_card(p)
+    today = _today_et()
+    yesterday = _yesterday_et()
+    url = f"{host}/sports/bsb/{today.year}/players/{slug}"
+    try:
+        resp = _session.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        if resp.status_code != 200 or not resp.text:
+            return _static_placement_card(p)
+        html = resp.text
+    except Exception:
+        return _static_placement_card(p)
+    line = _parse_presto_player_page(html, today=today, yesterday=yesterday)
+    if not line:
+        # No game today/yesterday — keep the placement card.
+        return _static_placement_card(p, player_url=url)
+    return {
+        "player_name": p["player_name"],
+        "team": f"{p['summer_team']} ({p['league']})",
+        "level": "Summer",
+        "stats_summary": line["summary"],
+        "game_context": line.get("opponent", ""),
+        "game_status": line["status"],
+        "game_time": line.get("game_time"),
+        "game_date": line.get("date_iso"),
+        "is_yesterday": line.get("is_yesterday", False),
+        "next_game": None,
+        "box_score_url": None,
+        "player_profile_url": url,
+        "performance_grade": "— No Data",
+        "grade_reason": "",
+        "social_search_url": "",
+        "data_source": "PrestoSports",
+        "is_client": True,
+        "tags": {
+            "draft_class": p.get("draft_class",""),
+            "position": "",
+            "roster_priority": 99,
+            "summer_college": p.get("school",""),
+            "summer_league": p.get("league",""),
+            "placement_status": p.get("status",""),
+        },
+    }
+
+
+def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
+    """Placement-only card when there's no live-stats path (Northwoods etc.)
+    or when the live path is wired but no game is happening today/yesterday.
+    """
+    status = p.get("status", "Confirmed")
+    return {
+        "player_name": p["player_name"],
+        "team": f"{p['summer_team']} ({p['league']})",
+        "level": "Summer",
+        "stats_summary": "No game today" if status == "Confirmed" else status,
+        "game_context": f"Summer ball — {p.get('school','')}",
+        "game_status": status,
+        "game_time": None,
+        "game_date": None,
+        "is_yesterday": False,
+        "next_game": None,
+        "box_score_url": None,
+        "player_profile_url": player_url,
+        "performance_grade": "— No Data",
+        "grade_reason": "",
+        "social_search_url": "",
+        "data_source": "Kent placements",
+        "is_client": True,
+        "tags": {
+            "draft_class": p.get("draft_class",""),
+            "position": "",
+            "roster_priority": 99,
+            "summer_college": p.get("school",""),
+            "summer_league": p.get("league",""),
+            "placement_status": status,
+        },
+    }
+
+
+def _status_only_card(p: dict, *, reason: str) -> dict:
+    """Card for Shut Down / Injured players — show them so they're visible
+    but with grade '— No Data' and a clear status."""
+    return {
+        "player_name": p["player_name"],
+        "team": (p.get("summer_team") or p.get("school","") or "—") + (
+            f" ({p['league']})" if p.get("league") else ""
+        ),
+        "level": "Summer",
+        "stats_summary": reason,
+        "game_context": f"Summer ball — {p.get('school','')}",
+        "game_status": p.get("status","") or "Status Update",
+        "game_time": None,
+        "game_date": None,
+        "is_yesterday": False,
+        "next_game": None,
+        "box_score_url": None,
+        "player_profile_url": "",
+        "performance_grade": "— No Data",
+        "grade_reason": "",
+        "social_search_url": "",
+        "data_source": "Kent placements",
+        "is_client": True,
+        "tags": {
+            "draft_class": p.get("draft_class",""),
+            "position": "",
+            "roster_priority": 99,
+            "summer_college": p.get("school",""),
+            "summer_league": p.get("league",""),
+            "placement_status": p.get("status",""),
+        },
+    }
 
 
 def _team_abbr_index(league_short_name: str) -> dict[str, int]:
