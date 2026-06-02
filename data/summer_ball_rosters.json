@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T14:05:31.400637+00:00",
+  "generated_at": "2026-06-02T14:11:29.954362+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 391,
       "team_count": 10,
       "error": null,
-      "duration_ms": 182,
+      "duration_ms": 2465,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -22,7 +22,7 @@
       "player_count": 151,
       "team_count": 5,
       "error": null,
-      "duration_ms": 76,
+      "duration_ms": 1327,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 187,
       "team_count": 7,
       "error": null,
-      "duration_ms": 82,
+      "duration_ms": 1445,
       "sample_players": [
         "Brady Shannon",
         "Carlos Sanchez",
@@ -45,6 +45,51 @@
         "Chris Domke",
         "Ciaran Caughey"
       ]
+    },
+    {
+      "league": "NECBL",
+      "status": "ok",
+      "player_count": 0,
+      "team_count": 0,
+      "error": null,
+      "duration_ms": 1238,
+      "sample_players": []
+    },
+    {
+      "league": "Cal Ripken",
+      "status": "ok",
+      "player_count": 0,
+      "team_count": 0,
+      "error": null,
+      "duration_ms": 3088,
+      "sample_players": []
+    },
+    {
+      "league": "PGCBL",
+      "status": "ok",
+      "player_count": 0,
+      "team_count": 0,
+      "error": null,
+      "duration_ms": 1171,
+      "sample_players": []
+    },
+    {
+      "league": "FCBL",
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "FCBL: teams index returned empty (direct + residential proxy both failed)",
+      "duration_ms": 7104,
+      "sample_players": []
+    },
+    {
+      "league": "Prospect",
+      "status": "ok",
+      "player_count": 0,
+      "team_count": 0,
+      "error": null,
+      "duration_ms": 1284,
+      "sample_players": []
     },
     {
       "league": "Northwoods",
@@ -56,21 +101,12 @@
       "sample_players": []
     },
     {
-      "league": "NECBL",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "NECBL migrated to PrestoSports for 2026 \u2014 adapter pending",
-      "duration_ms": 0,
-      "sample_players": []
-    },
-    {
       "league": "Coastal Plain",
       "status": "failed",
       "player_count": 0,
       "team_count": 0,
       "error": "Coastal Plain: no leagueid/seasonid (autodiscovery from https://coastalplain.com/stats/ failed and no defaults set)",
-      "duration_ms": 1823,
+      "duration_ms": 2051,
       "sample_players": []
     },
     {
@@ -88,15 +124,6 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Florida Collegiate Summer League: scraper not yet built",
-      "duration_ms": 0,
-      "sample_players": []
-    },
-    {
-      "league": "Prospect",
-      "status": "not_implemented",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "Prospect League: scraper not yet built",
       "duration_ms": 0,
       "sample_players": []
     }
