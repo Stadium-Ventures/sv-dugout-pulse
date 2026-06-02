@@ -1,22 +1,67 @@
 {
-  "generated_at": "2026-06-02T12:11:04.299095+00:00",
+  "generated_at": "2026-06-02T14:05:31.400637+00:00",
   "league_health": [
-    {
-      "league": "Northwoods",
-      "status": "ok",
-      "player_count": 0,
-      "team_count": 0,
-      "error": null,
-      "duration_ms": 25275,
-      "sample_players": []
-    },
     {
       "league": "Cape Cod",
       "status": "ok",
+      "player_count": 391,
+      "team_count": 10,
+      "error": null,
+      "duration_ms": 182,
+      "sample_players": [
+        "Adam Magpoc",
+        "Alex Philpott",
+        "Andrelys Payamps",
+        "Blaine Brown",
+        "Brady Louck"
+      ]
+    },
+    {
+      "league": "Appalachian",
+      "status": "ok",
+      "player_count": 151,
+      "team_count": 5,
+      "error": null,
+      "duration_ms": 76,
+      "sample_players": [
+        "Austin Rose",
+        "Bo Strickland",
+        "Brady Richardson",
+        "Brandon Newland",
+        "Brendin Oliver"
+      ]
+    },
+    {
+      "league": "MLB Draft",
+      "status": "ok",
+      "player_count": 187,
+      "team_count": 7,
+      "error": null,
+      "duration_ms": 82,
+      "sample_players": [
+        "Brady Shannon",
+        "Carlos Sanchez",
+        "Carter Wilcox",
+        "Chris Domke",
+        "Ciaran Caughey"
+      ]
+    },
+    {
+      "league": "Northwoods",
+      "status": "failed",
       "player_count": 0,
       "team_count": 0,
-      "error": null,
-      "duration_ms": 89661,
+      "error": "Northwoods: in-house stats system at northwoodsleague.com (post-2020); HTML adapter pending",
+      "duration_ms": 0,
+      "sample_players": []
+    },
+    {
+      "league": "NECBL",
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "NECBL migrated to PrestoSports for 2026 \u2014 adapter pending",
+      "duration_ms": 0,
       "sample_players": []
     },
     {
@@ -25,25 +70,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Coastal Plain: no leagueid/seasonid (autodiscovery from https://coastalplain.com/stats/ failed and no defaults set)",
-      "duration_ms": 2108,
-      "sample_players": []
-    },
-    {
-      "league": "NECBL",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "NECBL: no leagueid/seasonid (autodiscovery from https://necbl.com/stats/ failed and no defaults set)",
-      "duration_ms": 64,
-      "sample_players": []
-    },
-    {
-      "league": "Appalachian",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "Appalachian: no leagueid/seasonid (autodiscovery from https://appyleague.com/stats/ failed and no defaults set)",
-      "duration_ms": 1534,
+      "duration_ms": 1823,
       "sample_players": []
     },
     {
@@ -75,34 +102,72 @@
     }
   ],
   "baseballcube": {
-    "attempted": 39,
+    "attempted": 32,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 0,
+  "ncaa_clients_matched": 6,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 39,
-  "ncaa_clients_ambiguous": 0,
-  "matched": [],
-  "possible_matches": [],
-  "unmatched": [
+  "ncaa_clients_unmatched": 32,
+  "ncaa_clients_ambiguous": 1,
+  "matched": [
     {
       "player_name": "Aiden Robbins",
-      "college": "Texas"
+      "college": "Texas",
+      "summer_team": "HAR",
+      "league": "Cape Cod",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/828657"
     },
     {
       "player_name": "Cam Flukey",
-      "college": "Coastal Carolina"
-    },
-    {
-      "player_name": "Kyle Jones",
-      "college": "Florida"
+      "college": "Coastal Carolina",
+      "summer_team": "BOU",
+      "league": "Cape Cod",
+      "summer_name": "Cameron Flukey",
+      "match_strength": "initial+last",
+      "profile_url": "https://www.mlb.com/player/805619"
     },
     {
       "player_name": "Myles Bailey",
-      "college": "Florida State"
+      "college": "Florida State",
+      "summer_team": "HYA",
+      "league": "Cape Cod",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/815343"
+    },
+    {
+      "player_name": "Ben Tryon",
+      "college": "Dallas Baptist",
+      "summer_team": "WIL",
+      "league": "MLB Draft",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/830337"
+    },
+    {
+      "player_name": "Henry Zatkowski",
+      "college": "Virginia",
+      "summer_team": "HYA",
+      "league": "Cape Cod",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/832360"
+    },
+    {
+      "player_name": "Mason Eckelman",
+      "college": "Ohio State",
+      "summer_team": "FAL",
+      "league": "Cape Cod",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/806065"
+    }
+  ],
+  "possible_matches": [],
+  "unmatched": [
+    {
+      "player_name": "Kyle Jones",
+      "college": "Florida"
     },
     {
       "player_name": "Caleb Daniel",
@@ -127,14 +192,6 @@
     {
       "player_name": "Ty Finkbeiner",
       "college": "Michigan"
-    },
-    {
-      "player_name": "Alex Kranzler",
-      "college": "Vanderbilt"
-    },
-    {
-      "player_name": "Ben Tryon",
-      "college": "Dallas Baptist"
     },
     {
       "player_name": "Boston Torres",
@@ -167,14 +224,6 @@
     {
       "player_name": "Evan Taylor",
       "college": "Alabama"
-    },
-    {
-      "player_name": "Henry Zatkowski",
-      "college": "Virginia"
-    },
-    {
-      "player_name": "Mason Eckelman",
-      "college": "Ohio State"
     },
     {
       "player_name": "Sam Mitchell",
@@ -245,6 +294,21 @@
       "college": "Sacramento State"
     }
   ],
-  "ambiguous": [],
-  "all_players_count": 0
+  "ambiguous": [
+    {
+      "player_name": "Alex Kranzler",
+      "college": "Vanderbilt",
+      "candidates": [
+        {
+          "summer_team": "ORL",
+          "league": "Cape Cod"
+        },
+        {
+          "summer_team": "TRN",
+          "league": "MLB Draft"
+        }
+      ]
+    }
+  ],
+  "all_players_count": 729
 }
