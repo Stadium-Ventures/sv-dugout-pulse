@@ -595,9 +595,16 @@ class PrestoSportsLeague(SummerLeague):
 
     host_url: str = ""
     season_year: int = 0  # 0 = current year
+    # Some PrestoSports leagues use academic-year format ("2025-26") rather
+    # than calendar year ("2026"). PGCBL + Prospect League use academic;
+    # NECBL + Cal Ripken use calendar. Subclasses can override.
+    use_academic_year: bool = False
 
-    def _year(self) -> int:
-        return self.season_year or date.today().year
+    def _year(self) -> "int | str":
+        y = self.season_year or date.today().year
+        if self.use_academic_year:
+            return f"{y-1}-{str(y)[-2:]}"
+        return y
 
     def _fetch_page(self, url: str) -> str:
         """Direct first, residential proxy fallback for Cloudflare-gated hosts.
@@ -738,10 +745,13 @@ class CalRipkenLeague(PrestoSportsLeague):
 
 
 class PGCBL(PrestoSportsLeague):
-    """Perfect Game Collegiate Baseball League — PrestoSports since 2025."""
+    """Perfect Game Collegiate Baseball League — PrestoSports since 2025.
+    Uses academic-year format (2025-26) for URLs.
+    """
     name = "Perfect Game Collegiate Baseball League"
     short_name = "PGCBL"
     host_url = "https://pgcbl.com"
+    use_academic_year = True
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
@@ -764,10 +774,13 @@ class FCBL(PrestoSportsLeague):
 
 
 class ProspectLeagueBaseball(PrestoSportsLeague):
-    """Prospect League — longstanding PrestoSports customer."""
+    """Prospect League — longstanding PrestoSports customer.
+    Uses academic-year format (2025-26).
+    """
     name = "Prospect League"
     short_name = "Prospect"
     host_url = "https://prospectleague.com"
+    use_academic_year = True
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
