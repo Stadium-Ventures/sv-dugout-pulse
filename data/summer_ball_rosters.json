@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T19:17:37.729784+00:00",
+  "generated_at": "2026-06-02T20:22:32.945101+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 390,
       "team_count": 10,
       "error": null,
-      "duration_ms": 712,
+      "duration_ms": 2550,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -22,7 +22,7 @@
       "player_count": 211,
       "team_count": 7,
       "error": null,
-      "duration_ms": 404,
+      "duration_ms": 1610,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 180,
       "team_count": 7,
       "error": null,
-      "duration_ms": 356,
+      "duration_ms": 1433,
       "sample_players": [
         "Brady Shannon",
         "Carlos Sanchez",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 561,
-      "team_count": 13,
+      "player_count": 509,
+      "team_count": 12,
       "error": null,
-      "duration_ms": 57539,
+      "duration_ms": 84107,
       "sample_players": [
         "Grant Bradley",
         "Sean Britt",
@@ -67,16 +67,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 2454,
+      "duration_ms": 3440,
       "sample_players": []
     },
     {
       "league": "PGCBL",
-      "status": "ok",
+      "status": "failed",
       "player_count": 0,
       "team_count": 0,
-      "error": null,
-      "duration_ms": 89636,
+      "error": "PGCBL: teams index returned empty (direct + residential proxy both failed)",
+      "duration_ms": 9429,
       "sample_players": []
     },
     {
@@ -85,22 +85,22 @@
       "player_count": 0,
       "team_count": 0,
       "error": "FCBL: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 6004,
+      "duration_ms": 4551,
       "sample_players": []
     },
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 741,
-      "team_count": 20,
+      "player_count": 518,
+      "team_count": 14,
       "error": null,
-      "duration_ms": 110187,
+      "duration_ms": 138810,
       "sample_players": [
-        "Caynen Patterson",
-        "Sean McConachie",
-        "Hayden Wilson",
-        "Kaedin Bond",
-        "Brandon Gour"
+        "Kolt Kurzman",
+        "Foti Rigopoulos",
+        "Ty Mikkelsen",
+        "Juan Fernandez",
+        "Lucas Krebs"
       ]
     },
     {
@@ -114,12 +114,18 @@
     },
     {
       "league": "Coastal Plain",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "Coastal Plain: no leagueid/seasonid (autodiscovery from https://coastalplain.com/stats/ failed and no defaults set)",
-      "duration_ms": 1698,
-      "sample_players": []
+      "status": "ok",
+      "player_count": 461,
+      "team_count": 15,
+      "error": null,
+      "duration_ms": 5130,
+      "sample_players": [
+        "Ben Shepherd",
+        "Bennett Holdener",
+        "Brady McGuire",
+        "Braxton Walker",
+        "Bryce Smith"
+      ]
     },
     {
       "league": "Alaska",
@@ -141,15 +147,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 30,
+    "attempted": 28,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 8,
+  "ncaa_clients_matched": 10,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 30,
+  "ncaa_clients_unmatched": 28,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -193,6 +199,16 @@
       "profile_url": "https://www.mlb.com/player/830337"
     },
     {
+      "player_name": "Brooks Wright",
+      "college": "SE Louisiana",
+      "summer_team": "Boone Bigfoots",
+      "league": "Coastal Plain",
+      "summer_name": "Brooks Wright",
+      "source_id": "",
+      "match_strength": "name-only",
+      "profile_url": "https://coastalplain.com/rosters/boone-bigfoots-roster/"
+    },
+    {
       "player_name": "Henry Zatkowski",
       "college": "Virginia",
       "summer_team": "HYA",
@@ -231,6 +247,16 @@
       "source_id": "lukefithianx6bv",
       "match_strength": "name-only",
       "profile_url": "https://necbl.com/sports/bsb/2026/teams/newportgulls?view=roster"
+    },
+    {
+      "player_name": "Bennett Edwards",
+      "college": "Georgia Southern",
+      "summer_team": "Lexington County Blowfish",
+      "league": "Coastal Plain",
+      "summer_name": "Bennett Edwards",
+      "source_id": "",
+      "match_strength": "name+college",
+      "profile_url": "https://coastalplain.com/rosters/lexington-county-blowfish-roster/"
     }
   ],
   "possible_matches": [],
@@ -278,10 +304,6 @@
     {
       "player_name": "Braydon Kersey",
       "college": "Mercer"
-    },
-    {
-      "player_name": "Brooks Wright",
-      "college": "SE Louisiana"
     },
     {
       "player_name": "Cole Cleveland",
@@ -348,10 +370,6 @@
       "college": "Alabama"
     },
     {
-      "player_name": "Bennett Edwards",
-      "college": "Georgia Southern"
-    },
-    {
       "player_name": "Ethan Lay",
       "college": "Sacramento State"
     }
@@ -372,5 +390,5 @@
       ]
     }
   ],
-  "all_players_count": 2083
+  "all_players_count": 2269
 }
