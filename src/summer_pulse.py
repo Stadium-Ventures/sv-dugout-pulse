@@ -812,8 +812,45 @@ def _presto_card_from_placement(p: dict, auto: dict) -> dict:
 def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
     """Placement-only card when there's no live-stats path (Northwoods etc.)
     or when the live path is wired but no game is happening today/yesterday.
+
+    Before giving up, tries The Baseball Cube as a day-after fallback —
+    BBC ingests from many sources with a 24-hour lag, so it covers leagues
+    we can't scrape directly (Northwoods, Coastal Plain, FCBL, Cloudflare-
+    blocked PGCBL/Prospect).
     """
     status = p.get("status", "Confirmed")
+
+    if status in ("Confirmed", "2nd Half"):
+        bbc_line = _try_baseballcube(p)
+        if bbc_line:
+            return {
+                "player_name": p["player_name"],
+                "team": f"{p['summer_team']} ({p['league']})",
+                "level": "Summer",
+                "stats_summary": bbc_line["summary"],
+                "game_context": bbc_line.get("opponent", f"via Baseball Cube ({p.get('school','')})"),
+                "game_status": bbc_line.get("status", "Final"),
+                "game_time": None,
+                "game_date": bbc_line.get("date_iso"),
+                "is_yesterday": bbc_line.get("is_yesterday", True),
+                "next_game": None,
+                "box_score_url": None,
+                "player_profile_url": bbc_line.get("profile_url", ""),
+                "performance_grade": "— No Data",
+                "grade_reason": "",
+                "social_search_url": "",
+                "data_source": "Baseball Cube (next-day)",
+                "is_client": True,
+                "tags": {
+                    "draft_class": p.get("draft_class",""),
+                    "position": "",
+                    "roster_priority": 99,
+                    "summer_college": p.get("school",""),
+                    "summer_league": p.get("league",""),
+                    "placement_status": status,
+                },
+            }
+
     return {
         "player_name": p["player_name"],
         "team": f"{p['summer_team']} ({p['league']})",
@@ -840,6 +877,94 @@ def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
             "summer_league": p.get("league",""),
             "placement_status": status,
         },
+    }
+
+
+# In-process cache: avoid hitting BBC multiple times for the same player
+# within a single pulse run.
+_BBC_CACHE: dict[str, Optional[dict]] = {}
+
+
+def _try_baseballcube(p: dict) -> Optional[dict]:
+    """Search The Baseball Cube for a player's most recent summer-ball game.
+
+    Returns {summary, opponent, status, date_iso, profile_url, is_yesterday}
+    or None when BBC has no record or the lookup fails. Uses residential
+    proxy because BBC is Cloudflare-gated.
+    """
+    cache_key = f"{p['player_name'].lower()}|{p.get('school','').lower()}"
+    if cache_key in _BBC_CACHE:
+        return _BBC_CACHE[cache_key]
+    try:
+        from urllib.parse import quote_plus
+        from src.summer_ball import fetch_via_residential_proxy
+    except Exception:
+        _BBC_CACHE[cache_key] = None
+        return None
+
+    q = quote_plus(p["player_name"])
+    search_url = f"https://www.thebaseballcube.com/content/search/?search={q}"
+    html, _diag = fetch_via_residential_proxy(search_url, timeout=25)
+    if not html:
+        _BBC_CACHE[cache_key] = None
+        return None
+
+    from bs4 import BeautifulSoup
+    import re
+    soup = BeautifulSoup(html, "html.parser")
+    candidate_urls: list[str] = []
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        if "/content/player/" in href:
+            full = href if href.startswith("http") else f"https://www.thebaseballcube.com{href}"
+            candidate_urls.append(full)
+        if len(candidate_urls) >= 5:
+            break
+
+    target_college = (p.get("school") or "").lower()
+    for url in candidate_urls:
+        phtml, _ = fetch_via_residential_proxy(url, timeout=25)
+        if not phtml:
+            continue
+        body = BeautifulSoup(phtml, "html.parser").get_text(" ", strip=True)
+        # Sanity-check the right player via college affiliation.
+        if target_college and target_college not in body.lower():
+            continue
+        # Look for a "last game" / "recent games" section. BBC layouts
+        # vary; we look for date + AB/IP pattern in the page text.
+        line = _parse_bbc_recent_line(body)
+        if line:
+            line["profile_url"] = url
+            _BBC_CACHE[cache_key] = line
+            return line
+    _BBC_CACHE[cache_key] = None
+    return None
+
+
+def _parse_bbc_recent_line(body: str) -> Optional[dict]:
+    """Look for a recent-game stat line in BBC's profile body text.
+
+    BBC formats recent games variously (e.g. "Jun 1 vs OPP: 2-4, HR, 2 RBI").
+    Heuristic match — keep light, fail closed.
+    """
+    import re
+    # Date prefix + matchup keyword + numeric line.
+    m = re.search(
+        r"(\w{3}\s+\d{1,2})\s*(?:vs\.?|@|at)\s+([A-Z][\w .'\-]{2,40})[^\d]*(\d[\d\-, A-Z./]*HR|\d-\d|\d\s+IP)",
+        body[:20000],
+    )
+    if not m:
+        return None
+    date_str, opp, _ = m.groups()
+    # Pull a wider snippet around the match for the full stat line.
+    start = m.start()
+    snippet = body[start:start + 200]
+    return {
+        "summary": snippet.split(":")[-1].strip()[:80] if ":" in snippet[:120] else snippet[:80],
+        "opponent": opp.strip(),
+        "status": "Final",
+        "date_iso": None,
+        "is_yesterday": True,
     }
 
 
