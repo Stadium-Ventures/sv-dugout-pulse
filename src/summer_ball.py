@@ -562,13 +562,74 @@ class MLBDraftLeague(MLBStatsAPILeague):
 # Legacy Pointstreak leagues (soft-sunset; held for WCL/CPL/VBL/NYCBL fallback)
 # -----------------------------------------------------------------------------
 
-class CoastalPlainLeague(PointstreakBackedLeague):
-    """Pointstreak holdout (no 2026 partner announced as of 2026-06-02).
-    Keep the URL but expect it to return stale 2025 data until they migrate.
+class CoastalPlainLeague(SummerLeague):
+    """Coastal Plain League — has its own roster pages on coastalplain.com.
+
+    Each team has a server-rendered roster table at
+    /rosters/{team-slug}-roster/ with Name, DOB, Height/Weight, Bats/Throws,
+    Year, and School columns. School affiliation makes high-confidence
+    name+college matching possible.
     """
     name = "Coastal Plain League"
     short_name = "Coastal Plain"
-    host_url = "https://coastalplain.com/stats/"
+    host_url = "https://coastalplain.com"
+
+    def discover_rosters(self) -> list[PlayerEntry]:
+        index_url = f"{self.host_url}/rosters/"
+        try:
+            html = _http.get(index_url, timeout=15).text
+        except Exception as e:
+            raise RuntimeError(f"Coastal Plain: index fetch failed: {e}")
+        slugs = sorted(set(re.findall(r"/rosters/([a-z0-9-]+-roster)/?", html)))
+        logger.info("Coastal Plain: %d team rosters discovered", len(slugs))
+        entries: list[PlayerEntry] = []
+        for slug in slugs:
+            url = f"{self.host_url}/rosters/{slug}/"
+            team_display = slug.replace("-roster", "").replace("-", " ").title()
+            try:
+                team_html = _http.get(url, timeout=15).text
+            except Exception:
+                logger.exception("Coastal Plain: %s fetch failed", slug)
+                continue
+            entries.extend(self._parse_cpl_roster(
+                team_html, team_display=team_display, profile_url=url,
+            ))
+        logger.info("Coastal Plain: extracted %d players total", len(entries))
+        return entries
+
+    def _parse_cpl_roster(
+        self, html: str, *, team_display: str, profile_url: str,
+    ) -> list[PlayerEntry]:
+        out: list[PlayerEntry] = []
+        soup = BeautifulSoup(html, "html.parser")
+        for table in soup.find_all("table"):
+            rows = table.find_all("tr")
+            if len(rows) < 3:
+                continue
+            headers = [c.get_text(strip=True).lower() for c in rows[0].find_all(["th", "td"])]
+            if "name" not in headers or "school" not in headers:
+                continue
+            name_idx = headers.index("name")
+            school_idx = headers.index("school")
+            for row in rows[1:]:
+                cells = row.find_all(["th", "td"])
+                if len(cells) <= max(name_idx, school_idx):
+                    continue
+                name = cells[name_idx].get_text(" ", strip=True)
+                school = cells[school_idx].get_text(" ", strip=True)
+                if not name or len(name) > 60:
+                    continue
+                out.append(PlayerEntry(
+                    name=_normalize_name(name),
+                    college=_normalize_college(school),
+                    summer_team=team_display,
+                    league=self.short_name,
+                    profile_url=profile_url,
+                    raw_name=name,
+                    raw_college=school,
+                ))
+            break
+        return out
 
 
 # -----------------------------------------------------------------------------
