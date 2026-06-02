@@ -673,16 +673,25 @@ class PrestoSportsLeague(SummerLeague):
                 cells = row.find_all(["th", "td"])
                 if len(cells) <= name_idx:
                     continue
-                name = cells[name_idx].get_text(" ", strip=True)
+                name_cell = cells[name_idx]
+                name = name_cell.get_text(" ", strip=True)
                 if not name or len(name) > 60:
                     continue
-                # Display team name from slug (capitalize words).
+                # Capture Presto's per-player slug (used by summer_pulse.py to
+                # fetch game logs). Path looks like /sports/bsb/{year}/players/{slug}.
+                player_slug = ""
+                a = name_cell.find("a", href=True)
+                if a:
+                    m = re.search(r"/sports/bsb/\d+/players/([^/?\"' ]+)", a["href"])
+                    if m:
+                        player_slug = m.group(1)
                 summer_team = team_slug.replace("-", " ").title()
                 out.append(PlayerEntry(
                     name=_normalize_name(name),
                     college="",  # Presto rosters don't expose college
                     summer_team=summer_team,
                     league="",  # set by subclass via league field on entry below
+                    source_id=player_slug,
                     profile_url=profile_url,
                     raw_name=name,
                     raw_college="",
@@ -996,6 +1005,7 @@ class SummerBallAggregator:
                         "player_name": ncaa_full_name, "college": c.get("team"),
                         "summer_team": p.summer_team, "league": p.league,
                         "summer_name": p.raw_name or p.name,
+                        "source_id": p.source_id,
                         "match_strength": "name+college", "profile_url": p.profile_url,
                     })
                     continue
@@ -1014,6 +1024,7 @@ class SummerBallAggregator:
                         "player_name": ncaa_full_name, "college": c.get("team"),
                         "summer_team": p.summer_team, "league": p.league,
                         "summer_name": p.raw_name or p.name,
+                        "source_id": p.source_id,
                         "match_strength": "name-only", "profile_url": p.profile_url,
                     })
                     continue
@@ -1042,6 +1053,7 @@ class SummerBallAggregator:
                     "player_name": ncaa_full_name, "college": c.get("team"),
                     "summer_team": p.summer_team, "league": p.league,
                     "summer_name": p.raw_name or p.name,
+                    "source_id": p.source_id,
                     "match_strength": "initial+last", "profile_url": p.profile_url,
                 })
                 continue

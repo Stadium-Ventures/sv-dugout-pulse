@@ -33,9 +33,16 @@ _ROSTER_PATH = _REPO_ROOT / "data" / "summer_ball_rosters.json"
 _MLB_LEAGUE_IDS = {"Cape Cod": 565, "Appalachian": 120, "MLB Draft": 5536}
 _MLB_LEAGUES = set(_MLB_LEAGUE_IDS.keys())
 
-# Leagues we know about but haven't wired live stats for yet. Cards still get
-# generated (with a "No live stats yet" status) so the assignment is visible.
-_STUB_LEAGUES = {"NECBL", "Cal Ripken", "PGCBL", "FCBL", "Prospect"}
+# PrestoSports leagues — same player-page structure across all of them.
+# Each subclass's `host_url` from src.summer_ball.py is the data source.
+_PRESTO_HOSTS = {
+    "NECBL": "https://necbl.com",
+    "Cal Ripken": "https://calripkensrleague.org",
+    "PGCBL": "https://pgcbl.com",
+    "FCBL": "https://fcbl.prestosports.com",
+    "Prospect": "https://prospectleague.com",
+}
+_STUB_LEAGUES = set(_PRESTO_HOSTS.keys())
 
 _STATSAPI = "https://statsapi.mlb.com/api/v1"
 _ET = timezone(timedelta(hours=-4))  # EDT for summer; close enough for display
@@ -271,13 +278,71 @@ def _build_entry(
     }
 
 
-def _stub_entry(match: dict) -> dict:
-    """Holding card for matched players in leagues we haven't wired stats for."""
+def _presto_entry(match: dict) -> dict:
+    """Live card for a PrestoSports-league player via their player page.
+
+    Reads /sports/bsb/{year}/players/{slug} and finds today's/yesterday's
+    row in the hitter or pitcher game-log table. Falls back to a "Roster
+    Confirmed" holding card if the slug is missing or the page can't be
+    parsed.
+    """
+    league = match.get("league", "")
+    host = _PRESTO_HOSTS.get(league)
+    slug = match.get("source_id", "")
+    if not host or not slug:
+        return _holding_entry(match, reason="No player slug captured")
+
+    today = _today_et()
+    yesterday = _yesterday_et()
+    url = f"{host}/sports/bsb/{today.year}/players/{slug}"
+    try:
+        resp = _session.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+        if resp.status_code != 200 or not resp.text:
+            return _holding_entry(match, reason=f"player page HTTP {resp.status_code}")
+        html = resp.text
+    except Exception:
+        logger.exception("summer_pulse/presto: fetch failed for %s", url)
+        return _holding_entry(match, reason="player page fetch failed")
+
+    line = _parse_presto_player_page(html, today=today, yesterday=yesterday)
+    if not line:
+        return _holding_entry(match, reason="No game today/yesterday")
+
+    return {
+        "player_name": match["player_name"],
+        "team": f"{match['summer_team']} ({league})",
+        "level": "Summer",
+        "stats_summary": line["summary"],
+        "game_context": line.get("opponent", ""),
+        "game_status": line["status"],
+        "game_time": line.get("game_time"),
+        "game_date": line.get("date_iso"),
+        "is_yesterday": line.get("is_yesterday", False),
+        "next_game": None,
+        "box_score_url": None,
+        "player_profile_url": url,
+        "performance_grade": "— No Data",
+        "grade_reason": "",
+        "social_search_url": "",
+        "data_source": "PrestoSports",
+        "is_client": True,
+        "tags": {
+            "draft_class": "",
+            "position": "",
+            "roster_priority": 99,
+            "summer_college": match.get("college", ""),
+            "summer_league": league,
+        },
+    }
+
+
+def _holding_entry(match: dict, *, reason: str = "") -> dict:
+    """Fallback card when live-stats path fails for a known assignment."""
     return {
         "player_name": match["player_name"],
         "team": f"{match['summer_team']} ({match['league']})",
         "level": "Summer",
-        "stats_summary": "Live stats coming — adapter pending",
+        "stats_summary": "No game today",
         "game_context": f"Summer ball — {match.get('college','')}",
         "game_status": "Roster Confirmed",
         "game_time": None,
@@ -289,7 +354,7 @@ def _stub_entry(match: dict) -> dict:
         "performance_grade": "— No Data",
         "grade_reason": "",
         "social_search_url": "",
-        "data_source": "Roster snapshot",
+        "data_source": f"Roster snapshot ({reason})" if reason else "Roster snapshot",
         "is_client": True,
         "tags": {
             "draft_class": "",
@@ -299,6 +364,100 @@ def _stub_entry(match: dict) -> dict:
             "summer_league": match.get("league", ""),
         },
     }
+
+
+def _parse_presto_player_page(html: str, *, today: date, yesterday: date) -> Optional[dict]:
+    """Look through hitter + pitcher game-log tables for today's/yesterday's row.
+
+    Presto stores dates like "Jun 4Danbury Westerners" (concatenated when the
+    opponent is in the same cell). We match by month-abbreviation + day.
+    """
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html, "html.parser")
+    target_dates = [
+        (today, today.strftime("%b %-d"), False),
+        (yesterday, yesterday.strftime("%b %-d"), True),
+    ]
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if len(rows) < 2:
+            continue
+        header_cells = [c.get_text(strip=True).lower() for c in rows[0].find_all(["th", "td"])]
+        if "date" not in header_cells:
+            continue
+        is_hitting = "ab" in header_cells and "pa" not in header_cells
+        is_pitching = "ip" in header_cells
+        if not (is_hitting or is_pitching):
+            continue
+        date_idx = header_cells.index("date")
+        # opponent column
+        opp_idx = header_cells.index("opponent") if "opponent" in header_cells else 1
+        score_idx = header_cells.index("score") if "score" in header_cells else 2
+        for row in rows[1:]:
+            cells = row.find_all(["th", "td"])
+            if not cells:
+                continue
+            date_text = cells[date_idx].get_text(" ", strip=True) if len(cells) > date_idx else ""
+            opp_text = cells[opp_idx].get_text(" ", strip=True) if len(cells) > opp_idx else ""
+            score_text = cells[score_idx].get_text(" ", strip=True) if len(cells) > score_idx else ""
+            for game_date, key, is_yest in target_dates:
+                if key not in date_text:
+                    continue
+                # Build summary from the stat cells.
+                stat_cells = [c.get_text(strip=True) for c in cells]
+                if is_hitting:
+                    summary = _format_hitter_log_row(header_cells, stat_cells, score_text)
+                else:
+                    summary = _format_pitcher_log_row(header_cells, stat_cells, score_text)
+                if not summary:
+                    continue
+                status = "Final" if score_text else "Scheduled"
+                return {
+                    "summary": summary,
+                    "opponent": opp_text,
+                    "status": status,
+                    "date_iso": game_date.isoformat(),
+                    "is_yesterday": is_yest,
+                }
+    return None
+
+
+def _format_hitter_log_row(headers: list[str], cells: list[str], score: str) -> Optional[str]:
+    def cv(name: str) -> str:
+        i = headers.index(name) if name in headers else -1
+        return cells[i] if 0 <= i < len(cells) else ""
+
+    ab = cv("ab")
+    h = cv("h")
+    if not ab or ab == "-":
+        return "In lineup" if score else None
+    parts = [f"{h}-{ab}"]
+    for stat, label in [("2b", "2B"), ("3b", "3B"), ("hr", "HR"),
+                         ("rbi", "RBI"), ("bb", "BB"), ("k", "K"), ("sb", "SB")]:
+        v = cv(stat)
+        if v and v != "-" and v != "0":
+            if stat in {"2b", "3b", "hr"} and v.isdigit() and int(v) > 1:
+                parts.append(f"{v}×{label}")
+            elif stat in {"2b", "3b", "hr"}:
+                parts.append(label)
+            else:
+                parts.append(f"{v} {label}")
+    return ", ".join(parts)
+
+
+def _format_pitcher_log_row(headers: list[str], cells: list[str], score: str) -> Optional[str]:
+    def cv(name: str) -> str:
+        i = headers.index(name) if name in headers else -1
+        return cells[i] if 0 <= i < len(cells) else ""
+
+    ip = cv("ip")
+    if not ip or ip == "-":
+        return None
+    er = cv("er") or "0"
+    h = cv("h") or "0"
+    bb = cv("bb") or "0"
+    k = cv("k") or "0"
+    return f"{ip} IP, {er} ER, {h} H, {bb} BB, {k} K"
 
 
 def _resolve_person_ids(matches: list[dict]) -> dict[str, int]:
@@ -363,7 +522,7 @@ def build_summer_pulse_entries() -> list[dict]:
         league = m.get("league", "")
         player_name = m.get("player_name", "")
         if league in _STUB_LEAGUES:
-            entries.append(_stub_entry(m))
+            entries.append(_presto_entry(m))
             continue
         if league not in _MLB_LEAGUES:
             continue
