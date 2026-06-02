@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T17:30:48.111941+00:00",
+  "generated_at": "2026-06-02T17:56:49.598569+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 390,
       "team_count": 10,
       "error": null,
-      "duration_ms": 905,
+      "duration_ms": 867,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -37,7 +37,7 @@
       "player_count": 178,
       "team_count": 7,
       "error": null,
-      "duration_ms": 537,
+      "duration_ms": 536,
       "sample_players": [
         "Brady Shannon",
         "Carlos Sanchez",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 483,
-      "team_count": 11,
+      "player_count": 516,
+      "team_count": 12,
       "error": null,
-      "duration_ms": 227670,
+      "duration_ms": 219871,
       "sample_players": [
         "Grant Bradley",
         "Sean Britt",
@@ -67,7 +67,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 3284,
+      "duration_ms": 3791,
       "sample_players": []
     },
     {
@@ -76,7 +76,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "PGCBL: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 29283,
+      "duration_ms": 35290,
       "sample_players": []
     },
     {
@@ -85,7 +85,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "FCBL: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 28877,
+      "duration_ms": 11598,
       "sample_players": []
     },
     {
@@ -94,7 +94,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Prospect: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 15378,
+      "duration_ms": 32568,
       "sample_players": []
     },
     {
@@ -112,7 +112,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": "Coastal Plain: no leagueid/seasonid (autodiscovery from https://coastalplain.com/stats/ failed and no defaults set)",
-      "duration_ms": 1965,
+      "duration_ms": 2165,
       "sample_players": []
     },
     {
@@ -135,15 +135,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 31,
+    "attempted": 30,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 7,
+  "ncaa_clients_matched": 8,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 31,
+  "ncaa_clients_unmatched": 30,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -205,6 +205,16 @@
       "source_id": "806065",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/806065"
+    },
+    {
+      "player_name": "Eamon McDermott",
+      "college": "Duke",
+      "summer_team": "Keeneswampbats",
+      "league": "NECBL",
+      "summer_name": "Eamon McDermott",
+      "source_id": "eamonmcdermottjjsa",
+      "match_strength": "name-only",
+      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
     },
     {
       "player_name": "Luke Fithian",
@@ -320,10 +330,6 @@
       "college": "Alabama"
     },
     {
-      "player_name": "Eamon McDermott",
-      "college": "Duke"
-    },
-    {
       "player_name": "Lee Sowers",
       "college": "North Carolina"
     },
@@ -360,5 +366,5 @@
       ]
     }
   ],
-  "all_players_count": 1262
+  "all_players_count": 1295
 }
