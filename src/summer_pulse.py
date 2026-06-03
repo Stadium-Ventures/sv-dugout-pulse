@@ -757,14 +757,17 @@ def _build_placement_entry(
 def _presto_card_from_placement(p: dict, auto: dict) -> dict:
     """PrestoSports path card built from a placement record.
 
-    Uses the auto-match's source_id (player slug) when available. If not,
-    falls back to a static placement card.
+    Uses the auto-match's source_id (player slug) when available. When not
+    (e.g. PGCBL/FCBL adapters returned 0 rosters), tries to find the player
+    in the league-wide /players index page — useful once the player has
+    appeared in a game (Presto only surfaces them in the directory after
+    they have stats).
     """
-    if not auto or not auto.get("source_id"):
-        return _static_placement_card(p)
     host = _PRESTO_HOSTS.get(p.get("league",""))
-    slug = auto["source_id"]
     if not host:
+        return _static_placement_card(p)
+    slug = (auto.get("source_id") if auto else "") or _search_presto_slug(host, p["player_name"])
+    if not slug:
         return _static_placement_card(p)
     today = _today_et()
     yesterday = _yesterday_et()
@@ -807,6 +810,53 @@ def _presto_card_from_placement(p: dict, auto: dict) -> dict:
             "placement_status": p.get("status",""),
         },
     }
+
+
+# In-process cache for league-wide player-index lookups. Each league's
+# /players index is ~5MB; only fetch once per pulse run.
+_PRESTO_INDEX_CACHE: dict[str, str] = {}
+
+
+def _search_presto_slug(host: str, player_name: str) -> Optional[str]:
+    """Find a PrestoSports player slug by name in the league-wide players
+    leaderboard. Useful when our roster adapter returned 0 (e.g. PGCBL
+    Cloudflare-gated or FCBL blocked) but the player has appeared in a
+    game and now has a profile in the leaderboard.
+    """
+    if not host or not player_name:
+        return None
+    year = _today_et().year
+    # PGCBL/Prospect use academic-year format (2025-26); others use calendar.
+    candidates = [str(year), f"{year-1}-{str(year)[-2:]}"]
+    for ystr in candidates:
+        cache_key = f"{host}|{ystr}"
+        if cache_key not in _PRESTO_INDEX_CACHE:
+            url = f"{host}/sports/bsb/{ystr}/players"
+            try:
+                resp = _session.get(url, timeout=20, headers={"User-Agent": "Mozilla/5.0"})
+                if resp.status_code == 200 and len(resp.text) > 50000:
+                    _PRESTO_INDEX_CACHE[cache_key] = resp.text
+                    continue
+            except Exception:
+                pass
+            _PRESTO_INDEX_CACHE[cache_key] = ""
+    # Search both year-format caches for the player.
+    import re
+    for ystr in candidates:
+        html = _PRESTO_INDEX_CACHE.get(f"{host}|{ystr}", "")
+        if not html:
+            continue
+        # Slug pattern: lowercase firstname + lastname + hash.
+        normalized = re.sub(r"[^a-z]", "", player_name.lower())
+        # Slugs are alphanumeric; look for any link whose slug starts with the
+        # collapsed name or contains the lastname.
+        m = re.search(
+            rf"/sports/bsb/{re.escape(ystr)}/players/({re.escape(normalized)}[a-z0-9]+)",
+            html,
+        )
+        if m:
+            return m.group(1)
+    return None
 
 
 def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
