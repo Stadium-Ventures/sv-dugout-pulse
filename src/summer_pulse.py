@@ -590,7 +590,77 @@ def build_summer_pulse_entries() -> list[dict]:
         "summer_pulse: built %d entries from %d placements",
         len(entries), len(placements),
     )
+
+    # Persist a running game-log file so we have history + cross-source
+    # verification. Only Final/In Progress entries are appended; future
+    # scheduled placeholders are skipped. Failures are non-fatal — this is
+    # bookkeeping, not the primary pipeline.
+    try:
+        _append_to_game_log(entries)
+    except Exception:
+        logger.exception("summer_pulse: game-log append failed (non-fatal)")
     return entries
+
+
+def _append_to_game_log(entries: list[dict]) -> None:
+    """Append today's Final/In-Progress summer entries to a per-date game log.
+
+    File at data/summer_game_log.json keeps a {date_iso: [entry, ...]} dict.
+    Subsequent runs on the same day OVERWRITE that date's entries (avoids
+    duplication; the latest pulse always wins). Used for:
+    - Historical record (so a player's June stats are recoverable even if
+      the upstream source rotates a slug).
+    - Cross-source verification (when two sources disagree on the same
+      player+date, we can flag for review).
+    """
+    path = _REPO_ROOT / "data" / "summer_game_log.json"
+    log: dict = {}
+    if path.exists():
+        try:
+            with open(path) as f:
+                log = json.load(f)
+        except Exception:
+            log = {}
+
+    today_key = _today_et().isoformat()
+    yest_key = _yesterday_et().isoformat()
+
+    bucket_today: list[dict] = []
+    bucket_yest: list[dict] = []
+    for e in entries:
+        if e.get("game_status") not in ("Final", "In Progress"):
+            continue
+        record = {
+            "player_name": e["player_name"],
+            "team": e["team"],
+            "level": e["level"],
+            "game_status": e["game_status"],
+            "stats_summary": e["stats_summary"],
+            "game_context": e.get("game_context", ""),
+            "data_source": e.get("data_source", ""),
+            "college": (e.get("tags") or {}).get("summer_college", ""),
+            "league": (e.get("tags") or {}).get("summer_league", ""),
+        }
+        if e.get("is_yesterday"):
+            bucket_yest.append(record)
+        else:
+            bucket_today.append(record)
+
+    if bucket_today:
+        log[today_key] = bucket_today
+    if bucket_yest:
+        # Only fill yesterday's bucket if we don't already have it from a
+        # prior run — yesterday's data shouldn't change post-hoc except for
+        # source corrections.
+        log.setdefault(yest_key, bucket_yest)
+
+    if log:
+        with open(path, "w") as f:
+            json.dump(log, f, indent=2, sort_keys=True)
+        logger.info(
+            "summer_pulse: game-log -> %s entries today, %s entries yesterday",
+            len(bucket_today), len(bucket_yest),
+        )
 
 
 def _team_name_to_id(league_short_name: str) -> dict[str, int]:
@@ -952,10 +1022,12 @@ def _try_baseballcube(p: dict) -> Optional[dict]:
         _BBC_CACHE[cache_key] = None
         return None
 
-    q = quote_plus(p["player_name"])
+    name = p["player_name"]
+    q = quote_plus(name)
     search_url = f"https://www.thebaseballcube.com/content/search/?search={q}"
-    html, _diag = fetch_via_residential_proxy(search_url, timeout=25)
+    html, diag = fetch_via_residential_proxy(search_url, timeout=25)
     if not html:
+        logger.info("bbc[%s]: search blocked (%s)", name, diag.get("error"))
         _BBC_CACHE[cache_key] = None
         return None
 
@@ -971,22 +1043,38 @@ def _try_baseballcube(p: dict) -> Optional[dict]:
         if len(candidate_urls) >= 5:
             break
 
+    if not candidate_urls:
+        logger.info(
+            "bbc[%s]: search returned %d bytes but 0 player links (likely "
+            "challenge page or no matches)", name, len(html),
+        )
+        _BBC_CACHE[cache_key] = None
+        return None
+
+    logger.info("bbc[%s]: %d candidate profiles", name, len(candidate_urls))
     target_college = (p.get("school") or "").lower()
+    matched_profile = False
     for url in candidate_urls:
         phtml, _ = fetch_via_residential_proxy(url, timeout=25)
         if not phtml:
             continue
         body = BeautifulSoup(phtml, "html.parser").get_text(" ", strip=True)
-        # Sanity-check the right player via college affiliation.
         if target_college and target_college not in body.lower():
             continue
-        # Look for a "last game" / "recent games" section. BBC layouts
-        # vary; we look for date + AB/IP pattern in the page text.
+        matched_profile = True
         line = _parse_bbc_recent_line(body)
         if line:
             line["profile_url"] = url
+            logger.info("bbc[%s]: matched line on %s", name, url)
             _BBC_CACHE[cache_key] = line
             return line
+    if matched_profile:
+        logger.info("bbc[%s]: matched profile but no parseable recent line", name)
+    else:
+        logger.info(
+            "bbc[%s]: %d profiles checked, none matched college %r",
+            name, len(candidate_urls), target_college,
+        )
     _BBC_CACHE[cache_key] = None
     return None
 
