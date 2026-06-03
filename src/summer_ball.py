@@ -1099,6 +1099,24 @@ class SummerBallAggregator:
                     continue
                 if len(exact_candidates) == 1:
                     p = exact_candidates[0]
+                    # If summer roster has a college and it differs from NCAA's,
+                    # this is almost certainly a name collision (two different
+                    # players with the same name). 2026-06-03 incident: Brooks
+                    # Wright at SE Louisiana false-matched to Brooks Wright at
+                    # Appalachian State on Boone Bigfoots (CPL). Route to
+                    # ambiguous so it appears in the review bucket instead of
+                    # silently confirming the wrong player.
+                    if p.college and ncaa_college and p.college != ncaa_college:
+                        ambiguous.append({
+                            "player_name": ncaa_full_name, "college": c.get("team"),
+                            "candidates": [{
+                                "summer_team": p.summer_team, "league": p.league,
+                                "summer_name": p.raw_name or p.name,
+                                "summer_college": p.raw_college or p.college,
+                            }],
+                            "conflict_reason": "college mismatch",
+                        })
+                        continue
                     matched.append({
                         "player_name": ncaa_full_name, "college": c.get("team"),
                         "summer_team": p.summer_team, "league": p.league,
