@@ -31,6 +31,10 @@ _ROSTER_PATH = _REPO_ROOT / "data" / "summer_ball_rosters.json"
 # is at what summer team. Auto-scraped roster matches augment but never
 # override these. See data/summer_ball_placements.json.
 _PLACEMENTS_PATH = _REPO_ROOT / "data" / "summer_ball_placements.json"
+# Baseball-Reference Register stats cache, refreshed daily by
+# scripts/refresh_bbref_stats. Used as next-day fallback for placements
+# where our primary live source doesn't surface a current line.
+_BBREF_STATS_PATH = _REPO_ROOT / "data" / "bbref_stats.json"
 
 # MLB Stats API → our league short_name. Mirrors src/summer_ball.py classes.
 # Maps to the leagueId on MLB Stats API (sportId=22 = College Baseball).
@@ -933,14 +937,20 @@ def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
     """Placement-only card when there's no live-stats path (Northwoods etc.)
     or when the live path is wired but no game is happening today/yesterday.
 
-    Before giving up, tries The Baseball Cube as a day-after fallback —
-    BBC ingests from many sources with a 24-hour lag, so it covers leagues
-    we can't scrape directly (Northwoods, Coastal Plain, FCBL, Cloudflare-
-    blocked PGCBL/Prospect).
+    Fallback order:
+    1. Baseball-Reference Register cache (data/bbref_stats.json) — primary
+       day-after source. Sanctioned, free, covers all wood-bat leagues.
+    2. The Baseball Cube — Cloudflare-blocked through our proxy stack as
+       of 2026-06-03, kept for the day BBC stops requiring JS challenge.
     """
     status = p.get("status", "Confirmed")
 
     if status in ("Confirmed", "2nd Half"):
+        # BBRef Register first — clean, sanctioned, doesn't need a proxy.
+        bbref = _try_bbref_stats(p)
+        if bbref:
+            return _placement_card_from_bbref(p, bbref)
+        # BBC is currently blocked but kept wired for the day it works.
         bbc_line = _try_baseballcube(p)
         if bbc_line:
             return {
@@ -1003,6 +1013,74 @@ def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
 # In-process cache: avoid hitting BBC multiple times for the same player
 # within a single pulse run.
 _BBC_CACHE: dict[str, Optional[dict]] = {}
+
+# Lazy-loaded once per pulse run.
+_BBREF_STATS_LOADED: Optional[dict] = None
+
+
+def _try_bbref_stats(p: dict) -> Optional[dict]:
+    """Return BBRef-cached 2026 summer line for this player, or None.
+
+    The cache file is keyed by player_name (matches placement names
+    case-sensitively). Built daily by scripts/refresh_bbref_stats.
+    """
+    global _BBREF_STATS_LOADED
+    if _BBREF_STATS_LOADED is None:
+        if not _BBREF_STATS_PATH.exists():
+            _BBREF_STATS_LOADED = {"players": {}}
+        else:
+            try:
+                _BBREF_STATS_LOADED = json.loads(_BBREF_STATS_PATH.read_text())
+            except Exception:
+                _BBREF_STATS_LOADED = {"players": {}}
+    record = _BBREF_STATS_LOADED.get("players", {}).get(p["player_name"])
+    if not record:
+        return None
+    # Only return if there's an actual 2026 summer row (not "no row yet").
+    if not record.get("summer_team"):
+        return None
+    return record
+
+
+def _placement_card_from_bbref(p: dict, bbref: dict) -> dict:
+    """Build a placement card seeded with BBRef season-to-date summary."""
+    summary = bbref.get("summary") or ""
+    bbref_id = bbref.get("bbref_id")
+    profile_url = (
+        f"https://www.baseball-reference.com/register/player.fcgi?id={bbref_id}"
+        if bbref_id else ""
+    )
+    # Honor placement's league/team labels even if BBRef shows a slightly
+    # different team name (Kent's spreadsheet is source of truth for who/where).
+    league = p.get("league", "")
+    summer_team = p.get("summer_team", "")
+    return {
+        "player_name": p["player_name"],
+        "team": f"{summer_team} ({league})",
+        "level": "Summer",
+        "stats_summary": summary or "Season totals pending",
+        "game_context": f"Summer ball — {p.get('school','')} · season totals",
+        "game_status": "Season Stats",
+        "game_time": None,
+        "game_date": None,
+        "is_yesterday": True,
+        "next_game": None,
+        "box_score_url": None,
+        "player_profile_url": profile_url,
+        "performance_grade": "— No Data",
+        "grade_reason": "",
+        "social_search_url": "",
+        "data_source": "Baseball-Reference Register",
+        "is_client": True,
+        "tags": {
+            "draft_class": p.get("draft_class",""),
+            "position": "",
+            "roster_priority": 99,
+            "summer_college": p.get("school",""),
+            "summer_league": league,
+            "placement_status": p.get("status", ""),
+        },
+    }
 
 
 def _try_baseballcube(p: dict) -> Optional[dict]:

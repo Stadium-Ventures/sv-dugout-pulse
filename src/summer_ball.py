@@ -1283,12 +1283,24 @@ def _validate_against_placements(matched: list[dict], possible: list[dict]) -> d
             continue
         auto_team = (auto.get("summer_team") or "").lower()
         auto_league = (auto.get("league") or "").lower()
-        # Direct team-name match OR auto returned an abbreviation contained
-        # in the placement name (e.g. "HYA" inside "Hyannis Harbor Hawks").
+        # Looser team-name comparison: tokenize both sides and check overlap.
+        # Handles "Lexington Blowfish" (sheet) vs "Lexington County Blowfish"
+        # (CPL site) — same team, different word ordering. Also covers
+        # abbreviation match ("HYA" inside "Hyannis Harbor Hawks") via the
+        # substring check.
+        def _team_tokens(t: str) -> set:
+            # Drop common modifier words that vary between sources.
+            stop = {"the", "of", "county", "city", "town", "ny", "ma", "nh"}
+            return {w for w in t.replace("-", " ").split() if w and w not in stop}
+
+        p_tokens = _team_tokens(placement_team)
+        a_tokens = _team_tokens(auto_team)
+        token_overlap = len(p_tokens & a_tokens) >= min(2, min(len(p_tokens), len(a_tokens)))
         if (
             auto_team == placement_team
             or auto_team in placement_team
             or placement_team.replace(" ", "").startswith(auto_team.replace(" ", ""))
+            or token_overlap
         ):
             result["agrees"].append({
                 "player_name": name,
