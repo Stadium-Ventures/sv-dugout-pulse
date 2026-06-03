@@ -6,11 +6,14 @@ name: Refresh Baseball-Reference Stats
 # 2. Fetch each player's BBRef Register page with a 3s polite delay.
 # 3. Commit the updated cache.
 #
-# Runs at 09:00 UTC = 5 AM ET — after most overnight BBRef updates land,
-# before the morning Monday email + pulse cycle.
+# Runs twice daily: 13:00 UTC (9 AM ET) and 21:00 UTC (5 PM ET).
+# - Morning pass: most overnight BBRef updates land by 6-8 AM ET, so 9 AM
+#   captures last night's games for the Monday email + morning pulse.
+# - Evening pass: catches mid-day BBRef updates and any reprocessing.
 on:
   schedule:
-    - cron: "0 9 * * *"
+    - cron: "0 13 * * *"
+    - cron: "0 21 * * *"
   workflow_dispatch: {}
 
 jobs:
