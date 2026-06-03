@@ -1043,10 +1043,16 @@ def _try_baseballcube(p: dict) -> Optional[dict]:
         if len(candidate_urls) >= 5:
             break
 
+    # Cloudflare challenge pages on BBC are ~8KB. Real search results are
+    # much larger AND have player links. If body is small AND no links =
+    # challenge page, not legitimate "no matches" result.
     if not candidate_urls:
+        is_challenge = len(html) < 15000
         logger.info(
-            "bbc[%s]: search returned %d bytes but 0 player links (likely "
-            "challenge page or no matches)", name, len(html),
+            "bbc[%s]: %s (got %d bytes, 0 player links)",
+            name,
+            "Cloudflare-blocked" if is_challenge else "no matches in search",
+            len(html),
         )
         _BBC_CACHE[cache_key] = None
         return None
