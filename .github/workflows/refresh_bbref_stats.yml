@@ -1,0 +1,60 @@
+name: Refresh Baseball-Reference Stats
+
+# Daily refresh of data/bbref_stats.json.
+# 1. Re-resolve player IDs against Chadwick Bureau register (handles
+#    new placement additions + Chadwick's weekly index updates).
+# 2. Fetch each player's BBRef Register page with a 3s polite delay.
+# 3. Commit the updated cache.
+#
+# Runs at 09:00 UTC = 5 AM ET — after most overnight BBRef updates land,
+# before the morning Monday email + pulse cycle.
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install --quiet requests beautifulsoup4
+
+      - name: Refresh player ID cache (Chadwick)
+        run: python -m scripts.refresh_player_id_cache
+
+      - name: Refresh BBRef stats
+        run: python -m src.baseball_reference
+
+      - name: Commit caches
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/bbref_id_cache.json data/bbref_stats.json
+          if git diff --staged --quiet; then
+            echo "No BBRef changes"
+            exit 0
+          fi
+          git commit -m "Refresh BBRef stats cache [bot]"
+          git checkout -- .
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git merge -X ours origin/main --no-edit -m "Merge concurrent data [bot]" || true
+            if git push; then
+              echo "Push succeeded on attempt $attempt"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "All push attempts failed"
+          exit 1
