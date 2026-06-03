@@ -719,6 +719,193 @@ def _render_summer_banner() -> str:
 """
 
 
+def _render_summer_placements_section() -> str:
+    """Render the per-player summer-ball placement list for the email.
+
+    Reads data/summer_ball_placements.json (Kent's spreadsheet) and groups
+    placements by status. For Active placements we include the player's
+    last-7-day line via the MLB Stats API where available (CCBL,
+    Appalachian, MLBDL); other leagues show the assignment + "Stats
+    populate as games run" since their season may not have started or
+    we don't have a live-stats path yet.
+
+    Returns "" when no placements file exists (defensive).
+    """
+    placements_path = REPO_ROOT / "data" / "summer_ball_placements.json"
+    if not placements_path.exists():
+        return ""
+    try:
+        data = json.loads(placements_path.read_text())
+    except Exception:
+        return ""
+    placements = data.get("placements") or []
+    placements = [p for p in placements if p.get("player_name")
+                  and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)]
+    if not placements:
+        return ""
+
+    # Bucket by status.
+    active: list[dict] = []
+    shut_down: list[dict] = []
+    injured: list[dict] = []
+    pending: list[dict] = []
+    second_half: list[dict] = []
+    for p in placements:
+        status = (p.get("status") or "").strip()
+        if status == "Shut Down":
+            shut_down.append(p)
+        elif status == "Injured":
+            injured.append(p)
+        elif status.startswith("Pending"):
+            pending.append(p)
+        elif status == "2nd Half":
+            second_half.append(p)
+        else:
+            active.append(p)
+
+    parts = ['<h2 style="margin-top:24px;">Summer Ball — Placements</h2>']
+
+    if active:
+        parts.append('<div style="margin-bottom:14px;">')
+        parts.append('<div style="font-weight:700;font-size:13.5px;margin-bottom:6px;">'
+                     'Active placements</div>')
+        parts.append('<ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.55;">')
+        for p in active:
+            parts.append(_render_summer_placement_row(p, include_line=True))
+        parts.append('</ul></div>')
+
+    if shut_down:
+        parts.append(_render_status_group("Shut down for season", shut_down))
+    if injured:
+        parts.append(_render_status_group("Injured", injured))
+    if pending:
+        parts.append(_render_status_group("Pending arrival", pending))
+    if second_half:
+        parts.append(_render_status_group("Joining for 2nd Half", second_half))
+
+    return f"""
+<div class="topline-card" style="border-left:4px solid #a855f7;">
+  <h3 style="margin-top:0;">Summer Ball — Per-Player Update</h3>
+  {''.join(parts[1:])}  <!-- skip the redundant h2 -->
+  <div style="margin-top:10px;color:#6e7781;font-size:11.5px;">
+    Source of truth: Kent's "Summer Ball Placement" sheet. Live stats
+    flow in from MLB Stats API (CCBL, Appy, MLBDL), PrestoSports
+    (NECBL, PGCBL, Cal Ripken, Prospect), or Baseball Cube next-day
+    fallback. Northwoods + Coastal Plain remain roster-only for now.
+  </div>
+</div>
+"""
+
+
+def _render_summer_placement_row(p: dict, *, include_line: bool) -> str:
+    name = p.get("player_name") or "?"
+    school = p.get("school") or p.get("school_raw") or ""
+    team = p.get("summer_team") or "—"
+    league = p.get("league") or p.get("league_raw") or "?"
+    status = p.get("status") or ""
+    line_html = ""
+    if include_line:
+        line = _summer_player_week_line(name, league, p.get("source_id", ""))
+        if line:
+            line_html = f' — <span style="color:#1a7a30;font-weight:600;">{line}</span>'
+    school_html = f' <span style="color:#6e7781;">({school})</span>' if school else ""
+    status_html = ""
+    if status and status != "Confirmed":
+        status_html = f' <span style="color:#6e7781;font-size:11.5px;">[{status}]</span>'
+    return (
+        f'<li><strong>{name}</strong>{school_html} → '
+        f'{team} <span style="color:#6e7781;">({league})</span>'
+        f'{status_html}{line_html}</li>'
+    )
+
+
+def _render_status_group(label: str, players: list[dict]) -> str:
+    rows = []
+    for p in players:
+        school = p.get("school") or p.get("school_raw") or ""
+        team = p.get("summer_team") or ""
+        league = p.get("league") or ""
+        suffix = f' — {team} ({league})' if team and league else ''
+        school_html = f' <span style="color:#6e7781;">({school})</span>' if school else ""
+        rows.append(f'<li><strong>{p["player_name"]}</strong>{school_html}{suffix}</li>')
+    return (
+        f'<div style="margin-bottom:10px;">'
+        f'<div style="font-weight:700;font-size:13.5px;margin-bottom:4px;">{label}</div>'
+        f'<ul style="margin:0;padding-left:18px;font-size:12.5px;line-height:1.5;color:#57606a;">'
+        f'{"".join(rows)}</ul></div>'
+    )
+
+
+# MLB-API league codes from Kent's spreadsheet ("MLBD" = MLB Draft, "CCBL"
+# = Cape Cod, "Appy" not in sheet yet).
+_MLB_API_LEAGUE_CODES = {
+    "MLBD": 5536,
+    "MLB Draft": 5536,
+    "CCBL": 565,
+    "Cape Cod": 565,
+    "Appy": 120,
+    "Appalachian": 120,
+}
+
+
+def _summer_player_week_line(
+    player_name: str, league: str, source_id: str = "",
+) -> str:
+    """For a placement in an MLB-Stats-API league, fetch a quick last-7-day
+    line via /people/{id}/stats?stats=byDateRange. Returns "" silently on
+    any failure — the email still ships with the assignment row.
+    """
+    league_id = _MLB_API_LEAGUE_CODES.get(league)
+    if not league_id:
+        return ""
+    try:
+        import requests as _r
+        from datetime import timedelta as _td
+        person_id = source_id if source_id and str(source_id).isdigit() else None
+        if not person_id:
+            url = (
+                f"https://statsapi.mlb.com/api/v1/people/search"
+                f"?names={player_name.replace(' ', '+')}&sportIds=22"
+            )
+            people = _r.get(url, timeout=10).json().get("people", [])
+            if people:
+                person_id = people[0].get("id")
+        if not person_id:
+            return ""
+        end = date.today()
+        start = end - timedelta(days=7)
+        url = (
+            f"https://statsapi.mlb.com/api/v1/people/{person_id}/stats"
+            f"?stats=byDateRange&startDate={start.isoformat()}"
+            f"&endDate={end.isoformat()}&group=hitting,pitching"
+        )
+        resp = _r.get(url, timeout=10).json()
+        line_parts: list[str] = []
+        for stat_group in resp.get("stats", []):
+            group = stat_group.get("group", {}).get("displayName", "")
+            splits = stat_group.get("splits", [])
+            if not splits:
+                continue
+            stats = splits[0].get("stat", {})
+            if group == "hitting" and stats.get("plateAppearances"):
+                line_parts.append(
+                    f"{stats.get('hits',0)}-for-{stats.get('atBats',0)}, "
+                    f"{stats.get('homeRuns',0)} HR, "
+                    f"{stats.get('rbi',0)} RBI, "
+                    f"{stats.get('strikeOuts',0)} K"
+                )
+            elif group == "pitching" and stats.get("inningsPitched"):
+                line_parts.append(
+                    f"{stats.get('inningsPitched','0.0')} IP, "
+                    f"{stats.get('earnedRuns',0)} ER, "
+                    f"{stats.get('strikeOuts',0)} K, "
+                    f"{stats.get('baseOnBalls',0)} BB"
+                )
+        return " · ".join(line_parts)
+    except Exception:
+        return ""
+
+
 def render_html(payload: dict) -> str:
     body_parts = []
 
@@ -738,6 +925,10 @@ def render_html(payload: dict) -> str:
     summer_banner = _render_summer_banner()
     if summer_banner:
         body_parts.append(summer_banner)
+
+    summer_section = _render_summer_placements_section()
+    if summer_section:
+        body_parts.append(summer_section)
 
     for lvl in LEVEL_ORDER:
         sec = payload["sections"][lvl]
