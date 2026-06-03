@@ -2411,6 +2411,7 @@ async function loadSummerBanner() {
   const matched = snap.ncaa_clients_matched || 0;
   const possible = snap.ncaa_clients_possible || 0;
   const unmatched = snap.ncaa_clients_unmatched || 0;
+  const ambiguous = snap.ncaa_clients_ambiguous || 0;
   const total = snap.ncaa_clients_total || 0;
   const health = snap.league_health || [];
 
@@ -2432,11 +2433,30 @@ async function loadSummerBanner() {
       + `<span class="meta">possible: ${cands}</span></li>`;
   }).join('');
 
+  // Ambiguous bucket holds (a) name collisions across teams and (b) college
+  // mismatches where a same-name summer-ball player is at a DIFFERENT school.
+  // Surface these in the banner so they're not silently ignored.
+  const ambiguousHtml = (snap.ambiguous || []).slice(0, 20).map(p => {
+    const cands = (p.candidates || []).slice(0, 3).map(c =>
+      `${_summerEscape(c.summer_team)}${c.summer_college ? ' / ' + _summerEscape(c.summer_college) : ''} (${_summerEscape(c.league)})`
+    ).join(', ');
+    const reason = p.conflict_reason ? ` — <span style="color:#d32f2f;">${_summerEscape(p.conflict_reason)}</span>` : '';
+    return `<li><strong>${_summerEscape(p.player_name)}</strong> `
+      + `<span class="college">(${_summerEscape(p.college)})</span>${reason} `
+      + `<span class="meta">${cands}</span></li>`;
+  }).join('');
+
   const detailParts = [];
   if (matchedHtml) {
     detailParts.push(
       `<div class="summer-section-title">Confirmed assignments</div>`
       + `<ul class="summer-list">${matchedHtml}</ul>`
+    );
+  }
+  if (ambiguousHtml) {
+    detailParts.push(
+      `<div class="summer-section-title">Needs review (college mismatch / name collision)</div>`
+      + `<ul class="summer-list">${ambiguousHtml}</ul>`
     );
   }
   if (possibleHtml) {
@@ -2473,6 +2493,7 @@ async function loadSummerBanner() {
         <div class="summer-stat">
           <strong>${matched}</strong> confirmed ·
           <strong>${possible}</strong> possible ·
+          ${ambiguous ? `<strong style="color:#d32f2f;">${ambiguous}</strong> needs review · ` : ''}
           <strong>${unmatched}</strong> unmatched
           <span style="color:#8b949e;"> (of ${total} NCAA clients)</span>
         </div>
