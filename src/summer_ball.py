@@ -1202,6 +1202,14 @@ class SummerBallAggregator:
                 })
             unmatched = still_unmatched
 
+        # Cross-validate auto-match results against Kent's manual placements
+        # spreadsheet. Catches stale-roster issues like Henry Zatkowski (auto-
+        # match finds him on Hyannis CCBL from carryover data; placement says
+        # Bourne CCBL + Shut Down). The placement file is source of truth;
+        # this surfaces disagreements so Kent can either update the sheet or
+        # we know the auto-match is stale.
+        validation = _validate_against_placements(matched, possible_matches)
+
         snapshot = {
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "league_health": [h.to_dict() for h in health],
@@ -1215,12 +1223,91 @@ class SummerBallAggregator:
             "possible_matches": possible_matches,
             "unmatched": unmatched,
             "ambiguous": ambiguous,
+            "placement_validation": validation,
             "all_players_count": len(players),
         }
 
         SUMMER_ROSTER_PATH.parent.mkdir(parents=True, exist_ok=True)
         SUMMER_ROSTER_PATH.write_text(json.dumps(snapshot, indent=2))
         return snapshot
+
+
+_PLACEMENTS_PATH = Path(__file__).resolve().parent.parent / "data" / "summer_ball_placements.json"
+
+
+def _validate_against_placements(matched: list[dict], possible: list[dict]) -> dict:
+    """Compare auto-match results to Kent's manual placement spreadsheet.
+
+    Returns:
+      {
+        "agrees": [{player_name, school, placement_team, auto_team, league}, ...],
+        "conflicts": [...same shape but teams differ; "Stale roster" flag],
+        "unmatched": [{player_name, school, placement_team, league, status}, ...]  # in sheet, not auto-matched
+      }
+    """
+    result = {"agrees": [], "conflicts": [], "unmatched": []}
+    if not _PLACEMENTS_PATH.exists():
+        return result
+    try:
+        placement_data = json.loads(_PLACEMENTS_PATH.read_text())
+    except Exception:
+        return result
+    placements = placement_data.get("placements") or []
+    # Filter "NEED PLACEMENT" placeholder rows
+    placements = [
+        p for p in placements
+        if p.get("player_name")
+        and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)
+    ]
+    auto_by_name = {(m.get("player_name") or "").lower(): m for m in matched}
+
+    for p in placements:
+        name = (p.get("player_name") or "").strip()
+        if not name:
+            continue
+        status = p.get("status", "")
+        # Skip status-only entries (Shut Down, Injured); no team to validate.
+        if status in ("Shut Down", "Injured") or not p.get("summer_team"):
+            continue
+        placement_team = p["summer_team"].lower()
+        placement_league = (p.get("league") or "").lower()
+        auto = auto_by_name.get(name.lower())
+        if not auto:
+            result["unmatched"].append({
+                "player_name": name,
+                "school": p.get("school", ""),
+                "placement_team": p.get("summer_team"),
+                "league": p.get("league"),
+                "status": status,
+            })
+            continue
+        auto_team = (auto.get("summer_team") or "").lower()
+        auto_league = (auto.get("league") or "").lower()
+        # Direct team-name match OR auto returned an abbreviation contained
+        # in the placement name (e.g. "HYA" inside "Hyannis Harbor Hawks").
+        if (
+            auto_team == placement_team
+            or auto_team in placement_team
+            or placement_team.replace(" ", "").startswith(auto_team.replace(" ", ""))
+        ):
+            result["agrees"].append({
+                "player_name": name,
+                "school": p.get("school", ""),
+                "league": p.get("league"),
+                "team": p.get("summer_team"),
+            })
+        else:
+            result["conflicts"].append({
+                "player_name": name,
+                "school": p.get("school", ""),
+                "placement_team": p.get("summer_team"),
+                "placement_league": p.get("league"),
+                "auto_team": auto.get("summer_team"),
+                "auto_league": auto.get("league"),
+                "status": status,
+                "reason": "auto-match team differs from spreadsheet — likely stale roster",
+            })
+    return result
 
 
 def load_snapshot() -> Optional[dict]:
