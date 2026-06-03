@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-03T18:07:24.339448+00:00",
+  "generated_at": "2026-06-03T20:25:28.882722+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 389,
       "team_count": 10,
       "error": null,
-      "duration_ms": 685,
+      "duration_ms": 880,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -22,7 +22,7 @@
       "player_count": 245,
       "team_count": 8,
       "error": null,
-      "duration_ms": 427,
+      "duration_ms": 553,
       "sample_players": [
         "Anthony Grippo",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 183,
+      "player_count": 186,
       "team_count": 7,
       "error": null,
-      "duration_ms": 391,
+      "duration_ms": 584,
       "sample_players": [
         "Brady Shannon",
         "Carlos Sanchez",
@@ -52,7 +52,7 @@
       "player_count": 571,
       "team_count": 13,
       "error": null,
-      "duration_ms": 71374,
+      "duration_ms": 33728,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -67,7 +67,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 2794,
+      "duration_ms": 1825,
       "sample_players": []
     },
     {
@@ -76,7 +76,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 139256,
+      "duration_ms": 89008,
       "sample_players": []
     },
     {
@@ -85,16 +85,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": "FCBL: teams index returned empty (direct + residential proxy both failed)",
-      "duration_ms": 6674,
+      "duration_ms": 3823,
       "sample_players": []
     },
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 744,
+      "player_count": 743,
       "team_count": 20,
       "error": null,
-      "duration_ms": 118891,
+      "duration_ms": 103539,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -115,10 +115,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 466,
+      "player_count": 468,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3910,
+      "duration_ms": 3810,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -410,20 +410,15 @@
         "school": "Rutgers",
         "league": "NECBL",
         "team": "New Port Gulls"
-      }
-    ],
-    "conflicts": [
+      },
       {
         "player_name": "Bennett Edwards",
         "school": "Georgia Southern",
-        "placement_team": "Lexington Blowfish",
-        "placement_league": "Coastal Plain",
-        "auto_team": "Lexington County Blowfish",
-        "auto_league": "Coastal Plain",
-        "status": "Confirmed",
-        "reason": "auto-match team differs from spreadsheet \u2014 likely stale roster"
+        "league": "Coastal Plain",
+        "team": "Lexington Blowfish"
       }
     ],
+    "conflicts": [],
     "unmatched": [
       {
         "player_name": "Alex Kranzler",
@@ -560,5 +555,5 @@
       }
     ]
   },
-  "all_players_count": 2598
+  "all_players_count": 2602
 }
