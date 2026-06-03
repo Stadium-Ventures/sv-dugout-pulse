@@ -1,34 +1,5 @@
 [
   {
-    "generated_at": "2026-05-27T00:01:56.527402+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Cade Doughty",
-      "Jack Cebert",
-      "Austin Amaral",
-      "Davis Sharpe",
-      "Najer Victor",
-      "Xavier Kolhosser"
-    ],
-    "total_clients": 84,
-    "by_source": {},
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-27T00:18:07.472013+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -30201,6 +30172,56 @@
   },
   {
     "generated_at": "2026-06-02T23:47:07.769101+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Garrett Whitlock",
+      "Jack Cebert",
+      "Austin Amaral",
+      "Blake Rambusch",
+      "Davis Sharpe",
+      "Xavier Kolhosser",
+      "Peyton Glavine"
+    ],
+    "total_clients": 110,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 5
+      },
+      "ESPN": {
+        "No game listed today": 5
+      },
+      "NCAA.com": {
+        "found stats": 2,
+        "Game found, not in box score": 3
+      },
+      "Sidearm": {
+        "No game listed today": 3
+      },
+      "StatBroadcast": {
+        "No game listed today": 3
+      },
+      "NCAA.org": {
+        "No game listed today": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-03T00:02:01.910946+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
