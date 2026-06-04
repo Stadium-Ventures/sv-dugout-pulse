@@ -1,0 +1,46 @@
+name: Summer Ball Daily Slack Recap
+
+# Posts a daily summary to Dugout Pulse Slack at 9:30 AM ET:
+# - Yesterday's Final lines for client summer placements
+# - Today's scheduled / live games
+#
+# Fires after BBRef refresh (9 AM ET) so summer Final lines from
+# last night have the freshest possible numbers.
+on:
+  schedule:
+    - cron: "30 13 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install --quiet requests
+      - name: Post daily summer recap
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python -m scripts.summer_daily_slack
+      - name: Post placement-conflict alerts (if any new)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python -m scripts.summer_conflict_alert
+      - name: Commit seen-conflicts state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f data/_last_conflicts.json ]; then
+            git add data/_last_conflicts.json
+            git diff --staged --quiet || git commit -m "Update conflict-alert seen-set [bot]"
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git merge -X ours origin/main --no-edit -m "Merge concurrent data [bot]" || true
+              git push && exit 0
+              sleep 5
+            done
+          fi
