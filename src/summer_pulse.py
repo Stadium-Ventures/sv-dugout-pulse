@@ -584,13 +584,21 @@ def build_summer_pulse_entries() -> list[dict]:
         auto = auto_by_name.get(name.lower(), {})
 
         if league in _MLB_LEAGUES:
-            entries.append(_mlb_card_from_placement(
+            # Emit BOTH today's card and yesterday's card when relevant —
+            # the Today tab shows today's, Yesterday tab shows yesterday's,
+            # 7D rolls them up. Without the yesterday card, Kent's Yesterday
+            # tab is empty (reported 2026-06-04).
+            today_entry, yest_entry = _mlb_cards_for_placement(
                 p, auto,
                 today_by_team=today_by_team,
                 yesterday_by_team=yesterday_by_team,
                 team_name_to_id=name_to_team_id_by_league.get(league, {}),
                 today=today, yesterday=yesterday,
-            ))
+            )
+            if today_entry:
+                entries.append(today_entry)
+            if yest_entry:
+                entries.append(yest_entry)
         elif league in _STUB_LEAGUES:
             entries.append(_presto_card_from_placement(p, auto))
         else:
@@ -756,26 +764,25 @@ def _team_name_to_id(league_short_name: str) -> dict[str, int]:
     return out
 
 
-def _mlb_card_from_placement(
+def _mlb_cards_for_placement(
     p: dict, auto: dict, *,
     today_by_team: dict, yesterday_by_team: dict,
     team_name_to_id: dict[str, int],
     today: date, yesterday: date,
-) -> dict:
-    """MLB-Stats-API path card built from a placement record."""
+) -> tuple[Optional[dict], Optional[dict]]:
+    """Returns (today_card, yesterday_card) for an MLB-Stats-API placement.
+
+    today_card is always returned (with off-day fallback if no game today).
+    yesterday_card is returned only when the team actually played yesterday —
+    so the Yesterday tab has real Finals to show.
+    """
     summer_team_name = (p.get("summer_team") or "").strip()
     team_id = team_name_to_id.get(summer_team_name.lower())
     person_id = None
-    # If we auto-matched the player, we already stored their MLB person_id.
     src = auto.get("source_id") if auto else None
     if src and str(src).isdigit():
         person_id = int(src)
-    elif src:
-        # Non-numeric source_id means auto-match came from a Presto league —
-        # ignore; we'll fall back to name search.
-        person_id = None
     if not person_id:
-        # Search MLB people by name.
         try:
             url = f"{_STATSAPI}/people/search?names={p['player_name'].replace(' ', '+')}&sportIds=22"
             resp = _session.get(url, timeout=10).json()
@@ -787,11 +794,18 @@ def _mlb_card_from_placement(
 
     info = {"person_id": person_id}
 
+    today_card = None
+    yest_card = None
+
     if team_id and team_id in today_by_team:
-        return _build_placement_entry(p, info, today_by_team[team_id], today, is_yesterday=False)
+        today_card = _build_placement_entry(p, info, today_by_team[team_id], today, is_yesterday=False)
+    else:
+        today_card = _build_placement_entry(p, info, None, today, is_yesterday=False)
+
     if team_id and team_id in yesterday_by_team:
-        return _build_placement_entry(p, info, yesterday_by_team[team_id], yesterday, is_yesterday=True)
-    return _build_placement_entry(p, info, None, today, is_yesterday=False)
+        yest_card = _build_placement_entry(p, info, yesterday_by_team[team_id], yesterday, is_yesterday=True)
+
+    return today_card, yest_card
 
 
 def _build_placement_entry(
