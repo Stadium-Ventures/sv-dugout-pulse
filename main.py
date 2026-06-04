@@ -1218,6 +1218,7 @@ def run_live():
     # by the summer_rosters workflow) and emits a card per matched player
     # with today's/yesterday's MLB-Stats-API summer-league game state.
     # Failures are non-fatal — the rest of the pulse should still ship.
+    summer_entries: list = []
     try:
         from src.summer_pulse import build_summer_pulse_entries
         summer_entries = build_summer_pulse_entries()
@@ -1229,6 +1230,18 @@ def run_live():
 
     write_output(today_pulse)
     _supplement_yesterday(pulse)
+
+    # _supplement_yesterday rewrites yesterday_pulse.json from the current
+    # pulse's Final entries (Pro/NCAA/HS only — it doesn't know about
+    # Summer). Re-merge Summer is_yesterday cards back in here so the
+    # Yesterday tab surfaces them. Without this, summer_pulse's earlier
+    # write gets clobbered.
+    if summer_entries:
+        try:
+            from src.summer_pulse import _merge_summer_into_yesterday_pulse
+            _merge_summer_into_yesterday_pulse(summer_entries)
+        except Exception:
+            logger.exception("summer_pulse: post-supplement yesterday-merge failed")
 
     _fetch_yesterday_pass(all_players, fetcher, analyzer)
     _flush_ncaa_game_log()
