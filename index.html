@@ -1011,6 +1011,7 @@
   <h1>SV Dugout Pulse</h1>
   <div class="subtitle" id="updated"></div>
   <div class="next-update" id="nextUpdate"></div>
+  <div id="bbrefFreshness" style="font-size:0.72rem; color:var(--text-dim); margin-top:0.2rem;"></div>
   <div class="auto-refresh-indicator" id="autoRefreshIndicator">
     <div class="auto-refresh-dot"></div>
     <span>Auto-refreshing</span>
@@ -1392,11 +1393,40 @@ function renderCard(p) {
         <span class="tag">${esc(p.tags.position)}</span>
         ${p.tags.draft_class && p.tags.draft_class !== 'N/A' ? `<span class="tag">${esc(p.tags.draft_class)}</span>` : ''}
       </div>
+      ${summerNoDataHint(p)}
       <div class="card-actions">
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
         ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${p.game_status === 'Scheduled' ? 'Preview' : 'Box Score'}</a>` : ''}
       </div>
     </div>`;
+}
+
+function summerNoDataHint(p) {
+  // Only show on Summer cards that don't already have live game data.
+  if (p.level !== 'Summer') return '';
+  const isOffDay = ['Off Day', 'Roster Confirmed', 'Status Update'].indexOf(p.game_status) !== -1;
+  if (!isOffDay) return '';
+  // Walk-throughs for the user so "-- No Data" isn't a black box.
+  let msg = '';
+  let color = '#7d8590';
+  if (bbrefCacheHours == null) {
+    msg = 'Baseball-Reference fallback not yet cached — first refresh runs at 9 AM ET.';
+  } else if (bbrefCacheHours > 30) {
+    color = '#fbbf24';
+    msg = `⚠ Baseball-Reference cache stale — last refresh ${Math.round(bbrefCacheHours)}h ago. Cron may have skipped; manually trigger refresh_bbref_stats.yml.`;
+  } else {
+    // Cache is fresh. Is the player in it?
+    const record = bbrefStats && bbrefStats.players && bbrefStats.players[p.player_name];
+    if (!record) {
+      msg = `Baseball-Reference cache fresh (${Math.round(bbrefCacheHours)}h ago) — player not yet in Chadwick Bureau index. Updates weekly.`;
+    } else if (!record.summer_team) {
+      msg = `Baseball-Reference cache fresh (${Math.round(bbrefCacheHours)}h ago) — no 2026 summer row on his BBRef page yet (lag is typically days for new games).`;
+    } else {
+      // Has data but we showed Off Day — means season-to-date is the only thing.
+      return '';
+    }
+  }
+  return `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid ${color};border-radius:4px;font-size:11px;color:${color};line-height:1.4;">${esc(msg)}</div>`;
 }
 
 function levelBadgeClass(level) {
@@ -2442,6 +2472,11 @@ function _summerEscape(s) {
   })[c]);
 }
 
+// Globals populated by loadSummerBanner — used by renderCard to surface
+// per-card "Awaiting BBRef" / "cache stale" hints on Summer placements.
+let bbrefStats = null;
+let bbrefCacheHours = null;
+
 async function loadSummerBanner() {
   const el = document.getElementById('summerBanner');
   if (!el) return;
@@ -2451,6 +2486,30 @@ async function loadSummerBanner() {
     if (!resp.ok) return;
     snap = await resp.json();
   } catch (e) { return; }
+  // Pull BBRef cache freshness in parallel — used for per-card hints +
+  // the top-of-banner refresh pill.
+  try {
+    const bb = await fetch('data/bbref_stats.json?t=' + Date.now());
+    if (bb.ok) {
+      bbrefStats = await bb.json();
+      const ts = bbrefStats && bbrefStats.generated_at_utc;
+      if (ts) {
+        bbrefCacheHours = (Date.now() - new Date(ts).getTime()) / 3600000;
+        const freshEl = document.getElementById('bbrefFreshness');
+        if (freshEl) {
+          const hrs = bbrefCacheHours;
+          const ago = hrs < 1 ? `${Math.round(hrs * 60)}m` : hrs < 24 ? `${Math.round(hrs)}h` : `${Math.round(hrs/24)}d`;
+          let color = '#7d8590';
+          let label = `Baseball-Reference next-day stats: refreshed ${ago} ago`;
+          if (hrs > 30) {
+            color = '#fbbf24';
+            label = `⚠ Baseball-Reference cache stale (${ago} ago) — cron may have skipped`;
+          }
+          freshEl.innerHTML = `<span style="color:${color};">${label}</span>`;
+        }
+      }
+    }
+  } catch (e) { /* non-fatal */ }
   if (!snap) return;
 
   const matched = snap.ncaa_clients_matched || 0;
