@@ -140,6 +140,9 @@
   <h2>Residential proxy pool (last 7 days)</h2>
   <div id="proxyPool"></div>
 
+  <h2>Summer ball — data sources</h2>
+  <div id="summerSources" style="margin-bottom: 1.5rem;"></div>
+
   <h2>Per-run history</h2>
   <table id="historyTable">
     <thead>
@@ -588,10 +591,12 @@ async function fetchJson(path) {
 }
 
 async function load() {
-  const [history, pulse, playerHist] = await Promise.all([
+  const [history, pulse, playerHist, summerRosters, bbrefStats] = await Promise.all([
     fetchJson('data/fetch_health_history.json'),
     fetchJson('data/current_pulse.json'),
     fetchJson('data/player_health_history.json'),
+    fetchJson('data/summer_ball_rosters.json'),
+    fetchJson('data/bbref_stats.json'),
   ]);
   renderSummary(history || []);
   renderDailySummary(playerHist || []);
@@ -599,7 +604,59 @@ async function load() {
   renderPlayerHistory(playerHist || []);
   renderSourceAggregation(history || []);
   renderProxyPool(history || []);
+  renderSummerSources(summerRosters, bbrefStats);
   renderHistoryTable(history || []);
+}
+
+function renderSummerSources(rosters, bbref) {
+  const el = document.getElementById('summerSources');
+  if (!el) return;
+  const rosterGenAt = rosters && rosters.generated_at ? new Date(rosters.generated_at) : null;
+  const bbrefGenAt = bbref && bbref.generated_at_utc ? new Date(bbref.generated_at_utc) : null;
+  const fmtAge = (d) => {
+    if (!d) return '<span style="color:#7d8590;">never</span>';
+    const min = Math.round((Date.now() - d.getTime()) / 60000);
+    if (min < 60) return `${min} min ago`;
+    const hr = Math.round(min / 60);
+    return `${hr} hr ago`;
+  };
+  const leagueRows = (rosters?.league_health || []).map(h => {
+    const cls = h.status === 'ok' ? 'ok' : h.status === 'failed' ? 'critical' : 'warning';
+    const players = h.player_count || 0;
+    return `<tr>
+      <td>${esc(h.league)}</td>
+      <td><span class="summary-value ${cls}" style="font-size:.85rem;">${esc(h.status)}</span></td>
+      <td>${players}</td>
+      <td>${h.error ? `<span style="color:#f87171;">${esc(String(h.error).slice(0, 80))}</span>` : '—'}</td>
+    </tr>`;
+  }).join('');
+  const bbrefPlayers = bbref && bbref.players ? Object.entries(bbref.players) : [];
+  const bbrefWithData = bbrefPlayers.filter(([_, v]) => v && v.summer_team).length;
+  const bbrefFailures = bbref?.fetch_failures || 0;
+  el.innerHTML = `
+    <table>
+      <thead><tr><th>Source</th><th>Status</th><th>Last refresh</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Live roster discovery</strong> (auto-scrape)</td>
+          <td>${rosters ? '<span class="summary-value ok" style="font-size:.85rem;">running</span>' : '<span class="summary-value critical" style="font-size:.85rem;">no data</span>'}</td>
+          <td>${fmtAge(rosterGenAt)}</td>
+          <td>4× daily; see per-league breakdown below</td>
+        </tr>
+        <tr>
+          <td><strong>Baseball-Reference Register</strong> (next-day fallback)</td>
+          <td>${bbrefPlayers.length ? '<span class="summary-value ok" style="font-size:.85rem;">running</span>' : '<span class="summary-value warning" style="font-size:.85rem;">no data</span>'}</td>
+          <td>${fmtAge(bbrefGenAt)}</td>
+          <td>${bbrefPlayers.length} players cached, ${bbrefWithData} with current data${bbrefFailures ? `, ${bbrefFailures} fetch failures (preserved from prior)` : ''}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 style="margin: 1.2rem 0 0.5rem 0; font-size: 0.95rem;">Per-league roster discovery</h3>
+    <table>
+      <thead><tr><th>League</th><th>Status</th><th>Players</th><th>Last error</th></tr></thead>
+      <tbody>${leagueRows || '<tr><td colspan="4" style="color:#7d8590;">No league data yet.</td></tr>'}</tbody>
+    </table>
+  `;
 }
 load();
 setInterval(load, 60000);

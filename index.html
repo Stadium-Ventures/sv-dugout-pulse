@@ -197,6 +197,31 @@
   .card.level-ncaa, .window-card.level-ncaa { border-left: 3px solid var(--accent-orange); }
   .card.level-summer, .window-card.level-summer { border-left: 3px solid #c084fc; }
 
+  /* Status-only Summer cards (Shut Down, Injured, Pending) — show in muted
+     style so they're clearly differentiated from cards with live game data. */
+  .card.summer-inactive {
+    opacity: 0.55;
+    border-left-color: #71717a;
+  }
+  .card.summer-inactive:hover { opacity: 0.85; }
+  .card.summer-inactive .game-info { display: none; }
+  .card.summer-inactive .stats { color: var(--text-dim); font-style: italic; font-size: 0.85rem; }
+  .summer-status-pill {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(113,113,122,0.2);
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-left: 0.4rem;
+  }
+  .summer-status-pill.injured { background: rgba(234,179,8,0.2); color: #facc15; }
+  .summer-status-pill.shutdown { background: rgba(239,68,68,0.18); color: #f87171; }
+  .summer-status-pill.pending { background: rgba(59,130,246,0.15); color: #93c5fd; }
+
   /* ---- Live card glow (overrides level border) ---- */
   .card.live { border-left: 3px solid var(--live-green); animation: live-glow 2.5s ease-in-out infinite; }
   @keyframes live-glow {
@@ -1317,8 +1342,17 @@ function renderCard(p) {
     ? `<div class="next-game"><span class="next-label">Next:</span> <span class="next-value">${esc(p.next_game.display)}</span></div>`
     : '';
 
+  // Summer cards in a status-only state (Shut Down, Injured, Pending, etc.)
+  // get a muted treatment so they're visually distinct from live-game cards.
+  const summerStatus = (p.tags && p.tags.placement_status) || '';
+  const isInactiveSummer = p.level === 'Summer' && (
+    ['Shut Down','Injured','Pending, 1st Half','Pending, 2nd Half','2nd Half','Status Update']
+      .indexOf(p.game_status) !== -1
+  );
+  const inactiveCls = isInactiveSummer ? ' summer-inactive' : '';
+
   return `
-    <div class="card${isLive ? ' live' : ''} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
+    <div class="card${isLive ? ' live' : ''}${inactiveCls} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
         ${p.player_profile_url
@@ -2486,7 +2520,21 @@ async function loadSummerBanner() {
     );
   }
 
+  // Prominent banner row when there are ambiguous/Needs-Review entries.
+  // The Summer Ball Coverage banner is collapsed by default — this row
+  // makes sure unresolved conflicts get noticed before someone expands.
+  const reviewBanner = ambiguous
+    ? `<div style="background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.35);
+         border-radius:6px;padding:8px 12px;margin-bottom:10px;
+         font-size:13px;color:#d32f2f;font-weight:600;">
+         ⚠ ${ambiguous} placement${ambiguous === 1 ? '' : 's'} need${ambiguous === 1 ? 's' : ''} review
+         <span style="font-weight:400;color:#7a2727;">
+           — expand below, then update your placement spreadsheet to confirm the correct team.
+         </span>
+       </div>` : '';
+
   el.innerHTML = `
+    ${reviewBanner}
     <div class="summer-head" onclick="document.getElementById('summerBanner').classList.toggle('expanded')">
       <div>
         <div class="summer-title">Summer Ball Coverage</div>

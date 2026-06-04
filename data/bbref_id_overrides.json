@@ -1,0 +1,5 @@
+{
+  "_comment": "Manual escape hatch for BBRef Register IDs not yet in Chadwick Bureau's weekly index. Format: {player_name: {bbref_minors_id, mlbam_id, note}}. Player name must match exactly what's in summer_ball_placements.json. This file is checked BEFORE Chadwick lookup, so anything here wins.",
+  "_example_usage": "If Chadwick is missing 'Riley Goodman', look him up manually on baseball-reference.com/register, find his URL (e.g., https://www.baseball-reference.com/register/player.fcgi?id=goodma123ril), and add: \"Riley Goodman\": {\"bbref_minors_id\": \"goodma123ril\", \"note\": \"manually added 2026-06-03 — not yet in Chadwick\"}",
+  "overrides": {}
+}

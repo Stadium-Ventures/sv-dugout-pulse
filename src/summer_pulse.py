@@ -36,6 +36,10 @@ _PLACEMENTS_PATH = _REPO_ROOT / "data" / "summer_ball_placements.json"
 # where our primary live source doesn't surface a current line.
 _BBREF_STATS_PATH = _REPO_ROOT / "data" / "bbref_stats.json"
 
+# Stamped on every summer entry so the UI can render "last updated X min ago"
+# alongside the data source. Re-resolved at the top of build_summer_pulse_entries.
+_NOW_ISO: str = ""
+
 # MLB Stats API → our league short_name. Mirrors src/summer_ball.py classes.
 # Maps to the leagueId on MLB Stats API (sportId=22 = College Baseball).
 _MLB_LEAGUE_IDS = {"Cape Cod": 565, "Appalachian": 120, "MLB Draft": 5536}
@@ -532,6 +536,9 @@ def build_summer_pulse_entries() -> list[dict]:
         logger.info("summer_pulse: no placements; nothing to render")
         return []
 
+    global _NOW_ISO
+    _NOW_ISO = datetime.now(timezone.utc).isoformat()
+
     # Build name-keyed index of auto-scraped matches for source_id lookup.
     roster = _load_roster() or {}
     matches = roster.get("matched", [])
@@ -590,20 +597,76 @@ def build_summer_pulse_entries() -> list[dict]:
             # Northwoods / Coastal Plain / etc. — no scraper, show static card.
             entries.append(_static_placement_card(p))
 
+    # Group cards by league so the UI shows them in a logical order:
+    # MLB-API leagues first (most reliable data), then PrestoSports leagues,
+    # then BBRef-only / static placements, then status-flagged at the bottom.
+    league_order = {
+        "MLB Draft": 0, "Cape Cod": 1, "Appalachian": 2,
+        "NECBL": 3, "Cal Ripken": 4, "PGCBL": 5, "FCBL": 6, "Prospect": 7,
+        "Coastal Plain": 8, "Northwoods": 9,
+    }
+
+    def _sort_key(e: dict) -> tuple:
+        status = e.get("game_status", "")
+        is_inactive = status in (
+            "Shut Down", "Injured", "Pending, 1st Half",
+            "Pending, 2nd Half", "2nd Half", "Status Update",
+        )
+        league = (e.get("tags") or {}).get("summer_league", "")
+        return (
+            1 if is_inactive else 0,
+            league_order.get(league, 99),
+            league,
+            e.get("player_name", ""),
+        )
+
+    entries.sort(key=_sort_key)
+
+    # Stamp every summer entry with stats_captured_at so the UI can render
+    # "last updated X min ago" next to the data source.
+    for e in entries:
+        e.setdefault("stats_captured_at", _NOW_ISO)
+
+    # Cross-source agreement check — flag silent errors. Non-fatal.
+    try:
+        _log_cross_source_disagreements(entries)
+    except Exception:
+        logger.exception("summer_pulse: cross-source check failed (non-fatal)")
+
     logger.info(
         "summer_pulse: built %d entries from %d placements",
         len(entries), len(placements),
     )
 
-    # Persist a running game-log file so we have history + cross-source
-    # verification. Only Final/In Progress entries are appended; future
-    # scheduled placeholders are skipped. Failures are non-fatal — this is
-    # bookkeeping, not the primary pipeline.
     try:
         _append_to_game_log(entries)
     except Exception:
         logger.exception("summer_pulse: game-log append failed (non-fatal)")
     return entries
+
+
+def _log_cross_source_disagreements(entries: list[dict]) -> None:
+    """For each live-sourced Summer entry, compare against BBRef cache and
+    log when they disagree on league. Catches stale rosters quietly.
+    """
+    if _BBREF_STATS_LOADED is None:
+        return
+    bbref_players = (_BBREF_STATS_LOADED or {}).get("players", {})
+    for e in entries:
+        if e.get("level") != "Summer":
+            continue
+        if e.get("data_source") in ("Kent placements", "Baseball-Reference Register"):
+            continue
+        bbref = bbref_players.get(e.get("player_name", ""))
+        if not bbref or not bbref.get("summer_team"):
+            continue
+        bbref_league = (bbref.get("league") or "").lower()
+        live_league = ((e.get("tags") or {}).get("summer_league") or "").lower()
+        if bbref_league and live_league and bbref_league != live_league:
+            logger.warning(
+                "cross-source disagreement for %s: live says %s, BBRef says %s",
+                e.get("player_name"), live_league, bbref_league,
+            )
 
 
 def _append_to_game_log(entries: list[dict]) -> None:

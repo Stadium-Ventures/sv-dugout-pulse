@@ -198,6 +198,11 @@ def format_summary(stats: dict) -> str:
 def refresh_all_stats(year: int = 2026) -> dict:
     """For each cached BBRef ID, fetch their Register page and parse the
     {year} summer row. Writes data/bbref_stats.json.
+
+    Last-known-good behavior: if a fetch fails for a player, the previous
+    run's stats for that player are preserved (so a transient BBRef
+    blip doesn't blank out yesterday's data). Only successful fetches
+    overwrite the cache entry.
     """
     if not _ID_CACHE_PATH.exists():
         logger.error("Missing %s — run scripts/refresh_player_id_cache.py first", _ID_CACHE_PATH)
@@ -206,7 +211,16 @@ def refresh_all_stats(year: int = 2026) -> dict:
     ids = cache.get("ids") or {}
     logger.info("BBRef refresh: %d players queued", len(ids))
 
+    # Load prior cache so we can preserve last-known-good entries.
+    prior: dict[str, dict] = {}
+    if _STATS_CACHE_PATH.exists():
+        try:
+            prior = (json.loads(_STATS_CACHE_PATH.read_text()) or {}).get("players", {})
+        except Exception:
+            prior = {}
+
     results: dict[str, dict] = {}
+    fetch_failures = 0
     for i, (player_name, info) in enumerate(sorted(ids.items())):
         bbref_id = info.get("bbref_minors_id")
         if not bbref_id:
@@ -215,12 +229,24 @@ def refresh_all_stats(year: int = 2026) -> dict:
             time.sleep(_RATE_LIMIT_SEC)
         html = _fetch_player_page(bbref_id)
         if not html:
-            results[player_name] = {"bbref_id": bbref_id, "error": "fetch failed"}
+            fetch_failures += 1
+            # Preserve prior data if we had it; otherwise mark as failed.
+            prior_record = prior.get(player_name)
+            if prior_record and prior_record.get("summer_team"):
+                results[player_name] = {
+                    **prior_record,
+                    "is_stale": True,
+                    "stale_reason": "BBRef fetch failed; showing last-known-good",
+                }
+                logger.info("bbref %s: fetch failed, preserved last-known-good", player_name)
+            else:
+                results[player_name] = {"bbref_id": bbref_id, "error": "fetch failed"}
             continue
         stats = _parse_summer_rows(html, year=year)
         results[player_name] = {
             "bbref_id": bbref_id,
             "year": year,
+            "fetched_at_utc": datetime.now(timezone.utc).isoformat(),
             **stats,
             "summary": format_summary(stats),
         }
@@ -229,11 +255,15 @@ def refresh_all_stats(year: int = 2026) -> dict:
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "year": year,
+        "fetch_failures": fetch_failures,
         "players": results,
     }
     _STATS_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     _STATS_CACHE_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True))
-    logger.info("Wrote %d player stats to %s", len(results), _STATS_CACHE_PATH)
+    logger.info(
+        "Wrote %d player stats to %s (%d fetches failed, preserved from prior)",
+        len(results), _STATS_CACHE_PATH, fetch_failures,
+    )
     return payload
 
 

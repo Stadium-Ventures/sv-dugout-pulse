@@ -29,6 +29,9 @@ logger = logging.getLogger(__name__)
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _PLACEMENTS_PATH = _REPO_ROOT / "data" / "summer_ball_placements.json"
 _CACHE_PATH = _REPO_ROOT / "data" / "bbref_id_cache.json"
+# Manual overrides for players Chadwick hasn't indexed yet. Checked BEFORE
+# the Chadwick lookup so manual entries win over auto-resolution.
+_OVERRIDES_PATH = _REPO_ROOT / "data" / "bbref_id_overrides.json"
 
 _CHADWICK_BASE = (
     "https://raw.githubusercontent.com/chadwickbureau/register/master/data/"
@@ -133,6 +136,21 @@ def _pick_best_match(
     return active
 
 
+def _load_overrides() -> dict:
+    """Manual BBRef ID overrides — for players Chadwick hasn't indexed yet.
+
+    Returns {player_name: {bbref_minors_id, mlbam_id, note}}.
+    """
+    if not _OVERRIDES_PATH.exists():
+        return {}
+    try:
+        data = json.loads(_OVERRIDES_PATH.read_text())
+        return data.get("overrides") or {}
+    except Exception:
+        logger.warning("Failed to read %s", _OVERRIDES_PATH)
+        return {}
+
+
 def main():
     if not _PLACEMENTS_PATH.exists():
         logger.error("Missing %s", _PLACEMENTS_PATH)
@@ -143,15 +161,33 @@ def main():
         if p.get("player_name")
         and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)
     ]
-    logger.info("Resolving %d placement players against Chadwick register", len(placements))
+    overrides = _load_overrides()
+    logger.info(
+        "Resolving %d placement players against Chadwick register "
+        "(%d manual overrides loaded)",
+        len(placements), len(overrides),
+    )
 
     index = _build_index()
     cache: dict[str, dict] = {}
     misses: list[str] = []
     multi: list[str] = []
+    overridden: list[str] = []
 
     for p in placements:
         name = p["player_name"]
+        # 1) Manual override wins if present.
+        if name in overrides:
+            ov = overrides[name]
+            cache[name] = {
+                "bbref_minors_id": ov.get("bbref_minors_id"),
+                "mlbam_id": ov.get("mlbam_id"),
+                "source": "manual_override",
+                "note": ov.get("note", ""),
+            }
+            overridden.append(name)
+            continue
+        # 2) Chadwick lookup.
         last, first = _normalize_name_for_lookup(name)
         candidates = index.get((last, first), [])
         narrowed = _pick_best_match(
@@ -171,6 +207,7 @@ def main():
             "col_played_first": chosen.get("col_played_first"),
             "col_played_last": chosen.get("col_played_last"),
             "candidate_count": len(narrowed),
+            "source": "chadwick",
         }
 
     payload = {
@@ -179,17 +216,16 @@ def main():
         "resolved": len(cache),
         "missing": misses,
         "ambiguous": multi,
+        "manual_overrides": overridden,
         "ids": cache,
     }
     _CACHE_PATH.write_text(json.dumps(payload, indent=2, sort_keys=True))
     logger.info(
-        "Wrote %d resolved IDs to %s (missing: %d, ambiguous: %d)",
-        len(cache), _CACHE_PATH, len(misses), len(multi),
+        "Wrote %d resolved IDs to %s (missing: %d, ambiguous: %d, manual: %d)",
+        len(cache), _CACHE_PATH, len(misses), len(multi), len(overridden),
     )
     if misses:
-        logger.info("Missing: %s", ", ".join(misses[:10]))
-    if multi:
-        logger.info("Ambiguous: %s", ", ".join(multi[:10]))
+        logger.info("Missing (eligible for manual override): %s", ", ".join(misses[:15]))
 
 
 if __name__ == "__main__":
