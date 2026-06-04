@@ -1250,6 +1250,22 @@ def run_live():
     # the NCAA portion of L7 window stats to include today's Final games.
     _refresh_ncaa_l7(all_players)
 
+    # _refresh_ncaa_l7 rewrites window_7d.json from Pro+NCAA+HS only —
+    # same clobber pattern as _supplement_yesterday. Re-merge Summer
+    # window entries here so the 7 Days tab keeps them.
+    if summer_entries:
+        try:
+            from src.summer_pulse import _load_placements
+            from src.summer_pulse import _write_summer_window_entries
+            placements = _load_placements()
+            # auto_by_name not needed for non-MLB leagues; pass empty since
+            # the rebuild only needs placement data for MLB-API queries
+            # which already happened above. Falls back to BBRef/static for
+            # other leagues — same as the first call.
+            _write_summer_window_entries(placements, {})
+        except Exception:
+            logger.exception("summer_pulse: post-l7 window-merge failed")
+
 
 def _refresh_ncaa_l7(all_players: list[dict]):
     """Re-aggregate NCAA + HS L7 window stats from the freshly-flushed game logs.
