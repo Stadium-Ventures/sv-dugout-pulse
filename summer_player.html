@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>SV Dugout Pulse — Summer Player</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface-hover: #22262f;
+    --border: #2a2e3a;
+    --text: #e4e4e7;
+    --text-dim: #71717a;
+    --accent: #c084fc;
+    --good: #22c55e;
+    --warn: #fbbf24;
+    --bad: #f87171;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    padding: 1.2rem;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  .topnav {
+    font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem;
+  }
+  .topnav a { color: var(--text-dim); text-decoration: none; }
+  .topnav a:hover { color: var(--text); text-decoration: underline; }
+  h1 { font-size: 1.7rem; margin-bottom: 0.4rem; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 1.4rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .card h2 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: 0.7rem;
+  }
+  .kv { display: grid; grid-template-columns: 130px 1fr; gap: 0.4rem 0.9rem; font-size: 0.9rem; }
+  .kv dt { color: var(--text-dim); }
+  .kv dd { color: var(--text); }
+  .status-ok { color: var(--good); }
+  .status-warn { color: var(--warn); }
+  .status-bad { color: var(--bad); }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    margin-top: 0.6rem;
+  }
+  .stat-cell {
+    background: rgba(255,255,255,0.03);
+    padding: 0.5rem 0.4rem;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .stat-label { color: var(--text-dim); font-size: 0.7rem; text-transform: uppercase; }
+  .stat-value { font-weight: 700; font-size: 1.05rem; margin-top: 0.15rem; }
+  .game-row {
+    display: flex; justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .game-row:last-child { border-bottom: none; }
+  .game-row .date { color: var(--text-dim); }
+  .empty { color: var(--text-dim); font-style: italic; font-size: 0.85rem; }
+  .pill {
+    display: inline-block;
+    font-size: 0.7rem; font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-left: 0.4rem;
+  }
+  .pill-confirmed { background: rgba(34,197,94,0.18); color: var(--good); }
+  .pill-injured { background: rgba(251,191,36,0.18); color: var(--warn); }
+  .pill-shutdown { background: rgba(248,113,113,0.18); color: var(--bad); }
+  .pill-pending { background: rgba(96,165,250,0.18); color: #93c5fd; }
+  a.source { color: var(--accent); font-size: 0.82rem; text-decoration: none; }
+  a.source:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav">
+    <a href="index.html">← Back to Dugout Pulse</a>
+  </div>
+  <h1 id="playerName">Loading…</h1>
+  <div class="subtitle" id="playerSub"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function getNameParam() {
+  const params = new URLSearchParams(location.search);
+  return params.get('name') || '';
+}
+
+async function fetchJson(path) {
+  try {
+    const r = await fetch(path + '?t=' + Date.now());
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+
+function statusPill(status) {
+  if (!status) return '';
+  const cls = status === 'Confirmed' ? 'pill-confirmed'
+    : status === 'Injured' ? 'pill-injured'
+    : status === 'Shut Down' ? 'pill-shutdown'
+    : status.startsWith('Pending') || status === '2nd Half' ? 'pill-pending'
+    : 'pill-confirmed';
+  return `<span class="pill ${cls}">${esc(status)}</span>`;
+}
+
+function renderPlacement(p) {
+  if (!p) return `<div class="card"><h2>Placement</h2><div class="empty">Not in placement spreadsheet</div></div>`;
+  return `<div class="card">
+    <h2>Placement (Kent's spreadsheet)</h2>
+    <dl class="kv">
+      <dt>School</dt><dd>${esc(p.school || p.school_raw)}</dd>
+      <dt>Summer team</dt><dd>${esc(p.summer_team || '—')}</dd>
+      <dt>League</dt><dd>${esc(p.league || p.league_raw || '—')}</dd>
+      <dt>Status</dt><dd>${esc(p.status || 'Confirmed')} ${statusPill(p.status || 'Confirmed')}</dd>
+      <dt>Draft class</dt><dd>${esc(p.draft_class || '—')}</dd>
+    </dl>
+  </div>`;
+}
+
+function renderAutoMatch(name, rosters) {
+  if (!rosters) return '';
+  const lc = name.toLowerCase();
+  const matched = (rosters.matched || []).find(m => (m.player_name || '').toLowerCase() === lc);
+  const conflict = ((rosters.placement_validation || {}).conflicts || []).find(c => (c.player_name || '').toLowerCase() === lc);
+  const ambiguous = (rosters.ambiguous || []).find(a => (a.player_name || '').toLowerCase() === lc);
+  let body;
+  let cls = 'status-ok';
+  if (conflict) {
+    cls = 'status-warn';
+    body = `<dl class="kv">
+      <dt>Auto-found at</dt><dd>${esc(conflict.auto_team)} (${esc(conflict.auto_league)})</dd>
+      <dt>Status</dt><dd class="${cls}">⚠ Conflict — sheet says different team</dd>
+      <dt>Reason</dt><dd>${esc(conflict.reason || 'stale roster (carryover from prior year)')}</dd>
+    </dl>`;
+  } else if (ambiguous) {
+    cls = 'status-warn';
+    const cands = (ambiguous.candidates || []).map(c =>
+      `${esc(c.summer_team)} / ${esc(c.summer_college || '?')} (${esc(c.league || '?')})`
+    ).join(', ');
+    body = `<dl class="kv">
+      <dt>Status</dt><dd class="${cls}">⚠ Needs review — ${esc(ambiguous.conflict_reason || 'name collision')}</dd>
+      <dt>Candidates</dt><dd>${cands}</dd>
+    </dl>`;
+  } else if (matched) {
+    body = `<dl class="kv">
+      <dt>Auto-confirmed at</dt><dd class="${cls}">✓ ${esc(matched.summer_team)} (${esc(matched.league)})</dd>
+      <dt>Match strength</dt><dd>${esc(matched.match_strength || 'name+college')}</dd>
+      ${matched.profile_url ? `<dt>Profile</dt><dd><a class="source" href="${esc(matched.profile_url)}" target="_blank">View on league site</a></dd>` : ''}
+    </dl>`;
+  } else {
+    cls = 'status-warn';
+    body = `<dl class="kv">
+      <dt>Status</dt><dd class="${cls}">Not yet auto-matched — likely a league we can't scrape (Northwoods, FCBL, etc.)</dd>
+    </dl>`;
+  }
+  return `<div class="card"><h2>Auto-scrape result</h2>${body}</div>`;
+}
+
+function renderBBRef(name, bbref, idCache) {
+  if (!bbref) return '';
+  const record = (bbref.players || {})[name];
+  const idInfo = idCache && (idCache.ids || {})[name];
+  if (!record && !idInfo) {
+    return `<div class="card">
+      <h2>Baseball-Reference (next-day fallback)</h2>
+      <div class="empty">Not yet resolved in Chadwick Bureau index (updates weekly).</div>
+    </div>`;
+  }
+  if (!record || !record.summer_team) {
+    const link = idInfo && idInfo.bbref_minors_id
+      ? `https://www.baseball-reference.com/register/player.fcgi?id=${idInfo.bbref_minors_id}`
+      : null;
+    return `<div class="card">
+      <h2>Baseball-Reference (next-day fallback)</h2>
+      <div class="empty">Resolved in Chadwick but no 2026 summer row yet (BBRef lag is typically days).</div>
+      ${link ? `<div style="margin-top:0.5rem;"><a class="source" href="${esc(link)}" target="_blank">View BBRef profile →</a></div>` : ''}
+    </div>`;
+  }
+  const isPitcher = record.kind === 'pitcher';
+  const grid = isPitcher
+    ? `<div class="stat-grid" style="grid-template-columns: repeat(5, 1fr);">
+        <div class="stat-cell"><div class="stat-label">G</div><div class="stat-value">${esc(record.games || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">IP</div><div class="stat-value">${esc(record.ip || '-')}</div></div>
+        <div class="stat-cell"><div class="stat-label">ERA</div><div class="stat-value">${esc(record.era || '-')}</div></div>
+        <div class="stat-cell"><div class="stat-label">WHIP</div><div class="stat-value">${esc(record.whip || '-')}</div></div>
+        <div class="stat-cell"><div class="stat-label">K</div><div class="stat-value">${esc(record.so || 0)}</div></div>
+      </div>`
+    : `<div class="stat-grid">
+        <div class="stat-cell"><div class="stat-label">G</div><div class="stat-value">${esc(record.games || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">PA</div><div class="stat-value">${esc(record.pa || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">AB</div><div class="stat-value">${esc(record.ab || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">H</div><div class="stat-value">${esc(record.h || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">HR</div><div class="stat-value">${esc(record.hr || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">RBI</div><div class="stat-value">${esc(record.rbi || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">AVG</div><div class="stat-value">${esc(record.avg || '-')}</div></div>
+        <div class="stat-cell"><div class="stat-label">OBP</div><div class="stat-value">${esc(record.obp || '-')}</div></div>
+        <div class="stat-cell"><div class="stat-label">SLG</div><div class="stat-value">${esc(record.slg || '-')}</div></div>
+        <div class="stat-cell"><div class="stat-label">BB</div><div class="stat-value">${esc(record.bb || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">K</div><div class="stat-value">${esc(record.so || 0)}</div></div>
+        <div class="stat-cell"><div class="stat-label">SB</div><div class="stat-value">${esc(record.sb || 0)}</div></div>
+      </div>`;
+  const link = record.bbref_id
+    ? `https://www.baseball-reference.com/register/player.fcgi?id=${record.bbref_id}`
+    : null;
+  return `<div class="card">
+    <h2>Baseball-Reference season totals</h2>
+    <div style="font-size:0.88rem; color:var(--text-dim); margin-bottom:0.3rem;">
+      ${esc(record.summer_team)} (${esc(record.league || record.league_code || '')})
+    </div>
+    ${grid}
+    ${link ? `<div style="margin-top:0.7rem;"><a class="source" href="${esc(link)}" target="_blank">View BBRef profile →</a></div>` : ''}
+  </div>`;
+}
+
+function renderGameLog(name, gameLog) {
+  if (!gameLog) return '';
+  const dates = Object.keys(gameLog).sort().reverse();
+  const lc = name.toLowerCase();
+  const games = [];
+  for (const d of dates.slice(0, 14)) {
+    for (const entry of (gameLog[d] || [])) {
+      if ((entry.player_name || '').toLowerCase() === lc) {
+        games.push({ date: d, ...entry });
+      }
+    }
+  }
+  if (!games.length) {
+    return `<div class="card">
+      <h2>Recent game log</h2>
+      <div class="empty">No recorded games yet.</div>
+    </div>`;
+  }
+  return `<div class="card">
+    <h2>Recent game log</h2>
+    ${games.map(g => `<div class="game-row">
+      <span class="date">${esc(g.date)}</span>
+      <span>${esc(g.game_context || '')}</span>
+      <span><strong>${esc(g.stats_summary || g.game_status)}</strong></span>
+    </div>`).join('')}
+  </div>`;
+}
+
+async function load() {
+  const name = getNameParam();
+  if (!name) {
+    document.getElementById('playerName').textContent = 'No player specified';
+    document.getElementById('content').innerHTML = '<div class="empty">Add ?name=Player+Name to the URL.</div>';
+    return;
+  }
+  const [placements, rosters, bbref, idCache, gameLog] = await Promise.all([
+    fetchJson('data/summer_ball_placements.json'),
+    fetchJson('data/summer_ball_rosters.json'),
+    fetchJson('data/bbref_stats.json'),
+    fetchJson('data/bbref_id_cache.json'),
+    fetchJson('data/summer_game_log.json'),
+  ]);
+
+  const placement = (placements && placements.placements || [])
+    .find(p => (p.player_name || '').toLowerCase() === name.toLowerCase());
+
+  document.getElementById('playerName').textContent = name + (placement ? '' : ' (not in placement sheet)');
+  if (placement) {
+    document.getElementById('playerSub').innerHTML =
+      `${esc(placement.school || '')} → <strong>${esc(placement.summer_team || '—')}</strong> ` +
+      `<span style="color:var(--text-dim);">(${esc(placement.league || '?')})</span>` +
+      statusPill(placement.status || 'Confirmed');
+  }
+
+  const sections = [
+    renderPlacement(placement),
+    renderAutoMatch(name, rosters),
+    renderBBRef(name, bbref, idCache),
+    renderGameLog(name, gameLog),
+  ];
+  document.getElementById('content').innerHTML = sections.join('');
+}
+
+load();
+</script>
+</body>
+</html>

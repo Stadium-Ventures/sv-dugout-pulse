@@ -1367,9 +1367,11 @@ function renderCard(p) {
     <div class="card${isLive ? ' live' : ''}${inactiveCls} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
-        ${p.player_profile_url
-          ? `<a class="player-name" href="${esc(p.player_profile_url, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
-          : `<span class="player-name">${esc(p.player_name)}</span>`}
+        ${p.level === 'Summer'
+          ? `<a class="player-name" href="summer_player.html?name=${encodeURIComponent(p.player_name)}">${esc(p.player_name)}</a>`
+          : p.player_profile_url
+            ? `<a class="player-name" href="${esc(p.player_profile_url, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
+            : `<span class="player-name">${esc(p.player_name)}</span>`}
         ${heartbeatHtml(p.player_name, isClient)}
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         ${p.split_squad ? '<span class="badge badge-gm">SS</span>' : p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
