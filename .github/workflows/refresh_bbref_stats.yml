@@ -6,13 +6,20 @@ name: Refresh Baseball-Reference Stats
 # 2. Fetch each player's BBRef Register page with a 3s polite delay.
 # 3. Commit the updated cache.
 #
-# Runs twice daily: 13:00 UTC (9 AM ET) and 21:00 UTC (5 PM ET).
-# - Morning pass: most overnight BBRef updates land by 6-8 AM ET, so 9 AM
-#   captures last night's games for the Monday email + morning pulse.
-# - Evening pass: catches mid-day BBRef updates and any reprocessing.
+# Runs three times daily: 13:00 / 16:00 / 21:00 UTC (9 AM / 12 PM / 5 PM ET).
+# - 9 AM: catches overnight BBRef updates for Monday email + morning pulse.
+# - 12 PM: backstop in case morning run silently skips (GitHub cron is flaky).
+# - 5 PM: catches mid-day BBRef updates and any reprocessing.
+#
+# NOTE: GitHub-native schedules occasionally get silently skipped — we hit
+# this with the Monday email workflow and again 2026-06-04 (9 AM didn't
+# fire). The robust fix is to dispatch from cron-job.org instead (same
+# pattern as pulse.yml). Until that's wired, three fire windows give us
+# redundancy.
 on:
   schedule:
     - cron: "0 13 * * *"
+    - cron: "0 16 * * *"
     - cron: "0 21 * * *"
   workflow_dispatch: {}
 
