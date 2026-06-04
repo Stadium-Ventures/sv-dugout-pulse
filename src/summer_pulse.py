@@ -657,9 +657,45 @@ def build_summer_pulse_entries() -> list[dict]:
     try:
         _write_summer_window_entries(placements, auto_by_name)
     except Exception:
-        logger.exception("summer_pulse: window-window write failed (non-fatal)")
+        logger.exception("summer_pulse: window write failed (non-fatal)")
+
+    # Yesterday tab reads from yesterday_pulse.json (not current_pulse.json),
+    # so we mirror any is_yesterday=true Summer entries into that file.
+    try:
+        _merge_summer_into_yesterday_pulse(entries)
+    except Exception:
+        logger.exception("summer_pulse: yesterday-pulse write failed (non-fatal)")
 
     return entries
+
+
+def _merge_summer_into_yesterday_pulse(entries: list[dict]) -> None:
+    """Mirror any Summer-level is_yesterday=True entries into
+    data/yesterday_pulse.json so the Yesterday tab surfaces them.
+
+    Strips prior Summer entries first to avoid duplicates on re-run.
+    """
+    path = _REPO_ROOT / "data" / "yesterday_pulse.json"
+    yest_summer = [e for e in entries if e.get("level") == "Summer" and e.get("is_yesterday")]
+    if not yest_summer and not path.exists():
+        return
+    try:
+        with open(path) as f:
+            existing = json.load(f)
+    except Exception:
+        existing = []
+    # File is sometimes a list, sometimes {players: [...]}.
+    if isinstance(existing, dict):
+        players = existing.get("players") or []
+        non_summer = [p for p in players if p.get("level") != "Summer"]
+        existing["players"] = non_summer + yest_summer
+        with open(path, "w") as f:
+            json.dump(existing, f, indent=2)
+    else:
+        non_summer = [p for p in existing if p.get("level") != "Summer"]
+        with open(path, "w") as f:
+            json.dump(non_summer + yest_summer, f, indent=2)
+    logger.info("summer_pulse: wrote %d Summer entries to yesterday_pulse.json", len(yest_summer))
 
 
 def _write_summer_window_entries(placements: list[dict], auto_by_name: dict) -> None:
