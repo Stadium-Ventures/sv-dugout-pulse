@@ -1,0 +1,28 @@
+name: Cron Health Alert (BBRef)
+
+# Daily plain-English check: did the BBRef refresh fire in the last 24h?
+# Runs at 22:00 UTC = 6 PM ET — after all three BBRef windows
+# (9 AM, 12 PM, 5 PM ET) have had their shot.
+#
+# Drop this once cron-job.org takes over BBRef dispatch (memory note:
+# project_dugout_pulse_cronjob_org_bbref).
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install --quiet requests
+      - name: Send health alert
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python -m scripts.cron_health_alert
