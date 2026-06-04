@@ -650,7 +650,122 @@ def build_summer_pulse_entries() -> list[dict]:
         _append_to_game_log(entries)
     except Exception:
         logger.exception("summer_pulse: game-log append failed (non-fatal)")
+
+    # Write Summer entries into window_7d.json + window_season.json so the
+    # 7 Days / Season tabs surface summer-ball stats. Non-fatal — if either
+    # write fails, today's pulse still ships.
+    try:
+        _write_summer_window_entries(placements, auto_by_name)
+    except Exception:
+        logger.exception("summer_pulse: window-window write failed (non-fatal)")
+
     return entries
+
+
+def _write_summer_window_entries(placements: list[dict], auto_by_name: dict) -> None:
+    """For each MLB-API summer placement, fetch last-7-day + season-to-date
+    stats and append a Summer-level entry to window_7d.json + window_season.json.
+
+    Other summer leagues (Presto/Northwoods/CPL etc.) get a roster-only entry
+    so Kent sees the placement even before stats accumulate.
+    """
+    from src.baseball_reference import _STATS_CACHE_PATH as _BBREF_PATH  # noqa
+    today = _today_et()
+    week_start = today - timedelta(days=7)
+    season_start = date(today.year, 1, 1)
+
+    bbref_data: dict = {}
+    if _BBREF_PATH.exists():
+        try:
+            bbref_data = json.loads(_BBREF_PATH.read_text()).get("players", {})
+        except Exception:
+            bbref_data = {}
+
+    week_entries: list[dict] = []
+    season_entries: list[dict] = []
+    for p in placements:
+        name = (p.get("player_name") or "").strip()
+        if not name:
+            continue
+        status = p.get("status", "")
+        if status in ("Shut Down", "Injured"):
+            continue
+        league = p.get("league", "")
+        summer_team = p.get("summer_team", "")
+        if not summer_team or not league:
+            continue
+        auto = auto_by_name.get(name.lower(), {})
+
+        # MLB-API leagues — query byDateRange for real numbers.
+        if league in _MLB_LEAGUES:
+            person_id = None
+            src = auto.get("source_id") if auto else None
+            if src and str(src).isdigit():
+                person_id = int(src)
+            week_line = _summer_window_line(person_id, week_start, today) if person_id else None
+            season_line = _summer_window_line(person_id, season_start, today) if person_id else None
+            week_entries.append(_summer_window_entry(p, "7d", week_line))
+            season_entries.append(_summer_window_entry(p, "season", season_line))
+        else:
+            # Non-MLB-API league. BBRef cache has season-to-date if we
+            # resolved their ID.
+            bbref = bbref_data.get(name)
+            summary = bbref.get("summary") if bbref and bbref.get("summer_team") else None
+            week_entries.append(_summer_window_entry(p, "7d", None))
+            season_entries.append(_summer_window_entry(p, "season", summary))
+
+    _merge_summer_into_window(_REPO_ROOT / "data" / "window_7d.json", week_entries)
+    _merge_summer_into_window(_REPO_ROOT / "data" / "window_season.json", season_entries)
+    logger.info(
+        "summer_pulse: window write — %d 7d entries, %d season entries",
+        len(week_entries), len(season_entries),
+    )
+
+
+def _summer_window_entry(p: dict, window: str, summary: Optional[str]) -> dict:
+    """Build a window entry (matches window_7d.json shape) for one placement."""
+    status = p.get("status", "")
+    stats_summary = summary or (
+        f"{status}" if status and status != "Confirmed"
+        else "No games yet — season just opened"
+    )
+    return {
+        "player_name": p["player_name"],
+        "team": f"{p['summer_team']} ({p['league']})",
+        "level": "Summer",
+        "is_client": True,
+        "tags": {
+            "position": "",
+            "draft_class": p.get("draft_class", ""),
+            "roster_priority": 99,
+            "summer_college": p.get("school", ""),
+            "summer_league": p.get("league", ""),
+            "placement_status": status,
+        },
+        "window": window,
+        "window_grade": "— No Data",
+        "stats": {},
+        "stats_summary": stats_summary,
+        "games_played": 0,
+        "last_updated": _NOW_ISO,
+    }
+
+
+def _merge_summer_into_window(path, summer_entries: list[dict]) -> None:
+    """Read an existing window file, strip prior Summer-level entries (so
+    re-runs don't duplicate), append fresh Summer entries, write back.
+    """
+    existing: list[dict] = []
+    if path.exists():
+        try:
+            with open(path) as f:
+                existing = json.load(f) or []
+        except Exception:
+            existing = []
+    non_summer = [e for e in existing if e.get("level") != "Summer"]
+    merged = non_summer + summer_entries
+    with open(path, "w") as f:
+        json.dump(merged, f, indent=2)
 
 
 def _log_cross_source_disagreements(entries: list[dict]) -> None:
@@ -762,6 +877,45 @@ def _team_name_to_id(league_short_name: str) -> dict[str, int]:
             if key:
                 out[key.lower()] = tid
     return out
+
+
+def _summer_window_line(person_id: int, start: date, end: date) -> Optional[str]:
+    """Pull a hitter/pitcher line from MLB Stats API for a date range.
+    Used to populate 7D / Season Summer cards."""
+    if not person_id:
+        return None
+    try:
+        url = (
+            f"{_STATSAPI}/people/{person_id}/stats"
+            f"?stats=byDateRange&startDate={start.isoformat()}"
+            f"&endDate={end.isoformat()}&group=hitting,pitching"
+        )
+        resp = _session.get(url, timeout=10).json()
+        parts: list[str] = []
+        for group in resp.get("stats", []) or []:
+            kind = group.get("group", {}).get("displayName", "")
+            splits = group.get("splits", []) or []
+            if not splits:
+                continue
+            s = splits[0].get("stat", {})
+            if kind == "hitting" and s.get("plateAppearances"):
+                parts.append(
+                    f"{s.get('hits',0)}-{s.get('atBats',0)}, "
+                    f"{s.get('homeRuns',0)} HR, {s.get('rbi',0)} RBI, "
+                    f"{s.get('strikeOuts',0)} K · "
+                    f"{s.get('avg','-')}/{s.get('obp','-')}/{s.get('slg','-')}"
+                )
+            elif kind == "pitching" and s.get("inningsPitched"):
+                parts.append(
+                    f"{s.get('inningsPitched','0.0')} IP, "
+                    f"{s.get('earnedRuns',0)} ER, "
+                    f"{s.get('strikeOuts',0)} K, "
+                    f"{s.get('baseOnBalls',0)} BB · "
+                    f"ERA {s.get('era','-')}, WHIP {s.get('whip','-')}"
+                )
+        return " · ".join(parts) if parts else None
+    except Exception:
+        return None
 
 
 def _mlb_cards_for_placement(
