@@ -732,23 +732,32 @@ def _write_summer_window_entries(placements: list[dict], auto_by_name: dict) -> 
             continue
         auto = auto_by_name.get(name.lower(), {})
 
-        # MLB-API leagues — query byDateRange for real numbers.
+        # MLB-API leagues — query season totals (more reliable than
+        # byDateRange, which lags).
         if league in _MLB_LEAGUES:
             person_id = None
             src = auto.get("source_id") if auto else None
             if src and str(src).isdigit():
                 person_id = int(src)
-            week_line = _summer_window_line(person_id, week_start, today) if person_id else None
-            season_line = _summer_window_line(person_id, season_start, today) if person_id else None
-            week_entries.append(_summer_window_entry(p, "7d", week_line))
-            season_entries.append(_summer_window_entry(p, "season", season_line))
+            if not person_id:
+                try:
+                    url = f"{_STATSAPI}/people/search?names={name.replace(' ', '+')}&sportIds=22"
+                    resp = _session.get(url, timeout=10).json()
+                    people = resp.get("people", []) or []
+                    if people:
+                        person_id = people[0].get("id")
+                except Exception:
+                    pass
+            stats = _summer_season_stats(person_id) if person_id else None
+            week_entries.append(_summer_window_entry(p, "7d", stats))
+            season_entries.append(_summer_window_entry(p, "season", stats))
         else:
             # Non-MLB-API league. BBRef cache has season-to-date if we
-            # resolved their ID.
+            # resolved their ID. Pull structured stats out where possible.
             bbref = bbref_data.get(name)
-            summary = bbref.get("summary") if bbref and bbref.get("summer_team") else None
-            week_entries.append(_summer_window_entry(p, "7d", None))
-            season_entries.append(_summer_window_entry(p, "season", summary))
+            stats = _bbref_to_window_stats(bbref) if bbref and bbref.get("summer_team") else None
+            week_entries.append(_summer_window_entry(p, "7d", stats))
+            season_entries.append(_summer_window_entry(p, "season", stats))
 
     _merge_summer_into_window(_REPO_ROOT / "data" / "window_7d.json", week_entries)
     _merge_summer_into_window(_REPO_ROOT / "data" / "window_season.json", season_entries)
@@ -758,20 +767,57 @@ def _write_summer_window_entries(placements: list[dict], auto_by_name: dict) -> 
     )
 
 
-def _summer_window_entry(p: dict, window: str, summary: Optional[str]) -> dict:
-    """Build a window entry (matches window_7d.json shape) for one placement."""
+def _summer_window_entry(p: dict, window: str, stats: Optional[dict]) -> dict:
+    """Build a window entry (matches window_7d.json shape) for one placement.
+
+    `stats` is the dict returned by _summer_season_stats / _bbref_to_window_stats,
+    or None if we don't have stats yet. The website renders the stats grid
+    from the `stats` field; we map our schema → its expected keys.
+    """
     status = p.get("status", "")
-    stats_summary = summary or (
-        f"{status}" if status and status != "Confirmed"
-        else "No games yet — season just opened"
-    )
+    games_played = (stats or {}).get("games", 0)
+    if stats:
+        stats_summary = _format_window_summary(stats)
+        # Map to the website's window-card stats schema.
+        grid: dict = {
+            "pa": stats.get("pa", 0),
+            "ab": stats.get("ab", 0),
+            "h": stats.get("h", 0),
+            "hr": stats.get("hr", 0),
+            "bb": stats.get("bb", 0),
+            "k": stats.get("k", 0),
+            "rbi": stats.get("rbi", 0),
+            "r": stats.get("runs", 0),
+            "sb": stats.get("sb", 0),
+            "avg": stats.get("avg", "-"),
+            "obp": stats.get("obp", "-"),
+            "slg": stats.get("slg", "-"),
+            "ops": stats.get("ops", "-"),
+            "k_pct": stats.get("k_pct", "-"),
+            "bb_pct": stats.get("bb_pct", "-"),
+        }
+        if stats.get("kind") == "pitcher":
+            grid.update({
+                "ip": stats.get("ip", "-"),
+                "era": stats.get("era", "-"),
+                "whip": stats.get("whip", "-"),
+                "earned_runs": stats.get("earned_runs", 0),
+            })
+        position = "Pitcher" if stats.get("kind") == "pitcher" else "Hitter"
+    else:
+        grid = {}
+        stats_summary = (
+            status if status and status != "Confirmed"
+            else "No games yet — season just opened"
+        )
+        position = ""
     return {
         "player_name": p["player_name"],
         "team": f"{p['summer_team']} ({p['league']})",
         "level": "Summer",
         "is_client": True,
         "tags": {
-            "position": "",
+            "position": position,
             "draft_class": p.get("draft_class", ""),
             "roster_priority": 99,
             "summer_college": p.get("school", ""),
@@ -780,11 +826,47 @@ def _summer_window_entry(p: dict, window: str, summary: Optional[str]) -> dict:
         },
         "window": window,
         "window_grade": "— No Data",
-        "stats": {},
+        "stats": grid,
         "stats_summary": stats_summary,
-        "games_played": 0,
+        "games_played": games_played,
         "last_updated": _NOW_ISO,
     }
+
+
+def _bbref_to_window_stats(bbref: dict) -> Optional[dict]:
+    """Convert a BBRef cache record to the same shape as _summer_season_stats."""
+    if not bbref:
+        return None
+    if bbref.get("kind") == "pitcher":
+        return {
+            "kind": "pitcher",
+            "games": bbref.get("games", 0),
+            "ip": bbref.get("ip", "-"),
+            "era": bbref.get("era", "-"),
+            "whip": bbref.get("whip", "-"),
+            "earned_runs": bbref.get("earned_runs", 0),
+            "k": bbref.get("so", 0),
+            "bb": bbref.get("bb", 0),
+        }
+    if bbref.get("ab") or bbref.get("pa"):
+        ab = bbref.get("ab", 0)
+        h = bbref.get("h", 0)
+        return {
+            "kind": "hitter",
+            "games": bbref.get("games", 0),
+            "pa": bbref.get("pa", 0), "ab": ab, "h": h,
+            "hr": bbref.get("hr", 0),
+            "doubles": bbref.get("doubles", 0),
+            "rbi": bbref.get("rbi", 0),
+            "runs": bbref.get("runs", 0),
+            "bb": bbref.get("bb", 0),
+            "k": bbref.get("so", 0),
+            "sb": bbref.get("sb", 0),
+            "avg": bbref.get("avg", "-"),
+            "obp": bbref.get("obp", "-"),
+            "slg": bbref.get("slg", "-"),
+        }
+    return None
 
 
 def _merge_summer_into_window(path, summer_entries: list[dict]) -> None:
@@ -915,43 +997,97 @@ def _team_name_to_id(league_short_name: str) -> dict[str, int]:
     return out
 
 
-def _summer_window_line(person_id: int, start: date, end: date) -> Optional[str]:
-    """Pull a hitter/pitcher line from MLB Stats API for a date range.
-    Used to populate 7D / Season Summer cards."""
+def _summer_season_stats(person_id: int) -> Optional[dict]:
+    """Pull a player's MLB Stats API season stats (hitting + pitching).
+
+    The byDateRange endpoint has a multi-day aggregation lag; season
+    aggregates are usually updated within an hour or two of each game
+    Final. For early-season Summer (where 7D ~= season anyway) we use
+    this for both window views.
+
+    Returns a dict shaped for window-card consumption:
+      {pa, ab, h, hr, bb, k, sb, runs, doubles, rbi, avg, obp, slg, ops,
+       games, ip, era, whip, earned_runs, h_allowed, kind}
+    or None if the player has no MLB-side season totals yet.
+    """
     if not person_id:
         return None
     try:
         url = (
             f"{_STATSAPI}/people/{person_id}/stats"
-            f"?stats=byDateRange&startDate={start.isoformat()}"
-            f"&endDate={end.isoformat()}&group=hitting,pitching"
+            f"?stats=season&season={_today_et().year}&sportId=22"
+            f"&group=hitting,pitching"
         )
         resp = _session.get(url, timeout=10).json()
-        parts: list[str] = []
+        h_split = p_split = None
         for group in resp.get("stats", []) or []:
             kind = group.get("group", {}).get("displayName", "")
             splits = group.get("splits", []) or []
             if not splits:
                 continue
-            s = splits[0].get("stat", {})
-            if kind == "hitting" and s.get("plateAppearances"):
-                parts.append(
-                    f"{s.get('hits',0)}-{s.get('atBats',0)}, "
-                    f"{s.get('homeRuns',0)} HR, {s.get('rbi',0)} RBI, "
-                    f"{s.get('strikeOuts',0)} K · "
-                    f"{s.get('avg','-')}/{s.get('obp','-')}/{s.get('slg','-')}"
-                )
-            elif kind == "pitching" and s.get("inningsPitched"):
-                parts.append(
-                    f"{s.get('inningsPitched','0.0')} IP, "
-                    f"{s.get('earnedRuns',0)} ER, "
-                    f"{s.get('strikeOuts',0)} K, "
-                    f"{s.get('baseOnBalls',0)} BB · "
-                    f"ERA {s.get('era','-')}, WHIP {s.get('whip','-')}"
-                )
-        return " · ".join(parts) if parts else None
+            stat = splits[0].get("stat", {})
+            if kind == "hitting" and stat.get("plateAppearances"):
+                h_split = stat
+            elif kind == "pitching" and stat.get("inningsPitched"):
+                p_split = stat
+        # Hitter line wins for two-way players.
+        if h_split:
+            ab = h_split.get("atBats", 0)
+            h = h_split.get("hits", 0)
+            bb = h_split.get("baseOnBalls", 0)
+            k = h_split.get("strikeOuts", 0)
+            pa = h_split.get("plateAppearances", 0)
+            k_pct = f"{round(100*k/pa,1)}%" if pa else None
+            bb_pct = f"{round(100*bb/pa,1)}%" if pa else None
+            return {
+                "kind": "hitter",
+                "games": h_split.get("gamesPlayed", 0),
+                "pa": pa, "ab": ab, "h": h,
+                "hr": h_split.get("homeRuns", 0),
+                "doubles": h_split.get("doubles", 0),
+                "triples": h_split.get("triples", 0),
+                "rbi": h_split.get("rbi", 0),
+                "runs": h_split.get("runs", 0),
+                "bb": bb, "k": k,
+                "sb": h_split.get("stolenBases", 0),
+                "avg": h_split.get("avg", "-"),
+                "obp": h_split.get("obp", "-"),
+                "slg": h_split.get("slg", "-"),
+                "ops": h_split.get("ops", "-"),
+                "k_pct": k_pct or "-",
+                "bb_pct": bb_pct or "-",
+            }
+        if p_split:
+            return {
+                "kind": "pitcher",
+                "games": p_split.get("gamesPlayed", 0),
+                "ip": p_split.get("inningsPitched", "0.0"),
+                "earned_runs": p_split.get("earnedRuns", 0),
+                "h_allowed": p_split.get("hits", 0),
+                "bb": p_split.get("baseOnBalls", 0),
+                "k": p_split.get("strikeOuts", 0),
+                "era": p_split.get("era", "-"),
+                "whip": p_split.get("whip", "-"),
+            }
     except Exception:
         return None
+    return None
+
+
+def _format_window_summary(stats: dict) -> str:
+    if not stats:
+        return ""
+    if stats.get("kind") == "pitcher":
+        return (
+            f"{stats.get('ip','-')} IP, {stats.get('earned_runs',0)} ER, "
+            f"{stats.get('k',0)} K, {stats.get('bb',0)} BB · "
+            f"ERA {stats.get('era','-')} ({stats.get('games',0)} G)"
+        )
+    return (
+        f"{stats.get('h',0)}-{stats.get('ab',0)}, {stats.get('hr',0)} HR, "
+        f"{stats.get('rbi',0)} RBI · {stats.get('avg','-')}/"
+        f"{stats.get('obp','-')}/{stats.get('slg','-')} ({stats.get('games',0)} G)"
+    )
 
 
 def _mlb_cards_for_placement(
