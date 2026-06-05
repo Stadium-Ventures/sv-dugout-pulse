@@ -168,13 +168,18 @@ def _player_line(game_pk: int, person_id: int) -> Optional[dict]:
             h = b.get("hits", 0)
             parts = [f"{h}-{ab}"]
             extras = []
-            if b.get("doubles"): extras.append(f"{b['doubles']}×2B")
-            if b.get("triples"): extras.append(f"{b['triples']}×3B")
-            if b.get("homeRuns"): extras.append(f"{b['homeRuns']}×HR")
-            if b.get("rbi"): extras.append(f"{b['rbi']} RBI")
-            if b.get("baseOnBalls"): extras.append(f"{b['baseOnBalls']} BB")
-            if b.get("strikeOuts"): extras.append(f"{b['strikeOuts']} K")
-            if b.get("stolenBases"): extras.append(f"{b['stolenBases']} SB")
+            # Box-score convention: just the stat letter for 1, prefix count
+            # for 2+ (e.g. "BB" = 1 walk, "2 BB" = 2 walks; "2B" = 1 double,
+            # "2 2B" = 2 doubles).
+            def _fmt(n: int, label: str) -> str:
+                return label if n == 1 else f"{n} {label}"
+            if b.get("doubles"): extras.append(_fmt(b['doubles'], "2B"))
+            if b.get("triples"): extras.append(_fmt(b['triples'], "3B"))
+            if b.get("homeRuns"): extras.append(_fmt(b['homeRuns'], "HR"))
+            if b.get("rbi"): extras.append(_fmt(b['rbi'], "RBI"))
+            if b.get("baseOnBalls"): extras.append(_fmt(b['baseOnBalls'], "BB"))
+            if b.get("strikeOuts"): extras.append(_fmt(b['strikeOuts'], "K"))
+            if b.get("stolenBases"): extras.append(_fmt(b['stolenBases'], "SB"))
             return {
                 "summary": ", ".join(parts + extras),
                 "kind": "hitter",
