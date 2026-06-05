@@ -1,52 +1,5 @@
 [
   {
-    "generated_at": "2026-05-29T16:31:58.299206+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Adam McKelvey",
-      "Caleb Daniel"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 22
-      },
-      "ESPN": {
-        "found stats": 19,
-        "No game listed today": 1,
-        "Game found, not in box score": 2
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 2
-      },
-      "Sidearm": {
-        "No game listed today": 2
-      },
-      "StatBroadcast": {
-        "No game listed today": 2
-      },
-      "NCAA.org": {
-        "Stale data — skipped": 2
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-29T16:46:55.151242+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -34168,6 +34121,66 @@
   },
   {
     "generated_at": "2026-06-05T16:17:03.885073+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Cade Doughty"
+    ],
+    "total_clients": 113,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 2
+      },
+      "ESPN": {
+        "found stats": 2
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-05T16:32:14.725409+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
