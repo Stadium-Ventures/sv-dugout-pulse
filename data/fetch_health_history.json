@@ -1,58 +1,5 @@
 [
   {
-    "generated_at": "2026-05-30T20:16:40.907058+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Aaron Watson",
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Henry Zatkowski",
-      "Austin Amaral",
-      "Ryan DeSanto",
-      "Sam Mitchell",
-      "Lucas Steele"
-    ],
-    "total_clients": 85,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 22
-      },
-      "ESPN": {
-        "found stats": 16,
-        "No game listed today": 1,
-        "Game found, not in box score": 5
-      },
-      "NCAA.com": {
-        "found stats": 1,
-        "Game found, not in box score": 4,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 5
-      },
-      "StatBroadcast": {
-        "No game listed today": 5
-      },
-      "NCAA.org": {
-        "No game listed today": 5
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-05-30T20:31:58.998234+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -36779,6 +36726,81 @@
     "fallback_clients": [
       "Aaron Watson",
       "Dax Kilby",
+      "Lee Sowers"
+    ],
+    "total_clients": 113,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 8
+      },
+      "ESPN": {
+        "found stats": 7,
+        "Game found, not in box score": 1
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 1
+      },
+      "Sidearm": {
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "No game listed today": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-06T20:17:12.582862+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Aaron Watson",
+      "Dax Kilby",
+      "Garrett Whitlock",
       "Lee Sowers"
     ],
     "total_clients": 113,
