@@ -20496,7 +20496,7 @@
   },
   {
     "date": "2026-06-07",
-    "updated_at": "2026-06-07T19:02:07.502817+00:00",
+    "updated_at": "2026-06-07T19:17:53.793255+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -20660,7 +20660,7 @@
         "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -20671,7 +20671,7 @@
         "team": "Colorado Rockies",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -20870,13 +20870,17 @@
         "team": "North Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -20986,7 +20990,7 @@
         "team": "Oklahoma City Comets",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
