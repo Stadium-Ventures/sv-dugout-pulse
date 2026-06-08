@@ -1399,6 +1399,7 @@ function renderCard(p) {
       <div class="card-actions">
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
         ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${p.game_status === 'Scheduled' ? 'Preview' : 'Box Score'}</a>` : ''}
+        ${(p.tags && p.tags.league_site_url) ? `<a class="btn" href="${esc(p.tags.league_site_url, true)}" target="_blank" rel="noopener" title="Open the league's official team page in a new tab">League Site</a>` : ''}
       </div>
     </div>`;
 }
