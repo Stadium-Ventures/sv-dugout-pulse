@@ -1,54 +1,5 @@
 [
   {
-    "generated_at": "2026-06-01T21:31:52.827843+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Myles Bailey",
-      "Adam McKelvey"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 20
-      },
-      "ESPN": {
-        "No game listed today": 15,
-        "found stats": 3,
-        "Game found, not in box score": 2
-      },
-      "NCAA.com": {
-        "found stats": 8,
-        "Game found, not in box score": 8,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 9
-      },
-      "StatBroadcast": {
-        "No game listed today": 9
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 8,
-        "stale (yesterday)": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-06-01T21:46:55.416812+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -41094,6 +41045,81 @@
   },
   {
     "generated_at": "2026-06-08T21:17:20.408504+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Cade Doughty"
+    ],
+    "total_clients": 112,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 7
+      },
+      "ESPN": {
+        "No game listed today": 2,
+        "Game found, not in box score": 3,
+        "found stats": 2
+      },
+      "NCAA.com": {
+        "found stats": 1,
+        "Game found, not in box score": 4
+      },
+      "Sidearm": {
+        "No game listed today": 4
+      },
+      "StatBroadcast": {
+        "No game listed today": 4
+      },
+      "NCAA.org": {
+        "No game listed today": 4
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-08T21:32:13.107454+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
