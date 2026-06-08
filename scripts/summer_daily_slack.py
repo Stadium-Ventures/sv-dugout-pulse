@@ -83,6 +83,34 @@ def _format_today_line(e: dict) -> str:
     return ""
 
 
+def _no_data_active_placements(today_entries: list[dict], yest_entries: list[dict]) -> list[str]:
+    """Active placements (Confirmed / 2nd Half) for whom we have no data
+    today or yesterday. Likely a league we can't reach — surface so the
+    team knows we aren't silently dropping them.
+    """
+    yest_finals = {
+        e.get("player_name") for e in yest_entries
+        if e.get("game_status") in ("Final", "In Progress")
+    }
+    out = []
+    seen = set()
+    for e in today_entries:
+        name = e.get("player_name")
+        if not name or name in seen:
+            continue
+        status = (e.get("tags") or {}).get("placement_status", "")
+        if status not in ("Confirmed", "2nd Half", ""):
+            continue
+        # Skip if today has a real game or yesterday had a final.
+        if e.get("game_status") in ("Scheduled", "In Progress", "Final", "Live"):
+            continue
+        if name in yest_finals:
+            continue
+        seen.add(name)
+        out.append(name)
+    return sorted(out)
+
+
 def build_message() -> str:
     yest = _summer_clients(_load(_YESTERDAY_PATH))
     today = _summer_clients(_load(_CURRENT_PATH))
@@ -125,6 +153,16 @@ def build_message() -> str:
         parts.extend(today_lines)
     else:
         parts.append(f"\n*Coming up today ({today_date}):*  _no client summer games on the schedule_")
+
+    # Honest hedge: some placements aren't showing data here yet. Could be
+    # leagues that haven't opened, days off, or leagues we can't reach.
+    no_data = _no_data_active_placements(today, yest)
+    if no_data:
+        parts.append(
+            f"\n_Heads up: {len(no_data)} other placements have no data here. "
+            f"Most should appear as their leagues open and games run; a few "
+            f"leagues we may not be able to reach automatically._"
+        )
 
     parts.append("\n_<https://stadium-ventures.github.io/sv-dugout-pulse/|Open Dugout Pulse>_")
     return "\n".join(parts)

@@ -1411,22 +1411,11 @@ function summerNoDataHint(p) {
   // Walk-throughs for the user so "-- No Data" isn't a black box.
   let msg = '';
   let color = '#7d8590';
-  if (bbrefCacheHours == null) {
-    msg = 'Baseball-Reference fallback not yet cached — first refresh runs at 9 AM ET.';
-  } else if (bbrefCacheHours > 30) {
+  if (bbrefCacheHours != null && bbrefCacheHours > 30) {
     color = '#fbbf24';
-    msg = `⚠ Baseball-Reference cache stale — last refresh ${Math.round(bbrefCacheHours)}h ago. Cron may have skipped; manually trigger refresh_bbref_stats.yml.`;
+    msg = 'Our backup stats source hasn\'t refreshed recently. Manually trigger it from GitHub if needed.';
   } else {
-    // Cache is fresh. Is the player in it?
-    const record = bbrefStats && bbrefStats.players && bbrefStats.players[p.player_name];
-    if (!record) {
-      msg = `Baseball-Reference cache fresh (${Math.round(bbrefCacheHours)}h ago) — player not yet in Chadwick Bureau index. Updates weekly.`;
-    } else if (!record.summer_team) {
-      msg = `Baseball-Reference cache fresh (${Math.round(bbrefCacheHours)}h ago) — no 2026 summer row on his BBRef page yet (lag is typically days for new games).`;
-    } else {
-      // Has data but we showed Off Day — means season-to-date is the only thing.
-      return '';
-    }
+    msg = 'No stats here yet. This league may not surface data for a while — should appear if and when Baseball-Reference picks it up.';
   }
   return `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid ${color};border-radius:4px;font-size:11px;color:${color};line-height:1.4;">${esc(msg)}</div>`;
 }
@@ -2502,10 +2491,10 @@ async function loadSummerBanner() {
           const hrs = bbrefCacheHours;
           const ago = hrs < 1 ? `${Math.round(hrs * 60)}m` : hrs < 24 ? `${Math.round(hrs)}h` : `${Math.round(hrs/24)}d`;
           let color = '#7d8590';
-          let label = `Baseball-Reference next-day stats: refreshed ${ago} ago`;
+          let label = `Backup stats source refreshed ${ago} ago`;
           if (hrs > 30) {
             color = '#fbbf24';
-            label = `⚠ Baseball-Reference cache stale (${ago} ago) — cron may have skipped`;
+            label = `⚠ Backup stats source last refreshed ${ago} ago`;
           }
           freshEl.innerHTML = `<span style="color:${color};">${label}</span>`;
         }
