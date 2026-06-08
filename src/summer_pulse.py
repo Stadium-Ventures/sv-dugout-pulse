@@ -40,6 +40,73 @@ _BBREF_STATS_PATH = _REPO_ROOT / "data" / "bbref_stats.json"
 # alongside the data source. Re-resolved at the top of build_summer_pulse_entries.
 _NOW_ISO: str = ""
 
+
+# League-site URLs to surface on each Summer card. The user wants a one-click
+# path to the official league source so they can spot-check stats we can't
+# pull (Northwoods admin-ajax) or just see additional context. Format:
+# league_short_name -> (host, path_template). Path template uses {slug}
+# which we derive from the placement's summer_team name (with hand-mapped
+# exceptions for known spreadsheet typos vs official slug).
+_LEAGUE_SITE_PATTERNS: dict = {
+    "Northwoods":     ("https://northwoodsleague.com",  "/{slug}/statistics/"),
+    "Cape Cod":       ("https://capecodbaseball.org",    "/teams/{slug}/"),
+    "NECBL":          ("https://necbl.com",              "/sports/bsb/2026/teams/{slug}"),
+    "PGCBL":          ("https://pgcbl.com",              "/sports/bsb/2025-26/teams/{slug}"),
+    "Cal Ripken":     ("https://calripkensrleague.org",  "/sports/bsb/2026/teams/{slug}"),
+    "FCBL":           ("https://thefuturesleague.com",   "/sports/bsb/2026/teams/{slug}"),
+    "Prospect":       ("https://prospectleague.com",     "/sports/bsb/2025-26/teams/{slug}"),
+    "Coastal Plain":  ("https://coastalplain.com",       "/rosters/{slug}-roster/"),
+    "MLB Draft":      ("https://www.mlb.com",            "/draft-league"),  # generic, no team page
+    "Appalachian":    ("https://appyleague.com",         ""),               # generic root
+}
+
+# Known team-slug overrides where spreadsheet team name differs from the
+# official URL slug. Add entries as we discover them.
+_TEAM_SLUG_OVERRIDES: dict = {
+    # Northwoods (spreadsheet typos / slight URL variations).
+    "willmar stringers": "willmar-stingers",   # sheet has extra R
+    "rochester honkers": "rochester-honkers",
+    # NECBL — PrestoSports slugs are typically all-lowercase no-hyphen.
+    "new port gulls": "newportgulls",
+    "newport gulls": "newportgulls",
+    "keene swamp bats": "keeneswampbats",
+    "bristol blues": "bristolblues",
+    # Coastal Plain — sheet had "Lexington Blowfish"; URL has "county".
+    "lexington blowfish": "lexington-county-blowfish",
+    "lexington county blowfish": "lexington-county-blowfish",
+    # CCBL — spreadsheet typo "Gateman" should be "Gatemen".
+    "wareham gateman": "wareham-gatemen",
+    # PGCBL (PrestoSports slugs all-lowercase no-hyphen).
+    "amsterdam mohawks": "amsterdammohawks",
+    # FCBL — sheet typo "New Britian Bees" + Presto slug is one word.
+    "new britian bees": "newbritainbees",
+    "new britain bees": "newbritainbees",
+}
+
+
+def _slugify(name: str) -> str:
+    """Generic lowercase + dash slug from a team name."""
+    import re as _re
+    s = (name or "").lower()
+    s = _re.sub(r"[^a-z0-9]+", "-", s)
+    s = _re.sub(r"-+", "-", s).strip("-")
+    return s
+
+
+def _league_site_url(league: str, summer_team: str) -> str:
+    """Return the official league-site URL for this placement's team, or ""."""
+    pattern = _LEAGUE_SITE_PATTERNS.get(league)
+    if not pattern:
+        return ""
+    host, path = pattern
+    if not path:
+        return host
+    team_lc = (summer_team or "").strip().lower()
+    slug = _TEAM_SLUG_OVERRIDES.get(team_lc) or _slugify(summer_team)
+    if not slug:
+        return host
+    return host + path.format(slug=slug)
+
 # MLB Stats API → our league short_name. Mirrors src/summer_ball.py classes.
 # Maps to the leagueId on MLB Stats API (sportId=22 = College Baseball).
 _MLB_LEAGUE_IDS = {"Cape Cod": 565, "Appalachian": 120, "MLB Draft": 5536}
@@ -636,9 +703,25 @@ def build_summer_pulse_entries() -> list[dict]:
     entries.sort(key=_sort_key)
 
     # Stamp every summer entry with stats_captured_at so the UI can render
-    # "last updated X min ago" next to the data source.
+    # "last updated X min ago" next to the data source. Also stamp the
+    # league-site URL so cards can show a "View on league site" link —
+    # one-click path to the official source for spot-checks (especially
+    # for Northwoods / CPL where our automation can't pull stats).
     for e in entries:
         e.setdefault("stats_captured_at", _NOW_ISO)
+        tags = e.setdefault("tags", {})
+        if not tags.get("league_site_url"):
+            league = tags.get("summer_league", "")
+            # summer_team is in entry's `team` field as "TeamName (League)" —
+            # parse it back out.
+            t = e.get("team", "")
+            if "(" in t:
+                team_name = t.split("(")[0].strip()
+            else:
+                team_name = t
+            url = _league_site_url(league, team_name)
+            if url:
+                tags["league_site_url"] = url
 
     # Cross-source agreement check — flag silent errors. Non-fatal.
     try:
