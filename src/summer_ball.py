@@ -656,6 +656,9 @@ class PrestoSportsLeague(SummerLeague):
 
     host_url: str = ""
     season_year: int = 0  # 0 = current year
+    # Hard-coded team slugs to use when the league's teams index page is
+    # JS-rendered (Cal Ripken is the case). Empty = auto-discover from index.
+    fallback_team_slugs: list[str] = []
     # Some PrestoSports leagues use academic-year format ("2025-26") rather
     # than calendar year ("2026"). PGCBL + Prospect League use academic;
     # NECBL + Cal Ripken use calendar. Subclasses can override.
@@ -693,20 +696,27 @@ class PrestoSportsLeague(SummerLeague):
         year = self._year()
         teams_index_url = f"{self.host_url}/sports/bsb/{year}/teams"
         html = self._fetch_page(teams_index_url)
-        if not html:
-            raise RuntimeError(
-                f"{self.short_name}: teams index returned empty "
-                f"(direct + residential proxy both failed)"
-            )
         slugs: set[str] = set()
-        for m in re.finditer(
-            rf"/sports/bsb/{year}/teams/([a-z0-9-]+)/?[?\"' ]", html,
-        ):
-            slug = m.group(1)
-            if "allstars" in slug or "all-stars" in slug:
-                continue
-            slugs.add(slug)
-        logger.info("%s: %d team slugs discovered for %d", self.short_name, len(slugs), year)
+        if html:
+            for m in re.finditer(
+                rf"/sports/bsb/{year}/teams/([a-z0-9-]+)/?[?\"' ]", html,
+            ):
+                slug = m.group(1)
+                if "allstars" in slug or "all-stars" in slug:
+                    continue
+                slugs.add(slug)
+        if not slugs:
+            if self.fallback_team_slugs:
+                slugs = set(self.fallback_team_slugs)
+                logger.info("%s: teams index unavailable / JS-rendered; using %d fallback slugs",
+                            self.short_name, len(slugs))
+            else:
+                raise RuntimeError(
+                    f"{self.short_name}: teams index returned empty and no "
+                    f"fallback_team_slugs configured"
+                )
+        else:
+            logger.info("%s: %d team slugs discovered for %d", self.short_name, len(slugs), year)
         entries: list[PlayerEntry] = []
         for slug in sorted(slugs):
             url = f"{self.host_url}/sports/bsb/{year}/teams/{slug}?view=roster"
@@ -790,13 +800,18 @@ class NECBL(PrestoSportsLeague):
 class CalRipkenLeague(PrestoSportsLeague):
     """Cal Ripken Sr. Collegiate Baseball League — PrestoSports.
 
-    Note: the league's own domain is calripkensrleague.org (with "sr" for
-    "Sr."), NOT calripkenleague.org. The .prestosports.com subdomain is
-    Cloudflare-gated; the .org domain serves the same Presto pages cleanly.
+    The league's own domain is calripkensrleague.org (with "sr" for "Sr.").
+    Teams index is JS-rendered, so we hard-code the 8 slugs (discovered
+    once via the marketing /teams/{nick} redirects on the same domain).
     """
     name = "Cal Ripken Sr. Collegiate Baseball League"
     short_name = "Cal Ripken"
     host_url = "https://calripkensrleague.org"
+    fallback_team_slugs = [
+        "alexandriaaces", "bethesdabigtrain", "metrosouthcountybraves",
+        "olneycropdusters", "gaithersburggiants", "dcgrays",
+        "southernmarylandsenators", "sstthunderbolts",
+    ]
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
@@ -822,10 +837,14 @@ class PGCBL(PrestoSportsLeague):
 
 
 class FCBL(PrestoSportsLeague):
-    """Futures Collegiate Baseball League — PrestoSports."""
+    """Futures Collegiate Baseball League — PrestoSports.
+
+    Correct league domain is thefuturesleague.com (NOT thefcbl.com or
+    fcbl.prestosports.com — both fail). Uses calendar-year URL format.
+    """
     name = "Futures Collegiate Baseball League"
     short_name = "FCBL"
-    host_url = "https://fcbl.prestosports.com"
+    host_url = "https://thefuturesleague.com"
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()

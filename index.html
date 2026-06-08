@@ -1409,15 +1409,10 @@ function summerNoDataHint(p) {
   const isOffDay = ['Off Day', 'Roster Confirmed', 'Status Update'].indexOf(p.game_status) !== -1;
   if (!isOffDay) return '';
   // Walk-throughs for the user so "-- No Data" isn't a black box.
-  let msg = '';
-  let color = '#7d8590';
-  if (bbrefCacheHours != null && bbrefCacheHours > 30) {
-    color = '#fbbf24';
-    msg = 'Our backup stats source hasn\'t refreshed recently. Manually trigger it from GitHub if needed.';
-  } else {
-    msg = 'No stats here yet. This league may not surface data for a while — should appear if and when Baseball-Reference picks it up.';
-  }
-  return `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid ${color};border-radius:4px;font-size:11px;color:${color};line-height:1.4;">${esc(msg)}</div>`;
+  // No promise of when this will appear — some leagues don't publish stats
+  // we can reach during the season at all.
+  const msg = 'No stats here yet. This league may not surface data we can automatically reach mid-season.';
+  return `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid #7d8590;border-radius:4px;font-size:11px;color:#7d8590;line-height:1.4;">${esc(msg)}</div>`;
 }
 
 function levelBadgeClass(level) {
@@ -2490,13 +2485,10 @@ async function loadSummerBanner() {
         if (freshEl) {
           const hrs = bbrefCacheHours;
           const ago = hrs < 1 ? `${Math.round(hrs * 60)}m` : hrs < 24 ? `${Math.round(hrs)}h` : `${Math.round(hrs/24)}d`;
-          let color = '#7d8590';
-          let label = `Backup stats source refreshed ${ago} ago`;
-          if (hrs > 30) {
-            color = '#fbbf24';
-            label = `⚠ Backup stats source last refreshed ${ago} ago`;
-          }
-          freshEl.innerHTML = `<span style="color:${color};">${label}</span>`;
+          // Drop the explicit BBRef pill — research confirmed BBRef is a
+          // post-season archive, not a mid-season fallback. Leaving the
+          // element empty rather than misleading anyone.
+          freshEl.innerHTML = '';
         }
       }
     }
