@@ -1,48 +1,5 @@
 [
   {
-    "generated_at": "2026-06-02T19:16:54.072460+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby"
-    ],
-    "total_clients": 110,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 5
-      },
-      "ESPN": {
-        "No game listed today": 5
-      },
-      "NCAA.com": {
-        "found stats": 2,
-        "Game found, not in box score": 3
-      },
-      "Sidearm": {
-        "No game listed today": 3
-      },
-      "StatBroadcast": {
-        "No game listed today": 3
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-06-02T19:21:09.539423+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -43127,6 +43084,76 @@
   },
   {
     "generated_at": "2026-06-09T19:04:49.091700+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Dax Kilby"
+    ],
+    "total_clients": 110,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 5
+      },
+      "ESPN": {
+        "No game listed today": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 3,
+        "found stats": 2
+      },
+      "Sidearm": {
+        "No game listed today": 3
+      },
+      "StatBroadcast": {
+        "No game listed today": 3
+      },
+      "NCAA.org": {
+        "No game listed today": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-09T19:17:07.815974+00:00",
     "severity": "ok",
     "blocked_sources": [],
     "blocked_event_count": 0,
