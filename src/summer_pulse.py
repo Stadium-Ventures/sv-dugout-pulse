@@ -1244,7 +1244,17 @@ def _build_placement_entry(
     person_id = info.get("person_id")
     status_note = p.get("status", "")
     if not game_block:
-        sub = status_note if status_note and status_note != "Confirmed" else "No game today"
+        # Friendly status text — same mapping as _static_placement_card so
+        # cards don't echo raw status labels as their headline.
+        status_summary_map = {
+            "Confirmed": "No game today",
+            "2nd Half": "Joins team in second half",
+            "Pending, 1st Half": "Awaiting arrival — first half",
+            "Pending, 2nd Half": "Awaiting arrival — second half",
+            "Injured": "Out — injury",
+            "Shut Down": "Shut down for the summer",
+        }
+        sub = status_summary_map.get(status_note, status_note or "No game today")
         return {
             "player_name": p["player_name"],
             "team": f"{p['summer_team']} ({p['league']})",
@@ -1484,11 +1494,22 @@ def _static_placement_card(p: dict, *, player_url: str = "") -> dict:
                 },
             }
 
+    # Friendly stats_summary text for inactive/awaiting placements so cards
+    # don't echo the status label as the headline. Use plain English the
+    # team can read without thinking.
+    status_summary_map = {
+        "Confirmed": "No game today",
+        "2nd Half": "Joins team in second half",
+        "Pending, 1st Half": "Awaiting arrival — first half",
+        "Pending, 2nd Half": "Awaiting arrival — second half",
+        "Injured": "Out — injury",
+        "Shut Down": "Shut down for the summer",
+    }
     return {
         "player_name": p["player_name"],
         "team": f"{p['summer_team']} ({p['league']})",
         "level": "Summer",
-        "stats_summary": "No game today" if status == "Confirmed" else status,
+        "stats_summary": status_summary_map.get(status, status or "No game today"),
         "game_context": f"Summer ball — {p.get('school','')}",
         "game_status": status,
         "game_time": None,

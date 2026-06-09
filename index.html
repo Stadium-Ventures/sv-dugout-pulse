@@ -1912,6 +1912,14 @@ function render() {
         { label: 'Final', match: s => s === 'Final' || s === 'Forfeit' || s === 'Completed Early' },
         { label: 'Scheduled', match: s => s === 'Scheduled' },
         { label: 'Postponed', match: s => s === 'Cancelled' || s === 'Postponed' },
+        // Summer-ball-specific placement states (Pending/Injured/Shut Down
+        // etc.). These aren't game-day statuses — they're roster flags from
+        // Kent's placement spreadsheet. Group them under a friendly label.
+        { label: 'Awaiting / Inactive', match: s => [
+            'Confirmed', '2nd Half', 'Pending, 1st Half', 'Pending, 2nd Half',
+            'Injured', 'Shut Down', 'Off Day', 'Roster Confirmed', 'Status Update',
+            'Season Stats',
+          ].indexOf(s) !== -1 },
       ];
       const placed = new Set();
       let html = '';
@@ -1926,7 +1934,7 @@ function render() {
       if (leftover.length > 0) {
         const unknownStatuses = [...new Set(leftover.map(p => p.game_status || '(blank)'))].join(', ');
         console.warn('Today render: catch-all bucket caught statuses:', unknownStatuses);
-        html += `<div class="status-section-header">Other (${esc(unknownStatuses)})</div>`;
+        html += `<div class="status-section-header">Other</div>`;
         html += leftover.map(renderCard).join('');
       }
       grid.innerHTML = html;
@@ -2574,18 +2582,9 @@ async function loadSummerBanner() {
     );
   }
 
-  // Prominent banner row when there are ambiguous/Needs-Review entries.
-  // The Summer Ball Coverage banner is collapsed by default — this row
-  // makes sure unresolved conflicts get noticed before someone expands.
-  const reviewBanner = ambiguous
-    ? `<div style="background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.35);
-         border-radius:6px;padding:8px 12px;margin-bottom:10px;
-         font-size:13px;color:#d32f2f;font-weight:600;">
-         ⚠ ${ambiguous} placement${ambiguous === 1 ? '' : 's'} need${ambiguous === 1 ? 's' : ''} review
-         <span style="font-weight:400;color:#7a2727;">
-           — expand below, then update your placement spreadsheet to confirm the correct team.
-         </span>
-       </div>` : '';
+  // Subtle "needs review" line — no longer a big red banner. The detail
+  // is inside the expandable section; this is just a small flag.
+  const reviewBanner = '';
 
   el.innerHTML = `
     ${reviewBanner}
