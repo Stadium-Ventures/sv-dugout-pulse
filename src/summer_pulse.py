@@ -836,7 +836,8 @@ def _write_summer_window_entries(placements: list[dict], auto_by_name: dict) -> 
                         person_id = people[0].get("id")
                 except Exception:
                     pass
-            stats = _summer_season_stats(person_id) if person_id else None
+            league_id = _MLB_LEAGUE_IDS.get(league)
+            stats = _summer_season_stats(person_id, league_id) if person_id else None
             week_entries.append(_summer_window_entry(p, "7d", stats))
             season_entries.append(_summer_window_entry(p, "season", stats))
         else:
@@ -1085,35 +1086,46 @@ def _team_name_to_id(league_short_name: str) -> dict[str, int]:
     return out
 
 
-def _summer_season_stats(person_id: int) -> Optional[dict]:
-    """Pull a player's MLB Stats API season stats (hitting + pitching).
+def _summer_season_stats(person_id: int, league_id: Optional[int] = None) -> Optional[dict]:
+    """Pull a player's MLB Stats API season stats (hitting + pitching),
+    filtered to a specific summer league.
 
-    The byDateRange endpoint has a multi-day aggregation lag; season
-    aggregates are usually updated within an hour or two of each game
-    Final. For early-season Summer (where 7D ~= season anyway) we use
-    this for both window views.
+    Without the league filter, sportId=22 returns ALL 2026 College Baseball
+    stats — including a player's NCAA spring season at his college, which
+    gets confused with summer numbers (2026-06-08 incident: Cole Katayama-
+    Stall's Portland Pilots spring line was showing as his Cotuit Kettleers
+    summer line). Filtering by leagueIds keeps each placement honest.
 
     Returns a dict shaped for window-card consumption:
       {pa, ab, h, hr, bb, k, sb, runs, doubles, rbi, avg, obp, slg, ops,
        games, ip, era, whip, earned_runs, h_allowed, kind}
-    or None if the player has no MLB-side season totals yet.
+    or None if the player has no MLB-side stats for the given league yet.
     """
     if not person_id:
         return None
     try:
-        url = (
-            f"{_STATSAPI}/people/{person_id}/stats"
+        params = (
             f"?stats=season&season={_today_et().year}&sportId=22"
             f"&group=hitting,pitching"
         )
+        if league_id:
+            params += f"&leagueIds={league_id}"
+        url = f"{_STATSAPI}/people/{person_id}/stats{params}"
         resp = _session.get(url, timeout=10).json()
         h_split = p_split = None
         for group in resp.get("stats", []) or []:
             kind = group.get("group", {}).get("displayName", "")
             splits = group.get("splits", []) or []
-            if not splits:
+            # When a league filter is in play, pick the split that matches
+            # — defensively, in case MLB returns multiple sub-splits.
+            stat = None
+            for s in splits:
+                if league_id and (s.get("league", {}).get("id") != league_id):
+                    continue
+                stat = s.get("stat", {})
+                break
+            if not stat:
                 continue
-            stat = splits[0].get("stat", {})
             if kind == "hitting" and stat.get("plateAppearances"):
                 h_split = stat
             elif kind == "pitching" and stat.get("inningsPitched"):
