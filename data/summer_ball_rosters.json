@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-08T23:24:02.246430+00:00",
+  "generated_at": "2026-06-09T11:28:05.841332+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 391,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1884,
+      "duration_ms": 2993,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -22,7 +22,7 @@
       "player_count": 262,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1223,
+      "duration_ms": 1708,
       "sample_players": [
         "Anthony Grippo",
         "Austin Rose",
@@ -37,7 +37,7 @@
       "player_count": 215,
       "team_count": 7,
       "error": null,
-      "duration_ms": 1145,
+      "duration_ms": 1677,
       "sample_players": [
         "Brady Shannon",
         "Bryce Hubbard",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 474,
-      "team_count": 11,
+      "player_count": 567,
+      "team_count": 13,
       "error": null,
-      "duration_ms": 185882,
+      "duration_ms": 66045,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,10 +64,10 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 267,
-      "team_count": 6,
+      "player_count": 342,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 89012,
+      "duration_ms": 51058,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -78,30 +78,42 @@
     },
     {
       "league": "PGCBL",
-      "status": "failed",
+      "status": "ok",
       "player_count": 0,
       "team_count": 0,
-      "error": "PGCBL: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 8512,
+      "error": null,
+      "duration_ms": 93192,
       "sample_players": []
     },
     {
       "league": "FCBL",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "FCBL: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 8899,
-      "sample_players": []
+      "status": "ok",
+      "player_count": 244,
+      "team_count": 5,
+      "error": null,
+      "duration_ms": 38188,
+      "sample_players": [
+        "Dylan Izenman",
+        "Marco Zirpolo",
+        "Matthew Hall",
+        "Patrick Connors",
+        "Finn Ramseyer"
+      ]
     },
     {
       "league": "Prospect",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 6442,
-      "sample_players": []
+      "status": "ok",
+      "player_count": 699,
+      "team_count": 18,
+      "error": null,
+      "duration_ms": 118468,
+      "sample_players": [
+        "Caynen Patterson",
+        "Sean McConachie",
+        "Hayden Wilson",
+        "Kaedin Bond",
+        "Brandon Gour"
+      ]
     },
     {
       "league": "Northwoods",
@@ -118,7 +130,7 @@
       "player_count": 505,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3939,
+      "duration_ms": 9058,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -557,5 +569,5 @@
       }
     ]
   },
-  "all_players_count": 2114
+  "all_players_count": 3225
 }
