@@ -1,107 +1,5 @@
 [
   {
-    "generated_at": "2026-06-02T07:02:57.391834+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Aaron Watson",
-      "Dax Kilby",
-      "Myles Bailey",
-      "Adam McKelvey",
-      "Tanner Gordon",
-      "Lucas Steele"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 20
-      },
-      "ESPN": {
-        "No game listed today": 15,
-        "found stats": 2,
-        "Game found, not in box score": 3
-      },
-      "NCAA.com": {
-        "found stats": 8,
-        "Game found, not in box score": 9,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 10
-      },
-      "StatBroadcast": {
-        "No game listed today": 10
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 10
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
-    "generated_at": "2026-06-02T07:16:48.279544+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Aaron Watson",
-      "Dax Kilby",
-      "Myles Bailey",
-      "Adam McKelvey",
-      "Tanner Gordon",
-      "Lucas Steele"
-    ],
-    "total_clients": 84,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 20
-      },
-      "ESPN": {
-        "No game listed today": 15,
-        "found stats": 2,
-        "Game found, not in box score": 3
-      },
-      "NCAA.com": {
-        "found stats": 8,
-        "Game found, not in box score": 9,
-        "stale (yesterday)": 1
-      },
-      "Sidearm": {
-        "No game listed today": 10
-      },
-      "StatBroadcast": {
-        "No game listed today": 10
-      },
-      "NCAA.org": {
-        "No game listed today": 10
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-06-02T07:32:02.895006+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -41990,6 +41888,79 @@
       },
       "NCAA.org": {
         "No game listed today": 4
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-09T07:17:03.047631+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Cade Doughty"
+    ],
+    "total_clients": 110,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 7
+      },
+      "ESPN": {
+        "No game listed today": 2,
+        "Game found, not in box score": 3,
+        "found stats": 2
+      },
+      "NCAA.com": {
+        "found stats": 1,
+        "Game found, not in box score": 4
+      },
+      "Sidearm": {
+        "No game listed today": 4
+      },
+      "StatBroadcast": {
+        "No game listed today": 4
+      },
+      "NCAA.org": {
+        "Game found, not in box score": 4
       }
     },
     "proxy_pool": {
