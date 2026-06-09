@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09T19:31:12.475910+00:00",
+  "generated_at": "2026-06-09T23:29:07.684721+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 391,
       "team_count": 10,
       "error": null,
-      "duration_ms": 693,
+      "duration_ms": 832,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 262,
+      "player_count": 266,
       "team_count": 8,
       "error": null,
-      "duration_ms": 423,
+      "duration_ms": 549,
       "sample_players": [
         "Anthony Grippo",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 225,
-      "team_count": 7,
+      "player_count": 255,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 440,
+      "duration_ms": 564,
       "sample_players": [
         "Brady Shannon",
         "Bryce Hubbard",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 567,
+      "player_count": 566,
       "team_count": 13,
       "error": null,
-      "duration_ms": 58875,
+      "duration_ms": 67744,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,16 +64,16 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 167,
-      "team_count": 4,
+      "player_count": 301,
+      "team_count": 7,
       "error": null,
-      "duration_ms": 47102,
+      "duration_ms": 57277,
       "sample_players": [
-        "Tyler Bassett",
-        "Zach Beyra",
-        "Kenan Bowman",
-        "Jack Brafa",
-        "Reid Downs"
+        "Alex Cromwell",
+        "Connor Doherty",
+        "Dylan McClellan",
+        "Parker McRay",
+        "Jay Newton"
       ]
     },
     {
@@ -82,38 +82,32 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 103827,
+      "duration_ms": 96903,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 211,
-      "team_count": 4,
+      "player_count": 344,
+      "team_count": 7,
       "error": null,
-      "duration_ms": 56831,
+      "duration_ms": 31395,
       "sample_players": [
-        "James Fagnant",
-        "William Margolies",
-        "Jack Kane",
-        "Matthew Shea",
-        "Braden Young"
+        "Dylan Izenman",
+        "Marco Zirpolo",
+        "Matthew Hall",
+        "Finn Ramseyer",
+        "Quincy Kerr"
       ]
     },
     {
       "league": "Prospect",
-      "status": "ok",
-      "player_count": 776,
-      "team_count": 20,
-      "error": null,
-      "duration_ms": 109549,
-      "sample_players": [
-        "Caynen Patterson",
-        "Sean McConachie",
-        "Hayden Wilson",
-        "Kaedin Bond",
-        "Brandon Gour"
-      ]
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 8374,
+      "sample_players": []
     },
     {
       "league": "Northwoods",
@@ -130,7 +124,7 @@
       "player_count": 505,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4729,
+      "duration_ms": 3927,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -563,5 +557,5 @@
       }
     ]
   },
-  "all_players_count": 3104
+  "all_players_count": 2628
 }
