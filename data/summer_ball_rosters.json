@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-10T16:48:50.947288+00:00",
+  "generated_at": "2026-06-10T19:49:43.379366+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 793,
+      "duration_ms": 799,
       "sample_players": []
     },
     {
@@ -16,7 +16,7 @@
       "player_count": 266,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1276,
+      "duration_ms": 1178,
       "sample_players": [
         "Anthony Grippo",
         "Austin Rose",
@@ -28,10 +28,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 255,
+      "player_count": 252,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1239,
+      "duration_ms": 1232,
       "sample_players": [
         "Brady Shannon",
         "Bryce Hubbard",
@@ -42,20 +42,26 @@
     },
     {
       "league": "NECBL",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "NECBL: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 21477,
-      "sample_players": []
+      "status": "ok",
+      "player_count": 565,
+      "team_count": 13,
+      "error": null,
+      "duration_ms": 60235,
+      "sample_players": [
+        "Gavin Collins",
+        "Trent Rice",
+        "Christopher DiPrima",
+        "Antonio Ducatelli",
+        "Justin Ruiz"
+      ]
     },
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 345,
-      "team_count": 8,
+      "player_count": 301,
+      "team_count": 7,
       "error": null,
-      "duration_ms": 125715,
+      "duration_ms": 56284,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -70,16 +76,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 205378,
+      "duration_ms": 80086,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 303,
-      "team_count": 6,
+      "player_count": 345,
+      "team_count": 7,
       "error": null,
-      "duration_ms": 72630,
+      "duration_ms": 35102,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -91,10 +97,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 301,
-      "team_count": 8,
+      "player_count": 746,
+      "team_count": 19,
       "error": null,
-      "duration_ms": 260604,
+      "duration_ms": 114602,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -115,10 +121,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 495,
+      "player_count": 497,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5616,
+      "duration_ms": 4735,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -147,15 +153,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 34,
+    "attempted": 32,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 4,
+  "ncaa_clients_matched": 6,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 34,
+  "ncaa_clients_unmatched": 32,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -187,6 +193,26 @@
       "source_id": "bennealxp7o",
       "match_strength": "initial+last",
       "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
+    },
+    {
+      "player_name": "Eamon McDermott",
+      "college": "Duke",
+      "summer_team": "Keeneswampbats",
+      "league": "NECBL",
+      "summer_name": "Eamon McDermott",
+      "source_id": "eamonmcdermottjjsa",
+      "match_strength": "name-only",
+      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
+    },
+    {
+      "player_name": "Luke Fithian",
+      "college": "Rutgers",
+      "summer_team": "Newportgulls",
+      "league": "NECBL",
+      "summer_name": "Luke Fithian",
+      "source_id": "lukefithianx6bv",
+      "match_strength": "name-only",
+      "profile_url": "https://necbl.com/sports/bsb/2026/teams/newportgulls?view=roster"
     },
     {
       "player_name": "Bennett Edwards",
@@ -310,16 +336,8 @@
       "college": "Alabama"
     },
     {
-      "player_name": "Eamon McDermott",
-      "college": "Duke"
-    },
-    {
       "player_name": "Lee Sowers",
       "college": "North Carolina"
-    },
-    {
-      "player_name": "Luke Fithian",
-      "college": "Rutgers"
     },
     {
       "player_name": "Truitt Webb",
@@ -360,6 +378,12 @@
         "school": "Dallas Baptist",
         "league": "MLB Draft",
         "team": "Williamsport Crosscutters"
+      },
+      {
+        "player_name": "Luke Fithian",
+        "school": "Rutgers",
+        "league": "NECBL",
+        "team": "New Port Gulls"
       },
       {
         "player_name": "Bennett Edwards",
@@ -445,13 +469,6 @@
         "status": "Confirmed"
       },
       {
-        "player_name": "Luke Fithian",
-        "school": "Rutgers",
-        "placement_team": "New Port Gulls",
-        "league": "NECBL",
-        "status": "Confirmed"
-      },
-      {
         "player_name": "Cole Katayama-Stall",
         "school": "Portland",
         "placement_team": "Cotuit Kettleers",
@@ -516,5 +533,5 @@
       }
     ]
   },
-  "all_players_count": 1965
+  "all_players_count": 2972
 }
