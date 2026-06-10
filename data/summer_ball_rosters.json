@@ -1,20 +1,14 @@
 {
-  "generated_at": "2026-06-10T11:49:17.307694+00:00",
+  "generated_at": "2026-06-10T16:48:50.947288+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 391,
-      "team_count": 10,
+      "player_count": 0,
+      "team_count": 0,
       "error": null,
-      "duration_ms": 2173,
-      "sample_players": [
-        "Adam Magpoc",
-        "Alex Philpott",
-        "Andrelys Payamps",
-        "Blaine Brown",
-        "Brady Louck"
-      ]
+      "duration_ms": 793,
+      "sample_players": []
     },
     {
       "league": "Appalachian",
@@ -22,7 +16,7 @@
       "player_count": 266,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1417,
+      "duration_ms": 1276,
       "sample_players": [
         "Anthony Grippo",
         "Austin Rose",
@@ -37,7 +31,7 @@
       "player_count": 255,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1387,
+      "duration_ms": 1239,
       "sample_players": [
         "Brady Shannon",
         "Bryce Hubbard",
@@ -48,18 +42,12 @@
     },
     {
       "league": "NECBL",
-      "status": "ok",
-      "player_count": 572,
-      "team_count": 13,
-      "error": null,
-      "duration_ms": 75814,
-      "sample_players": [
-        "Gavin Collins",
-        "Trent Rice",
-        "Christopher DiPrima",
-        "Antonio Ducatelli",
-        "Justin Ruiz"
-      ]
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "NECBL: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 21477,
+      "sample_players": []
     },
     {
       "league": "Cal Ripken",
@@ -67,7 +55,7 @@
       "player_count": 345,
       "team_count": 8,
       "error": null,
-      "duration_ms": 59255,
+      "duration_ms": 125715,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,16 +70,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 102318,
+      "duration_ms": 205378,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 344,
-      "team_count": 7,
+      "player_count": 303,
+      "team_count": 6,
       "error": null,
-      "duration_ms": 43969,
+      "duration_ms": 72630,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,10 +91,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 776,
-      "team_count": 20,
+      "player_count": 301,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 110145,
+      "duration_ms": 260604,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -127,10 +115,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 493,
+      "player_count": 495,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4198,
+      "duration_ms": 5616,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -159,46 +147,26 @@
     }
   ],
   "baseballcube": {
-    "attempted": 27,
+    "attempted": 34,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 10,
+  "ncaa_clients_matched": 4,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 27,
-  "ncaa_clients_ambiguous": 2,
+  "ncaa_clients_unmatched": 34,
+  "ncaa_clients_ambiguous": 1,
   "matched": [
     {
-      "player_name": "Aiden Robbins",
-      "college": "Texas",
-      "summer_team": "HAR",
-      "league": "Cape Cod",
-      "summer_name": "Aiden Robbins",
-      "source_id": "828657",
+      "player_name": "Alex Kranzler",
+      "college": "Vanderbilt",
+      "summer_team": "TRN",
+      "league": "MLB Draft",
+      "summer_name": "Alex Kranzler",
+      "source_id": "702962",
       "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/828657"
-    },
-    {
-      "player_name": "Cam Flukey",
-      "college": "Coastal Carolina",
-      "summer_team": "BOU",
-      "league": "Cape Cod",
-      "summer_name": "Cameron Flukey",
-      "source_id": "805619",
-      "match_strength": "initial+last",
-      "profile_url": "https://www.mlb.com/player/805619"
-    },
-    {
-      "player_name": "Myles Bailey",
-      "college": "Florida State",
-      "summer_team": "HYA",
-      "league": "Cape Cod",
-      "summer_name": "Myles Bailey",
-      "source_id": "815343",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/815343"
+      "profile_url": "https://www.mlb.com/player/702962"
     },
     {
       "player_name": "Ben Tryon",
@@ -221,46 +189,6 @@
       "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
     },
     {
-      "player_name": "Henry Zatkowski",
-      "college": "Virginia",
-      "summer_team": "HYA",
-      "league": "Cape Cod",
-      "summer_name": "Henry Zatkowski",
-      "source_id": "832360",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/832360"
-    },
-    {
-      "player_name": "Mason Eckelman",
-      "college": "Ohio State",
-      "summer_team": "FAL",
-      "league": "Cape Cod",
-      "summer_name": "Mason Eckelman",
-      "source_id": "806065",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/806065"
-    },
-    {
-      "player_name": "Eamon McDermott",
-      "college": "Duke",
-      "summer_team": "Keeneswampbats",
-      "league": "NECBL",
-      "summer_name": "Eamon McDermott",
-      "source_id": "eamonmcdermottjjsa",
-      "match_strength": "name-only",
-      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
-    },
-    {
-      "player_name": "Luke Fithian",
-      "college": "Rutgers",
-      "summer_team": "Newportgulls",
-      "league": "NECBL",
-      "summer_name": "Luke Fithian",
-      "source_id": "lukefithianx6bv",
-      "match_strength": "name-only",
-      "profile_url": "https://necbl.com/sports/bsb/2026/teams/newportgulls?view=roster"
-    },
-    {
       "player_name": "Bennett Edwards",
       "college": "Georgia Southern",
       "summer_team": "Lexington County Blowfish",
@@ -274,8 +202,20 @@
   "possible_matches": [],
   "unmatched": [
     {
+      "player_name": "Aiden Robbins",
+      "college": "Texas"
+    },
+    {
+      "player_name": "Cam Flukey",
+      "college": "Coastal Carolina"
+    },
+    {
       "player_name": "Kyle Jones",
       "college": "Florida"
+    },
+    {
+      "player_name": "Myles Bailey",
+      "college": "Florida State"
     },
     {
       "player_name": "Caleb Daniel",
@@ -322,6 +262,14 @@
       "college": "Alabama"
     },
     {
+      "player_name": "Henry Zatkowski",
+      "college": "Virginia"
+    },
+    {
+      "player_name": "Mason Eckelman",
+      "college": "Ohio State"
+    },
+    {
       "player_name": "Sam Mitchell",
       "college": "Southern Miss"
     },
@@ -362,8 +310,16 @@
       "college": "Alabama"
     },
     {
+      "player_name": "Eamon McDermott",
+      "college": "Duke"
+    },
+    {
       "player_name": "Lee Sowers",
       "college": "North Carolina"
+    },
+    {
+      "player_name": "Luke Fithian",
+      "college": "Rutgers"
     },
     {
       "player_name": "Truitt Webb",
@@ -383,20 +339,6 @@
     }
   ],
   "ambiguous": [
-    {
-      "player_name": "Alex Kranzler",
-      "college": "Vanderbilt",
-      "candidates": [
-        {
-          "summer_team": "ORL",
-          "league": "Cape Cod"
-        },
-        {
-          "summer_team": "TRN",
-          "league": "MLB Draft"
-        }
-      ]
-    },
     {
       "player_name": "Brooks Wright",
       "college": "SE Louisiana",
@@ -420,27 +362,25 @@
         "team": "Williamsport Crosscutters"
       },
       {
-        "player_name": "Luke Fithian",
-        "school": "Rutgers",
-        "league": "NECBL",
-        "team": "New Port Gulls"
-      },
-      {
         "player_name": "Bennett Edwards",
         "school": "Georgia Southern",
         "league": "Coastal Plain",
         "team": "Lexington Blowfish"
       }
     ],
-    "conflicts": [],
-    "unmatched": [
+    "conflicts": [
       {
         "player_name": "Alex Kranzler",
         "school": "Vanderbilt",
         "placement_team": "Trenton Thunder",
-        "league": "MLB Draft",
-        "status": "Confirmed"
-      },
+        "placement_league": "MLB Draft",
+        "auto_team": "TRN",
+        "auto_league": "MLB Draft",
+        "status": "Confirmed",
+        "reason": "auto-match team differs from spreadsheet \u2014 likely stale roster"
+      }
+    ],
+    "unmatched": [
       {
         "player_name": "Brooks Wright",
         "school": "SE Louisiana",
@@ -502,6 +442,13 @@
         "school": "Tulane",
         "placement_team": "Hyannis Harbor Hawks",
         "league": "Cape Cod",
+        "status": "Confirmed"
+      },
+      {
+        "player_name": "Luke Fithian",
+        "school": "Rutgers",
+        "placement_team": "New Port Gulls",
+        "league": "NECBL",
         "status": "Confirmed"
       },
       {
@@ -569,5 +516,5 @@
       }
     ]
   },
-  "all_players_count": 3442
+  "all_players_count": 1965
 }
