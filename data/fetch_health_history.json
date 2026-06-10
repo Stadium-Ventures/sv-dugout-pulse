@@ -1,56 +1,5 @@
 [
   {
-    "generated_at": "2026-06-03T01:01:53.138154+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Garrett Whitlock",
-      "Jack Cebert",
-      "Austin Amaral",
-      "Blake Rambusch",
-      "Davis Sharpe",
-      "Najer Victor",
-      "Xavier Kolhosser",
-      "Peyton Glavine"
-    ],
-    "total_clients": 110,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 5
-      },
-      "ESPN": {
-        "No game listed today": 5
-      },
-      "NCAA.com": {
-        "found stats": 2,
-        "Game found, not in box score": 3
-      },
-      "Sidearm": {
-        "No game listed today": 3
-      },
-      "StatBroadcast": {
-        "No game listed today": 3
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 3
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-06-03T01:17:11.147542+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -43842,6 +43791,83 @@
       "Sterlin Thompson",
       "Tanner Gordon",
       "Austin Amaral",
+      "Blake Rambusch",
+      "Davis Sharpe",
+      "Xavier Kolhosser"
+    ],
+    "total_clients": 110,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 5
+      },
+      "ESPN": {
+        "No game listed today": 5
+      },
+      "NCAA.com": {
+        "Game found, not in box score": 3,
+        "found stats": 2
+      },
+      "Sidearm": {
+        "No game listed today": 3
+      },
+      "StatBroadcast": {
+        "No game listed today": 3
+      },
+      "NCAA.org": {
+        "No game listed today": 3
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-10T01:02:16.217909+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Jack Cebert",
+      "Justin Riemer",
+      "Sterlin Thompson",
+      "Tanner Gordon",
       "Blake Rambusch",
       "Davis Sharpe",
       "Xavier Kolhosser"
