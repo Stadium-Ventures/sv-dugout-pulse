@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09T23:29:07.684721+00:00",
+  "generated_at": "2026-06-10T11:49:17.307694+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 391,
       "team_count": 10,
       "error": null,
-      "duration_ms": 832,
+      "duration_ms": 2173,
       "sample_players": [
         "Adam Magpoc",
         "Alex Philpott",
@@ -22,7 +22,7 @@
       "player_count": 266,
       "team_count": 8,
       "error": null,
-      "duration_ms": 549,
+      "duration_ms": 1417,
       "sample_players": [
         "Anthony Grippo",
         "Austin Rose",
@@ -37,7 +37,7 @@
       "player_count": 255,
       "team_count": 8,
       "error": null,
-      "duration_ms": 564,
+      "duration_ms": 1387,
       "sample_players": [
         "Brady Shannon",
         "Bryce Hubbard",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 566,
+      "player_count": 572,
       "team_count": 13,
       "error": null,
-      "duration_ms": 67744,
+      "duration_ms": 75814,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,10 +64,10 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 301,
-      "team_count": 7,
+      "player_count": 345,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 57277,
+      "duration_ms": 59255,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 96903,
+      "duration_ms": 102318,
       "sample_players": []
     },
     {
@@ -91,7 +91,7 @@
       "player_count": 344,
       "team_count": 7,
       "error": null,
-      "duration_ms": 31395,
+      "duration_ms": 43969,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -102,12 +102,18 @@
     },
     {
       "league": "Prospect",
-      "status": "failed",
-      "player_count": 0,
-      "team_count": 0,
-      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 8374,
-      "sample_players": []
+      "status": "ok",
+      "player_count": 776,
+      "team_count": 20,
+      "error": null,
+      "duration_ms": 110145,
+      "sample_players": [
+        "Caynen Patterson",
+        "Sean McConachie",
+        "Hayden Wilson",
+        "Kaedin Bond",
+        "Brandon Gour"
+      ]
     },
     {
       "league": "Northwoods",
@@ -121,10 +127,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 505,
+      "player_count": 493,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3927,
+      "duration_ms": 4198,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -153,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 28,
+    "attempted": 27,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 9,
+  "ncaa_clients_matched": 10,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 28,
+  "ncaa_clients_unmatched": 27,
   "ncaa_clients_ambiguous": 2,
   "matched": [
     {
@@ -203,6 +209,16 @@
       "source_id": "830337",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/830337"
+    },
+    {
+      "player_name": "Brady Neal",
+      "college": "Alabama",
+      "summer_team": "Metrosouthcountybraves",
+      "league": "Cal Ripken",
+      "summer_name": "Ben Neal",
+      "source_id": "bennealxp7o",
+      "match_strength": "initial+last",
+      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
     },
     {
       "player_name": "Henry Zatkowski",
@@ -288,10 +304,6 @@
     {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
-    },
-    {
-      "player_name": "Brady Neal",
-      "college": "Alabama"
     },
     {
       "player_name": "Brady St. Pierre",
@@ -557,5 +569,5 @@
       }
     ]
   },
-  "all_players_count": 2628
+  "all_players_count": 3442
 }
