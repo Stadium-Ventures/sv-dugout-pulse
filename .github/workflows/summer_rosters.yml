@@ -59,12 +59,18 @@ jobs:
             python -m scripts.refresh_summer_rosters
           fi
 
+      - name: Roster-regression Slack alert
+        if: ${{ inputs.dry_run != true }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python -m scripts.summer_roster_regression_alert
+
       - name: Commit roster snapshot
         if: ${{ inputs.dry_run != true }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/summer_ball_rosters.json
+          git add data/summer_ball_rosters.json data/_last_league_counts.json
           if git diff --staged --quiet; then
             echo "No roster changes to commit"
             exit 0
