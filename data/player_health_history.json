@@ -23654,7 +23654,7 @@
   },
   {
     "date": "2026-06-12",
-    "updated_at": "2026-06-12T22:50:28.545069+00:00",
+    "updated_at": "2026-06-12T23:02:19.117264+00:00",
     "players": [
       {
         "name": "Aaron Watson",
@@ -23727,7 +23727,7 @@
         "team": "Fayetteville Woodpeckers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed",
+        "game_status": "Delayed Start",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -23991,13 +23991,17 @@
         "team": "North Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
@@ -24027,7 +24031,7 @@
         "team": "Trenton Thunder (MLB Draft)",
         "level": "Summer",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "In Progress",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",

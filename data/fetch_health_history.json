@@ -1,83 +1,5 @@
 [
   {
-    "generated_at": "2026-06-05T23:02:13.304172+00:00",
-    "severity": "ok",
-    "blocked_sources": [],
-    "blocked_event_count": 0,
-    "blocked_clients": [],
-    "carry_forward_clients": [
-      "Adam McKelvey",
-      "Alex Kranzler",
-      "Alex Kranzler",
-      "Ben Tryon",
-      "Ben Tryon",
-      "Bennett Edwards",
-      "Brady St. Pierre",
-      "Braydon Kersey",
-      "Brooks Wright",
-      "Bryson Tweedy",
-      "Caleb Daniel",
-      "Cole Katayama-Stall",
-      "Devin Diaz",
-      "Dom Woodward",
-      "Drew Bellis",
-      "Duke McCarron",
-      "Evan Taylor",
-      "Henry Zatkowski",
-      "Luke Fithian",
-      "Riley Goodman",
-      "Sam Harry",
-      "Sammy Mitchell",
-      "Tanner Chun",
-      "Taylor Kirk",
-      "Truitt Webb",
-      "Ty Finkbeiner",
-      "Will Rhine",
-      "Zack Johnson"
-    ],
-    "fallback_clients": [
-      "Dax Kilby",
-      "Cade Doughty",
-      "Carter Johnson",
-      "Austin Amaral",
-      "Michael Dattalo",
-      "Ryan DeSanto",
-      "Lee Sowers"
-    ],
-    "total_clients": 113,
-    "by_source": {
-      "D1Baseball": {
-        "No game listed today": 2
-      },
-      "ESPN": {
-        "Game found, not in box score": 1,
-        "found stats": 1
-      },
-      "NCAA.com": {
-        "Game found, not in box score": 1
-      },
-      "Sidearm": {
-        "No game listed today": 1
-      },
-      "StatBroadcast": {
-        "No game listed today": 1
-      },
-      "NCAA.org": {
-        "Game found, not in box score": 1
-      }
-    },
-    "proxy_pool": {
-      "pool": [
-        "p.webshare.io",
-        "geo.iproyal.com",
-        "proxy-server.scraperapi.com"
-      ],
-      "active": null,
-      "dead": [],
-      "stats": {}
-    }
-  },
-  {
     "generated_at": "2026-06-05T23:17:23.651541+00:00",
     "severity": "ok",
     "blocked_sources": [],
@@ -48312,6 +48234,82 @@
       },
       "ESPN": {
         "found stats": 1
+      }
+    },
+    "proxy_pool": {
+      "pool": [
+        "p.webshare.io",
+        "geo.iproyal.com",
+        "proxy-server.scraperapi.com"
+      ],
+      "active": null,
+      "dead": [],
+      "stats": {}
+    }
+  },
+  {
+    "generated_at": "2026-06-12T23:02:19.074346+00:00",
+    "severity": "ok",
+    "blocked_sources": [],
+    "blocked_event_count": 0,
+    "blocked_clients": [],
+    "carry_forward_clients": [
+      "Adam McKelvey",
+      "Alex Kranzler",
+      "Alex Kranzler",
+      "Ben Tryon",
+      "Ben Tryon",
+      "Bennett Edwards",
+      "Brady St. Pierre",
+      "Braydon Kersey",
+      "Brooks Wright",
+      "Bryson Tweedy",
+      "Caleb Daniel",
+      "Cole Katayama-Stall",
+      "Devin Diaz",
+      "Dom Woodward",
+      "Drew Bellis",
+      "Duke McCarron",
+      "Evan Taylor",
+      "Henry Zatkowski",
+      "Luke Fithian",
+      "Riley Goodman",
+      "Sam Harry",
+      "Sammy Mitchell",
+      "Tanner Chun",
+      "Taylor Kirk",
+      "Truitt Webb",
+      "Ty Finkbeiner",
+      "Will Rhine",
+      "Zack Johnson"
+    ],
+    "fallback_clients": [
+      "Dax Kilby",
+      "Carter Johnson",
+      "Davis Sharpe",
+      "Michael Dattalo",
+      "Brennan Orf",
+      "Lee Sowers"
+    ],
+    "total_clients": 112,
+    "by_source": {
+      "D1Baseball": {
+        "No game listed today": 1
+      },
+      "ESPN": {
+        "Game found, not in box score": 1
+      },
+      "NCAA.com": {
+        "Stale data — skipped": 1
+      },
+      "Sidearm": {
+        "No game listed today": 1
+      },
+      "StatBroadcast": {
+        "No game listed today": 1
+      },
+      "NCAA.org": {
+        "Stale data — skipped": 1
       }
     },
     "proxy_pool": {
