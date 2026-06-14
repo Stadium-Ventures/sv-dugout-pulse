@@ -25155,7 +25155,7 @@
   },
   {
     "date": "2026-06-14",
-    "updated_at": "2026-06-14T23:02:15.647193+00:00",
+    "updated_at": "2026-06-14T23:20:02.568228+00:00",
     "players": [
       {
         "name": "Aiden Robbins",
@@ -25187,7 +25187,7 @@
         "team": "Hillsboro Hops",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -25396,7 +25396,7 @@
         "team": "Tacoma Rainiers",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -25418,7 +25418,7 @@
         "team": "Tri-City Dust Devils",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -25451,7 +25451,7 @@
         "team": "Salt Lake Bees",
         "level": "Pro",
         "tier": null,
-        "game_status": "Live",
+        "game_status": "Final",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -25495,13 +25495,17 @@
         "team": "North Carolina",
         "level": "NCAA",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "ESPN",
         "sources_tried": [
           "D1Baseball",
-          "ESPN"
+          "ESPN",
+          "NCAA.com",
+          "NCAA.org",
+          "Sidearm",
+          "StatBroadcast"
         ]
       },
       {
