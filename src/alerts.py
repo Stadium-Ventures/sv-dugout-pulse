@@ -513,12 +513,63 @@ def _check_career_firsts(player, stats, name, team, tier_label, gm_label,
         _emit("first_save", "first MLB save")
 
 
+# Rolling-window wOBA thresholds for hitter streak alerts. Calibrated so
+# the cold side only fires on genuinely worrying performance (not a 3-game
+# slump). 5-game window with min 15 PAs filters out short looks.
+#
+# Reference points:
+#   .450+ wOBA over a week = top of the league, "on fire"
+#   .200- wOBA over 15+ PAs = struggling badly, ~replacement level or worse
+#   League average wOBA is ~.320
+_WOBA_HOT_THRESHOLD = 0.450
+_WOBA_COLD_THRESHOLD = 0.200
+_STREAK_MIN_PA = 15
+
+
+def _woba(games: list[dict]) -> tuple[float, dict]:
+    """Compute rolling wOBA across a list of MLB game-log splits.
+
+    Returns (wOBA, totals_dict). Totals include ab/h/2b/3b/hr/bb/k/pa for
+    rendering in the alert message. wOBA=0.0 when denominator is 0.
+
+    Formula (standard FanGraphs weights):
+      wOBA = (0.69·BB + 0.72·HBP + 0.89·1B + 1.27·2B + 1.62·3B + 2.10·HR)
+             ÷ (AB + BB + SF + HBP)
+    Using BB instead of uBB (intentional walks are tiny noise at this scale).
+    """
+    ab = h = bb = hbp = sf = sb_2 = sb_3 = sb_hr = k = pa = 0
+    for g in games:
+        ab += int(g.get("atBats", 0) or 0)
+        h += int(g.get("hits", 0) or 0)
+        bb += int(g.get("baseOnBalls", 0) or 0)
+        hbp += int(g.get("hitByPitch", 0) or 0)
+        sf += int(g.get("sacFlies", 0) or 0)
+        sb_2 += int(g.get("doubles", 0) or 0)
+        sb_3 += int(g.get("triples", 0) or 0)
+        sb_hr += int(g.get("homeRuns", 0) or 0)
+        k += int(g.get("strikeOuts", 0) or 0)
+        pa += int(g.get("plateAppearances", 0) or 0)
+    singles = h - sb_2 - sb_3 - sb_hr
+    denom = ab + bb + sf + hbp
+    if denom <= 0:
+        return 0.0, {"ab": ab, "h": h, "hr": sb_hr, "bb": bb, "k": k, "pa": pa}
+    numer = (
+        0.69 * bb + 0.72 * hbp + 0.89 * singles
+        + 1.27 * sb_2 + 1.62 * sb_3 + 2.10 * sb_hr
+    )
+    return round(numer / denom, 3), {
+        "ab": ab, "h": h, "hr": sb_hr, "bb": bb, "k": k, "pa": pa,
+        "2b": sb_2, "3b": sb_3,
+    }
+
+
 def _check_streak(player, stats, name, team, tier_label, gm_label,
                   game_date, game_number, game_context, box_link):
-    """Look at the player's last 5 game logs and alert on hot or cold patterns.
+    """Rolling 5-game streak detector based on wOBA.
 
-    Hot (hitter): 3+ multi-hit games in last 5 (sticky per player+streak-start).
-    Cold (hitter): 0 hits across 5 consecutive games with PAs.
+    Hot (hitter): 5-game wOBA >= .450 over 15+ PA — exceptional stretch.
+    Cold (hitter): 5-game wOBA <= .200 over 15+ PA — genuinely bad; surface
+       so someone can check in.
     Hot (pitcher): 3 consecutive starts of <=2 ER AND >=5 IP.
     """
     mlb_id = _mlb_id(player, stats)
@@ -545,33 +596,34 @@ def _check_streak(player, stats, name, team, tier_label, gm_label,
     hits_log.sort(key=lambda r: r.get("date", ""), reverse=True)
     pit_log.sort(key=lambda r: r.get("date", ""), reverse=True)
 
-    # Hitter streaks.
+    # Hitter streaks via rolling 5-game wOBA.
     if hits_log:
         last5 = hits_log[:5]
-        multi_hit = sum(1 for g in last5 if int(g.get("hits", 0) or 0) >= 2)
-        with_pa = [g for g in last5 if int(g.get("plateAppearances", 0) or 0) >= 1]
-        zero_for = (
-            len(with_pa) >= 5
-            and all(int(g.get("hits", 0) or 0) == 0 for g in with_pa)
-        )
-        if multi_hit >= 3:
-            kind = f"hot_hit_{game_date}"
-            if not _already_sent(game_date, name, kind, game_number=game_number):
-                if send_slack_message(
-                    f"🔥 *{name}* ({tier_label}) heating up{gm_label} — "
-                    f"{multi_hit} multi-hit games in last 5\n"
-                    f"_{team}_ — {game_context}{box_link}"
-                ):
-                    _mark_sent(game_date, name, kind, game_number=game_number)
-        elif zero_for:
-            kind = f"cold_hit_{game_date}"
-            if not _already_sent(game_date, name, kind, game_number=game_number):
-                if send_slack_message(
-                    f"🥶 *{name}* ({tier_label}) cold{gm_label} — "
-                    f"0 hits in last 5 games\n"
-                    f"_{team}_ — {game_context}{box_link}"
-                ):
-                    _mark_sent(game_date, name, kind, game_number=game_number)
+        woba, totals = _woba(last5)
+        if totals["pa"] >= _STREAK_MIN_PA:
+            stat_line = (
+                f"{totals['h']}-for-{totals['ab']}, "
+                f"{totals['hr']} HR, {totals['k']} K"
+            )
+            if woba >= _WOBA_HOT_THRESHOLD:
+                kind = f"hot_hit_{game_date}"
+                if not _already_sent(game_date, name, kind, game_number=game_number):
+                    if send_slack_message(
+                        f"🔥 *{name}* ({tier_label}) on fire{gm_label} — "
+                        f"*{woba:.3f} wOBA* over last 5 games "
+                        f"({stat_line})\n_{team}_ — {game_context}{box_link}"
+                    ):
+                        _mark_sent(game_date, name, kind, game_number=game_number)
+            elif woba <= _WOBA_COLD_THRESHOLD:
+                kind = f"cold_hit_{game_date}"
+                if not _already_sent(game_date, name, kind, game_number=game_number):
+                    if send_slack_message(
+                        f"🚨 *{name}* ({tier_label}) struggling{gm_label} — "
+                        f"only *{woba:.3f} wOBA* over last 5 games "
+                        f"({stat_line}). Worth a check-in.\n"
+                        f"_{team}_ — {game_context}{box_link}"
+                    ):
+                        _mark_sent(game_date, name, kind, game_number=game_number)
 
     # Pitcher hot streak.
     if pit_log:
