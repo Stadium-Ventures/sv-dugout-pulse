@@ -214,7 +214,12 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     split_squad = stats.get("split_squad", False)
     summary = stats.get("stats_summary", "")
 
-    # Skip if no game data
+    # Promotion / level-change check runs first because we want to catch
+    # call-ups on off-days too (player isn't in tonight's game because he
+    # was just promoted and is traveling). Doesn't need a game.
+    _check_promotion(player, stats, name, team)
+
+    # Skip remaining alerts if no game data.
     if game_status == "N/A":
         return
 
@@ -685,6 +690,124 @@ def _check_homecoming(player, stats, name, team, tier_label, gm_label,
         f"_{team}_ — {game_context}{box_link}"
     ):
         _mark_sent(game_date, name, kind, game_number=game_number)
+
+
+_TEAM_STATE_PATH = os.path.join(
+    os.path.dirname(__file__), "..", "data", "_last_team_levels.json",
+)
+
+# MLB Stats API sport hierarchy (lower id = higher level).
+# Source: statsapi.mlb.com /sports
+_SPORT_LEVEL_NAME = {
+    1: "MLB", 11: "AAA", 12: "AA", 13: "A+", 14: "A",
+    15: "Short-Season A", 16: "Rookie", 17: "Winter",
+    21: "Minors (rollup)", 22: "College", 23: "Independent",
+}
+
+
+def _load_team_state() -> dict:
+    try:
+        with open(_TEAM_STATE_PATH) as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def _save_team_state(state: dict) -> None:
+    try:
+        os.makedirs(os.path.dirname(_TEAM_STATE_PATH), exist_ok=True)
+        with open(_TEAM_STATE_PATH, "w") as f:
+            json.dump(state, f, indent=2, sort_keys=True)
+    except Exception:
+        logger.exception("Failed to write team-state file")
+
+
+def _check_promotion(player, stats, name, team):
+    """Detect when a Pro client moves to a higher level (lower sportId).
+
+    Tracks each client's current team_id + sport_id between pulses in
+    data/_last_team_levels.json. On a downward sportId shift (e.g.,
+    AA → AAA, AAA → MLB), fires a Slack alert once.
+
+    Quietly no-ops for any player without an mlb_id or current team info.
+    """
+    mlb_id = _mlb_id(player, stats)
+    if not mlb_id:
+        return
+    # Pull current team + sport. Try stats first, fall back to MLB API.
+    sport_id = stats.get("api_sport_id") or stats.get("sport_id")
+    team_id = stats.get("api_team_id") or stats.get("team_id")
+    team_name = stats.get("api_current_team") or team
+    if not (sport_id and team_id):
+        data = _mlb_get(f"/people/{mlb_id}?hydrate=currentTeam")
+        if not data:
+            return
+        people = data.get("people", []) or []
+        if not people:
+            return
+        ct = people[0].get("currentTeam") or {}
+        team_id = ct.get("id")
+        team_name = ct.get("name", team_name)
+        # Hydrated team carries sport.id one level deeper.
+        team_data = _mlb_get(f"/teams/{team_id}") if team_id else None
+        if team_data:
+            teams = team_data.get("teams", []) or []
+            if teams:
+                sport_id = (teams[0].get("sport") or {}).get("id")
+    if not (mlb_id and team_id and sport_id):
+        return
+
+    state = _load_team_state()
+    key = str(mlb_id)
+    prior = state.get(key) or {}
+    prior_team_id = prior.get("team_id")
+    prior_sport_id = prior.get("sport_id")
+
+    # First time seeing this player — just record state, no alert.
+    if not prior_team_id:
+        state[key] = {"team_id": team_id, "sport_id": sport_id,
+                      "team_name": team_name, "name": name}
+        _save_team_state(state)
+        return
+
+    # No change.
+    if prior_team_id == team_id:
+        return
+
+    # Team changed — compare sport levels. Lower sport_id = higher level.
+    new_level = _SPORT_LEVEL_NAME.get(sport_id, f"sport {sport_id}")
+    prior_level = _SPORT_LEVEL_NAME.get(prior_sport_id, f"sport {prior_sport_id}")
+    prior_team = prior.get("team_name", "(prior team)")
+
+    is_promotion = prior_sport_id and sport_id < prior_sport_id
+    is_mlb_callup = sport_id == 1 and prior_sport_id != 1
+
+    if is_mlb_callup:
+        msg = (
+            f"🎉 *{name}* called up to the *MAJOR LEAGUES* — "
+            f"{prior_team} ({prior_level}) → *{team_name} (MLB)*"
+        )
+    elif is_promotion:
+        msg = (
+            f"⬆️ *{name}* promoted — "
+            f"{prior_team} ({prior_level}) → {team_name} ({new_level})"
+        )
+    else:
+        # Lateral move or demotion — log silently, update state, no Slack.
+        state[key] = {"team_id": team_id, "sport_id": sport_id,
+                      "team_name": team_name, "name": name}
+        _save_team_state(state)
+        return
+
+    # Dedup: per-player per-promotion-destination so re-pulses don't re-fire.
+    today = date.today().isoformat()
+    if _already_sent(today, name, f"promo_{team_id}"):
+        return
+    if send_slack_message(msg):
+        _mark_sent(today, name, f"promo_{team_id}")
+        state[key] = {"team_id": team_id, "sport_id": sport_id,
+                      "team_name": team_name, "name": name}
+        _save_team_state(state)
 
 
 def save_sent_alerts():
