@@ -781,6 +781,8 @@ def _check_promotion(player, stats, name, team):
 
     is_promotion = prior_sport_id and sport_id < prior_sport_id
     is_mlb_callup = sport_id == 1 and prior_sport_id != 1
+    is_demotion = prior_sport_id and sport_id > prior_sport_id
+    is_mlb_optioned = prior_sport_id == 1 and sport_id != 1
 
     if is_mlb_callup:
         msg = (
@@ -792,8 +794,20 @@ def _check_promotion(player, stats, name, team):
             f"⬆️ *{name}* promoted — "
             f"{prior_team} ({prior_level}) → {team_name} ({new_level})"
         )
+    elif is_mlb_optioned:
+        # Sent down from MLB is its own moment — louder than minors-to-minors.
+        msg = (
+            f"📉 *{name}* optioned from the Majors — "
+            f"*{prior_team} (MLB)* → {team_name} ({new_level})"
+        )
+    elif is_demotion:
+        msg = (
+            f"⬇️ *{name}* sent down — "
+            f"{prior_team} ({prior_level}) → {team_name} ({new_level})"
+        )
     else:
-        # Lateral move or demotion — log silently, update state, no Slack.
+        # Lateral move (same level, different team — e.g., trade between
+        # affiliates). Update state silently.
         state[key] = {"team_id": team_id, "sport_id": sport_id,
                       "team_name": team_name, "name": name}
         _save_team_state(state)
