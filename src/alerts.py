@@ -363,19 +363,38 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
             ):
                 _mark_sent(game_date, name, "pulled", game_number=game_number)
 
-    # --- Alert: Regular starter out of lineup ---
-    # PAUSED: alerts were firing incorrectly — re-enable once root cause is fixed
-    # _REGULAR_STARTER_MIN = 3  # must have appeared in 3+ of last 7 games
-    # if is_hitter and game_status in ("Live", "Final"):
-    #     summary_lower = (summary or "").lower()
-    #     is_out = ("did not play" in summary_lower or "not in lineup" in summary_lower)
-    #     recent_starts = stats.get("recent_starts", 0)
-    #     if is_out and recent_starts >= _REGULAR_STARTER_MIN and _ool_key not in _sent_alerts:
-    #         if send_slack_message(
-    #             f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
-    #             f"_{team}_ — started {recent_starts} of last 7 games — {game_context}{box_link}"
-    #         ):
-    #             _sent_alerts[_ool_key] = True  # sticky until player returns
+    # --- Alert: Regular starter out of lineup / pregame scratch ---
+    # Player appeared in 4+ of the last 7 games but is suddenly DNP today.
+    # Tightened threshold from 3 to 4 (less false-positive) and only fires on
+    # Final (so a day-off in a doubleheader doesn't double-alert). Sticky
+    # until player returns to lineup.
+    _REGULAR_STARTER_MIN = 4
+    if is_hitter and game_status == "Final":
+        summary_lower = (summary or "").lower()
+        is_out = "did not play" in summary_lower or "not in lineup" in summary_lower
+        recent_starts = stats.get("recent_starts", 0)
+        if (is_out and recent_starts >= _REGULAR_STARTER_MIN
+                and _ool_key not in _sent_alerts):
+            if send_slack_message(
+                f"👀 *{name}* ({tier_label}) is out of the lineup{gm_label}\n"
+                f"_{team}_ — started {recent_starts} of last 7 games — "
+                f"{game_context}{box_link}"
+            ):
+                _sent_alerts[_ool_key] = True  # sticky until player returns
+
+    # --- Alert: Career first (hit / HR / start / save) ---
+    _check_career_firsts(player, stats, name, team, tier_label, gm_label,
+                         game_date, game_number, game_context, box_link)
+
+    # --- Alert: Hot or cold streak (rolling window) ---
+    if game_status == "Final":
+        _check_streak(player, stats, name, team, tier_label, gm_label,
+                      game_date, game_number, game_context, box_link)
+
+    # --- Alert: Homecoming (player in their home state) ---
+    if game_status in ("Scheduled", "Live", "Final"):
+        _check_homecoming(player, stats, name, team, tier_label, gm_label,
+                          game_date, game_number, game_context, box_link)
 
     # --- Alert: Standout game summary (when game goes Final) ---
     if game_status == "Final" and "Standout" in grade:
@@ -385,6 +404,235 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
                 f"_{team}_ — {summary} — {game_context}{box_link}"
             ):
                 _mark_sent(game_date, name, "standout_recap", game_number=game_number)
+
+
+# ---------------------------------------------------------------------------
+# New Slack alert checks — career firsts, hot/cold streaks, homecoming games
+# (added 2026-06-15 after Kent flagged the "Munroe pulled" alert as high-value
+# and asked for more in the same spirit). All gated behind MLB person_id
+# availability; quietly no-op for players without one.
+# ---------------------------------------------------------------------------
+
+_STATSAPI = "https://statsapi.mlb.com/api/v1"
+
+
+def _mlb_get(path: str) -> Optional[dict]:
+    """Tiny helper: fetch + parse JSON from MLB Stats API. Returns None on
+    any failure — these alerts are non-essential so we never bubble errors."""
+    try:
+        resp = requests.get(f"{_STATSAPI}{path}", timeout=10)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return None
+
+
+def _mlb_id(player: dict, stats: dict) -> Optional[int]:
+    """Pull the player's MLB person_id from whichever field has it."""
+    for k in ("mlb_id", "mlb_player_id", "api_player_id"):
+        v = player.get(k) or stats.get(k)
+        if v:
+            try:
+                return int(v)
+            except Exception:
+                continue
+    return None
+
+
+def _check_career_firsts(player, stats, name, team, tier_label, gm_label,
+                         game_date, game_number, game_context, box_link):
+    """Alert on MLB career firsts — first hit, first HR, first start, first
+    save, first MLB game played. Check after each game by comparing today's
+    contribution to career totals.
+
+    Sentinel: today_X == career_X means this game produced their only
+    career X to date — i.e., the first one happened in this game.
+    """
+    if stats.get("game_status") != "Final":
+        return
+    mlb_id = _mlb_id(player, stats)
+    if not mlb_id:
+        return
+
+    # Pull career hitting + pitching totals once.
+    career_h = _mlb_get(f"/people/{mlb_id}/stats?stats=career&group=hitting,pitching")
+    if not career_h:
+        return
+
+    career_hitting = {}
+    career_pitching = {}
+    for grp in career_h.get("stats", []) or []:
+        kind = grp.get("group", {}).get("displayName", "")
+        splits = grp.get("splits", []) or []
+        if not splits:
+            continue
+        stat = splits[0].get("stat", {})
+        if kind == "hitting":
+            career_hitting = stat
+        elif kind == "pitching":
+            career_pitching = stat
+
+    # Today's contribution — best available from stats dict.
+    today_hits = int(stats.get("hits", 0) or 0)
+    today_hr = int(stats.get("hr", stats.get("home_runs", 0)) or 0)
+    today_rbi = int(stats.get("rbi", 0) or 0)
+    today_starts = 1 if stats.get("is_starting_pitcher") else 0
+    today_saves = int(stats.get("saves", 0) or 0)
+
+    career_hits = int(career_hitting.get("hits", 0) or 0)
+    career_hr = int(career_hitting.get("homeRuns", 0) or 0)
+    career_starts = int(career_pitching.get("gamesStarted", 0) or 0)
+    career_saves = int(career_pitching.get("saves", 0) or 0)
+    career_games = int(career_hitting.get("gamesPlayed", 0)
+                       or career_pitching.get("gamesPlayed", 0) or 0)
+
+    def _emit(kind: str, message: str) -> None:
+        if _already_sent(game_date, name, kind, game_number=game_number):
+            return
+        if send_slack_message(
+            f"🥇 *{name}* ({tier_label}) — {message}{gm_label}\n"
+            f"_{team}_ — {game_context}{box_link}"
+        ):
+            _mark_sent(game_date, name, kind, game_number=game_number)
+
+    # MLB debut: career games == 1.
+    if career_games == 1:
+        _emit("debut", "MLB debut! 👏")
+    # First MLB hit.
+    if today_hits and career_hits == today_hits:
+        _emit("first_hit", f"first MLB hit ({today_hits}-for-X)")
+    # First MLB HR.
+    if today_hr and career_hr == today_hr:
+        _emit("first_hr", f"first MLB home run! ({today_hr})")
+    # First MLB pitching start.
+    if today_starts and career_starts == today_starts:
+        _emit("first_start", "first MLB start")
+    # First MLB save.
+    if today_saves and career_saves == today_saves:
+        _emit("first_save", "first MLB save")
+
+
+def _check_streak(player, stats, name, team, tier_label, gm_label,
+                  game_date, game_number, game_context, box_link):
+    """Look at the player's last 5 game logs and alert on hot or cold patterns.
+
+    Hot (hitter): 3+ multi-hit games in last 5 (sticky per player+streak-start).
+    Cold (hitter): 0 hits across 5 consecutive games with PAs.
+    Hot (pitcher): 3 consecutive starts of <=2 ER AND >=5 IP.
+    """
+    mlb_id = _mlb_id(player, stats)
+    if not mlb_id:
+        return
+    log = _mlb_get(
+        f"/people/{mlb_id}/stats?stats=gameLog&season={date.today().year}"
+        f"&group=hitting,pitching&limit=10"
+    )
+    if not log:
+        return
+    hits_log = []
+    pit_log = []
+    for grp in log.get("stats", []) or []:
+        kind = grp.get("group", {}).get("displayName", "")
+        for sp in grp.get("splits", []) or []:
+            s = sp.get("stat", {})
+            row = {"date": sp.get("date", ""), **s}
+            if kind == "hitting":
+                hits_log.append(row)
+            elif kind == "pitching":
+                pit_log.append(row)
+
+    hits_log.sort(key=lambda r: r.get("date", ""), reverse=True)
+    pit_log.sort(key=lambda r: r.get("date", ""), reverse=True)
+
+    # Hitter streaks.
+    if hits_log:
+        last5 = hits_log[:5]
+        multi_hit = sum(1 for g in last5 if int(g.get("hits", 0) or 0) >= 2)
+        with_pa = [g for g in last5 if int(g.get("plateAppearances", 0) or 0) >= 1]
+        zero_for = (
+            len(with_pa) >= 5
+            and all(int(g.get("hits", 0) or 0) == 0 for g in with_pa)
+        )
+        if multi_hit >= 3:
+            kind = f"hot_hit_{game_date}"
+            if not _already_sent(game_date, name, kind, game_number=game_number):
+                if send_slack_message(
+                    f"🔥 *{name}* ({tier_label}) heating up{gm_label} — "
+                    f"{multi_hit} multi-hit games in last 5\n"
+                    f"_{team}_ — {game_context}{box_link}"
+                ):
+                    _mark_sent(game_date, name, kind, game_number=game_number)
+        elif zero_for:
+            kind = f"cold_hit_{game_date}"
+            if not _already_sent(game_date, name, kind, game_number=game_number):
+                if send_slack_message(
+                    f"🥶 *{name}* ({tier_label}) cold{gm_label} — "
+                    f"0 hits in last 5 games\n"
+                    f"_{team}_ — {game_context}{box_link}"
+                ):
+                    _mark_sent(game_date, name, kind, game_number=game_number)
+
+    # Pitcher hot streak.
+    if pit_log:
+        starts = [g for g in pit_log[:5] if int(g.get("gamesStarted", 0) or 0) >= 1]
+        if len(starts) >= 3:
+            good = sum(
+                1 for g in starts[:3]
+                if (int(g.get("earnedRuns", 0) or 0) <= 2
+                    and float(g.get("inningsPitched", "0.0") or 0) >= 5)
+            )
+            if good == 3:
+                kind = f"hot_pit_{game_date}"
+                if not _already_sent(game_date, name, kind, game_number=game_number):
+                    if send_slack_message(
+                        f"🔥 *{name}* ({tier_label}) — 3 consecutive quality "
+                        f"starts{gm_label}\n_{team}_ — {game_context}{box_link}"
+                    ):
+                        _mark_sent(game_date, name, kind, game_number=game_number)
+
+
+def _check_homecoming(player, stats, name, team, tier_label, gm_label,
+                     game_date, game_number, game_context, box_link):
+    """Alert when player is playing a game in their birth state (often the
+    only time per year they're in front of family). Dedup per player+state
+    per season — fires once when they first arrive in-state.
+    """
+    mlb_id = _mlb_id(player, stats)
+    if not mlb_id:
+        return
+    # Need today's game venue. Pull it from the schedule if not on stats.
+    venue_state = stats.get("venue_state")
+    if not venue_state:
+        game_pk = stats.get("game_pk")
+        if game_pk:
+            data = _mlb_get(f"/game/{game_pk}/feed/live")
+            if data:
+                venue = (data.get("gameData", {}) or {}).get("venue", {}) or {}
+                venue_state = (venue.get("location") or {}).get("state", "")
+    if not venue_state:
+        return
+
+    # Player birth state — cached lookup via /people.
+    person = _mlb_get(f"/people/{mlb_id}")
+    if not person:
+        return
+    people = person.get("people", []) or []
+    if not people:
+        return
+    birth_state = people[0].get("birthStateProvince", "")
+    if not birth_state or birth_state.lower() != venue_state.lower():
+        return
+
+    season = date.today().year
+    kind = f"homecoming_{season}_{venue_state}"
+    if _already_sent(game_date, name, kind, game_number=game_number):
+        return
+    if send_slack_message(
+        f"📍 *{name}* ({tier_label}) — homecoming game in {venue_state}{gm_label}\n"
+        f"_{team}_ — {game_context}{box_link}"
+    ):
+        _mark_sent(game_date, name, kind, game_number=game_number)
 
 
 def save_sent_alerts():
