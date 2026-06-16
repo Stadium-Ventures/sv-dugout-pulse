@@ -170,6 +170,15 @@ def _normalize_name(name: str) -> str:
     return s
 
 
+_COLLEGE_ALIASES = {
+    # Roster sheet uses "SE Louisiana"; summer-ball rosters publish
+    # "Southeastern Louisiana". Collapse to one key so name+college matches
+    # don't get routed to the "needs review" bucket as false college mismatches.
+    "se louisiana": "southeastern louisiana",
+    "se louisiana state": "southeastern louisiana",
+}
+
+
 def _normalize_college(college: str) -> str:
     """Normalize common college-name variants.
 
@@ -178,6 +187,8 @@ def _normalize_college(college: str) -> str:
     s = _normalize_name(college)
     s = s.replace(" university", "").replace(" college", "")
     s = re.sub(r"\bst\b", "state", s)
+    if s in _COLLEGE_ALIASES:
+        s = _COLLEGE_ALIASES[s]
     return s
 
 

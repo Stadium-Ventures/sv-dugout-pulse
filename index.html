@@ -2454,7 +2454,16 @@ async function fetchHeartbeat() {
 // Summer ball coverage banner — refreshed daily 4 AM ET by the
 // summer_rosters workflow. Mirrors the email banner so the website
 // has the same at-a-glance view.
+// Leagues with no sanctioned public stats feed — Northwoods runs an
+// in-house system w/ no JSON API, PGCBL is Cloudflare-gated and its
+// PrestoSports team pages don't expose Name+Position. Showing them
+// red implies a broken scraper; they're structurally unavailable.
+const _SUMMER_NO_FEED = new Set(['Northwoods', 'PGCBL']);
+
 function _summerChip(h) {
+  if (_SUMMER_NO_FEED.has(h.league)) {
+    return `<span class="summer-chip summer-chip-stub" title="No public stats feed — manual lookup via League Site button">${h.league} · n/a</span>`;
+  }
   const cls = h.status === 'ok' ? 'summer-chip-ok'
             : h.status === 'failed' ? 'summer-chip-failed'
             : 'summer-chip-stub';
