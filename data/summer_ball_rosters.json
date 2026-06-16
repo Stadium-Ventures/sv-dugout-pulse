@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-16T00:00:57.150874+00:00",
+  "generated_at": "2026-06-16T13:04:39.684784+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 283,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1962,
+      "duration_ms": 622,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -22,7 +22,7 @@
       "player_count": 259,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1661,
+      "duration_ms": 479,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 265,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1718,
+      "duration_ms": 464,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -52,7 +52,7 @@
       "player_count": 570,
       "team_count": 13,
       "error": null,
-      "duration_ms": 70468,
+      "duration_ms": 56381,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,16 +64,16 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 297,
+      "player_count": 304,
       "team_count": 7,
       "error": null,
-      "duration_ms": 54978,
+      "duration_ms": 58961,
       "sample_players": [
-        "Tyler Bassett",
-        "Zach Beyra",
-        "Kenan Bowman",
-        "Jack Brafa",
-        "Reid Downs"
+        "Alex Cromwell",
+        "Connor Doherty",
+        "Dylan McClellan",
+        "Parker McRay",
+        "Jay Newton"
       ]
     },
     {
@@ -82,7 +82,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 95562,
+      "duration_ms": 81051,
       "sample_players": []
     },
     {
@@ -91,7 +91,7 @@
       "player_count": 354,
       "team_count": 7,
       "error": null,
-      "duration_ms": 39266,
+      "duration_ms": 35742,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -106,7 +106,7 @@
       "player_count": 794,
       "team_count": 20,
       "error": null,
-      "duration_ms": 129550,
+      "duration_ms": 118933,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -130,7 +130,7 @@
       "player_count": 520,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4764,
+      "duration_ms": 3857,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -159,16 +159,16 @@
     }
   ],
   "baseballcube": {
-    "attempted": 25,
+    "attempted": 26,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 11,
+  "ncaa_clients_matched": 12,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 25,
-  "ncaa_clients_ambiguous": 3,
+  "ncaa_clients_unmatched": 26,
+  "ncaa_clients_ambiguous": 1,
   "matched": [
     {
       "player_name": "Riley Goodman",
@@ -211,14 +211,14 @@
       "profile_url": "https://www.mlb.com/player/830337"
     },
     {
-      "player_name": "Brady Neal",
-      "college": "Alabama",
-      "summer_team": "Metrosouthcountybraves",
-      "league": "Cal Ripken",
-      "summer_name": "Ben Neal",
-      "source_id": "bennealxp7o",
-      "match_strength": "initial+last",
-      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
+      "player_name": "Brady St. Pierre",
+      "college": "SE Louisiana",
+      "summer_team": "HYA",
+      "league": "Cape Cod",
+      "summer_name": "Brady St. Pierre",
+      "source_id": "842081",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/842081"
     },
     {
       "player_name": "Braydon Kersey",
@@ -271,6 +271,16 @@
       "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
     },
     {
+      "player_name": "Truitt Webb",
+      "college": "SE Louisiana",
+      "summer_team": "HYA",
+      "league": "Cape Cod",
+      "summer_name": "Truitt Webb",
+      "source_id": "842083",
+      "match_strength": "name+college",
+      "profile_url": "https://www.mlb.com/player/842083"
+    },
+    {
       "player_name": "Bennett Edwards",
       "college": "Georgia Southern",
       "summer_team": "Lexington County Blowfish",
@@ -318,6 +328,10 @@
     {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
+    },
+    {
+      "player_name": "Brady Neal",
+      "college": "Alabama"
     },
     {
       "player_name": "Drew Bellis",
@@ -386,19 +400,6 @@
   ],
   "ambiguous": [
     {
-      "player_name": "Brady St. Pierre",
-      "college": "SE Louisiana",
-      "candidates": [
-        {
-          "summer_team": "HYA",
-          "league": "Cape Cod",
-          "summer_name": "Brady St. Pierre",
-          "summer_college": "Southeastern Louisiana"
-        }
-      ],
-      "conflict_reason": "college mismatch"
-    },
-    {
       "player_name": "Brooks Wright",
       "college": "SE Louisiana",
       "candidates": [
@@ -407,19 +408,6 @@
           "league": "Coastal Plain",
           "summer_name": "Brooks Wright",
           "summer_college": "Appalachian State"
-        }
-      ],
-      "conflict_reason": "college mismatch"
-    },
-    {
-      "player_name": "Truitt Webb",
-      "college": "SE Louisiana",
-      "candidates": [
-        {
-          "summer_team": "HYA",
-          "league": "Cape Cod",
-          "summer_name": "Truitt Webb",
-          "summer_college": "Southeastern Louisiana"
         }
       ],
       "conflict_reason": "college mismatch"
@@ -454,6 +442,18 @@
       {
         "player_name": "Taylor Kirk",
         "school": "Fordham",
+        "league": "Cape Cod",
+        "team": "Hyannis Harbor Hawks"
+      },
+      {
+        "player_name": "Brady St. Pierre",
+        "school": "SE Louisiana",
+        "league": "Cape Cod",
+        "team": "Hyannis Harbor Hawks"
+      },
+      {
+        "player_name": "Truitt Webb",
+        "school": "SE Louisiana",
         "league": "Cape Cod",
         "team": "Hyannis Harbor Hawks"
       },
@@ -494,20 +494,6 @@
         "player_name": "Caleb Daniel",
         "school": "Georgia Tech",
         "placement_team": "Yarmouth-Dennis Red Sox",
-        "league": "Cape Cod",
-        "status": "Confirmed"
-      },
-      {
-        "player_name": "Brady St. Pierre",
-        "school": "SE Louisiana",
-        "placement_team": "Hyannis Harbor Hawks",
-        "league": "Cape Cod",
-        "status": "Confirmed"
-      },
-      {
-        "player_name": "Truitt Webb",
-        "school": "SE Louisiana",
-        "placement_team": "Hyannis Harbor Hawks",
         "league": "Cape Cod",
         "status": "Confirmed"
       },
@@ -583,5 +569,5 @@
       }
     ]
   },
-  "all_players_count": 3342
+  "all_players_count": 3349
 }
