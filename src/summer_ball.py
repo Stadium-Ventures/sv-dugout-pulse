@@ -834,17 +834,75 @@ class CalRipkenLeague(PrestoSportsLeague):
 class PGCBL(PrestoSportsLeague):
     """Perfect Game Collegiate Baseball League — PrestoSports since 2025.
     Uses academic-year format (2025-26) for URLs.
+
+    Deep-research finding (2026-06-17): pgcbl.com's team pages don't expose
+    Name+Position, but the PrestoSports-hosted subdomain
+    `pgcbl.prestosports.com/sports/bsb/2025-26/players` serves the full
+    league-wide leaderboard as static HTML. Try that first; fall back to
+    the per-team scrape via pgcbl.com if the index is unreachable.
     """
     name = "Perfect Game Collegiate Baseball League"
     short_name = "PGCBL"
-    host_url = "https://pgcbl.com"
+    host_url = "https://pgcbl.prestosports.com"
+    fallback_host_url = "https://pgcbl.com"
     use_academic_year = True
 
     def discover_rosters(self) -> list[PlayerEntry]:
-        entries = super().discover_rosters()
+        # Primary: league-wide /players index on the prestosports subdomain.
+        entries = self._discover_via_league_index()
+        if not entries:
+            # Fall back to original per-team scrape against pgcbl.com.
+            self.host_url = self.fallback_host_url
+            entries = super().discover_rosters()
         for e in entries:
             e.league = self.short_name
         return entries
+
+    def _discover_via_league_index(self) -> list[PlayerEntry]:
+        year = self._year()
+        url = f"{self.host_url}/sports/bsb/{year}/players"
+        html = self._fetch_page(url)
+        if not html or len(html) < 50000:
+            logger.info("%s: league-wide /players index empty/short (%d bytes)",
+                        self.short_name, len(html))
+            return []
+        out: list[PlayerEntry] = []
+        soup = BeautifulSoup(html, "html.parser")
+        # Each leaderboard row has the player slug in an <a href> and the team
+        # abbreviation/name in an adjacent cell.
+        seen: set[str] = set()
+        for a in soup.find_all("a", href=True):
+            m = re.search(rf"/sports/bsb/{year}/players/([a-z0-9-]+)/?$", a["href"])
+            if not m:
+                continue
+            slug = m.group(1)
+            if slug in seen:
+                continue
+            seen.add(slug)
+            name = a.get_text(" ", strip=True)
+            if not name or len(name) > 60:
+                continue
+            # Walk up to find the row, then look for a team link in that row.
+            row = a.find_parent("tr")
+            team = ""
+            if row:
+                for ta in row.find_all("a", href=True):
+                    tm = re.search(rf"/sports/bsb/{year}/teams/([a-z0-9-]+)", ta["href"])
+                    if tm:
+                        team = tm.group(1).replace("-", " ").title()
+                        break
+            out.append(PlayerEntry(
+                name=_normalize_name(name),
+                college="",
+                summer_team=team or "PGCBL",
+                league=self.short_name,
+                source_id=slug,
+                profile_url=f"{self.host_url}/sports/bsb/{year}/players/{slug}",
+                raw_name=name,
+                raw_college="",
+            ))
+        logger.info("%s: %d players from league-wide index", self.short_name, len(out))
+        return out
 
 
 class FCBL(PrestoSportsLeague):
