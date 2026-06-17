@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17T19:35:30.484625+00:00",
+  "generated_at": "2026-06-17T23:51:07.741776+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 291,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1786,
+      "duration_ms": 555,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 262,
+      "player_count": 260,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1448,
+      "duration_ms": 415,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 267,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1695,
+      "duration_ms": 445,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -52,7 +52,7 @@
       "player_count": 571,
       "team_count": 13,
       "error": null,
-      "duration_ms": 75074,
+      "duration_ms": 112642,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -67,7 +67,7 @@
       "player_count": 349,
       "team_count": 8,
       "error": null,
-      "duration_ms": 53590,
+      "duration_ms": 41770,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 102593,
+      "duration_ms": 116853,
       "sample_players": []
     },
     {
@@ -91,7 +91,7 @@
       "player_count": 358,
       "team_count": 7,
       "error": null,
-      "duration_ms": 32251,
+      "duration_ms": 33805,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -102,18 +102,12 @@
     },
     {
       "league": "Prospect",
-      "status": "ok",
-      "player_count": 807,
-      "team_count": 20,
-      "error": null,
-      "duration_ms": 129242,
-      "sample_players": [
-        "Caynen Patterson",
-        "Sean McConachie",
-        "Hayden Wilson",
-        "Kaedin Bond",
-        "Brandon Gour"
-      ]
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 14262,
+      "sample_players": []
     },
     {
       "league": "Northwoods",
@@ -130,7 +124,7 @@
       "player_count": 522,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5103,
+      "duration_ms": 3972,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -580,5 +574,5 @@
       }
     ]
   },
-  "all_players_count": 3427
+  "all_players_count": 2618
 }
