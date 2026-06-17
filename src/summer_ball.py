@@ -1381,13 +1381,23 @@ def _validate_against_placements(matched: list[dict], possible: list[dict]) -> d
             stop = {"the", "of", "county", "city", "town", "ny", "ma", "nh"}
             return {w for w in t.replace("-", " ").split() if w and w not in stop}
 
-        p_tokens = _team_tokens(placement_team)
-        a_tokens = _team_tokens(auto_team)
+        # Cape Cod sources publish short codes that no token-overlap rule
+        # would catch (e.g. "Y-D" for "Yarmouth-Dennis Red Sox"). Expand
+        # them so the comparison sees the full name on both sides.
+        _TEAM_ALIASES = {
+            "y-d": "yarmouth-dennis red sox",
+            "yd": "yarmouth-dennis red sox",
+        }
+        placement_team_x = _TEAM_ALIASES.get(placement_team, placement_team)
+        auto_team_x = _TEAM_ALIASES.get(auto_team, auto_team)
+
+        p_tokens = _team_tokens(placement_team_x)
+        a_tokens = _team_tokens(auto_team_x)
         token_overlap = len(p_tokens & a_tokens) >= min(2, min(len(p_tokens), len(a_tokens)))
         if (
-            auto_team == placement_team
-            or auto_team in placement_team
-            or placement_team.replace(" ", "").startswith(auto_team.replace(" ", ""))
+            auto_team_x == placement_team_x
+            or auto_team_x in placement_team_x
+            or placement_team_x.replace(" ", "").startswith(auto_team_x.replace(" ", ""))
             or token_overlap
         ):
             result["agrees"].append({
