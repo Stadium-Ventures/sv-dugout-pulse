@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17T23:51:07.741776+00:00",
+  "generated_at": "2026-06-18T12:03:16.503929+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 291,
       "team_count": 10,
       "error": null,
-      "duration_ms": 555,
+      "duration_ms": 728,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -22,7 +22,7 @@
       "player_count": 260,
       "team_count": 8,
       "error": null,
-      "duration_ms": 415,
+      "duration_ms": 597,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 267,
       "team_count": 8,
       "error": null,
-      "duration_ms": 445,
+      "duration_ms": 574,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -49,25 +49,25 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 571,
-      "team_count": 13,
+      "player_count": 526,
+      "team_count": 12,
       "error": null,
-      "duration_ms": 112642,
+      "duration_ms": 133766,
       "sample_players": [
-        "Gavin Collins",
-        "Trent Rice",
-        "Christopher DiPrima",
-        "Antonio Ducatelli",
-        "Justin Ruiz"
+        "Jayden Novak",
+        "Aidan Stern",
+        "Jack Edmunds",
+        "Ronan Donohue",
+        "Ian Brown"
       ]
     },
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 349,
-      "team_count": 8,
+      "player_count": 264,
+      "team_count": 6,
       "error": null,
-      "duration_ms": 41770,
+      "duration_ms": 70880,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,32 +82,32 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 116853,
+      "duration_ms": 142000,
       "sample_players": []
     },
     {
       "league": "FCBL",
-      "status": "ok",
-      "player_count": 358,
-      "team_count": 7,
-      "error": null,
-      "duration_ms": 33805,
-      "sample_players": [
-        "Dylan Izenman",
-        "Marco Zirpolo",
-        "Matthew Hall",
-        "Patrick Connors",
-        "Finn Ramseyer"
-      ]
-    },
-    {
-      "league": "Prospect",
       "status": "failed",
       "player_count": 0,
       "team_count": 0,
-      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 14262,
+      "error": "FCBL: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 14419,
       "sample_players": []
+    },
+    {
+      "league": "Prospect",
+      "status": "ok",
+      "player_count": 698,
+      "team_count": 17,
+      "error": null,
+      "duration_ms": 178756,
+      "sample_players": [
+        "Caynen Patterson",
+        "Sean McConachie",
+        "Hayden Wilson",
+        "Kaedin Bond",
+        "Brandon Gour"
+      ]
     },
     {
       "league": "Northwoods",
@@ -124,7 +124,7 @@
       "player_count": 522,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3972,
+      "duration_ms": 4511,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -153,15 +153,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 24,
+    "attempted": 25,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 14,
+  "ncaa_clients_matched": 13,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 24,
+  "ncaa_clients_unmatched": 25,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -213,16 +213,6 @@
       "source_id": "830337",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/830337"
-    },
-    {
-      "player_name": "Brady Neal",
-      "college": "Alabama",
-      "summer_team": "Metrosouthcountybraves",
-      "league": "Cal Ripken",
-      "summer_name": "Ben Neal",
-      "source_id": "bennealxp7o",
-      "match_strength": "initial+last",
-      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
     },
     {
       "player_name": "Brady St. Pierre",
@@ -338,6 +328,10 @@
     {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
+    },
+    {
+      "player_name": "Brady Neal",
+      "college": "Alabama"
     },
     {
       "player_name": "Drew Bellis",
@@ -574,5 +568,5 @@
       }
     ]
   },
-  "all_players_count": 2618
+  "all_players_count": 2828
 }
