@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-21T18:31:40.974101+00:00",
+  "generated_at": "2026-06-21T23:33:29.033328+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 298,
+      "player_count": 300,
       "team_count": 10,
       "error": null,
-      "duration_ms": 730,
+      "duration_ms": 606,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -22,7 +22,7 @@
       "player_count": 257,
       "team_count": 8,
       "error": null,
-      "duration_ms": 576,
+      "duration_ms": 403,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 270,
       "team_count": 8,
       "error": null,
-      "duration_ms": 596,
+      "duration_ms": 423,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -49,25 +49,25 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 529,
-      "team_count": 12,
+      "player_count": 220,
+      "team_count": 5,
       "error": null,
-      "duration_ms": 71778,
+      "duration_ms": 110589,
       "sample_players": [
-        "Gavin Collins",
-        "Trent Rice",
-        "Christopher DiPrima",
-        "Antonio Ducatelli",
-        "Justin Ruiz"
+        "Collin Anderson",
+        "Liam O'Leary",
+        "Andrew Lepine",
+        "Mikey Fernandez",
+        "Jackson Smith"
       ]
     },
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 356,
+      "player_count": 355,
       "team_count": 8,
       "error": null,
-      "duration_ms": 44480,
+      "duration_ms": 84373,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,31 +82,25 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 100600,
+      "duration_ms": 192367,
       "sample_players": []
     },
     {
       "league": "FCBL",
-      "status": "ok",
-      "player_count": 361,
-      "team_count": 7,
-      "error": null,
-      "duration_ms": 40980,
-      "sample_players": [
-        "Dylan Izenman",
-        "Marco Zirpolo",
-        "Matthew Hall",
-        "Patrick Connors",
-        "Finn Ramseyer"
-      ]
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "FCBL: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 28225,
+      "sample_players": []
     },
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 820,
-      "team_count": 20,
+      "player_count": 783,
+      "team_count": 19,
       "error": null,
-      "duration_ms": 145993,
+      "duration_ms": 131599,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -130,7 +124,7 @@
       "player_count": 508,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4361,
+      "duration_ms": 3701,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -159,15 +153,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 23,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 15,
+  "ncaa_clients_matched": 14,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 23,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -291,16 +285,6 @@
       "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
     },
     {
-      "player_name": "Luke Fithian",
-      "college": "Rutgers",
-      "summer_team": "Vermontlakemonsters",
-      "league": "FCBL",
-      "summer_name": "Luke Fithian",
-      "source_id": "lukefithianwmbe",
-      "match_strength": "name-only",
-      "profile_url": "https://thefuturesleague.com/sports/bsb/2026/teams/vermontlakemonsters?view=roster"
-    },
-    {
       "player_name": "Truitt Webb",
       "college": "SE Louisiana",
       "summer_team": "HYA",
@@ -404,6 +388,10 @@
       "college": "North Carolina"
     },
     {
+      "player_name": "Luke Fithian",
+      "college": "Rutgers"
+    },
+    {
       "player_name": "Zack Johnson",
       "college": "Alabama"
     },
@@ -504,16 +492,6 @@
         "auto_league": "MLB Draft",
         "status": "Confirmed",
         "reason": "auto-match team differs from spreadsheet \u2014 likely stale roster"
-      },
-      {
-        "player_name": "Luke Fithian",
-        "school": "Rutgers",
-        "placement_team": "New Port Gulls",
-        "placement_league": "NECBL",
-        "auto_team": "Vermontlakemonsters",
-        "auto_league": "FCBL",
-        "status": "Confirmed",
-        "reason": "auto-match team differs from spreadsheet \u2014 likely stale roster"
       }
     ],
     "unmatched": [
@@ -522,6 +500,13 @@
         "school": "SE Louisiana",
         "placement_team": "Willmar Stringers",
         "league": "Northwoods",
+        "status": "Confirmed"
+      },
+      {
+        "player_name": "Luke Fithian",
+        "school": "Rutgers",
+        "placement_team": "New Port Gulls",
+        "league": "NECBL",
         "status": "Confirmed"
       },
       {
@@ -589,5 +574,5 @@
       }
     ]
   },
-  "all_players_count": 3399
+  "all_players_count": 2693
 }
