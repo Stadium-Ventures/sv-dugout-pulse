@@ -797,9 +797,22 @@ class PrestoSportsLeague(SummerLeague):
 
 
 class NECBL(PrestoSportsLeague):
+    """New England Collegiate Baseball League — PrestoSports on necbl.com.
+
+    2026-06-21 saw a 529 → 220 partial regression (one or more team-roster
+    pages timed out). Hard-coding the 13-team fallback so a slow page
+    doesn't pull half the league out of coverage.
+    """
     name = "New England Collegiate Baseball League"
     short_name = "NECBL"
     host_url = "https://necbl.com"
+    fallback_team_slugs = [
+        "bristolblues", "danburywesterners", "keeneswampbats",
+        "marthasvineyardsharks", "mysticschooners", "newportgulls",
+        "northadamssteeplecats", "northshorenavigators", "oceanstatewaves",
+        "sanfordmainers", "uppervalleynighthawks", "valleybluesox",
+        "vermontmountaineers",
+    ]
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
@@ -910,10 +923,19 @@ class FCBL(PrestoSportsLeague):
 
     Correct league domain is thefuturesleague.com (NOT thefcbl.com or
     fcbl.prestosports.com — both fail). Uses calendar-year URL format.
+
+    Note: GitHub Actions IPs sometimes get an empty teams index from this
+    host (~2026-06-18 onward). Hard-coding the 7 known slugs as fallback
+    so a one-off block doesn't take the whole league to 0 players.
     """
     name = "Futures Collegiate Baseball League"
     short_name = "FCBL"
     host_url = "https://thefuturesleague.com"
+    fallback_team_slugs = [
+        "lowellspinners", "nashuasilverknights", "newbritainbees",
+        "norwichseaunicorns", "vermontlakemonsters", "westfieldstarfires",
+        "worcesterbravehearts",
+    ]
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
@@ -1407,6 +1429,25 @@ def _validate_against_placements(matched: list[dict], possible: list[dict]) -> d
                 "team": p.get("summer_team"),
             })
         else:
+            # If the auto-match landed in a DIFFERENT league than the sheet,
+            # this is almost certainly a same-name player in another summer
+            # league (2026-06-19: Luke Fithian at Rutgers placed on Newport
+            # Gulls/NECBL, but a different "Luke Fithian" appears on Vermont
+            # Lake Monsters/FCBL). Demote to "needs review" rather than
+            # firing as a stale-roster conflict, which it isn't.
+            if placement_league and auto_league and placement_league != auto_league:
+                # Drop silently; the placement still wins. The Coverage
+                # banner's "needs review" bucket will not surface this
+                # because the player matched by name only, but we don't
+                # want a misleading conflict alert either.
+                result["agrees"].append({
+                    "player_name": name,
+                    "school": p.get("school", ""),
+                    "league": p.get("league"),
+                    "team": p.get("summer_team"),
+                    "cross_league_namesake_ignored": True,
+                })
+                continue
             result["conflicts"].append({
                 "player_name": name,
                 "school": p.get("school", ""),
