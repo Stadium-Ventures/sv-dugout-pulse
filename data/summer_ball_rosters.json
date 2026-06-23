@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23T11:28:01.286574+00:00",
+  "generated_at": "2026-06-23T15:56:53.342108+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 304,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1550,
+      "duration_ms": 886,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -22,7 +22,7 @@
       "player_count": 255,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1201,
+      "duration_ms": 620,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 270,
+      "player_count": 269,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1244,
+      "duration_ms": 639,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -52,7 +52,7 @@
       "player_count": 573,
       "team_count": 13,
       "error": null,
-      "duration_ms": 57209,
+      "duration_ms": 73992,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,10 +64,10 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 313,
-      "team_count": 7,
+      "player_count": 359,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 62941,
+      "duration_ms": 54632,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 81192,
+      "duration_ms": 110676,
       "sample_players": []
     },
     {
@@ -91,7 +91,7 @@
       "player_count": 363,
       "team_count": 7,
       "error": null,
-      "duration_ms": 44084,
+      "duration_ms": 44155,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,16 +103,16 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 613,
-      "team_count": 15,
+      "player_count": 834,
+      "team_count": 20,
       "error": null,
-      "duration_ms": 101270,
+      "duration_ms": 122471,
       "sample_players": [
-        "Kolt Kurzman",
-        "Foti Rigopoulos",
-        "Ty Mikkelsen",
-        "Juan Fernandez",
-        "Lucas Krebs"
+        "Caynen Patterson",
+        "Sean McConachie",
+        "Hayden Wilson",
+        "Kaedin Bond",
+        "Brandon Gour"
       ]
     },
     {
@@ -127,10 +127,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 509,
+      "player_count": 505,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4614,
+      "duration_ms": 3885,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 24,
+    "attempted": 23,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 14,
+  "ncaa_clients_matched": 15,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 24,
+  "ncaa_clients_unmatched": 23,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -219,6 +219,16 @@
       "source_id": "830337",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/830337"
+    },
+    {
+      "player_name": "Brady Neal",
+      "college": "Alabama",
+      "summer_team": "Metrosouthcountybraves",
+      "league": "Cal Ripken",
+      "summer_name": "Ben Neal",
+      "source_id": "bennealxp7o",
+      "match_strength": "initial+last",
+      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
     },
     {
       "player_name": "Brady St. Pierre",
@@ -344,10 +354,6 @@
     {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
-    },
-    {
-      "player_name": "Brady Neal",
-      "college": "Alabama"
     },
     {
       "player_name": "Drew Bellis",
@@ -580,5 +586,5 @@
       }
     ]
   },
-  "all_players_count": 3200
+  "all_players_count": 3462
 }
