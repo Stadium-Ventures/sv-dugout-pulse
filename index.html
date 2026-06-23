@@ -1404,15 +1404,28 @@ function renderCard(p) {
     </div>`;
 }
 
+// Leagues with no sanctioned public stats feed — match _SUMMER_NO_FEED
+// in the Coverage banner above. Used to explain *why* a card is empty
+// instead of a generic "no stats here yet."
+const _SUMMER_NO_FEED_CARDS = new Set(['Northwoods', 'PGCBL']);
+
 function summerNoDataHint(p) {
   // Only show on Summer cards that don't already have live game data.
   if (p.level !== 'Summer') return '';
   const isOffDay = ['Off Day', 'Roster Confirmed', 'Status Update'].indexOf(p.game_status) !== -1;
   if (!isOffDay) return '';
-  // Walk-throughs for the user so "-- No Data" isn't a black box.
-  // No promise of when this will appear — some leagues don't publish stats
-  // we can reach during the season at all.
-  const msg = 'No stats here yet. This league may not surface data we can automatically reach mid-season.';
+  const league = (p.tags && p.tags.summer_league) || '';
+  const hasSiteLink = !!(p.tags && p.tags.league_site_url);
+  let msg;
+  if (_SUMMER_NO_FEED_CARDS.has(league)) {
+    // We KNOW we can't reach this league — say so, point at League Site.
+    msg = hasSiteLink
+      ? `${league} has no public stats feed we can auto-pull. Use the League Site button below for manual lookups.`
+      : `${league} has no public stats feed we can auto-pull mid-season.`;
+  } else {
+    // Likely a day off / pre-game state — non-committal hedge.
+    msg = 'No stats here yet — likely an off day or pre-game. Will populate once today’s game starts.';
+  }
   return `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid #7d8590;border-radius:4px;font-size:11px;color:#7d8590;line-height:1.4;">${esc(msg)}</div>`;
 }
 

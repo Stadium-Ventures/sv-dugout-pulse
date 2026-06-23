@@ -29,8 +29,57 @@ logger = logging.getLogger(__name__)
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _CURRENT_PATH = _REPO_ROOT / "data" / "current_pulse.json"
 _YESTERDAY_PATH = _REPO_ROOT / "data" / "yesterday_pulse.json"
+_SEASON_PATH = _REPO_ROOT / "data" / "window_season.json"
 _SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 _ET = timezone(timedelta(hours=-4))  # EDT for summer
+
+
+def _season_lookup() -> dict[str, str]:
+    """Map player_name → short season-to-date summary, pulled from
+    window_season.json. Empty string for placements with no stats yet."""
+    raw = _load(_SEASON_PATH)
+    out: dict[str, str] = {}
+    for e in raw:
+        if e.get("level") != "Summer":
+            continue
+        name = e.get("player_name", "")
+        summary = e.get("stats_summary", "") or ""
+        if not name or not summary or "No games yet" in summary:
+            continue
+        out[name] = _shorten_season(summary)
+    return out
+
+
+def _shorten_season(s: str) -> str:
+    """Trim window_season.json's stats_summary to a recap-friendly clause.
+
+    Hitters:  '18-59, 0 HR, 14 RBI · .305/.387/.458 (17 G)'
+              → '17 G, .305/.387/.458, 0 HR, 14 RBI'
+    Pitchers: '14.0 IP, 2 ER, 11 K, 3 BB · ERA 1.29 (3 G)'
+              → '3 G, 14.0 IP, 1.29 ERA, 11 K'
+    """
+    import re
+    g_match = re.search(r"\((\d+)\s*G\)", s)
+    games = g_match.group(1) + " G" if g_match else ""
+    # Pitcher: contains "IP"
+    if " IP" in s:
+        ip_m = re.search(r"([\d.]+)\s*IP", s)
+        era_m = re.search(r"ERA\s*([\d.]+)", s)
+        k_m = re.search(r"(\d+)\s*K", s)
+        bits = [games] if games else []
+        if ip_m: bits.append(f"{ip_m.group(1)} IP")
+        if era_m: bits.append(f"{era_m.group(1)} ERA")
+        if k_m: bits.append(f"{k_m.group(1)} K")
+        return ", ".join(b for b in bits if b)
+    # Hitter
+    slash_m = re.search(r"(\.\d{3}/\.\d{3}/\.\d{3})", s)
+    hr_m = re.search(r"(\d+)\s*HR", s)
+    rbi_m = re.search(r"(\d+)\s*RBI", s)
+    bits = [games] if games else []
+    if slash_m: bits.append(slash_m.group(1))
+    if hr_m: bits.append(f"{hr_m.group(1)} HR")
+    if rbi_m: bits.append(f"{rbi_m.group(1)} RBI")
+    return ", ".join(b for b in bits if b)
 
 
 def _load(path: Path) -> list[dict]:
@@ -54,24 +103,35 @@ def _summer_clients(entries: list[dict]) -> list[dict]:
     ]
 
 
-def _format_yesterday_line(e: dict) -> str:
-    name = e.get("player_name", "?")
+def _team_md(e: dict) -> str:
+    """Format the team name as a Slack mrkdwn link when we have a league-site
+    URL, plain text otherwise. Slack link syntax: <url|label>."""
     team = e.get("team", "")
+    if "(" in team:
+        team = team.split("(")[0].strip()
+    url = ((e.get("tags") or {}).get("league_site_url") or "").strip()
+    if url:
+        return f"<{url}|{team}>"
+    return team
+
+
+def _format_yesterday_line(e: dict, season_map: dict[str, str] | None = None) -> str:
+    name = e.get("player_name", "?")
     summary = e.get("stats_summary", "")
     if not summary or summary in ("No game today", "No games yet — season just opened"):
         return ""
-    # Drop the trailing "(league)" piece from the team string for brevity.
-    if "(" in team:
-        team = team.split("(")[0].strip()
-    return f"• *{name}* ({team}): {summary}"
+    season_tail = ""
+    if season_map:
+        season = season_map.get(name)
+        if season:
+            season_tail = f"  ·  _Season: {season}_"
+    return f"• *{name}* ({_team_md(e)}): {summary}{season_tail}"
 
 
 def _format_today_line(e: dict) -> str:
     name = e.get("player_name", "?")
-    team = e.get("team", "")
-    if "(" in team:
-        team = team.split("(")[0].strip()
     status = e.get("game_status", "")
+    team = _team_md(e)
     if status == "Scheduled":
         when = e.get("game_time") or "TBD"
         matchup = e.get("game_context") or ""
@@ -114,13 +174,14 @@ def _no_data_active_placements(today_entries: list[dict], yest_entries: list[dic
 def build_message() -> str:
     yest = _summer_clients(_load(_YESTERDAY_PATH))
     today = _summer_clients(_load(_CURRENT_PATH))
+    season_map = _season_lookup()
 
     # Yesterday: finals only.
     yest_lines = []
     for e in sorted(yest, key=lambda x: x.get("player_name", "")):
         if e.get("game_status") not in ("Final", "In Progress"):
             continue
-        line = _format_yesterday_line(e)
+        line = _format_yesterday_line(e, season_map)
         if line:
             yest_lines.append(line)
 
