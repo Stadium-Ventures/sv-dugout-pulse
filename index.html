@@ -1395,6 +1395,7 @@ function renderCard(p) {
         <span class="tag">${esc(p.tags.position)}</span>
         ${p.tags.draft_class && p.tags.draft_class !== 'N/A' ? `<span class="tag">${esc(p.tags.draft_class)}</span>` : ''}
       </div>
+      ${summerSparklineHtml(p)}
       ${summerNoDataHint(p)}
       <div class="card-actions">
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
@@ -2494,6 +2495,82 @@ function _summerEscape(s) {
 let bbrefStats = null;
 let bbrefCacheHours = null;
 
+// Per-player last-5 game classifications, populated by loadSummerGameLog.
+// Map: player_name -> ['good','ok','bad','dnp','good']  (oldest → newest)
+let summerSparklines = {};
+
+function _classifyGame(summary) {
+  // Returns 'good' | 'ok' | 'bad' | 'dnp' based on a one-line stat string.
+  if (!summary) return 'dnp';
+  const s = summary.toLowerCase();
+  if (s.includes('did not appear') || s.includes('no game')) return 'dnp';
+  // Pitcher line, e.g. "3.0 IP, 0 ER, 4 K"
+  const ipMatch = s.match(/([\d.]+)\s*ip/);
+  if (ipMatch) {
+    const ip = parseFloat(ipMatch[1]);
+    const er = (s.match(/(\d+)\s*er/) || [])[1];
+    const k = (s.match(/(\d+)\s*k\b/) || [])[1];
+    const erN = er === undefined ? null : parseInt(er, 10);
+    const kN = k === undefined ? 0 : parseInt(k, 10);
+    if (erN === 0 && ip >= 2) return 'good';
+    if (erN !== null && erN >= 3) return 'bad';
+    if (kN >= 4) return 'good';
+    return 'ok';
+  }
+  // Hitter line, e.g. "2-4, HR, 2 RBI" or "0-3, K"
+  const ab = s.match(/(\d+)-(\d+)/);
+  if (ab) {
+    const h = parseInt(ab[1], 10);
+    const at = parseInt(ab[2], 10);
+    const hr = (s.match(/(\d+)?\s*hr\b/) || [])[1];
+    if (h >= 2 || hr) return 'good';
+    if (at >= 3 && h === 0) return 'bad';
+    if (h >= 1) return 'ok';
+    return 'bad';
+  }
+  return 'dnp';
+}
+
+async function loadSummerGameLog() {
+  try {
+    const resp = await fetch('data/summer_game_log.json?t=' + Date.now());
+    if (!resp.ok) return;
+    const log = await resp.json();
+    const dates = Object.keys(log).sort();  // oldest → newest
+    // Walk newest → oldest building per-player up to 5 most recent entries.
+    const out = {};
+    for (let i = dates.length - 1; i >= 0; i--) {
+      const entries = log[dates[i]] || [];
+      for (const e of entries) {
+        const name = e.player_name;
+        if (!name) continue;
+        if (!out[name]) out[name] = [];
+        if (out[name].length >= 5) continue;
+        out[name].push(_classifyGame(e.stats_summary || ''));
+      }
+    }
+    // Reverse each player's array so oldest is first (left → right).
+    for (const k of Object.keys(out)) out[k] = out[k].reverse();
+    summerSparklines = out;
+  } catch (e) { /* non-fatal */ }
+}
+
+function summerSparklineHtml(p) {
+  if (p.level !== 'Summer') return '';
+  const seq = summerSparklines[p.player_name];
+  if (!seq || !seq.length) return '';
+  const dotColor = c => c === 'good' ? '#1a7a30'
+                     : c === 'ok'   ? '#b08900'
+                     : c === 'bad'  ? '#cf222e'
+                     :                '#7d8590';
+  const dots = seq.map(c =>
+    `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${dotColor(c)};margin-right:3px;"></span>`
+  ).join('');
+  return `<div style="margin-top:6px;font-size:10px;color:#7d8590;display:flex;align-items:center;gap:6px;" title="Last ${seq.length} games (oldest → newest): green = quality outing, yellow = OK, red = poor, grey = DNP">
+    <span>L${seq.length}</span><span>${dots}</span>
+  </div>`;
+}
+
 async function loadSummerBanner() {
   const el = document.getElementById('summerBanner');
   if (!el) return;
@@ -2629,6 +2706,11 @@ async function loadSummerBanner() {
   el.hidden = false;
 }
 loadSummerBanner();
+// Load summer game log + re-render once dots are ready (fire-and-forget,
+// non-blocking — cards render without sparkline first, then refresh).
+loadSummerGameLog().then(() => {
+  if (typeof render === 'function' && dataLoaded) render();
+});
 
 // Load data — supports both envelope {generated_at, players} and legacy array
 (async () => {

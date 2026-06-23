@@ -209,8 +209,49 @@ def build_message() -> str:
     else:
         parts.append(f"\n*Yesterday ({yest_date}):*  _no client summer activity recorded_")
 
+    # Client-vs-client matchups: games where 2+ clients are scheduled.
+    # Differentiate teammates (same team) from opponents (different teams
+    # in the same game) — only opponents are "facing each other"; same-team
+    # groupings just get a "same game" note.
+    matchup_callouts: list[str] = []
+    by_game: dict[str, list[dict]] = {}
+    for e in today:
+        if e.get("is_yesterday"):
+            continue
+        if e.get("game_status") != "Scheduled":
+            continue
+        game = (e.get("game_context") or "").strip()
+        if not game or not e.get("player_name"):
+            continue
+        by_game.setdefault(game, []).append(e)
+    for game, entries in sorted(by_game.items()):
+        if len(entries) < 2:
+            continue
+        # Group by team within this game.
+        teams: dict[str, list[str]] = {}
+        for e in entries:
+            team = (e.get("team") or "").split("(")[0].strip()
+            teams.setdefault(team, []).append(e.get("player_name", ""))
+        when = entries[0].get("game_time") or ""
+        when_suffix = f" ({when})" if when else ""
+        if len(teams) >= 2:
+            # Opponents — the real "client vs client" scenario.
+            sides = " vs ".join(
+                f"{', '.join(f'*{n}*' for n in sorted(set(names)))} ({team})"
+                for team, names in teams.items()
+            )
+            matchup_callouts.append(f"• :crossed_swords: Client-vs-client: {sides} — {game}{when_suffix}")
+        else:
+            team, names = next(iter(teams.items()))
+            names_md = ", ".join(f"*{n}*" for n in sorted(set(names)))
+            matchup_callouts.append(f"• :handshake: {names_md} ({team}) — {game}{when_suffix}")
+
     if today_lines:
         parts.append(f"\n*Coming up today ({today_date}):*")
+        if matchup_callouts:
+            parts.append("_Stacked games (multiple clients in one matchup):_")
+            parts.extend(matchup_callouts)
+            parts.append("")
         parts.extend(today_lines)
     else:
         parts.append(f"\n*Coming up today ({today_date}):*  _no client summer games on the schedule_")

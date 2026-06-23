@@ -65,12 +65,18 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python -m scripts.summer_roster_regression_alert
 
+      - name: Quiet-streak Slack alert
+        if: ${{ inputs.dry_run != true }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python -m scripts.summer_quiet_streak_alert
+
       - name: Commit roster snapshot
         if: ${{ inputs.dry_run != true }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/summer_ball_rosters.json data/_last_league_counts.json
+          git add data/summer_ball_rosters.json data/_last_league_counts.json data/_last_summer_games.json
           if git diff --staged --quiet; then
             echo "No roster changes to commit"
             exit 0
