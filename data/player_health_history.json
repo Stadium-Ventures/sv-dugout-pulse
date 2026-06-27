@@ -35107,7 +35107,7 @@
   },
   {
     "date": "2026-06-27",
-    "updated_at": "2026-06-27T23:32:37.463752+00:00",
+    "updated_at": "2026-06-27T23:47:40.438335+00:00",
     "players": [
       {
         "name": "Aaron Watson",
@@ -35156,6 +35156,17 @@
       {
         "name": "Garrett Whitlock",
         "team": "Boston Red Sox",
+        "level": "Pro",
+        "tier": null,
+        "game_status": "Final",
+        "captured": true,
+        "blocked": false,
+        "source": "MLB Stats API",
+        "sources_tried": []
+      },
+      {
+        "name": "Jack Cebert",
+        "team": "Somerset Patriots",
         "level": "Pro",
         "tier": null,
         "game_status": "Final",
@@ -35231,17 +35242,6 @@
         "sources_tried": []
       },
       {
-        "name": "Cade Doughty",
-        "team": "New Hampshire Fisher Cats",
-        "level": "Pro",
-        "tier": null,
-        "game_status": "Scheduled",
-        "captured": true,
-        "blocked": false,
-        "source": "MLB Stats API",
-        "sources_tried": []
-      },
-      {
         "name": "Caden Powell",
         "team": "Asheville Tourists",
         "level": "Pro",
@@ -35257,7 +35257,7 @@
         "team": "Beloit Sky Carp",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -35312,7 +35312,7 @@
         "team": "Peoria Chiefs",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -35440,24 +35440,6 @@
         "sources_tried": []
       },
       {
-        "name": "Lee Sowers",
-        "team": "North Carolina",
-        "level": "NCAA",
-        "tier": null,
-        "game_status": "Final",
-        "captured": true,
-        "blocked": false,
-        "source": "NCAA.org",
-        "sources_tried": [
-          "D1Baseball",
-          "ESPN",
-          "NCAA.com",
-          "NCAA.org",
-          "Sidearm",
-          "StatBroadcast"
-        ]
-      },
-      {
         "name": "Peyton Glavine",
         "team": "Columbus Clingstones",
         "level": "Pro",
@@ -35473,7 +35455,7 @@
         "team": "Cedar Rapids Kernels",
         "level": "Pro",
         "tier": null,
-        "game_status": "Scheduled",
+        "game_status": "Live",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
@@ -35770,7 +35752,7 @@
         "team": "Memphis Redbirds",
         "level": "Pro",
         "tier": null,
-        "game_status": "Delayed Start",
+        "game_status": "Scheduled",
         "captured": true,
         "blocked": false,
         "source": "MLB Stats API",
