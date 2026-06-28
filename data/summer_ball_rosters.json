@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-28T15:02:03.172148+00:00",
+  "generated_at": "2026-06-28T18:19:29.066921+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 316,
+      "player_count": 315,
       "team_count": 10,
       "error": null,
-      "duration_ms": 2356,
+      "duration_ms": 1866,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 258,
+      "player_count": 262,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1824,
+      "duration_ms": 1435,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 267,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1763,
+      "duration_ms": 1513,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -52,7 +52,7 @@
       "player_count": 585,
       "team_count": 13,
       "error": null,
-      "duration_ms": 122086,
+      "duration_ms": 61627,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,10 +64,10 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 360,
-      "team_count": 8,
+      "player_count": 311,
+      "team_count": 7,
       "error": null,
-      "duration_ms": 78074,
+      "duration_ms": 57858,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,16 +82,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 147868,
+      "duration_ms": 104133,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 370,
+      "player_count": 371,
       "team_count": 7,
       "error": null,
-      "duration_ms": 60622,
+      "duration_ms": 52647,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,10 +103,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 889,
+      "player_count": 891,
       "team_count": 20,
       "error": null,
-      "duration_ms": 214824,
+      "duration_ms": 109022,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -130,7 +130,7 @@
       "player_count": 508,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5579,
+      "duration_ms": 5485,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 23,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 15,
+  "ncaa_clients_matched": 14,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 23,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -249,16 +249,6 @@
       "source_id": "842091",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/842091"
-    },
-    {
-      "player_name": "Tanner Chun",
-      "college": "Tulane",
-      "summer_team": "HYA",
-      "league": "Cape Cod",
-      "summer_name": "Tanner Chun",
-      "source_id": "821930",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/821930"
     },
     {
       "player_name": "Lee Ellis",
@@ -388,6 +378,10 @@
       "college": "Saint Josephs"
     },
     {
+      "player_name": "Tanner Chun",
+      "college": "Tulane"
+    },
+    {
       "player_name": "Lucas Steele",
       "college": "Auburn"
     },
@@ -482,12 +476,6 @@
         "team": "Hyannis Harbor Hawks"
       },
       {
-        "player_name": "Tanner Chun",
-        "school": "Tulane",
-        "league": "Cape Cod",
-        "team": "Hyannis Harbor Hawks"
-      },
-      {
         "player_name": "Luke Fithian",
         "school": "Rutgers",
         "league": "NECBL",
@@ -519,6 +507,13 @@
         "school": "SE Louisiana",
         "placement_team": "Willmar Stringers",
         "league": "Northwoods",
+        "status": "Confirmed"
+      },
+      {
+        "player_name": "Tanner Chun",
+        "school": "Tulane",
+        "placement_team": "Hyannis Harbor Hawks",
+        "league": "Cape Cod",
         "status": "Confirmed"
       },
       {
@@ -586,5 +581,5 @@
       }
     ]
   },
-  "all_players_count": 3553
+  "all_players_count": 3510
 }
