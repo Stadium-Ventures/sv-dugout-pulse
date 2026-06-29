@@ -27,7 +27,7 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-import requests
+from scripts._automation_notify import post_automation
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -35,7 +35,6 @@ logger = logging.getLogger(__name__)
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _SEASON_PATH = _REPO_ROOT / "data" / "window_season.json"
 _STATE_PATH = _REPO_ROOT / "data" / "_last_summer_games.json"
-_SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 
 # Quiet for >= this many days fires an alert. 5 = "missed roughly two
 # series of games" — enough to be meaningful, not a typical day off.
@@ -142,26 +141,7 @@ def main() -> int:
         "long off-stretch._"
     )
     text = "\n".join(lines)
-
-    if not _SLACK_WEBHOOK_URL:
-        logger.warning("SLACK_WEBHOOK_URL not set — would have posted:")
-        print(text)
-        return 0
-    try:
-        resp = requests.post(
-            _SLACK_WEBHOOK_URL,
-            json={"text": text},
-            headers={"Content-Type": "application/json"},
-            timeout=15,
-        )
-        if resp.status_code != 200:
-            logger.error("Slack send failed: %s %s", resp.status_code, resp.text)
-            return 1
-        logger.info("Posted %d quiet-streak alert(s)", len(quiet))
-        return 0
-    except Exception:
-        logger.exception("Slack send errored")
-        return 1
+    return 0 if post_automation(text) else 1
 
 
 if __name__ == "__main__":

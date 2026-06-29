@@ -59,16 +59,16 @@ jobs:
             python -m scripts.refresh_summer_rosters
           fi
 
-      - name: Roster-regression Slack alert
+      - name: Roster-regression alert (#sv-automation)
         if: ${{ inputs.dry_run != true }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
         run: python -m scripts.summer_roster_regression_alert
 
-      - name: Quiet-streak Slack alert
+      - name: Quiet-streak alert (#sv-automation)
         if: ${{ inputs.dry_run != true }}
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
         run: python -m scripts.summer_quiet_streak_alert
 
       - name: Commit roster snapshot
