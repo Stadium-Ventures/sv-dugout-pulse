@@ -23,7 +23,7 @@ import os
 import sys
 from pathlib import Path
 
-import requests
+from scripts._automation_notify import post_automation
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -31,7 +31,6 @@ logger = logging.getLogger(__name__)
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _ROSTERS_PATH = _REPO_ROOT / "data" / "summer_ball_rosters.json"
 _STATE_PATH = _REPO_ROOT / "data" / "_last_league_counts.json"
-_SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 
 # Don't fire on day-over-day variance for tiny leagues — they're noisy.
 _MIN_PRIOR_PLAYERS = 50
@@ -122,26 +121,7 @@ def main() -> int:
         "Check workflow logs + the league site._"
     )
     text = "\n".join(lines)
-
-    if not _SLACK_WEBHOOK_URL:
-        logger.warning("SLACK_WEBHOOK_URL not set — would have posted:")
-        print(text)
-        return 0
-    try:
-        resp = requests.post(
-            _SLACK_WEBHOOK_URL,
-            json={"text": text},
-            headers={"Content-Type": "application/json"},
-            timeout=15,
-        )
-        if resp.status_code != 200:
-            logger.error("Slack send failed: %s %s", resp.status_code, resp.text)
-            return 1
-        logger.info("Posted %d regression(s)", len(regressions))
-        return 0
-    except Exception:
-        logger.exception("Slack send errored")
-        return 1
+    return 0 if post_automation(text) else 1
 
 
 if __name__ == "__main__":

@@ -1,0 +1,37 @@
+name: Health Monitor (LLM)
+
+# Reads across the health JSON, the #dugout-pulse channel (colleague comments
+# included), and recent CI runs; reasons about whether anything is actually
+# wrong; opens `pulse-health` GitHub issues for things needing rework and posts
+# a plain-English digest to #sv-automation. Silent when nothing is actionable.
+#
+# Runs twice a day: 9 AM ET (13:00 UTC) and 7 PM ET (23:00 UTC).
+on:
+  schedule:
+    - cron: "0 13 * * *"
+    - cron: "0 23 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install --quiet anthropic requests
+      - name: Run health monitor
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python -m scripts.health_monitor

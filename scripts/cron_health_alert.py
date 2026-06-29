@@ -2,7 +2,8 @@
 
 Reads `data/bbref_stats.json`'s `generated_at_utc` field — that's stamped
 every time the refresh_bbref_stats workflow successfully completes.
-Compares to wall clock and sends a plain-English status to Slack.
+Compares to wall clock and posts a plain-English status to #sv-automation
+(the muted cross-product channel — moved off #dugout-pulse 2026-06-29).
 
 Until Tom wires cron-job.org for refresh_bbref_stats.yml (queued for Mon
 2026-06-09), GitHub-native cron sometimes silently skips. This catches
@@ -18,14 +19,13 @@ import sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-import requests
+from scripts._automation_notify import post_automation
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _BBREF_STATS_PATH = _REPO_ROOT / "data" / "bbref_stats.json"
-_SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 
 
 def _hours_ago(iso_ts: str) -> float:
@@ -44,9 +44,6 @@ def _format_time_ago(hours: float) -> str:
 
 
 def main() -> int:
-    if not _SLACK_WEBHOOK_URL:
-        logger.warning("SLACK_WEBHOOK_URL not set — alert won't be sent")
-        return 0
     if not _BBREF_STATS_PATH.exists():
         text = (
             ":warning: *BBRef cron health check*: stats file missing entirely. "
@@ -79,21 +76,7 @@ def main() -> int:
                     f"refresh_bbref_stats.yml in GitHub Actions."
                 )
 
-    try:
-        resp = requests.post(
-            _SLACK_WEBHOOK_URL,
-            json={"text": text},
-            headers={"Content-Type": "application/json"},
-            timeout=10,
-        )
-        if resp.status_code != 200:
-            logger.error("Slack send failed: %s %s", resp.status_code, resp.text)
-            return 1
-        logger.info("Sent: %s", text)
-        return 0
-    except Exception:
-        logger.exception("Slack send errored")
-        return 1
+    return 0 if post_automation(text) else 1
 
 
 if __name__ == "__main__":
