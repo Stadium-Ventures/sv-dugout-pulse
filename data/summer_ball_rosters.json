@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-06-29T12:45:10.825876+00:00",
+  "generated_at": "2026-06-29T16:46:23.340481+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 313,
+      "player_count": 317,
       "team_count": 10,
       "error": null,
-      "duration_ms": 722,
+      "duration_ms": 720,
       "sample_players": [
         "Adam Magpoc",
         "Alexander Peck",
@@ -22,7 +22,7 @@
       "player_count": 262,
       "team_count": 8,
       "error": null,
-      "duration_ms": 542,
+      "duration_ms": 591,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 266,
       "team_count": 8,
       "error": null,
-      "duration_ms": 607,
+      "duration_ms": 851,
       "sample_players": [
         "Bryce Hubbard",
         "Carlos Sanchez",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 587,
+      "player_count": 586,
       "team_count": 13,
       "error": null,
-      "duration_ms": 60875,
+      "duration_ms": 99133,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,16 +64,16 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 78,
-      "team_count": 2,
+      "player_count": 234,
+      "team_count": 5,
       "error": null,
-      "duration_ms": 54298,
+      "duration_ms": 49707,
       "sample_players": [
-        "Logan Tribble",
-        "Cole Rhame",
-        "Jack Euart",
-        "James Layman",
-        "Yenli Nolasco"
+        "Alex Cromwell",
+        "Connor Doherty",
+        "Dylan McClellan",
+        "Parker McRay",
+        "Jay Newton"
       ]
     },
     {
@@ -82,16 +82,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 92108,
+      "duration_ms": 91301,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 371,
+      "player_count": 374,
       "team_count": 7,
       "error": null,
-      "duration_ms": 32475,
+      "duration_ms": 50209,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,10 +103,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 891,
+      "player_count": 896,
       "team_count": 20,
       "error": null,
-      "duration_ms": 128631,
+      "duration_ms": 120438,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -127,10 +127,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 508,
+      "player_count": 500,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4620,
+      "duration_ms": 4619,
       "sample_players": [
         "Ben Shepherd",
         "Bennett Holdener",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 25,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 13,
+  "ncaa_clients_matched": 14,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 25,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 1,
   "matched": [
     {
@@ -219,6 +219,16 @@
       "source_id": "830337",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/830337"
+    },
+    {
+      "player_name": "Brady Neal",
+      "college": "Alabama",
+      "summer_team": "Metrosouthcountybraves",
+      "league": "Cal Ripken",
+      "summer_name": "Ben Neal",
+      "source_id": "bennealxp7o",
+      "match_strength": "initial+last",
+      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
     },
     {
       "player_name": "Brady St. Pierre",
@@ -334,10 +344,6 @@
     {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
-    },
-    {
-      "player_name": "Brady Neal",
-      "college": "Alabama"
     },
     {
       "player_name": "Drew Bellis",
@@ -575,5 +581,5 @@
       }
     ]
   },
-  "all_players_count": 3276
+  "all_players_count": 3435
 }
