@@ -28,9 +28,21 @@ logger = logging.getLogger(__name__)
 
 _WEBHOOK_URL = os.environ.get("SV_AUTOMATION_WEBHOOK_URL", "")
 
+# Product label — SET THIS PER REPO when copying this helper. #sv-automation is
+# shared: every SV product posts there under the same "SV Automation" bot name,
+# so each message must name its own app or a reader can't tell who sent it.
+# Leads every post (see Tom's 2026-06-30 feedback). Skipped automatically when
+# the caller already names the product in its text.
+PRODUCT_LABEL = "Dugout Pulse"
+
 
 def post_automation(text: str, blocks: Optional[list] = None) -> bool:
     """Post a message to #sv-automation. Returns True on confirmed delivery."""
+    # Lead with the product label so the shared channel shows who posted. Skip
+    # if the caller already leads with it (e.g. "*Dugout Pulse health monitor*").
+    if PRODUCT_LABEL and PRODUCT_LABEL.lower() not in text.lower():
+        text = f"*{PRODUCT_LABEL}*\n{text}"
+
     if not _WEBHOOK_URL or "YOUR_WEBHOOK" in _WEBHOOK_URL:
         logger.warning(
             "SV_AUTOMATION_WEBHOOK_URL not set — would have posted to "
