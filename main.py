@@ -30,6 +30,8 @@ from src.config import (
     OUTPUT_PATH,
     PLAYER_HEALTH_HISTORY_PATH,
     WINDOW_7D_PATH,
+    WINDOW_14D_PATH,
+    WINDOW_30D_PATH,
     WINDOW_SEASON_PATH,
     YESTERDAY_PULSE_PATH,
 )
@@ -1795,6 +1797,11 @@ def run_historical():
     window_data = aggregator.run_all_windows(all_players)
 
     write_window_json(window_data["7d"], WINDOW_7D_PATH)
+    # Rolling mid-range windows — written straight from the aggregator. These
+    # are date-range fetches (no D1B season-scrape), so the empty-response
+    # preservation dance below (for Season) doesn't apply.
+    write_window_json(window_data["14d"], WINDOW_14D_PATH)
+    write_window_json(window_data["30d"], WINDOW_30D_PATH)
 
     # Preserve existing season data for NCAA players where D1B returned 403/empty.
     # D1Baseball rate-limits aggressively, so we don't want to wipe good data on a
@@ -1826,8 +1833,10 @@ def run_historical():
     write_window_json(season_data, WINDOW_SEASON_PATH)
 
     logger.info(
-        "Historical aggregation complete: 7D=%d, Season=%d",
+        "Historical aggregation complete: 7D=%d, 14D=%d, 30D=%d, Season=%d",
         len(window_data["7d"]),
+        len(window_data["14d"]),
+        len(window_data["30d"]),
         len(season_data),
     )
 

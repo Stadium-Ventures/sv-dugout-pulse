@@ -1038,6 +1038,8 @@
   <button class="time-tab active" data-window="today" role="tab" aria-selected="true">Today</button>
   <button class="time-tab" data-window="yesterday" role="tab" aria-selected="false">Yesterday</button>
   <button class="time-tab" data-window="7d" role="tab" aria-selected="false">7 Days</button>
+  <button class="time-tab" data-window="14d" role="tab" aria-selected="false">14 Days</button>
+  <button class="time-tab" data-window="30d" role="tab" aria-selected="false">30 Days</button>
   <button class="time-tab" data-window="season" role="tab" aria-selected="false">Season</button>
 </div>
 
@@ -1132,13 +1134,15 @@ let heartbeatData = new Map();
 
 // Time window state
 let currentWindow = 'today';
-const windowData = { today: null, yesterday: null, '7d': null, season: null };
+const windowData = { today: null, yesterday: null, '7d': null, '14d': null, '30d': null, season: null };
 const _windowFetchFailed = { today: false, yesterday: false, '7d': false, season: false };
 const _scrollPositions = { today: 0, yesterday: 0, '7d': 0, season: 0 };
 const WINDOW_PATHS = {
   today: 'data/current_pulse.json',
   yesterday: 'data/yesterday_pulse.json',
   '7d': 'data/window_7d.json',
+  '14d': 'data/window_14d.json',
+  '30d': 'data/window_30d.json',
   season: 'data/window_season.json'
 };
 

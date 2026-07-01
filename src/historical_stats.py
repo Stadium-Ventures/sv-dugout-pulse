@@ -958,34 +958,38 @@ class WindowStatsAggregator:
     def run_all_windows(self, players: list[dict]) -> dict[str, list]:
         """
         Aggregate stats for all players using concurrent fetching.
-        Returns: {"7d": [...], "season": [...]}
+        Returns: {"7d": [...], "14d": [...], "30d": [...], "season": [...]}
+
+        The rolling windows (7/14/30D) are date-range fetches — reliable for
+        Pro (MLB Stats API) and served from the game log for NCAA/HS. Season
+        uses Baseball Reference / D1Baseball totals.
         """
-        start_7d = self._today - timedelta(days=7)
+        window_starts = {
+            "7d": self._today - timedelta(days=7),
+            "14d": self._today - timedelta(days=14),
+            "30d": self._today - timedelta(days=30),
+            "season": self._season_start,
+        }
 
         def _process_player(player):
             name = player.get("player_name", "")
             level = player.get("level", "")
             logger.info("Processing windows for %s (%s)", name, level)
+            return {
+                w: self._build_window_entry(player, w, start, self._today)
+                for w, start in window_starts.items()
+            }
 
-            entry_7d = self._build_window_entry(
-                player, "7d", start_7d, self._today
-            )
-            entry_season = self._build_window_entry(
-                player, "season", self._season_start, self._today
-            )
-            return entry_7d, entry_season
-
-        results = {"7d": [], "season": []}
+        results = {w: [] for w in window_starts}
 
         with ThreadPoolExecutor(max_workers=4) as executor:
             futures = {executor.submit(_process_player, p): p for p in players}
             for future in as_completed(futures):
                 try:
-                    entry_7d, entry_season = future.result()
-                    if entry_7d:
-                        results["7d"].append(entry_7d)
-                    if entry_season:
-                        results["season"].append(entry_season)
+                    entries = future.result()
+                    for w, entry in entries.items():
+                        if entry:
+                            results[w].append(entry)
                 except Exception:
                     player = futures[future]
                     logger.exception(

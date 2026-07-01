@@ -83,8 +83,12 @@ WINDOW_MIN_IP = {"7d": 0.1, "month": 0.1, "season": 0.1}
 # ---------------------------------------------------------------------------
 OUTPUT_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "current_pulse.json")
 
-# Window stats output paths (7D = Pro only, Season = everyone)
+# Window stats output paths. Rolling windows (7/14/30D) are most meaningful for
+# Pro (MLB Stats API supports arbitrary date ranges); NCAA fills from its game
+# log where available, Season from Baseball Reference / D1Baseball.
 WINDOW_7D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_7d.json")
+WINDOW_14D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_14d.json")
+WINDOW_30D_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_30d.json")
 WINDOW_SEASON_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "window_season.json")
 YESTERDAY_PULSE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "yesterday_pulse.json")
 NCAA_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "ncaa_game_log.json")
