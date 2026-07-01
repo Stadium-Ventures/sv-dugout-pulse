@@ -1380,7 +1380,9 @@ function renderCard(p) {
     ['Shut Down','Injured','Pending, 1st Half','Pending, 2nd Half','2nd Half','Status Update']
       .indexOf(p.game_status) !== -1
   );
-  const inactiveCls = (isInactiveSummer || manualCard) ? ' summer-inactive' : '';
+  // Pending placement (rostered, not appearing yet) — muted + explained below.
+  const pendingArrival = summerPlacementPending(p);
+  const inactiveCls = (isInactiveSummer || manualCard || pendingArrival) ? ' summer-inactive' : '';
 
   return `
     <div class="card${isLive ? ' live' : ''}${inactiveCls} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
@@ -1399,9 +1401,9 @@ function renderCard(p) {
         ${p.level === 'Summer' ? '' : `<span class="badge badge-tier-dim">T${pri}</span>`}
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : manualCard ? 'Tracked manually' : p.performance_grade)}</div>
-      ${p.grade_reason && !manualCard ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
-      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${manualCard ? '' : highlightStats(p.stats_summary) + statsAsofHtml}</div>
+      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : manualCard ? 'Tracked manually' : pendingArrival ? 'Pending' : p.performance_grade)}</div>
+      ${p.grade_reason && !manualCard && !pendingArrival ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
+      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${(manualCard || (pendingArrival && !isScheduled)) ? '' : highlightStats(p.stats_summary) + statsAsofHtml}</div>
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
         : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
@@ -1416,6 +1418,7 @@ function renderCard(p) {
       </div>
       ${summerSparklineHtml(p)}
       ${summerNoDataHint(p)}
+      ${summerPendingHint(p)}
       <div class="card-actions">
         <a class="btn" href="${esc(p.social_search_url)}" target="_blank" rel="noopener">X Search</a>
         ${p.box_score_url ? `<a class="btn" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${p.game_status === 'Scheduled' ? 'Preview' : 'Box Score'}</a>` : ''}
@@ -1463,6 +1466,37 @@ function summerNoDataHint(p) {
   const isOffDay = ['Off Day', 'Roster Confirmed', 'Status Update'].indexOf(p.game_status) !== -1;
   if (!isOffDay) return '';
   return _summerHintBox('No stats here yet — likely an off day or pre-game. Will populate once today’s game starts.');
+}
+
+// Summaries that mean "no production" (rostered/scheduled but nothing recorded).
+const _SUMMER_EMPTY_SUMMARIES = new Set([
+  '', 'did not appear', 'no game today', 'no game scheduled',
+  'no games yet — season just opened',
+]);
+
+// A placement marked Pending (or 2nd-Half, before that half opens) that isn't
+// producing yet. They show as cards because their team has games, but the box
+// scores come back empty/DNP — so surface the pending status instead of a bare
+// "Did not appear" that reads like a bad game. Once real stats flow, this goes
+// false and they render like any other player.
+function summerPlacementPending(p) {
+  if (!p || p.level !== 'Summer') return false;
+  if (isManualSummerCard(p)) return false;  // manual-league treatment covers it
+  const st = (p.tags && p.tags.placement_status) || '';
+  if (!(st.indexOf('Pending') === 0 || st === '2nd Half')) return false;
+  const s = (p.stats_summary || '').trim().toLowerCase();
+  const scheduled = p.game_status === 'Scheduled' || s.startsWith('game at');
+  const hasProduction = !scheduled && !_SUMMER_EMPTY_SUMMARIES.has(s);
+  return !hasProduction;
+}
+
+function summerPendingHint(p) {
+  if (!summerPlacementPending(p)) return '';
+  const st = (p.tags && p.tags.placement_status) || 'Pending';
+  const half = st.includes('2nd') ? ' (second half)' : st.includes('1st') ? ' (first half)' : '';
+  return _summerHintBox(
+    `Pending roster spot${half} — rostered but not appearing in games yet. `
+    + `Stats fill in automatically once they get on the field.`);
 }
 
 function levelBadgeClass(level) {
