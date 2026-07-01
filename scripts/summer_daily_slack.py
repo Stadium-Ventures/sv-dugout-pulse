@@ -143,10 +143,19 @@ def _format_today_line(e: dict) -> str:
     return ""
 
 
-def _no_data_active_placements(today_entries: list[dict], yest_entries: list[dict]) -> list[str]:
+# Summer leagues we pull live game data from automatically. Placements in any
+# other league (Northwoods, PGCBL, FCBL, Coastal Plain, Prospect, Cal Ripken,
+# etc.) are tracked by hand — no automated stats will ever appear here for them,
+# so we shouldn't imply they're "coming soon."
+_REACHABLE_LEAGUES = {"Cape Cod", "MLB Draft", "Appalachian", "NECBL"}
+
+
+def _no_data_active_placements(
+    today_entries: list[dict], yest_entries: list[dict]
+) -> list[tuple[str, str]]:
     """Active placements (Confirmed / 2nd Half) for whom we have no data
-    today or yesterday. Likely a league we can't reach — surface so the
-    team knows we aren't silently dropping them.
+    today or yesterday. Returns (player_name, league) sorted by name so the
+    caller can split "league we can't reach" from "just idle today."
     """
     yest_finals = {
         e.get("player_name") for e in yest_entries
@@ -167,7 +176,8 @@ def _no_data_active_placements(today_entries: list[dict], yest_entries: list[dic
         if name in yest_finals:
             continue
         seen.add(name)
-        out.append(name)
+        league = (e.get("tags") or {}).get("summer_league", "") or ""
+        out.append((name, league))
     return sorted(out)
 
 
@@ -256,15 +266,32 @@ def build_message() -> str:
     else:
         parts.append(f"\n*Coming up today ({today_date}):*  _no client summer games on the schedule_")
 
-    # Honest hedge: some placements aren't showing data here yet. Could be
-    # leagues that haven't opened, days off, or leagues we can't reach.
+    # Honest split: mid-season, "leagues will open" is stale. Separate the
+    # placements in leagues we simply can't pull automatically (tracked by
+    # hand — won't ever show here) from reachable-league guys who were just
+    # idle in the last day.
     no_data = _no_data_active_placements(today, yest)
     if no_data:
-        parts.append(
-            f"\n_Heads up: {len(no_data)} other placements have no data here. "
-            f"Most should appear as their leagues open and games run; a few "
-            f"leagues we may not be able to reach automatically._"
-        )
+        unreachable = [(n, lg) for n, lg in no_data if lg not in _REACHABLE_LEAGUES]
+        idle = [n for n, lg in no_data if lg in _REACHABLE_LEAGUES]
+        if unreachable:
+            by_lg: dict[str, list[str]] = {}
+            for n, lg in unreachable:
+                by_lg.setdefault(lg or "league TBD", []).append(n)
+            grouped = "; ".join(
+                f"{', '.join(sorted(names))} ({lg})"
+                for lg, names in sorted(by_lg.items())
+            )
+            parts.append(
+                f"\n_Tracked by hand — we can't pull these leagues automatically, "
+                f"so check the league/team site directly: {grouped}._"
+            )
+        if idle:
+            names_md = ", ".join(sorted(idle))
+            parts.append(
+                f"\n_No game in the last day for {names_md} — just idle; "
+                f"they'll reappear the next time they play._"
+            )
 
     parts.append("\n_<https://stadium-ventures.github.io/sv-dugout-pulse/|Open Dugout Pulse>_")
     return "\n".join(parts)
