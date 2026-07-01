@@ -2465,24 +2465,7 @@ async function fetchHeartbeat() {
   }
 }
 
-// Summer ball coverage banner — refreshed daily 4 AM ET by the
-// summer_rosters workflow. Mirrors the email banner so the website
-// has the same at-a-glance view.
-// Leagues with no sanctioned public stats feed — Northwoods runs an
-// in-house system w/ no JSON API, PGCBL is Cloudflare-gated and its
-// PrestoSports team pages don't expose Name+Position. Showing them
-// red implies a broken scraper; they're structurally unavailable.
-const _SUMMER_NO_FEED = new Set(['Northwoods', 'PGCBL']);
-
-function _summerChip(h) {
-  if (_SUMMER_NO_FEED.has(h.league)) {
-    return `<span class="summer-chip summer-chip-stub" title="No public stats feed — manual lookup via League Site button">${h.league} · n/a</span>`;
-  }
-  const cls = h.status === 'ok' ? 'summer-chip-ok'
-            : h.status === 'failed' ? 'summer-chip-failed'
-            : 'summer-chip-stub';
-  return `<span class="summer-chip ${cls}">${h.league} · ${h.player_count}</span>`;
-}
+// Summer ball coverage banner — placement-driven (see loadSummerBanner).
 
 function _summerEscape(s) {
   return String(s ?? '').replace(/[&<>"]/g, c => ({
@@ -2574,11 +2557,20 @@ function summerSparklineHtml(p) {
 async function loadSummerBanner() {
   const el = document.getElementById('summerBanner');
   if (!el) return;
-  let snap;
+  // Placement-driven view. Source of truth = Kent's spreadsheet, imported to
+  // summer_ball_placements.json. Live stats only come from the four leagues on
+  // MLB Stats API / PrestoSports; everything else is tracked by hand. (The old
+  // auto-matcher snapshot in summer_ball_rosters.json is now a QA-only feed used
+  // by the Monday email + regression alert, not this banner.)
+  let placements, pulse;
   try {
-    const resp = await fetch('data/summer_ball_rosters.json?t=' + Date.now());
-    if (!resp.ok) return;
-    snap = await resp.json();
+    const [pRes, cRes] = await Promise.all([
+      fetch('data/summer_ball_placements.json?t=' + Date.now()),
+      fetch('data/current_pulse.json?t=' + Date.now())
+    ]);
+    if (!pRes.ok) return;
+    placements = await pRes.json();
+    pulse = cRes.ok ? await cRes.json() : {};
   } catch (e) { return; }
   // Pull BBRef cache freshness in parallel — used for per-card hints +
   // the top-of-banner refresh pill.
@@ -2601,101 +2593,94 @@ async function loadSummerBanner() {
       }
     }
   } catch (e) { /* non-fatal */ }
-  if (!snap) return;
+  // Leagues we pull live game data from automatically. Everything else is
+  // tracked by hand — no automated stats will ever appear for those placements.
+  const REACHABLE = new Set(['Cape Cod', 'MLB Draft', 'Appalachian', 'NECBL']);
 
-  const matched = snap.ncaa_clients_matched || 0;
-  const possible = snap.ncaa_clients_possible || 0;
-  const unmatched = snap.ncaa_clients_unmatched || 0;
-  const ambiguous = snap.ncaa_clients_ambiguous || 0;
-  const total = snap.ncaa_clients_total || 0;
-  const health = snap.league_health || [];
+  const rows = (Array.isArray(placements) ? placements : (placements.placements || []))
+    .filter(r => r && r.player_name && r.player_name !== 'NEED PLACEMENT');
+  if (!rows.length) { el.hidden = true; return; }
 
-  const chips = health.map(_summerChip).join('');
+  // Index today's summer pulse entries by player so we can tell who has a game.
+  const pulsePlayers = (pulse && pulse.players) || (Array.isArray(pulse) ? pulse : []);
+  const byName = {};
+  for (const e of pulsePlayers) {
+    if (e.level !== 'Summer' || !e.player_name) continue;
+    (byName[e.player_name] = byName[e.player_name] || []).push(e);
+  }
+  const hasGame = n => (byName[n] || []).some(e =>
+    ['Scheduled', 'Live', 'In Progress', 'Final'].includes(e.game_status));
+  const isLiveNow = n => (byName[n] || []).some(e =>
+    ['Live', 'In Progress'].includes(e.game_status));
 
-  const matchedHtml = (snap.matched || []).slice(0, 20).map(m =>
-    `<li><strong>${_summerEscape(m.player_name)}</strong> `
-    + `<span class="college">(${_summerEscape(m.college)})</span> → `
-    + `<strong>${_summerEscape(m.summer_team)}</strong> `
-    + `<span class="meta">(${_summerEscape(m.league)})</span></li>`
-  ).join('');
+  // Bucket every real placement.
+  const live = [], idle = [], manual = [], out = [];
+  const leagueCounts = {};   // league -> { count, reachable } — active only
+  for (const r of rows) {
+    const st = r.status || '';
+    const reachable = REACHABLE.has(r.league);
+    if (st === 'Shut Down' || st === 'Injured') { out.push(r); continue; }
+    // Chips reflect active placements by league (blank leagues get no chip).
+    if (r.league) {
+      (leagueCounts[r.league] = leagueCounts[r.league] || { count: 0, reachable }).count++;
+    }
+    if (!reachable) { manual.push(r); continue; }
+    if (hasGame(r.player_name)) live.push(r); else idle.push(r);
+  }
+  const playingNow = rows.filter(r => isLiveNow(r.player_name)).length;
+  const trackedLive = live.length + idle.length;
+  const total = rows.length;
 
-  const possibleHtml = (snap.possible_matches || []).slice(0, 20).map(p => {
-    const cands = (p.candidates || []).slice(0, 3).map(c =>
-      `${_summerEscape(c.summer_name)} → ${_summerEscape(c.summer_team)} (${_summerEscape(c.league)})`
-    ).join(', ');
-    return `<li><strong>${_summerEscape(p.player_name)}</strong> `
-      + `<span class="college">(${_summerEscape(p.college)})</span> — `
-      + `<span class="meta">possible: ${cands}</span></li>`;
-  }).join('');
+  // Chips: one per league with an SV placement. Reachable = green; manual
+  // (no automated feed) = muted with a "manual" tag. No zero-placement noise.
+  const chips = Object.entries(leagueCounts)
+    .sort((a, b) => b[1].count - a[1].count)
+    .map(([lg, info]) => info.reachable
+      ? `<span class="summer-chip summer-chip-ok">${_summerEscape(lg)} · ${info.count}</span>`
+      : `<span class="summer-chip summer-chip-stub" title="No automated stats feed — tracked by hand">${_summerEscape(lg)} · ${info.count} · manual</span>`
+    ).join('');
 
-  // Ambiguous bucket holds (a) name collisions across teams and (b) college
-  // mismatches where a same-name summer-ball player is at a DIFFERENT school.
-  // Surface these in the banner so they're not silently ignored.
-  const ambiguousHtml = (snap.ambiguous || []).slice(0, 20).map(p => {
-    const cands = (p.candidates || []).slice(0, 3).map(c =>
-      `${_summerEscape(c.summer_team)}${c.summer_college ? ' / ' + _summerEscape(c.summer_college) : ''} (${_summerEscape(c.league)})`
-    ).join(', ');
-    const reason = p.conflict_reason ? ` — <span style="color:#d32f2f;">${_summerEscape(p.conflict_reason)}</span>` : '';
-    return `<li><strong>${_summerEscape(p.player_name)}</strong> `
-      + `<span class="college">(${_summerEscape(p.college)})</span>${reason} `
-      + `<span class="meta">${cands}</span></li>`;
-  }).join('');
+  const bySort = (a, b) => a.player_name.localeCompare(b.player_name);
+  const _li = (r, note) => {
+    const sch = r.school ? ` <span class="college">(${_summerEscape(r.school)})</span>` : '';
+    const team = r.summer_team
+      ? ` <span class="meta">(${_summerEscape(r.summer_team)}${r.league ? ', ' + _summerEscape(r.league) : ''})</span>`
+      : '';
+    const n = note ? ` <span class="meta">— ${_summerEscape(note)}</span>` : '';
+    return `<li><strong>${_summerEscape(r.player_name)}</strong>${sch}${team}${n}</li>`;
+  };
 
   const detailParts = [];
-  if (matchedHtml) {
+  if (manual.length) {
     detailParts.push(
-      `<div class="summer-section-title">Confirmed assignments</div>`
-      + `<ul class="summer-list">${matchedHtml}</ul>`
+      `<div class="summer-section-title">Tracked by hand — no automated feed</div>`
+      + `<div class="meta" style="margin:4px 0;">These leagues have no public stats feed we can pull automatically. Check the team/league site directly.</div>`
+      + `<ul class="summer-list">${manual.slice().sort(bySort).map(r => _li(r)).join('')}</ul>`
     );
   }
-  if (ambiguousHtml) {
+  if (idle.length) {
     detailParts.push(
-      `<div class="summer-section-title">Needs review (college mismatch / name collision)</div>`
-      + `<ul class="summer-list">${ambiguousHtml}</ul>`
+      `<div class="summer-section-title">No game in the last day</div>`
+      + `<ul class="summer-list">${idle.slice().sort(bySort).map(r => _li(r)).join('')}</ul>`
     );
   }
-  if (possibleHtml) {
+  if (out.length) {
     detailParts.push(
-      `<div class="summer-section-title">Possible matches (manual review)</div>`
-      + `<ul class="summer-list">${possibleHtml}</ul>`
-    );
-  }
-  if (!detailParts.length) {
-    // Distinguish "rosters haven't published" from "data source is returning
-    // empty pages." If every ok-status league has 0 players, that's not a
-    // timing issue — it's a source issue (e.g. 2026-06-02 Pointstreak->Stack
-    // Sports migration broke 5 of our scrapers).
-    const okLeagues = health.filter(h => h.status === 'ok');
-    const okWithPlayers = okLeagues.filter(h => (h.player_count || 0) > 0);
-    let emptyMsg;
-    if (okLeagues.length && !okWithPlayers.length) {
-      emptyMsg = `No NCAA client matches yet. Source pages are loading but returning no roster data — `
-        + `investigating (Pointstreak was acquired by Stack Sports; their old stats URLs now redirect). `
-        + `Snapshot refreshes 4× daily.`;
-    } else {
-      emptyMsg = `No NCAA client matches yet — most summer leagues haven't published full rosters. `
-        + `Snapshot refreshes 4× daily.`;
-    }
-    detailParts.push(
-      `<div class="meta" style="margin-top:8px;color:#57606a;font-size:0.85rem;">${emptyMsg}</div>`
+      `<div class="summer-section-title">Out — injured / shut down</div>`
+      + `<ul class="summer-list">${out.slice().sort(bySort).map(r => _li(r, r.status)).join('')}</ul>`
     );
   }
 
-  // Subtle "needs review" line — no longer a big red banner. The detail
-  // is inside the expandable section; this is just a small flag.
-  const reviewBanner = '';
+  const nowBit = playingNow ? ` · <strong style="color:#1a7a30;">${playingNow}</strong> playing now` : '';
+  const idleBit = idle.length ? ` · <strong>${idle.length}</strong> idle today` : '';
 
   el.innerHTML = `
-    ${reviewBanner}
     <div class="summer-head" onclick="document.getElementById('summerBanner').classList.toggle('expanded')">
       <div>
-        <div class="summer-title">Summer Ball Coverage</div>
+        <div class="summer-title">Summer Ball · ${total} placements</div>
         <div class="summer-stat">
-          <strong>${matched}</strong> confirmed ·
-          <strong>${possible}</strong> possible ·
-          ${ambiguous ? `<strong style="color:#d32f2f;">${ambiguous}</strong> needs review · ` : ''}
-          <strong>${unmatched}</strong> unmatched
-          <span style="color:#8b949e;"> (of ${total} NCAA clients)</span>
+          <strong>${trackedLive}</strong> tracked live${nowBit}${idleBit}
+          · <strong>${manual.length}</strong> tracked by hand${out.length ? ` · <strong>${out.length}</strong> out` : ''}
         </div>
       </div>
       <span class="summer-toggle">details</span>
