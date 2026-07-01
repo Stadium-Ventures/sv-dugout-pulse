@@ -628,97 +628,6 @@ def build_payload(today: date | None = None) -> dict:
     }
 
 
-def _render_summer_banner() -> str:
-    """Read data/summer_ball_rosters.json and render a coverage banner.
-
-    Returns "" when the file is missing (pre-roster-discovery state) or
-    when its dependencies aren't installed (defensive — never fail the send
-    just because the banner can't render).
-    """
-    snapshot_path = REPO_ROOT / "data" / "summer_ball_rosters.json"
-    if not snapshot_path.exists():
-        return ""
-    try:
-        snap = json.loads(snapshot_path.read_text())
-    except Exception:
-        return ""
-    if not snap:
-        return ""
-
-    matched = snap.get("ncaa_clients_matched", 0)
-    possible = snap.get("ncaa_clients_possible", 0)
-    unmatched = snap.get("ncaa_clients_unmatched", 0)
-    total = snap.get("ncaa_clients_total", 0)
-    health = snap.get("league_health", [])
-
-    league_chips = []
-    for h in health:
-        status = h["status"]
-        color = {
-            "ok": "#1a7a30",
-            "failed": "#d32f2f",
-            "not_implemented": "#9e9e9e",
-        }.get(status, "#9e9e9e")
-        league_chips.append(
-            f'<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 8px;'
-            f'border-radius:999px;background:{color}20;color:{color};font-size:11px;'
-            f'font-weight:700;letter-spacing:0.04em;text-transform:uppercase;">'
-            f'{h["league"]} · {h["player_count"]}</span>'
-        )
-
-    matched_lines = []
-    for m in snap.get("matched", [])[:10]:
-        matched_lines.append(
-            f'<li><strong>{m["player_name"]}</strong> '
-            f'<span style="color:#57606a;">({m["college"]})</span> → '
-            f'<strong>{m["summer_team"]}</strong> ({m["league"]})</li>'
-        )
-    possible_lines = []
-    for p in snap.get("possible_matches", [])[:10]:
-        cand_str = ", ".join(
-            f'{c["summer_name"]} → {c["summer_team"]} ({c["league"]})'
-            for c in p.get("candidates", [])[:3]
-        )
-        possible_lines.append(
-            f'<li><strong>{p["player_name"]}</strong> '
-            f'<span style="color:#57606a;">({p["college"]})</span> — '
-            f'possible: {cand_str}</li>'
-        )
-
-    sections = []
-    if matched_lines:
-        sections.append(
-            f'<div style="margin-top:10px;"><strong>Confirmed summer assignments:</strong>'
-            f'<ul style="margin:6px 0 0 0;padding-left:18px;font-size:13px;line-height:1.5;">'
-            f'{"".join(matched_lines)}</ul></div>'
-        )
-    if possible_lines:
-        sections.append(
-            f'<div style="margin-top:10px;"><strong>Possible matches '
-            f'(needs manual review — last-name + first-initial only):</strong>'
-            f'<ul style="margin:6px 0 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:#57606a;">'
-            f'{"".join(possible_lines)}</ul></div>'
-        )
-
-    return f"""
-<div class="topline-card" style="border-left:4px solid #1a7a30;">
-  <h3 style="margin-top:0;">Summer Ball Coverage</h3>
-  <div style="font-size:13.5px;line-height:1.55;">
-    <strong>{matched}</strong> NCAA clients confirmed
-    · <strong>{possible}</strong> possible matches
-    · <strong>{unmatched}</strong> unmatched
-    <span style="color:#6e7781;"> (of {total} total)</span>
-  </div>
-  <div style="margin-top:8px;">{"".join(league_chips)}</div>
-  {"".join(sections)}
-  <div style="margin-top:10px;color:#6e7781;font-size:11.5px;">
-    Snapshot refreshed daily at 4 AM ET. Numbers above will grow as
-    summer leagues publish more rosters through June/July.
-  </div>
-</div>
-"""
-
-
 def _render_summer_placements_section() -> str:
     """Render the per-player summer-ball placement list for the email.
 
@@ -788,10 +697,11 @@ def _render_summer_placements_section() -> str:
   <h3 style="margin-top:0;">Summer Ball — Per-Player Update</h3>
   {''.join(parts[1:])}  <!-- skip the redundant h2 -->
   <div style="margin-top:10px;color:#6e7781;font-size:11.5px;">
-    Source of truth: Kent's "Summer Ball Placement" sheet. Live stats
-    flow in from MLB Stats API (CCBL, Appy, MLBDL), PrestoSports
-    (NECBL, PGCBL, Cal Ripken, Prospect), or Baseball Cube next-day
-    fallback. Northwoods + Coastal Plain remain roster-only for now.
+    Source of truth: Kent's "Summer Ball Placement" sheet. We pull live
+    stats automatically from MLB Stats API (Cape Cod, Appalachian, MLB
+    Draft) and PrestoSports (NECBL). Other leagues — Northwoods, PGCBL,
+    FCBL, Coastal Plain — have no feed we can reach, so those placements
+    are tracked by hand; check the league site for the latest.
   </div>
 </div>
 """
@@ -922,10 +832,10 @@ def render_html(payload: dict) -> str:
     if topline:
         body_parts.append(topline)
 
-    summer_banner = _render_summer_banner()
-    if summer_banner:
-        body_parts.append(summer_banner)
-
+    # The old auto-matcher coverage banner ("N confirmed / N unmatched of 39
+    # NCAA clients") is retired — it counted name-matches against scraped
+    # rosters, which reads as a failure mid-season when most of the "unmatched"
+    # simply aren't in summer ball. The placement section below is the truth.
     summer_section = _render_summer_placements_section()
     if summer_section:
         body_parts.append(summer_section)

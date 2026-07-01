@@ -1001,6 +1001,17 @@
     font-weight: 700; font-size: 0.8rem; color: #424a53;
     text-transform: uppercase; letter-spacing: 0.05em; margin-top: 10px;
   }
+  /* "Live now" pill — appears in the header only when games are in progress. */
+  .live-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 8px auto 0; padding: 4px 12px;
+    background: rgba(239,68,68,0.12); color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.4); border-radius: 999px;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    font-family: inherit; animation: livePulse 2s ease-in-out infinite;
+  }
+  .live-pill:hover { background: rgba(239,68,68,0.2); }
+  @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
 </style>
 </head>
 <body>
@@ -1016,6 +1027,7 @@
     <div class="auto-refresh-dot"></div>
     <span>Auto-refreshing</span>
   </div>
+  <button class="live-pill" id="livePill" type="button" style="display:none" title="Show only players in live games right now"></button>
   <nav class="header-nav" aria-label="Secondary">
     <a href="diagnostics.html">📊 Source health &amp; coverage</a>
   </nav>
@@ -1233,6 +1245,9 @@ function renderCard(p) {
   const isClient = p.is_client !== false;
   const pri = p.tags.roster_priority || 4;
   const isYesterday = p.is_yesterday === true;
+  // Manual-league summer placement with no game to show — reframe from a
+  // broken-looking "— No Data" into an explicit "tracked by hand" state.
+  const manualCard = isManualSummerCard(p);
 
   // Grade-tinted background class
   const TINT_MAP = { 'Milestone':'grade-tint-milestone', 'Standout':'grade-tint-standout', 'Good':'grade-tint-good', 'Off Day':'grade-tint-flag' };
@@ -1361,7 +1376,7 @@ function renderCard(p) {
     ['Shut Down','Injured','Pending, 1st Half','Pending, 2nd Half','2nd Half','Status Update']
       .indexOf(p.game_status) !== -1
   );
-  const inactiveCls = isInactiveSummer ? ' summer-inactive' : '';
+  const inactiveCls = (isInactiveSummer || manualCard) ? ' summer-inactive' : '';
 
   return `
     <div class="card${isLive ? ' live' : ''}${inactiveCls} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
@@ -1380,9 +1395,9 @@ function renderCard(p) {
         ${p.level === 'Summer' ? '' : `<span class="badge badge-tier-dim">T${pri}</span>`}
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : p.performance_grade)}</div>
-      ${p.grade_reason ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
-      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${highlightStats(p.stats_summary)}${statsAsofHtml}</div>
+      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : manualCard ? 'Tracked manually' : p.performance_grade)}</div>
+      ${p.grade_reason && !manualCard ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
+      <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${manualCard ? '' : highlightStats(p.stats_summary) + statsAsofHtml}</div>
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
         : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
@@ -1405,29 +1420,45 @@ function renderCard(p) {
     </div>`;
 }
 
-// Leagues with no sanctioned public stats feed — match _SUMMER_NO_FEED
-// in the Coverage banner above. Used to explain *why* a card is empty
-// instead of a generic "no stats here yet."
-const _SUMMER_NO_FEED_CARDS = new Set(['Northwoods', 'PGCBL']);
+// Summer leagues we pull live game data from (MLB Stats API / PrestoSports).
+// Placements in any OTHER league are tracked by hand — no automated stats will
+// ever appear, so those cards get a "tracked manually" treatment instead of a
+// generic "No Data" that reads as broken. Keep in sync with loadSummerBanner.
+const _SUMMER_REACHABLE_LEAGUES = new Set(['Cape Cod', 'MLB Draft', 'Appalachian', 'NECBL']);
+
+function summerLeagueOf(p) {
+  return (p && p.tags && p.tags.summer_league) || '';
+}
+
+// True for a Summer placement in a league we can't auto-pull, with no live/
+// scheduled game to show. Expected-empty (tracked by hand), NOT a failure.
+// Injured / shut-down placements are excluded — they get the inactive treatment.
+function isManualSummerCard(p) {
+  if (!p || p.level !== 'Summer') return false;
+  const lg = summerLeagueOf(p);
+  if (!lg || _SUMMER_REACHABLE_LEAGUES.has(lg)) return false;
+  if (['Live', 'In Progress', 'Final', 'Scheduled'].indexOf(p.game_status) !== -1) return false;
+  const st = (p.tags && p.tags.placement_status) || '';
+  return st !== 'Shut Down' && st !== 'Injured';
+}
+
+const _summerHintBox = msg =>
+  `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid #7d8590;border-radius:4px;font-size:11px;color:#7d8590;line-height:1.4;">${esc(msg)}</div>`;
 
 function summerNoDataHint(p) {
-  // Only show on Summer cards that don't already have live game data.
   if (p.level !== 'Summer') return '';
+  const league = summerLeagueOf(p);
+  const hasSiteLink = !!(p.tags && p.tags.league_site_url);
+  // Tracked-by-hand leagues: always explain, whatever the game_status.
+  if (isManualSummerCard(p)) {
+    return _summerHintBox(hasSiteLink
+      ? `We can't auto-pull ${league} — this placement is tracked by hand. Use the League Site button below for the latest.`
+      : `We can't auto-pull ${league} — this placement is tracked by hand (no public stats feed).`);
+  }
+  // Reachable leagues sitting in an off-day / pre-game state — soft hedge.
   const isOffDay = ['Off Day', 'Roster Confirmed', 'Status Update'].indexOf(p.game_status) !== -1;
   if (!isOffDay) return '';
-  const league = (p.tags && p.tags.summer_league) || '';
-  const hasSiteLink = !!(p.tags && p.tags.league_site_url);
-  let msg;
-  if (_SUMMER_NO_FEED_CARDS.has(league)) {
-    // We KNOW we can't reach this league — say so, point at League Site.
-    msg = hasSiteLink
-      ? `${league} has no public stats feed we can auto-pull. Use the League Site button below for manual lookups.`
-      : `${league} has no public stats feed we can auto-pull mid-season.`;
-  } else {
-    // Likely a day off / pre-game state — non-committal hedge.
-    msg = 'No stats here yet — likely an off day or pre-game. Will populate once today’s game starts.';
-  }
-  return `<div style="margin-top:8px;padding:6px 9px;background:rgba(125,133,144,0.08);border-left:2px solid #7d8590;border-radius:4px;font-size:11px;color:#7d8590;line-height:1.4;">${esc(msg)}</div>`;
+  return _summerHintBox('No stats here yet — likely an off day or pre-game. Will populate once today’s game starts.');
 }
 
 function levelBadgeClass(level) {
@@ -1885,11 +1916,25 @@ function renderHealthBanner() {
   }
 }
 
+// "Live now" header pill — count of players currently in a live game (Today
+// view only). Click filters the grid to Live.
+function updateLivePill() {
+  const el = document.getElementById('livePill');
+  if (!el) return;
+  const n = currentWindow === 'today'
+    ? (allPlayers || []).filter(p => p.game_status === 'Live').length
+    : 0;
+  if (!n) { el.style.display = 'none'; return; }
+  el.textContent = `🔴 ${n} playing now`;
+  el.style.display = 'inline-flex';
+}
+
 function render() {
   const grid = document.getElementById('grid');
   const empty = document.getElementById('empty');
   const noGameSection = document.getElementById('noGameSection');
   renderHealthBanner();
+  updateLivePill();
 
   if (currentWindow === 'today') {
     const allFiltered = allPlayers.filter(matchesFilters);
@@ -2329,6 +2374,17 @@ document.querySelectorAll('.filter-group').forEach(group => {
       render();
     });
   });
+});
+
+// Clicking the live pill jumps to the Live status filter and scrolls up.
+document.getElementById('livePill').addEventListener('click', () => {
+  filters.status = 'Live';
+  const grp = document.querySelector('.filter-group[data-filter="status"]');
+  if (grp) grp.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.value === 'Live'));
+  updateClearFiltersBtn();
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 function updateClearFiltersBtn() {
