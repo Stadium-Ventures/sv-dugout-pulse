@@ -17,6 +17,7 @@ import json
 import os
 import sys
 from datetime import date, datetime, timedelta, timezone
+from functools import lru_cache
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -672,6 +673,22 @@ def _render_summer_placements_section() -> str:
         else:
             active.append(p)
 
+    # A "Pending" / "2nd Half" label is just Kent's sheet state. If the player
+    # is actually playing and we already have last-week stats, treat them as
+    # Active regardless — the data flowing is what matters, not the label. This
+    # keeps us from having to chase sheet updates every time a spot firms up.
+    def _has_week_stats(p: dict) -> bool:
+        return bool(_summer_player_week_line(
+            p.get("player_name", ""),
+            p.get("league") or p.get("league_raw") or "",
+            p.get("source_id", ""),
+        ))
+    promoted = [p for p in (pending + second_half) if _has_week_stats(p)]
+    if promoted:
+        pending = [p for p in pending if p not in promoted]
+        second_half = [p for p in second_half if p not in promoted]
+        active.extend(promoted)
+
     parts = ['<h2 style="margin-top:24px;">Summer Ball — Placements</h2>']
 
     if active:
@@ -758,6 +775,7 @@ _MLB_API_LEAGUE_CODES = {
 }
 
 
+@lru_cache(maxsize=None)
 def _summer_player_week_line(
     player_name: str, league: str, source_id: str = "",
 ) -> str:
