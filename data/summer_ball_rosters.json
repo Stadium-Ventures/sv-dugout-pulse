@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-03T15:20:09.123283+00:00",
+  "generated_at": "2026-07-03T18:26:29.858421+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 323,
+      "player_count": 321,
       "team_count": 10,
       "error": null,
-      "duration_ms": 2153,
+      "duration_ms": 635,
       "sample_players": [
         "Brody DeLamielleure",
         "Camden Wimbish",
@@ -22,7 +22,7 @@
       "player_count": 261,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1518,
+      "duration_ms": 457,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 246,
+      "player_count": 243,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1914,
+      "duration_ms": 475,
       "sample_players": [
         "Cade McGarrh",
         "Carlos Sanchez",
@@ -52,7 +52,7 @@
       "player_count": 594,
       "team_count": 13,
       "error": null,
-      "duration_ms": 77420,
+      "duration_ms": 76336,
       "sample_players": [
         "Theo DeCicco",
         "Gavin Collins",
@@ -67,7 +67,7 @@
       "player_count": 363,
       "team_count": 8,
       "error": null,
-      "duration_ms": 55926,
+      "duration_ms": 57078,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,16 +82,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 101541,
+      "duration_ms": 103552,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 381,
+      "player_count": 382,
       "team_count": 7,
       "error": null,
-      "duration_ms": 38883,
+      "duration_ms": 57360,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -106,7 +106,7 @@
       "player_count": 912,
       "team_count": 20,
       "error": null,
-      "duration_ms": 122002,
+      "duration_ms": 130234,
       "sample_players": [
         "Caynen Patterson",
         "Sean McConachie",
@@ -127,10 +127,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 488,
+      "player_count": 493,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5416,
+      "duration_ms": 3721,
       "sample_players": [
         "Alex Graber",
         "Ben Shepherd",
@@ -159,16 +159,16 @@
     }
   ],
   "baseballcube": {
-    "attempted": 24,
+    "attempted": 23,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 14,
+  "ncaa_clients_matched": 13,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 24,
-  "ncaa_clients_ambiguous": 1,
+  "ncaa_clients_unmatched": 23,
+  "ncaa_clients_ambiguous": 3,
   "matched": [
     {
       "player_name": "Caleb Daniel",
@@ -199,16 +199,6 @@
       "source_id": "831815",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/831815"
-    },
-    {
-      "player_name": "Alex Kranzler",
-      "college": "Vanderbilt",
-      "summer_team": "TRN",
-      "league": "MLB Draft",
-      "summer_name": "Alex Kranzler",
-      "source_id": "702962",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/702962"
     },
     {
       "player_name": "Ben Tryon",
@@ -346,6 +336,10 @@
       "college": "Michigan"
     },
     {
+      "player_name": "Alex Kranzler",
+      "college": "Vanderbilt"
+    },
+    {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
     },
@@ -368,14 +362,6 @@
     {
       "player_name": "Mason Eckelman",
       "college": "Ohio State"
-    },
-    {
-      "player_name": "Sam Mitchell",
-      "college": "Southern Miss"
-    },
-    {
-      "player_name": "Brisen Tweedy",
-      "college": "USF"
     },
     {
       "player_name": "Sam Harry",
@@ -420,6 +406,32 @@
           "league": "Coastal Plain",
           "summer_name": "Brooks Wright",
           "summer_college": "Appalachian State"
+        }
+      ],
+      "conflict_reason": "college mismatch"
+    },
+    {
+      "player_name": "Sam Mitchell",
+      "college": "Southern Miss",
+      "candidates": [
+        {
+          "summer_team": "HYA",
+          "league": "Cape Cod",
+          "summer_name": "Sam Mitchell",
+          "summer_college": "Southern Mississippi"
+        }
+      ],
+      "conflict_reason": "college mismatch"
+    },
+    {
+      "player_name": "Brisen Tweedy",
+      "college": "USF",
+      "candidates": [
+        {
+          "summer_team": "Y-D",
+          "league": "Cape Cod",
+          "summer_name": "Brisen Tweedy",
+          "summer_college": "South Florida"
         }
       ],
       "conflict_reason": "college mismatch"
@@ -483,19 +495,15 @@
         "team": "Lexington Blowfish"
       }
     ],
-    "conflicts": [
+    "conflicts": [],
+    "unmatched": [
       {
         "player_name": "Alex Kranzler",
         "school": "Vanderbilt",
         "placement_team": "Trenton Thunder",
-        "placement_league": "MLB Draft",
-        "auto_team": "TRN",
-        "auto_league": "MLB Draft",
-        "status": "Confirmed",
-        "reason": "auto-match team differs from spreadsheet \u2014 likely stale roster"
-      }
-    ],
-    "unmatched": [
+        "league": "MLB Draft",
+        "status": "Confirmed"
+      },
       {
         "player_name": "Brooks Wright",
         "school": "SE Louisiana",
@@ -582,5 +590,5 @@
       }
     ]
   },
-  "all_players_count": 3568
+  "all_players_count": 3569
 }
