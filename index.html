@@ -1012,6 +1012,21 @@
   }
   .live-pill:hover { background: rgba(239,68,68,0.2); }
   @keyframes livePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+  /* Recent-form momentum chip (Pro: last 7D vs last 30D). */
+  .momentum-chip {
+    display: inline-block; margin-left: 6px; padding: 1px 7px;
+    border-radius: 999px; font-size: 0.68rem; font-weight: 700;
+    vertical-align: middle; letter-spacing: 0.02em;
+  }
+  .momentum-hot  { background: rgba(251,140,0,0.15);  color: #fb8c00; }
+  .momentum-cold { background: rgba(59,130,246,0.15); color: #5b9bf3; }
+  /* Data-confidence dot — only rendered when there's a caveat (no dot = clean). */
+  .conf-dot {
+    width: 7px; height: 7px; border-radius: 50%; display: inline-block;
+    margin-right: 5px; vertical-align: middle; flex: none;
+  }
+  .conf-red    { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
+  .conf-yellow { background: #eab308; box-shadow: 0 0 0 2px rgba(234,179,8,0.2); }
 </style>
 </head>
 <body>
@@ -1145,6 +1160,80 @@ const WINDOW_PATHS = {
   '30d': 'data/window_30d.json',
   season: 'data/window_season.json'
 };
+
+// ---- Recent-form momentum (Pro: last 7D vs last 30D) --------------------
+// Built from window_7d.json + window_30d.json on load, keyed by player, so the
+// chip is available on any tab. Only "hot"/"cold" are stored — steady = no chip.
+let momentumByPlayer = {};
+const _PITCHER_POS = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'];
+function _numOr(v) {
+  if (v == null || v === '--' || v === '') return null;
+  const n = parseFloat(String(v).replace(/[^0-9.\-]/g, ''));
+  return isNaN(n) ? null : n;
+}
+function _computeMomentum(s7, s30, isPitcher) {
+  if (isPitcher) {
+    const e7 = _numOr(s7.era), e30 = _numOr(s30.era), ip7 = _numOr(s7.ip), ip30 = _numOr(s30.ip);
+    if (e7 == null || e30 == null || ip30 == null || ip30 < 8 || ip7 == null || ip7 < 2) return null;
+    const better = e30 - e7;                 // ERA trending down = improving
+    if (better >= 1.0) return { trend: 'hot', label: '🔥 heating up' };
+    if (better <= -1.0) return { trend: 'cold', label: '🧊 cooling' };
+    return null;
+  }
+  const o7 = _numOr(s7.ops), o30 = _numOr(s30.ops), pa7 = _numOr(s7.pa), pa30 = _numOr(s30.pa);
+  if (o7 == null || o30 == null || pa30 == null || pa30 < 15 || pa7 == null || pa7 < 5) return null;
+  const d = o7 - o30;
+  if (d >= 0.150) return { trend: 'hot', label: '🔥 heating up' };
+  if (d <= -0.150) return { trend: 'cold', label: '🧊 cooling' };
+  return null;
+}
+async function loadMomentum() {
+  try {
+    const [r7, r30] = await Promise.all([
+      fetch('data/window_7d.json?t=' + Date.now()),
+      fetch('data/window_30d.json?t=' + Date.now()),
+    ]);
+    if (!r7.ok || !r30.ok) return;
+    const j7 = await r7.json(), j30 = await r30.json();
+    const arr7 = j7.players || j7, arr30 = j30.players || j30;
+    const by7 = {};
+    for (const e of arr7) by7[e.player_name] = e;
+    const next = {};
+    for (const e of arr30) {
+      if (e.level !== 'Pro') continue;
+      const s30 = e.stats || {}, s7 = (by7[e.player_name] || {}).stats || {};
+      const pos = (e.tags && e.tags.position) || '';
+      const isP = _PITCHER_POS.includes(pos) || ('ip' in s30);
+      const m = _computeMomentum(s7, s30, isP);
+      if (m) next[e.player_name] = m;
+    }
+    momentumByPlayer = next;
+    if (typeof render === 'function' && dataLoaded) render();
+  } catch (e) { /* non-fatal — chip just won't show */ }
+}
+function momentumChipHtml(p) {
+  if (!p || p.level !== 'Pro') return '';
+  const m = momentumByPlayer[p.player_name];
+  return m ? `<span class="momentum-chip momentum-${m.trend}" title="Recent form: last 7 days vs last 30 days">${m.label}</span>` : '';
+}
+
+// ---- Data-confidence dot ------------------------------------------------
+// Shown ONLY when there's a caveat (no dot = clean & fresh). Yellow = carried
+// forward from an earlier capture; red = a source blocked us / box never posted.
+function confidenceDotHtml(p) {
+  if (!p || p.level === 'Summer') return '';                       // summer has its own states
+  if (p.game_status === 'N/A' || p.game_status === 'Scheduled') return '';  // nothing fetched yet
+  const diag = Array.isArray(p.fetch_diagnostic) ? p.fetch_diagnostic : [];
+  const blocked = diag.some(d => /block|403|waf/i.test(d.outcome || ''));
+  if (blocked || p.stats_unavailable) {
+    return '<span class="conf-dot conf-red" title="A source blocked our request — this line may be stale."></span>';
+  }
+  if (p.stats_captured_at && dataGeneratedAt) {
+    const lagMin = (new Date(dataGeneratedAt) - new Date(p.stats_captured_at)) / 60000;
+    if (lagMin >= 2) return '<span class="conf-dot conf-yellow" title="Carried forward from an earlier capture — not refreshed this run."></span>';
+  }
+  return '';
+}
 
 function gradeKey(g) {
   for (const k of GRADE_ORDER) { if (g.includes(k)) return k; }
@@ -1388,6 +1477,7 @@ function renderCard(p) {
     <div class="card${isLive ? ' live' : ''}${inactiveCls} level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}${tintClass ? ' ' + tintClass : ''}">
       <div class="card-top">
         ${isLive ? '<div class="live-dot"></div>' : ''}
+        ${confidenceDotHtml(p)}
         ${p.level === 'Summer'
           ? `<a class="player-name" href="summer_player.html?name=${encodeURIComponent(p.player_name)}">${esc(p.player_name)}</a>`
           : p.player_profile_url
@@ -1401,7 +1491,7 @@ function renderCard(p) {
         ${p.level === 'Summer' ? '' : `<span class="badge badge-tier-dim">T${pri}</span>`}
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : manualCard ? 'Tracked manually' : pendingArrival ? 'Pending' : p.performance_grade)}</div>
+      <div class="grade-bar ${gc}">${esc(p.stats_unavailable ? '⚠️ Stats Unavailable' : manualCard ? 'Tracked manually' : pendingArrival ? 'Pending' : p.performance_grade)}${momentumChipHtml(p)}</div>
       ${p.grade_reason && !manualCard && !pendingArrival ? `<div class="grade-reason">${esc(p.grade_reason)}</div>` : ''}
       <div class="stats-line${isElevated ? ' stats-elevated' : ''}">${(manualCard || (pendingArrival && !isScheduled)) ? '' : highlightStats(p.stats_summary) + statsAsofHtml}</div>
       ${p.game_context ? (p.box_score_url
@@ -1734,7 +1824,7 @@ function renderWindowCard(p) {
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="window-grade ${gc}">${esc(p.window_grade || '— No Data')}</div>
+      <div class="window-grade ${gc}">${esc(p.window_grade || '— No Data')}${momentumChipHtml(p)}</div>
       ${statsHtml}
       ${gameLogHtml}
     </div>`;
@@ -2171,6 +2261,29 @@ function toggleFiltersForWindow(window) {
   }
 }
 
+function _setFilterButton(key, value) {
+  const grp = document.querySelector(`.filter-group[data-filter="${key}"]`);
+  if (grp) grp.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.value === value));
+}
+
+// Rolling windows (7/14/30D) are only meaningful mid-season for Pro (NCAA/HS are
+// out of season → empty cells). Auto-focus Pro on those tabs, and cleanly revert
+// to All elsewhere — but never override a level the user picked themselves.
+let _autoLevelPro = false;
+function applyLevelDefaultForWindow(window) {
+  const rolling = window === '7d' || window === '14d' || window === '30d';
+  if (rolling && filters.level === 'all') {
+    filters.level = 'Pro';
+    _autoLevelPro = true;
+    _setFilterButton('level', 'Pro');
+  } else if (!rolling && _autoLevelPro && filters.level === 'Pro') {
+    filters.level = 'all';
+    _autoLevelPro = false;
+    _setFilterButton('level', 'all');
+  }
+}
+
 async function switchWindow(window) {
   if (window === currentWindow) return;
 
@@ -2189,6 +2302,7 @@ async function switchWindow(window) {
 
   // Toggle filter visibility
   toggleFiltersForWindow(window);
+  applyLevelDefaultForWindow(window);
   updateTimestamp();
 
   // Load data if not cached
@@ -2408,6 +2522,8 @@ document.querySelectorAll('.filter-group').forEach(group => {
       group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       filters[key] = btn.dataset.value;
+      // User picked a level explicitly — stop auto-managing it across tabs.
+      if (key === 'level') _autoLevelPro = false;
       updateClearFiltersBtn();
       render();
     });
@@ -2433,6 +2549,7 @@ function updateClearFiltersBtn() {
 
 document.getElementById('clearFiltersBtn').addEventListener('click', () => {
   for (const key of Object.keys(filters)) filters[key] = 'all';
+  _autoLevelPro = false;
   document.querySelectorAll('.filter-group').forEach(group => {
     group.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     const allBtn = group.querySelector('[data-value="all"]');
@@ -2790,6 +2907,8 @@ loadSummerBanner();
 loadSummerGameLog().then(() => {
   if (typeof render === 'function' && dataLoaded) render();
 });
+// Recent-form momentum (Pro 7D-vs-30D) — fire-and-forget; re-renders when ready.
+loadMomentum();
 
 // Load data — supports both envelope {generated_at, players} and legacy array
 (async () => {
