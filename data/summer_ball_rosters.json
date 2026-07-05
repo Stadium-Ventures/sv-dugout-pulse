@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-05T14:52:31.742298+00:00",
+  "generated_at": "2026-07-05T18:18:04.343163+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 326,
+      "player_count": 329,
       "team_count": 10,
       "error": null,
-      "duration_ms": 851,
+      "duration_ms": 683,
       "sample_players": [
         "Brody DeLamielleure",
         "Camden Wimbish",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 264,
+      "player_count": 268,
       "team_count": 8,
       "error": null,
-      "duration_ms": 655,
+      "duration_ms": 508,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 242,
+      "player_count": 243,
       "team_count": 8,
       "error": null,
-      "duration_ms": 627,
+      "duration_ms": 516,
       "sample_players": [
         "Alexander Llinas",
         "Cade McGarrh",
@@ -49,16 +49,16 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 311,
-      "team_count": 7,
+      "player_count": 596,
+      "team_count": 13,
       "error": null,
-      "duration_ms": 122593,
+      "duration_ms": 61476,
       "sample_players": [
-        "Ryan Preisano",
-        "Aidan Stern",
-        "Jack Edmunds",
-        "Ronan Donohue",
-        "Ian Brown"
+        "Theo DeCicco",
+        "Gavin Collins",
+        "Trent Rice",
+        "Christopher DiPrima",
+        "Antonio Ducatelli"
       ]
     },
     {
@@ -67,7 +67,7 @@
       "player_count": 371,
       "team_count": 8,
       "error": null,
-      "duration_ms": 58103,
+      "duration_ms": 64455,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,16 +82,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 102838,
+      "duration_ms": 97609,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 383,
+      "player_count": 384,
       "team_count": 7,
       "error": null,
-      "duration_ms": 28720,
+      "duration_ms": 37342,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,10 +103,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 917,
-      "team_count": 20,
+      "player_count": 772,
+      "team_count": 17,
       "error": null,
-      "duration_ms": 129718,
+      "duration_ms": 123802,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -127,10 +127,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 482,
+      "player_count": 477,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3519,
+      "duration_ms": 3850,
       "sample_players": [
         "Alex Graber",
         "Ben Shepherd",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 23,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 13,
+  "ncaa_clients_matched": 12,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 23,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 3,
   "matched": [
     {
@@ -229,16 +229,6 @@
       "source_id": "842081",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/842081"
-    },
-    {
-      "player_name": "Lee Ellis",
-      "college": "Ohio State",
-      "summer_team": "BOU",
-      "league": "Cape Cod",
-      "summer_name": "Lee Ellis",
-      "source_id": "703548",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/703548"
     },
     {
       "player_name": "Taylor Kirk",
@@ -374,6 +364,10 @@
     {
       "player_name": "Tanner Chun",
       "college": "Tulane"
+    },
+    {
+      "player_name": "Lee Ellis",
+      "college": "Ohio State"
     },
     {
       "player_name": "Lucas Steele",
@@ -590,5 +584,5 @@
       }
     ]
   },
-  "all_players_count": 3296
+  "all_players_count": 3440
 }
