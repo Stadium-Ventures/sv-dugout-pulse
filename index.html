@@ -1020,6 +1020,24 @@
   }
   .conf-red    { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
   .conf-yellow { background: #eab308; box-shadow: 0 0 0 2px rgba(234,179,8,0.2); }
+  /* "Since yesterday" change strip — call-ups / team moves / standout games. */
+  .change-strip {
+    max-width: 600px; margin: 8px auto 12px; padding: 8px 12px;
+    background: rgba(59,130,246,0.06); border: 1px solid rgba(59,130,246,0.25);
+    border-left: 3px solid #3b82f6; border-radius: 6px;
+    font-size: 0.78rem; line-height: 1.5; color: var(--text-dim);
+  }
+  .change-strip .cs-head {
+    display: flex; align-items: center; font-weight: 700;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: #5b9bf3; margin-bottom: 4px;
+  }
+  .change-strip .cs-dismiss {
+    margin-left: auto; cursor: pointer; color: var(--text-dim);
+    font-size: 0.9rem; padding: 0 4px; user-select: none;
+  }
+  .change-strip .cs-row { padding: 1px 0; }
+  .change-strip .cs-row strong { color: var(--text); }
   /* Season per-level breakdown (multi-level players). */
   .level-breakdown { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); }
   .level-breakdown-head {
@@ -1058,6 +1076,7 @@
 </div>
 <div class="stale-banner" id="staleBanner"></div>
 <div class="summer-banner" id="summerBanner" hidden></div>
+<div class="change-strip" id="changeStrip" hidden></div>
 <div class="time-tabs" role="tablist" aria-label="Time window">
   <button class="time-tab active" data-window="today" role="tab" aria-selected="true">Today</button>
   <button class="time-tab" data-window="yesterday" role="tab" aria-selected="false">Yesterday</button>
@@ -1153,6 +1172,20 @@ let autoRefreshTimer = null;
 // Prevents the false "No players match" empty state during the initial fetch.
 let dataLoaded = false;
 let filters = { roster:'client', level:'all', position:'all', status:'all', grade:'all', heartbeat:'all' };
+// Sticky filters — restore the user's last picks (saved on every manual filter
+// click, never on tab-driven auto-defaults). Button states sync after DOM init.
+const _FILTERS_LS_KEY = 'dp_filters_v1';
+try {
+  const saved = JSON.parse(localStorage.getItem(_FILTERS_LS_KEY) || 'null');
+  if (saved && typeof saved === 'object') {
+    for (const k of Object.keys(filters)) {
+      if (typeof saved[k] === 'string') filters[k] = saved[k];
+    }
+  }
+} catch (e) { /* corrupt storage — keep defaults */ }
+function _persistFilters() {
+  try { localStorage.setItem(_FILTERS_LS_KEY, JSON.stringify(filters)); } catch (e) {}
+}
 let searchQuery = '';
 let heartbeatData = new Map();
 
@@ -1224,6 +1257,57 @@ function momentumChipHtml(p) {
   if (!p || p.level !== 'Pro') return '';
   const m = momentumByPlayer[p.player_name];
   return m ? `<span class="momentum-chip momentum-${m.trend}" title="Recent form: last 7 days vs last 30 days">${m.label}</span>` : '';
+}
+
+// ---- "Since yesterday" change strip --------------------------------------
+// Surfaces the things worth noticing first: Pro clients whose team changed
+// (call-up / send-down / trade) and yesterday's standout games. Dismissible
+// per day (sessionStorage). Today tab only; hidden when there's nothing new.
+function _changeStripDismissKey() {
+  const et = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  return 'dp_changestrip_' + et.toISOString().slice(0, 10);
+}
+async function loadChangeStrip() {
+  const el = document.getElementById('changeStrip');
+  if (!el) return;
+  try { if (sessionStorage.getItem(_changeStripDismissKey())) return; } catch (e) {}
+  let yest;
+  try {
+    const r = await fetch('data/yesterday_pulse.json?t=' + Date.now());
+    if (!r.ok) return;
+    const raw = await r.json();
+    yest = raw.players || raw;
+  } catch (e) { return; }
+  const firstByName = arr => {
+    const m = {};
+    for (const e of arr) if (e.player_name && !(e.player_name in m)) m[e.player_name] = e;
+    return m;
+  };
+  const yMap = firstByName(yest.filter(p => p.level === 'Pro'));
+  const tMap = firstByName((allPlayers || []).filter(p => p.level === 'Pro' && p.is_client !== false));
+  const rows = [];
+  // Team moves (call-up / send-down / trade) — team string changed overnight.
+  for (const [name, t] of Object.entries(tMap)) {
+    const y = yMap[name];
+    if (y && y.team && t.team && y.team !== t.team) {
+      rows.push(`<div class="cs-row">📈 <strong>${esc(name)}</strong> moved: ${esc(y.team)} → ${esc(t.team)}</div>`);
+    }
+  }
+  // Yesterday's standout games for clients.
+  for (const e of yest) {
+    if (e.is_client === false) continue;
+    const g = e.performance_grade || '';
+    if ((g.includes('Milestone') || g.includes('Standout')) && rows.length < 6) {
+      rows.push(`<div class="cs-row">🔥 <strong>${esc(e.player_name)}</strong> yesterday: ${esc(e.stats_summary || '')}</div>`);
+    }
+  }
+  if (!rows.length) return;
+  el.innerHTML = `
+    <div class="cs-head">Since yesterday
+      <span class="cs-dismiss" title="Dismiss for today" onclick="try{sessionStorage.setItem(_changeStripDismissKey(),'1')}catch(e){};this.closest('.change-strip').hidden=true;">✕</span>
+    </div>
+    ${rows.slice(0, 6).join('')}`;
+  el.hidden = currentWindow !== 'today';
 }
 
 // ---- Data-confidence dot ------------------------------------------------
@@ -2099,6 +2183,9 @@ function render() {
   const noGameSection = document.getElementById('noGameSection');
   renderHealthBanner();
   updateLivePill();
+  // Change strip only lives on the Today view.
+  const _cs = document.getElementById('changeStrip');
+  if (_cs) _cs.hidden = currentWindow !== 'today' || !_cs.innerHTML;
 
   if (currentWindow === 'today') {
     const allFiltered = allPlayers.filter(matchesFilters);
@@ -2560,11 +2647,17 @@ document.querySelectorAll('.filter-group').forEach(group => {
       filters[key] = btn.dataset.value;
       // User picked a level explicitly — stop auto-managing it across tabs.
       if (key === 'level') _autoLevelPro = false;
+      _persistFilters();
       updateClearFiltersBtn();
       render();
     });
   });
 });
+
+// Sync button active states with any filters restored from localStorage.
+// Every group syncs (including back to "all") so buttons never lie about state.
+for (const [k, v] of Object.entries(filters)) _setFilterButton(k, v);
+updateClearFiltersBtn();
 
 // Clicking the live pill jumps to the Live status filter and scrolls up.
 document.getElementById('livePill').addEventListener('click', () => {
@@ -2593,6 +2686,7 @@ document.getElementById('clearFiltersBtn').addEventListener('click', () => {
   });
   document.getElementById('searchInput').value = '';
   searchQuery = '';
+  _persistFilters();
   updateClearFiltersBtn();
   render();
 });
@@ -2967,6 +3061,7 @@ loadMomentum();
     }
     updateTimestamp();
     render();
+    loadChangeStrip();  // needs allPlayers — fire-and-forget after first render
   } else {
     document.getElementById('grid').innerHTML = '';
     document.getElementById('empty').textContent = 'Failed to load pulse data — check your connection and refresh.';
