@@ -1117,6 +1117,7 @@ class WindowStatsAggregator:
                     "level": ls["level"],
                     "games_played": ls["games_played"],
                     "stats": self._format_stats(ls["stats"], window, position),
+                    "window_grade": self._calculate_grade(ls["stats"], window, position),
                 }
                 for ls in raw_level_splits
             ]
