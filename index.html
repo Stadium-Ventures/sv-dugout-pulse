@@ -1573,9 +1573,7 @@ function renderCard(p) {
         ${confidenceDotHtml(p)}
         ${p.level === 'Summer'
           ? `<a class="player-name" href="summer_player.html?name=${encodeURIComponent(p.player_name)}">${esc(p.player_name)}</a>`
-          : p.player_profile_url
-            ? `<a class="player-name" href="${esc(p.player_profile_url, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
-            : `<span class="player-name">${esc(p.player_name)}</span>`}
+          : `<a class="player-name" href="player.html?name=${encodeURIComponent(p.player_name)}">${esc(p.player_name)}</a>`}
         ${heartbeatHtml(p.player_name, isClient)}
         ${isYesterday ? '<span class="badge badge-yesterday">Yesterday</span>' : ''}
         ${p.split_squad ? '<span class="badge badge-gm">SS</span>' : p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
@@ -1924,18 +1922,14 @@ function renderWindowCard(p) {
       </div>`;
   }
 
-  // Build profile URL for window cards
-  let profileUrl = null;
-  if (p.level === 'NCAA' && p.player_name) {
-    profileUrl = 'https://www.google.com/search?q=' + encodeURIComponent('site:thebaseballcube.com "' + p.player_name + '"') + '&btnI=';
-  }
+  // Window-card names link to the in-app player page (Summer has its own).
+  const detailUrl = (p.level === 'Summer' ? 'summer_player.html' : 'player.html')
+    + '?name=' + encodeURIComponent(p.player_name);
 
   return `
     <div class="window-card level-${p.level === 'Pro' ? 'pro' : p.level === 'Summer' ? 'summer' : 'ncaa'}">
       <div class="card-top">
-        ${profileUrl
-          ? `<a class="player-name" href="${esc(profileUrl, true)}" target="_blank" rel="noopener">${esc(p.player_name)}</a>`
-          : `<span class="player-name">${esc(p.player_name)}</span>`}
+        <a class="player-name" href="${detailUrl}">${esc(p.player_name)}</a>
         ${heartbeatHtml(p.player_name, isClient)}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>

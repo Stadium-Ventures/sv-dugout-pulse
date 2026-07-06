@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>SV Dugout Pulse — Player</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2e3a;
+    --text: #e4e4e7;
+    --text-dim: #71717a;
+    --accent: #5b9bf3;
+    --good: #22c55e;
+    --warn: #fbbf24;
+    --bad: #f87171;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    padding: 1.2rem; min-height: 100vh;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  .topnav { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem; }
+  .topnav a { color: var(--text-dim); text-decoration: none; }
+  .topnav a:hover { color: var(--text); text-decoration: underline; }
+  h1 { font-size: 1.7rem; margin-bottom: 0.4rem; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 1.4rem; }
+  .badge {
+    display: inline-block; font-size: 0.7rem; font-weight: 700;
+    padding: 0.15rem 0.5rem; border-radius: 4px;
+    letter-spacing: 0.04em; text-transform: uppercase; margin-left: 0.4rem;
+    background: rgba(59,130,246,0.18); color: #93c5fd; vertical-align: middle;
+  }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1rem;
+  }
+  .card h2 {
+    font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 0.7rem;
+  }
+  .grade {
+    display: inline-block; font-weight: 700; font-size: 0.85rem;
+    padding: 0.2rem 0.6rem; border-radius: 6px;
+    background: rgba(255,255,255,0.06); margin-bottom: 0.5rem;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    gap: 0.5rem; font-size: 0.85rem; margin-top: 0.5rem;
+  }
+  .stat-cell {
+    background: rgba(255,255,255,0.03); padding: 0.5rem 0.4rem;
+    border-radius: 6px; text-align: center;
+  }
+  .stat-label { color: var(--text-dim); font-size: 0.68rem; text-transform: uppercase; }
+  .stat-value { font-weight: 700; font-size: 1.02rem; margin-top: 0.15rem; }
+  .win-block { margin-bottom: 1rem; }
+  .win-block:last-child { margin-bottom: 0; }
+  .win-title {
+    font-size: 0.78rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: baseline; gap: 0.6rem;
+  }
+  .win-title .g { color: var(--text-dim); font-weight: 400; font-size: 0.72rem; }
+  .lvl-row {
+    display: flex; gap: 0.7rem; align-items: baseline;
+    font-size: 0.85rem; padding: 0.25rem 0;
+  }
+  .lvl-tag { min-width: 36px; font-weight: 700; font-size: 0.72rem; color: var(--accent); }
+  .lvl-line { flex: 1; color: var(--text-dim); }
+  .lvl-g { color: var(--text-dim); font-size: 0.75rem; }
+  .game-row {
+    display: flex; gap: 0.8rem; justify-content: space-between;
+    padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.86rem;
+  }
+  .game-row:last-child { border-bottom: none; }
+  .game-row .date { color: var(--text-dim); min-width: 44px; }
+  .game-row .opp { color: var(--text-dim); flex: 1; }
+  .empty { color: var(--text-dim); font-style: italic; font-size: 0.85rem; }
+  a.source { color: var(--accent); font-size: 0.82rem; text-decoration: none; margin-right: 1rem; }
+  a.source:hover { text-decoration: underline; }
+  .today-line { font-size: 0.95rem; }
+  .today-ctx { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.25rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topnav"><a href="index.html">← Back to Dugout Pulse</a></div>
+  <h1 id="playerName">Loading…</h1>
+  <div class="subtitle" id="playerSub"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function getNameParam() {
+  return new URLSearchParams(location.search).get('name') || '';
+}
+async function fetchJson(path) {
+  try {
+    const r = await fetch(path + '?t=' + Date.now());
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+function playersOf(raw) {
+  if (!raw) return [];
+  return Array.isArray(raw) ? raw : (raw.players || []);
+}
+const PITCHER_POS = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'];
+function isPitcherEntry(e) {
+  const pos = (e && e.tags && e.tags.position) || '';
+  const s = (e && e.stats) || {};
+  return PITCHER_POS.includes(pos) || ('ip' in s && !('pa' in s));
+}
+function cell(label, v) {
+  return `<div class="stat-cell"><div class="stat-label">${esc(label)}</div><div class="stat-value">${esc(v == null ? '--' : v)}</div></div>`;
+}
+function statGrid(s, pitcher) {
+  if (pitcher) {
+    return `<div class="stat-grid">${
+      cell('IP', s.ip) + cell('ERA', s.era) + cell('WHIP', s.whip)
+      + cell('K', s.k) + cell('BB', s.bb) + cell('K%', s.k_pct) + cell('BB%', s.bb_pct)}</div>`;
+  }
+  return `<div class="stat-grid">${
+    cell('PA', s.pa) + cell('AVG', s.avg) + cell('OBP', s.obp) + cell('SLG', s.slg)
+    + cell('OPS', s.ops) + cell('HR', s.hr) + cell('RBI', s.rbi) + cell('SB', s.sb)
+    + cell('K%', s.k_pct) + cell('BB%', s.bb_pct)}</div>`;
+}
+function levelLine(s, pitcher) {
+  if (pitcher) return `${s.era ?? '--'} ERA, ${s.whip ?? '--'} WHIP · ${s.ip ?? '--'} IP, ${s.k ?? '--'} K`;
+  return `${s.avg ?? '--'}/${s.obp ?? '--'}/${s.slg ?? '--'} · ${s.hr ?? '--'} HR, ${s.rbi ?? '--'} RBI`;
+}
+
+function renderToday(entries) {
+  if (!entries.length) return '';
+  const rows = entries.map(e => {
+    const grade = e.performance_grade && e.performance_grade !== '— No Data'
+      ? `<span class="grade">${esc(e.performance_grade)}</span> ` : '';
+    return `<div style="margin-bottom:0.6rem;">
+      ${grade}
+      <div class="today-line">${esc(e.stats_summary || e.game_status || '')}</div>
+      ${e.game_context ? `<div class="today-ctx">${esc(e.game_context)}${e.game_time ? ' — ' + esc(e.game_time) : ''}</div>` : ''}
+      ${e.data_source ? `<div class="today-ctx">via ${esc(e.data_source)}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="card"><h2>Today</h2>${rows}</div>`;
+}
+
+function renderWindows(byWindow, pitcher) {
+  const order = [['7d','Last 7 days'], ['14d','Last 14 days'], ['30d','Last 30 days'], ['season','Season']];
+  const blocks = [];
+  for (const [key, label] of order) {
+    const e = byWindow[key];
+    if (!e) continue;
+    const splits = (e.level_splits && e.level_splits.length > 1) ? e.level_splits : null;
+    // Multi-level season: headline = top level (rates never blend across levels).
+    const stats = splits ? (splits[0].stats || {}) : (e.stats || {});
+    const grade = splits ? (splits[0].window_grade || e.window_grade) : e.window_grade;
+    const gp = splits ? splits[0].games_played : e.games_played;
+    const lvlTag = splits ? ` · ${esc(splits[0].level)}` : '';
+    let splitRows = '';
+    if (splits) {
+      splitRows = `<div style="margin-top:0.6rem;border-top:1px dashed var(--border);padding-top:0.4rem;">
+        <div class="stat-label" style="margin-bottom:0.2rem;">Season by level</div>
+        ${splits.map(sp => `<div class="lvl-row"><span class="lvl-tag">${esc(sp.level)}</span>
+          <span class="lvl-line">${esc(levelLine(sp.stats || {}, pitcher))}</span>
+          <span class="lvl-g">${esc(sp.games_played)} G</span></div>`).join('')}
+      </div>`;
+    }
+    blocks.push(`<div class="win-block">
+      <div class="win-title">${esc(label)}${lvlTag}
+        <span class="g">${esc(gp ?? 0)} G</span>
+        ${grade ? `<span class="g">${esc(grade)}</span>` : ''}
+      </div>
+      ${statGrid(stats, pitcher)}
+      ${splitRows}
+    </div>`);
+  }
+  if (!blocks.length) return '';
+  return `<div class="card"><h2>Rolling windows</h2>${blocks.join('')}</div>`;
+}
+
+function renderGameLog(e7) {
+  const log = (e7 && e7.game_log) || [];
+  if (!log.length) return '';
+  const rows = log.slice().reverse().map(g => {
+    const s = g.stats || {};
+    let line;
+    if ('ip' in s && !('ab' in s)) {
+      line = `${s.ip ?? '0'} IP, ${s.er ?? 0} ER, ${s.k ?? 0} K, ${s.bb ?? 0} BB`;
+    } else {
+      const parts = [`${s.h ?? 0}-${s.ab ?? 0}`];
+      if (s.hr) parts.push(`${s.hr} HR`);
+      if (s.rbi) parts.push(`${s.rbi} RBI`);
+      if (s.bb) parts.push(`${s.bb} BB`);
+      if (s.k) parts.push(`${s.k} K`);
+      if (s.sb) parts.push(`${s.sb} SB`);
+      line = parts.join(', ');
+    }
+    const d = (g.date || '').slice(5).replace('-', '/');
+    return `<div class="game-row"><span class="date">${esc(d)}</span>
+      <span class="opp">${esc(g.opponent || '')}</span><span><strong>${esc(line)}</strong></span></div>`;
+  }).join('');
+  return `<div class="card"><h2>Game log (last 7 days)</h2>${rows}</div>`;
+}
+
+function renderLinks(entry, name) {
+  const links = [];
+  if (entry && entry.player_profile_url) {
+    links.push(`<a class="source" href="${esc(entry.player_profile_url)}" target="_blank" rel="noopener">External profile →</a>`);
+  }
+  if (entry && entry.social_search_url) {
+    links.push(`<a class="source" href="${esc(entry.social_search_url)}" target="_blank" rel="noopener">X search →</a>`);
+  }
+  if (entry && entry.box_score_url) {
+    links.push(`<a class="source" href="${esc(entry.box_score_url)}" target="_blank" rel="noopener">Box score →</a>`);
+  }
+  return links.length ? `<div class="card"><h2>Links</h2>${links.join('')}</div>` : '';
+}
+
+async function load() {
+  const name = getNameParam();
+  if (!name) {
+    document.getElementById('playerName').textContent = 'No player specified';
+    document.getElementById('content').innerHTML = '<div class="empty">Add ?name=Player+Name to the URL.</div>';
+    return;
+  }
+  document.title = 'Dugout Pulse — ' + name;
+  const [cur, w7, w14, w30, wseason] = await Promise.all([
+    fetchJson('data/current_pulse.json'),
+    fetchJson('data/window_7d.json'),
+    fetchJson('data/window_14d.json'),
+    fetchJson('data/window_30d.json'),
+    fetchJson('data/window_season.json'),
+  ]);
+  const lc = name.toLowerCase();
+  const match = e => (e.player_name || '').toLowerCase() === lc;
+  // Summer entries have their own page — this one covers Pro/NCAA/HS.
+  const todayEntries = playersOf(cur).filter(e => match(e) && e.level !== 'Summer');
+  const byWindow = {};
+  for (const [key, raw] of [['7d', w7], ['14d', w14], ['30d', w30], ['season', wseason]]) {
+    const hit = playersOf(raw).find(e => match(e) && e.level !== 'Summer');
+    if (hit) byWindow[key] = hit;
+  }
+  const anchor = todayEntries[0] || byWindow.season || byWindow['30d'] || byWindow['7d'];
+  if (!anchor) {
+    document.getElementById('playerName').textContent = name;
+    document.getElementById('content').innerHTML = '<div class="empty">No data found for this player.</div>';
+    return;
+  }
+  const tags = anchor.tags || {};
+  const pitcher = isPitcherEntry(byWindow.season || byWindow['30d'] || anchor);
+  document.getElementById('playerName').innerHTML = esc(name)
+    + `<span class="badge">${esc(anchor.level || '')}</span>`
+    + (tags.position ? `<span class="badge">${esc(tags.position)}</span>` : '');
+  document.getElementById('playerSub').textContent =
+    (anchor.team || '') + (tags.draft_class && tags.draft_class !== 'N/A' ? ' · Draft ' + tags.draft_class : '');
+
+  document.getElementById('content').innerHTML = [
+    renderToday(todayEntries),
+    renderWindows(byWindow, pitcher),
+    renderGameLog(byWindow['7d']),
+    renderLinks(anchor, name),
+  ].join('');
+}
+load();
+</script>
+</body>
+</html>
