@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-06T19:09:06.861844+00:00",
+  "generated_at": "2026-07-06T23:20:18.160460+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 327,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1934,
+      "duration_ms": 713,
       "sample_players": [
         "Brody DeLamielleure",
         "Camden Wimbish",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 268,
+      "player_count": 256,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1600,
+      "duration_ms": 557,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 239,
+      "player_count": 238,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1604,
+      "duration_ms": 562,
       "sample_players": [
         "Alexander Llinas",
         "Cade McGarrh",
@@ -52,7 +52,7 @@
       "player_count": 601,
       "team_count": 13,
       "error": null,
-      "duration_ms": 69421,
+      "duration_ms": 97564,
       "sample_players": [
         "Theo DeCicco",
         "Jonas Aponick",
@@ -67,7 +67,7 @@
       "player_count": 372,
       "team_count": 8,
       "error": null,
-      "duration_ms": 59383,
+      "duration_ms": 43328,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,16 +82,16 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 93010,
+      "duration_ms": 93968,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 385,
+      "player_count": 384,
       "team_count": 7,
       "error": null,
-      "duration_ms": 48037,
+      "duration_ms": 36853,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -102,18 +102,12 @@
     },
     {
       "league": "Prospect",
-      "status": "ok",
-      "player_count": 586,
-      "team_count": 13,
-      "error": null,
-      "duration_ms": 126661,
-      "sample_players": [
-        "Caynen Patterson",
-        "Hayden Wilson",
-        "Graham Laxton",
-        "Brandon Gour",
-        "Kayden Jennings"
-      ]
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 7732,
+      "sample_players": []
     },
     {
       "league": "Northwoods",
@@ -130,7 +124,7 @@
       "player_count": 478,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5463,
+      "duration_ms": 3951,
       "sample_players": [
         "Alex Graber",
         "Ben Shepherd",
@@ -584,5 +578,5 @@
       }
     ]
   },
-  "all_players_count": 3256
+  "all_players_count": 2656
 }
