@@ -1027,6 +1027,22 @@
   }
   .conf-red    { background: #ef4444; box-shadow: 0 0 0 2px rgba(239,68,68,0.2); }
   .conf-yellow { background: #eab308; box-shadow: 0 0 0 2px rgba(234,179,8,0.2); }
+  /* Season per-level breakdown (multi-level players). */
+  .level-breakdown { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); }
+  .level-breakdown-head {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--text-dim); margin-bottom: 5px;
+  }
+  .lvl-row {
+    display: flex; align-items: baseline; gap: 8px; font-size: 0.8rem;
+    padding: 2px 0; color: var(--text);
+  }
+  .lvl-tag {
+    flex: none; min-width: 34px; font-weight: 700; font-size: 0.7rem;
+    color: #5b9bf3;
+  }
+  .lvl-line { flex: 1; color: var(--text-dim); }
+  .lvl-g { flex: none; color: var(--text-dim); font-size: 0.72rem; }
 </style>
 </head>
 <body>
@@ -1654,14 +1670,34 @@ function eraColor(val) {
   return '';
 }
 
+// Compact one-line stat summary for a per-level breakdown row.
+function _levelLine(s, isPitcher) {
+  if (isPitcher) {
+    return `${s.era ?? '--'} ERA, ${s.whip ?? '--'} WHIP · ${s.ip ?? '--'} IP, ${s.k ?? '--'} K`;
+  }
+  return `${s.avg ?? '--'}/${s.obp ?? '--'}/${s.slg ?? '--'} · ${s.hr ?? '--'} HR, ${s.rbi ?? '--'} RBI`;
+}
+function levelBreakdownHtml(splits, isPitcher) {
+  if (!splits) return '';
+  const rows = splits.map(sp =>
+    `<div class="lvl-row"><span class="lvl-tag">${_summerEscape(sp.level)}</span>`
+    + `<span class="lvl-line">${_summerEscape(_levelLine(sp.stats || {}, isPitcher))}</span>`
+    + `<span class="lvl-g">${sp.games_played} G</span></div>`
+  ).join('');
+  return `<div class="level-breakdown"><div class="level-breakdown-head">Season by level</div>${rows}</div>`;
+}
+
 function renderWindowCard(p) {
   const position = p.tags?.position || 'Hitter';
-  const stats = p.stats || {};
+  // Multi-level season: rates don't blend across levels, so the headline grid
+  // shows the top (highest) level and we list every level in a breakdown below.
+  const splits = (p.level_splits && p.level_splits.length > 1) ? p.level_splits : null;
+  const stats = splits ? (splits[0].stats || {}) : (p.stats || {});
   const isPitcher = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'].includes(position) || 'ip' in stats;
   const gk = windowGradeKey(p.window_grade);
   const gc = WINDOW_GRADE_CLASS[gk] || 'grade-insufficient';
   const isClient = p.is_client !== false;
-  const gp = p.games_played ?? 0;
+  const gp = splits ? splits.reduce((a, s) => a + (s.games_played || 0), 0) : (p.games_played ?? 0);
   const gpLabel = gp === 1 ? '1 G' : `${gp} G`;
 
   let statsHtml;
@@ -1821,11 +1857,13 @@ function renderWindowCard(p) {
         ${heartbeatHtml(p.player_name, isClient)}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
+        ${splits ? `<span class="badge" style="background:rgba(59,130,246,0.15);color:#5b9bf3" title="Played ${splits.length} levels this season">${_summerEscape(splits[0].level)} +${splits.length - 1}</span>` : ''}
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="window-grade ${gc}">${esc(p.window_grade || '— No Data')}${momentumChipHtml(p)}</div>
+      <div class="window-grade ${gc}">${esc(p.window_grade || '— No Data')}${splits ? ` · ${_summerEscape(splits[0].level)}` : ''}${momentumChipHtml(p)}</div>
       ${statsHtml}
+      ${levelBreakdownHtml(splits, isPitcher)}
       ${gameLogHtml}
     </div>`;
 }

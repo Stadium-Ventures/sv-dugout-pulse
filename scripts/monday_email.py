@@ -277,17 +277,13 @@ def _grade_circle(tier: str) -> str:
     return f'<span class="grade-circle gc-{tier}" title="{TIER_LABEL[tier]}"></span>'
 
 
-def _hitter_row(rec: dict, level: str, window_key: str) -> str:
-    w = rec["week"] if window_key == "week" else rec["season"]
-    if not w:
-        return ""
-    s = w.get("stats", {})
-    tier = _tier_for_record(w, is_pitcher=False)
+def _hitter_row_cells(tier_html: str, name_html: str, team_html: str,
+                      s: dict, games_played, level: str, sub: bool = False) -> str:
     cells = [
-        f'<td class="grade-cell">{_grade_circle(tier)}</td>',
-        f'<td class="l player">{w["player_name"]}</td>',
-        f'<td class="l team">{w["team"]}</td>',
-        f'<td>{_fmt(w.get("games_played"))}</td>',
+        f'<td class="grade-cell">{tier_html}</td>',
+        f'<td class="l player">{name_html}</td>',
+        f'<td class="l team">{team_html}</td>',
+        f'<td>{_fmt(games_played)}</td>',
         f'<td>{_fmt(s.get("pa"))}</td>',
     ]
     if level == "Pro":
@@ -304,20 +300,48 @@ def _hitter_row(rec: dict, level: str, window_key: str) -> str:
         f'<td>{_fmt(s.get("bb_pct"))}</td>',
         f'<td>{_fmt(s.get("k_pct"))}</td>',
     ])
-    return '<tr>' + "".join(cells) + "</tr>"
+    tr_attr = ' style="background:#fbfcfd;"' if sub else ''
+    return f'<tr{tr_attr}>' + "".join(cells) + "</tr>"
 
 
-def _pitcher_row(rec: dict, window_key: str) -> str:
+# Multi-level season: one row per level (rates never blend across levels). The
+# player's name + grade sit on the top-level row; lower levels are dim sub-rows.
+def _level_rows(w: dict, is_pitcher: bool, row_fn) -> str:
+    rows = []
+    for i, sp in enumerate(w["level_splits"]):
+        s = sp.get("stats", {})
+        if i == 0:
+            tier_html = _grade_circle(_tier_for_record({"stats": s}, is_pitcher))
+            name_html = (f'{w["player_name"]} '
+                         f'<span style="color:#8b949e;font-size:11px;font-weight:600;">{sp["level"]}</span>')
+            team_html = w["team"]
+        else:
+            tier_html = ""
+            name_html = f'<span style="padding-left:16px;color:#6e7781;">{sp["level"]}</span>'
+            team_html = ""
+        rows.append(row_fn(tier_html, name_html, team_html, s, sp.get("games_played"), sub=(i > 0)))
+    return "\n".join(rows)
+
+
+def _hitter_row(rec: dict, level: str, window_key: str) -> str:
     w = rec["week"] if window_key == "week" else rec["season"]
     if not w:
         return ""
-    s = w.get("stats", {})
-    tier = _tier_for_record(w, is_pitcher=True)
+    if window_key == "season" and w.get("level_splits"):
+        return _level_rows(w, False,
+                           lambda t, n, tm, s, gp, sub: _hitter_row_cells(t, n, tm, s, gp, level, sub))
+    tier = _tier_for_record(w, is_pitcher=False)
+    return _hitter_row_cells(_grade_circle(tier), w["player_name"], w["team"],
+                             w.get("stats", {}), w.get("games_played"), level)
+
+
+def _pitcher_row_cells(tier_html: str, name_html: str, team_html: str,
+                       s: dict, games_played, level: str = "", sub: bool = False) -> str:
     cells = [
-        f'<td class="grade-cell">{_grade_circle(tier)}</td>',
-        f'<td class="l player">{w["player_name"]}</td>',
-        f'<td class="l team">{w["team"]}</td>',
-        f'<td>{_fmt(w.get("games_played"))}</td>',
+        f'<td class="grade-cell">{tier_html}</td>',
+        f'<td class="l player">{name_html}</td>',
+        f'<td class="l team">{team_html}</td>',
+        f'<td>{_fmt(games_played)}</td>',
         f'<td>{_fmt(s.get("ip"))}</td>',
         f'<td>{_fmt(s.get("era"))}</td>',
         f'<td>{_fmt(s.get("whip"))}</td>',
@@ -328,7 +352,20 @@ def _pitcher_row(rec: dict, window_key: str) -> str:
         f'<td>{_fmt(s.get("k_pct"))}</td>',
         f'<td>{_fmt(s.get("bb_pct"))}</td>',
     ]
-    return '<tr>' + "".join(cells) + "</tr>"
+    tr_attr = ' style="background:#fbfcfd;"' if sub else ''
+    return f'<tr{tr_attr}>' + "".join(cells) + "</tr>"
+
+
+def _pitcher_row(rec: dict, window_key: str) -> str:
+    w = rec["week"] if window_key == "week" else rec["season"]
+    if not w:
+        return ""
+    if window_key == "season" and w.get("level_splits"):
+        return _level_rows(w, True,
+                           lambda t, n, tm, s, gp, sub: _pitcher_row_cells(t, n, tm, s, gp, sub=sub))
+    tier = _tier_for_record(w, is_pitcher=True)
+    return _pitcher_row_cells(_grade_circle(tier), w["player_name"], w["team"],
+                              w.get("stats", {}), w.get("games_played"))
 
 
 def _hitter_section(level: str, played: list[dict], dnp_names: list[str],
