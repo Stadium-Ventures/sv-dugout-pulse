@@ -704,6 +704,18 @@ _SPORT_LEVEL_NAME = {
     21: "Minors (rollup)", 22: "College", 23: "Independent",
 }
 
+# Player names whose level changed this run — consumed by main.run_live to
+# rebuild their Season entries immediately instead of waiting for the 6 AM
+# historical pass (a promoted player's Season tab would otherwise lag ~24h).
+_level_moves: list = []
+
+
+def consume_level_moves() -> list:
+    """Return players whose level changed this run and clear the list."""
+    moves = list(dict.fromkeys(_level_moves))
+    _level_moves.clear()
+    return moves
+
 
 def _load_team_state() -> dict:
     try:
@@ -812,6 +824,10 @@ def _check_promotion(player, stats, name, team):
                       "team_name": team_name, "name": name}
         _save_team_state(state)
         return
+
+    # Level changed — queue a season-window rebuild regardless of whether
+    # the Slack alert below dedups or fails.
+    _level_moves.append(name)
 
     # Dedup: per-player per-promotion-destination so re-pulses don't re-fire.
     today = date.today().isoformat()

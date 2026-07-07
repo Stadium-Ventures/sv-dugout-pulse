@@ -161,11 +161,13 @@ function renderWindows(byWindow, pitcher) {
     const e = byWindow[key];
     if (!e) continue;
     const splits = (e.level_splits && e.level_splits.length > 1) ? e.level_splits : null;
-    // Multi-level season: headline = top level (rates never blend across levels).
-    const stats = splits ? (splits[0].stats || {}) : (e.stats || {});
-    const grade = splits ? (splits[0].window_grade || e.window_grade) : e.window_grade;
-    const gp = splits ? splits[0].games_played : e.games_played;
-    const lvlTag = splits ? ` · ${esc(splits[0].level)}` : '';
+    // Multi-level season: headline = the player's current level when known,
+    // else top level played (rates never blend across levels).
+    const headline = splits ? (splits.find(sp => sp.level === e.current_level) || splits[0]) : null;
+    const stats = headline ? (headline.stats || {}) : (e.stats || {});
+    const grade = headline ? (headline.window_grade || e.window_grade) : e.window_grade;
+    const gp = headline ? headline.games_played : e.games_played;
+    const lvlTag = headline ? ` · ${esc(headline.level)}` : '';
     let splitRows = '';
     if (splits) {
       splitRows = `<div style="margin-top:0.6rem;border-top:1px dashed var(--border);padding-top:0.4rem;">
