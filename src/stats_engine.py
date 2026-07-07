@@ -2563,6 +2563,41 @@ class NCAAOrgScraper(BaseSchoolScraper):
 
     # --- scoreboard ---
 
+    # Served-date markers, tried in order. stats.ncaa.org silently re-serves
+    # the most recent date WITH games (HTTP 200) when the requested game_date
+    # has none (off-season, travel days). Without a served-date check the
+    # 06-24 CWS final re-emitted nightly as a run-day final all July (Lee
+    # Sowers, "Oklahoma 13, North Carolina 2 | Final" stamped to the run day).
+    # Several markers are tried so a template change degrades to "unverified"
+    # (handled by the waterfall corroboration guard) instead of breaking.
+    _SERVED_DATE_RES = (
+        re.compile(r'id="game_date"[^>]*value="(\d{2}/\d{2}/\d{4})"'),
+        re.compile(r'value="(\d{2}/\d{2}/\d{4})"[^>]*id="game_date"'),
+        re.compile(r'game_date=(\d{2})%2F(\d{2})%2F(\d{4})'),
+        re.compile(r'game_date=(\d{2})/(\d{2})/(\d{4})'),
+    )
+
+    @classmethod
+    def _served_date(cls, html: str) -> Optional[date]:
+        """Extract the date stats.ncaa.org actually served this scoreboard for.
+
+        The page reflects its served date in the date-filter control and in
+        its own pagination/query links. Returns the parsed date, or None if no
+        marker matched (page template changed) — callers must treat None as
+        "unverified", never as a match.
+        """
+        for rx in cls._SERVED_DATE_RES:
+            m = rx.search(html)
+            if not m:
+                continue
+            g = m.groups()
+            mm, dd, yyyy = (g[0][:2], g[0][3:5], g[0][6:]) if len(g) == 1 else g
+            try:
+                return date(int(yyyy), int(mm), int(dd))
+            except ValueError:
+                continue
+        return None
+
     def _scoreboard_path(self, game_date: date) -> str:
         academic_year = _ncaa_academic_year(game_date)
         date_str = game_date.strftime("%m/%d/%Y")
@@ -2583,7 +2618,23 @@ class NCAAOrgScraper(BaseSchoolScraper):
         if not html:
             self._scoreboard_cache[key] = []
             return []
+        served = self._served_date(html)
+        if served is not None and served != game_date:
+            # Re-serve of another day's scoreboard — NOT the date we asked for.
+            # Treat as no games; never date-stamp another day's finals.
+            logger.info(
+                "NCAA.org scoreboard re-served %s when asked for %s — treating as no games",
+                served.isoformat(), game_date.isoformat(),
+            )
+            self._scoreboard_cache[key] = []
+            return []
         games = self._parse_scoreboard(html)
+        if served is None:
+            # Served-date marker not found (page template changed) — flag every
+            # game so the waterfall's corroboration guard can still refuse to
+            # emit an unverifiable final.
+            for g in games:
+                g["_served_date_unverified"] = True
         self._scoreboard_cache[key] = games
         return games
 
@@ -2704,6 +2755,7 @@ class NCAAOrgScraper(BaseSchoolScraper):
                                 "is_yesterday": is_yesterday,
                                 "game_date": d,
                                 "box_score_url": g["box_score_url"],
+                                "_served_date_unverified": g.get("_served_date_unverified", False),
                             })
         return results
 
@@ -2937,6 +2989,10 @@ class NCAAOrgScraper(BaseSchoolScraper):
             result["game_date"] = gd.isoformat()
         if game.get("is_yesterday"):
             result["is_yesterday"] = True
+        if game.get("_served_date_unverified"):
+            # Carried to the waterfall's corroboration guard; stripped there
+            # before the result is emitted into current_pulse.json.
+            result["_served_date_unverified"] = True
         return result
 
 
@@ -5268,6 +5324,33 @@ class NCAAStatsFetcher:
             or result.get("ip", 0) > 0
         )
 
+    def _espn_date_has_no_events(self, game_date) -> bool:
+        """True iff ESPN's scoreboard for ``game_date`` lists zero events.
+
+        Corroborates an unverifiable NCAA.org Final (see _waterfall_fetch):
+        ESPN's scoreboard is genuinely date-scoped (``?dates=YYYYMMDD``), so an
+        empty event list means no D1 game happened that day and the NCAA.org
+        "Final" is a stale re-serve. Returns False when the date is missing or
+        unparseable, or when the ESPN request fails — "no games" is asserted
+        only on a positive empty response, never on an error, so a real Final
+        is never suppressed by a transient ESPN outage.
+        """
+        if not game_date:
+            return False
+        try:
+            d = date.fromisoformat(str(game_date)[:10])
+        except (ValueError, TypeError):
+            return False
+        try:
+            board = self._espn._get_scoreboard(d.strftime("%Y%m%d"))
+        except Exception:
+            logger.info(
+                "ESPN corroboration check failed for %s — keeping NCAA.org result",
+                game_date,
+            )
+            return False
+        return not board.get("events")
+
     def _waterfall_fetch(self, player: dict, yesterday_only: bool = False) -> Optional[dict]:
         """Internal waterfall: try each scraper in order.
 
@@ -5295,6 +5378,31 @@ class NCAAStatsFetcher:
                 if result is None:
                     attempts.append({"source": diag_label, "outcome": "No game listed today"})
                     continue
+
+                # Corroboration guard for NCAA.org re-served scoreboards.
+                # When the served-date marker was missing (Layer 1 couldn't
+                # confirm the page's date) and this is a Final, verify a real
+                # D1 game happened that day via ESPN. stats.ncaa.org re-serves
+                # the most recent date WITH games for empty off-season dates;
+                # an empty ESPN board means the NCAA.org "Final" is a stale
+                # re-serve — drop it and keep going. (In season ESPN is never
+                # empty on a game day, so a real Final can't be suppressed.)
+                # Runs before _has_player_stats so it also catches a re-served
+                # final in which the queried player actually appeared.
+                if (result.get("_served_date_unverified")
+                        and result.get("game_status") == "Final"
+                        and self._espn_date_has_no_events(result.get("game_date"))):
+                    attempts.append({"source": diag_label,
+                                     "outcome": "Re-served scoreboard — stale final dropped"})
+                    _flush_inner(result)
+                    logger.info(
+                        "%s Final for %s @ %s dropped — ESPN lists no events for %s "
+                        "(re-served scoreboard, served date unverified)",
+                        scraper.__class__.__name__, name, team, result.get("game_date"),
+                    )
+                    continue
+                # Internal flag — never emit it into current_pulse.json.
+                result.pop("_served_date_unverified", None)
 
                 if self._has_player_stats(result):
                     # For Scheduled games missing game_time, save context and
