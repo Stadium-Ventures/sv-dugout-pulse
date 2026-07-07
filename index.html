@@ -599,12 +599,13 @@
     justify-content: center;
     gap: 0;
     padding: 0.75rem 0;
-    max-width: 440px;
+    max-width: 480px;
     margin: 0 auto;
   }
   .time-tab {
     flex: 1;
-    padding: 0.55rem 0.75rem;
+    white-space: nowrap;
+    padding: 0.55rem 0.6rem;
     background: var(--surface);
     border: 1px solid var(--border);
     color: var(--text-dim);
@@ -944,6 +945,16 @@
     .filter-group { flex-shrink: 0; }
     body { padding: 0.5rem; }
     .header h1 { font-size: 1.4rem; }
+    /* Six time tabs on a phone: keep one row, allow a sideways scroll if the
+       screen is truly tiny, and drop the padding so labels stay readable. */
+    .time-tabs { max-width: 100%; overflow-x: auto; padding: 0.6rem 0.25rem; }
+    .time-tab { padding: 0.5rem 0.45rem; font-size: 0.74rem; }
+    /* Stat grids: numbers are short — keep the columns, shrink the type. */
+    .stat-row .stat-value, .window-card .stat-value { font-size: 0.92rem; }
+    .stat-row .stat-label, .window-card .stat-label { font-size: 0.6rem; }
+    .summer-banner, .change-strip { margin-left: 0; margin-right: 0; }
+    .card-actions .btn { padding: 0.5rem 0.6rem; font-size: 0.78rem; }
+    .level-breakdown .lvl-line { font-size: 0.74rem; }
   }
 
   /* Summer Ball coverage banner — compact, collapsed by default */
@@ -1080,9 +1091,9 @@
 <div class="time-tabs" role="tablist" aria-label="Time window">
   <button class="time-tab active" data-window="today" role="tab" aria-selected="true">Today</button>
   <button class="time-tab" data-window="yesterday" role="tab" aria-selected="false">Yesterday</button>
-  <button class="time-tab" data-window="7d" role="tab" aria-selected="false">7 Days</button>
-  <button class="time-tab" data-window="14d" role="tab" aria-selected="false">14 Days</button>
-  <button class="time-tab" data-window="30d" role="tab" aria-selected="false">30 Days</button>
+  <button class="time-tab" data-window="7d" role="tab" aria-selected="false">7D</button>
+  <button class="time-tab" data-window="14d" role="tab" aria-selected="false">14D</button>
+  <button class="time-tab" data-window="30d" role="tab" aria-selected="false">30D</button>
   <button class="time-tab" data-window="season" role="tab" aria-selected="false">Season</button>
 </div>
 
@@ -1293,11 +1304,14 @@ async function loadChangeStrip() {
       rows.push(`<div class="cs-row">📈 <strong>${esc(name)}</strong> moved: ${esc(y.team)} → ${esc(t.team)}</div>`);
     }
   }
-  // Yesterday's standout games for clients.
+  // Yesterday's standout games for clients (dedup by name — doubleheader and
+  // merge artifacts can produce repeated entries).
+  const seenStandouts = new Set();
   for (const e of yest) {
-    if (e.is_client === false) continue;
+    if (e.is_client === false || seenStandouts.has(e.player_name)) continue;
     const g = e.performance_grade || '';
     if ((g.includes('Milestone') || g.includes('Standout')) && rows.length < 6) {
+      seenStandouts.add(e.player_name);
       rows.push(`<div class="cs-row">🔥 <strong>${esc(e.player_name)}</strong> yesterday: ${esc(e.stats_summary || '')}</div>`);
     }
   }
