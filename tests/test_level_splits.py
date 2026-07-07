@@ -75,3 +75,13 @@ def test_pa_falls_back_when_api_field_missing():
     del game["stat"]["plateAppearances"]
     stats = f._aggregate_batter_stats([game])
     assert stats["pa"] == 4
+
+
+def test_current_level_only_reports_verified_lookups():
+    # _player_sport falls back to 1 (MLB) when the currentTeam lookup fails;
+    # that guess must never surface as a current-level badge.
+    f = MLBHistoricalFetcher()
+    f._player_sport[123] = 11
+    assert f.current_level("Cached Guy", mlb_id=123) is None   # unverified
+    f._sport_verified.add(123)
+    assert f.current_level("Cached Guy", mlb_id=123) == "AAA"
