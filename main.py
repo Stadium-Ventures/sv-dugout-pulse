@@ -35,7 +35,7 @@ from src.config import (
     WINDOW_SEASON_PATH,
     YESTERDAY_PULSE_PATH,
 )
-from src.historical_stats import WindowStatsAggregator, write_window_json
+from src.historical_stats import MLBHistoricalFetcher, WindowStatsAggregator, write_window_json
 from src.performance_analyzer import PerformanceAnalyzer
 from src.roster_manager import get_all_players
 from src.stats_engine import StatsFetcher
@@ -615,6 +615,13 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
             "roster_priority": player.get("roster_priority", 99),
         },
     }
+    # Current affiliated level for the Today-card badge (Pro only; the level
+    # field itself is the roster bucket Pro/NCAA/HS, not the minors rung).
+    if player["level"] == "Pro":
+        lvl = MLBHistoricalFetcher._SPORT_LEVEL.get(stats.get("api_sport_id"))
+        if lvl:
+            entry["current_level"] = lvl
+
     gn = stats.get("game_number")
     if gn:
         entry["game_number"] = gn
@@ -1162,6 +1169,8 @@ def run_live():
         check_and_send_alerts(player, stats, grade=grade)
     save_sent_alerts()  # Persist all alert state in one write
 
+    _rebuild_season_for_level_movers(all_players)
+
     _flush_ncaa_game_log()
 
     # Deduplicate pulse entries.  Concurrent fetches + stats lock can
@@ -1267,6 +1276,52 @@ def run_live():
             _write_summer_window_entries(placements, {})
         except Exception:
             logger.exception("summer_pulse: post-l7 window-merge failed")
+
+
+def _rebuild_season_for_level_movers(all_players: list[dict]):
+    """Rebuild Season entries for players whose level changed this run.
+
+    The full season aggregation only runs on the 6 AM historical pass, so a
+    player promoted mid-day would show his old level on the Season tab for up
+    to 24 hours. Scoped to just the movers — one game-log sweep per player.
+    """
+    from src.alerts import consume_level_moves
+    movers = consume_level_moves()
+    if not movers:
+        return
+    try:
+        by_name = {p["player_name"]: p for p in all_players}
+        players = [by_name[n] for n in movers if n in by_name]
+        if not players:
+            return
+        try:
+            with open(WINDOW_SEASON_PATH) as f:
+                raw = json.load(f)
+            existing = raw.get("players", raw) if isinstance(raw, dict) else raw
+        except Exception:
+            logger.info("Season rebuild for movers skipped — no season file yet")
+            return
+
+        aggregator = WindowStatsAggregator()
+        rebuilt = []
+        for player in players:
+            entry = aggregator._build_window_entry(
+                player, "season", aggregator._season_start, aggregator._today
+            )
+            if entry:
+                rebuilt.append(entry)
+        if not rebuilt:
+            return
+
+        rebuilt_names = {e["player_name"] for e in rebuilt}
+        merged = [
+            e for e in existing
+            if not (e.get("player_name") in rebuilt_names and e.get("level") != "Summer")
+        ] + rebuilt
+        write_window_json(merged, WINDOW_SEASON_PATH)
+        logger.info("Season rebuilt after level move: %s", ", ".join(sorted(rebuilt_names)))
+    except Exception:
+        logger.exception("Season rebuild for level movers failed — next 6 AM pass will catch it")
 
 
 def _refresh_ncaa_l7(all_players: list[dict]):

@@ -1367,10 +1367,19 @@ class ProStatsFetcher:
         return None
 
     def _stamp_api_team(self, result: dict, player_id: int) -> dict:
-        """Inject ``api_current_team`` into a stats result dict."""
-        team_name = self._get_api_current_team(player_id)
-        if team_name:
-            result["api_current_team"] = team_name
+        """Inject ``api_current_team``/``api_team_id``/``api_sport_id`` into a
+        stats result dict. Downstream: the Today-card level badge and the
+        promotion check in alerts.py (which otherwise re-resolves via the
+        /people endpoint)."""
+        api_team_id = self._player_team_cache.get(player_id)
+        if not api_team_id:
+            return result
+        info = self._resolve_team(api_team_id)
+        if info.get("name"):
+            result["api_current_team"] = info["name"]
+        result["api_team_id"] = api_team_id
+        if info.get("sport_id"):
+            result["api_sport_id"] = info["sport_id"]
         return result
 
     def _apply_api_team_to_player(self, player: dict, player_id: int) -> None:

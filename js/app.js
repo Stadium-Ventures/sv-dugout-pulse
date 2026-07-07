@@ -434,6 +434,7 @@ function renderCard(p) {
         ${p.split_squad ? '<span class="badge badge-gm">SS</span>' : p.game_number ? `<span class="badge badge-gm">Gm ${p.game_number}</span>` : ''}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
+        ${p.current_level ? `<span class="badge" style="background:rgba(34,197,94,0.15);color:#4ade80" title="Current level">${esc(p.current_level)}</span>` : ''}
         ${p.level === 'Summer' ? '' : `<span class="badge badge-tier-dim">T${pri}</span>`}
       </div>
       <div class="team-name">${esc(p.team)}</div>
@@ -621,19 +622,22 @@ function levelBreakdownHtml(splits, isPitcher, currentLevel) {
 function renderWindowCard(p) {
   const position = p.tags?.position || 'Hitter';
   // Multi-level season: rates don't blend across levels, so the headline grid
-  // shows the top (highest) level and we list every level in a breakdown below.
+  // shows ONE level's line and we list every level in a breakdown below.
+  // Headline = the player's CURRENT level when we know it ("how's he doing
+  // where he is now"), falling back to the top level played.
   const splits = (p.level_splits && p.level_splits.length > 1) ? p.level_splits : null;
-  const stats = splits ? (splits[0].stats || {}) : (p.stats || {});
+  const headline = splits ? (splits.find(s => s.level === p.current_level) || splits[0]) : null;
+  const stats = headline ? (headline.stats || {}) : (p.stats || {});
   const isPitcher = ['Pitcher','LHP','RHP','LHR','RHR','SP','RP','CL'].includes(position) || 'ip' in stats;
-  // Headline grade tracks the headline (top) level too, so it can't disagree
+  // Headline grade tracks the headline level too, so it can't disagree
   // with the line shown (falls back to the combined grade until data refreshes).
-  const gradeStr = splits ? (splits[0].window_grade || p.window_grade) : p.window_grade;
+  const gradeStr = headline ? (headline.window_grade || p.window_grade) : p.window_grade;
   const gk = windowGradeKey(gradeStr);
   const gc = WINDOW_GRADE_CLASS[gk] || 'grade-insufficient';
   const isClient = p.is_client !== false;
-  // Games badge tracks the headline level (top level), not the season total —
-  // the headline shows that level's line as-is; the breakdown below has the rest.
-  const gp = splits ? (splits[0].games_played ?? 0) : (p.games_played ?? 0);
+  // Games badge tracks the headline level, not the season total — the
+  // headline shows that level's line as-is; the breakdown below has the rest.
+  const gp = headline ? (headline.games_played ?? 0) : (p.games_played ?? 0);
   const gpLabel = gp === 1 ? '1 G' : `${gp} G`;
 
   let statsHtml;
@@ -790,11 +794,11 @@ function renderWindowCard(p) {
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
         ${p.current_level ? `<span class="badge" style="background:rgba(34,197,94,0.15);color:#4ade80" title="Current level (where he is right now)">${_summerEscape(p.current_level)}</span>` : ''}
-        ${splits ? `<span class="badge" style="background:rgba(59,130,246,0.15);color:#5b9bf3" title="Played ${splits.length} levels this season — stats above are the ${_summerEscape(splits[0].level)} line">${_summerEscape(splits[0].level)} +${splits.length - 1}</span>` : ''}
+        ${splits ? `<span class="badge" style="background:rgba(59,130,246,0.15);color:#5b9bf3" title="Played ${splits.length} levels this season — stats above are the ${_summerEscape(headline.level)} line">${_summerEscape(headline.level)} +${splits.length - 1}</span>` : ''}
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
-      <div class="window-grade ${gc}">${esc(gradeStr || '— No Data')}${splits ? ` · ${_summerEscape(splits[0].level)}` : ''}${momentumChipHtml(p)}</div>
+      <div class="window-grade ${gc}">${esc(gradeStr || '— No Data')}${splits ? ` · ${_summerEscape(headline.level)}` : ''}${momentumChipHtml(p)}</div>
       ${statsHtml}
       ${levelBreakdownHtml(splits, isPitcher, p.current_level)}
       ${gameLogHtml}
