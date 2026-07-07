@@ -69,6 +69,7 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           # TEMP: proxy was returning 403 from SB's WAF — testing direct
           # curl_cffi Chrome impersonation from the Actions runner.  Restore
@@ -95,6 +96,7 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           SB_PROXY_URL: ""
           SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
@@ -111,6 +113,7 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           SB_PROXY_URL: ${{ secrets.SB_PROXY_URL }}
           SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
           SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}

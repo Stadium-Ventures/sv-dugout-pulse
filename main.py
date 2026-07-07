@@ -1543,6 +1543,88 @@ def _update_player_health_history(pulse: list[dict]) -> None:
         logger.warning("Failed to update player health history — non-fatal")
 
 
+_CRITICAL_ALERT_STATE = os.path.join(os.path.dirname(OUTPUT_PATH), "_last_critical_alert.json")
+_CRITICAL_ALERT_COOLDOWN_MIN = 60
+
+
+def _maybe_alert_critical(health: dict) -> None:
+    """Post a plain-English #sv-automation alert when a run goes critical.
+
+    Fires at most once per hour while the condition persists (timestamp in a
+    state file), and never crashes the run — alerting is best-effort.
+    """
+    if health.get("severity") != "critical":
+        return
+    now = datetime.now(timezone.utc)
+    try:
+        with open(_CRITICAL_ALERT_STATE) as f:
+            last = datetime.fromisoformat(json.load(f).get("last_alert", ""))
+        if (now - last).total_seconds() < _CRITICAL_ALERT_COOLDOWN_MIN * 60:
+            return
+    except Exception:
+        pass  # no/invalid state — treat as never alerted
+    blocked = health.get("blocked_clients", [])
+    sources = ", ".join(health.get("blocked_sources", [])) or "unknown sources"
+    names = ", ".join(blocked[:6]) + ("…" if len(blocked) > 6 else "")
+    text = (
+        ":rotating_light: *Live stats are down for several clients right now.*\n"
+        f"How we know: {sources} blocked this run's requests — {len(blocked)} clients "
+        f"have no live data ({names}).\n"
+        "What to do: 👤 check the proxy dashboards (ScraperAPI / Webshare) first; the "
+        "15-min retries + overnight backfill usually recover it. 🛠️ If this repeats "
+        "across days, a Claude Code fix is likely needed."
+    )
+    try:
+        from scripts._automation_notify import post_automation
+        if post_automation(text):
+            _atomic_json_write(_CRITICAL_ALERT_STATE, {"last_alert": now.isoformat()})
+    except Exception:
+        logger.exception("Critical-severity alert failed (non-fatal)")
+
+
+# Don't let one bad API day wipe a window file wholesale. If the fresh data has
+# fewer than half the entries of what's on disk (and the on-disk file wasn't
+# trivially small), keep the old file and raise a flag instead of overwriting.
+_WINDOW_GUARD_MIN_EXISTING = 20
+_WINDOW_GUARD_RATIO = 0.5
+
+
+def _window_write_is_safe(new_count: int, existing_count: int) -> bool:
+    """Pure guard logic, split out for unit testing."""
+    if existing_count < _WINDOW_GUARD_MIN_EXISTING:
+        return True
+    return new_count >= existing_count * _WINDOW_GUARD_RATIO
+
+
+def _write_window_guarded(data: list, path: str, label: str) -> None:
+    existing_count = 0
+    try:
+        with open(path) as f:
+            raw = json.load(f)
+        existing = raw.get("players", raw) if isinstance(raw, dict) else raw
+        existing_count = len(existing)
+    except Exception:
+        pass  # missing/corrupt file — nothing to protect
+    if _window_write_is_safe(len(data), existing_count):
+        write_window_json(data, path)
+        return
+    logger.error(
+        "%s window write BLOCKED: new run has %d entries vs %d on disk — keeping old file",
+        label, len(data), existing_count,
+    )
+    try:
+        from scripts._automation_notify import post_automation
+        post_automation(
+            f":warning: *{label} stats refresh looked wrong, so we kept yesterday's data.*\n"
+            f"How we know: today's run produced {len(data)} players vs {existing_count} on file "
+            f"(more than half missing — usually an upstream API hiccup).\n"
+            "What to do: 👤 nothing yet; tomorrow's 6 AM pass usually fixes it. "
+            "🛠️ If this repeats two days running, a Claude Code look is warranted."
+        )
+    except Exception:
+        logger.exception("Window-guard alert failed (non-fatal)")
+
+
 def write_output(pulse: list[dict]):
     """Write the pulse list to data/current_pulse.json with generated_at envelope."""
     # Stable sort so concurrent runs produce identical line positions (see _stable_sort_key).
@@ -1563,6 +1645,7 @@ def write_output(pulse: list[dict]):
             health["severity"], health["blocked_sources"],
             len(health["blocked_clients"]), len(health["fallback_clients"]),
         )
+        _maybe_alert_critical(health)
     logger.info("Wrote %d entries to %s", len(pulse), OUTPUT_PATH)
 
 
@@ -1796,12 +1879,12 @@ def run_historical():
     aggregator = WindowStatsAggregator()
     window_data = aggregator.run_all_windows(all_players)
 
-    write_window_json(window_data["7d"], WINDOW_7D_PATH)
+    _write_window_guarded(window_data["7d"], WINDOW_7D_PATH, "7D")
     # Rolling mid-range windows — written straight from the aggregator. These
     # are date-range fetches (no D1B season-scrape), so the empty-response
     # preservation dance below (for Season) doesn't apply.
-    write_window_json(window_data["14d"], WINDOW_14D_PATH)
-    write_window_json(window_data["30d"], WINDOW_30D_PATH)
+    _write_window_guarded(window_data["14d"], WINDOW_14D_PATH, "14D")
+    _write_window_guarded(window_data["30d"], WINDOW_30D_PATH, "30D")
 
     # Preserve existing season data for NCAA players where D1B returned 403/empty.
     # D1Baseball rate-limits aggressively, so we don't want to wipe good data on a
@@ -1830,7 +1913,7 @@ def run_historical():
         except Exception:
             logger.debug("Could not load existing season data for preservation")
 
-    write_window_json(season_data, WINDOW_SEASON_PATH)
+    _write_window_guarded(season_data, WINDOW_SEASON_PATH, "Season")
 
     logger.info(
         "Historical aggregation complete: 7D=%d, 14D=%d, 30D=%d, Season=%d",

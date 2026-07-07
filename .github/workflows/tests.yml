@@ -1,0 +1,27 @@
+name: Tests
+
+# Runs the pytest suite on every push/PR to main so pipeline regressions
+# (level splits, email rows, summer recap, window-wipe guard) get caught
+# before a scheduled cron run hits them.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "data/**"
+      - "docs/**"
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: pip install --quiet pytest -r requirements.txt
+      - name: Run tests
+        run: python -m pytest tests/ -v
