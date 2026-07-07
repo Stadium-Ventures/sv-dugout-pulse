@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-07T15:54:52.810746+00:00",
+  "generated_at": "2026-07-07T19:14:49.576374+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 327,
+      "player_count": 328,
       "team_count": 10,
       "error": null,
-      "duration_ms": 555,
+      "duration_ms": 757,
       "sample_players": [
         "Brody DeLamielleure",
         "Camden Wimbish",
@@ -22,7 +22,7 @@
       "player_count": 256,
       "team_count": 8,
       "error": null,
-      "duration_ms": 411,
+      "duration_ms": 557,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 223,
+      "player_count": 224,
       "team_count": 8,
       "error": null,
-      "duration_ms": 434,
+      "duration_ms": 567,
       "sample_players": [
         "Alexander Llinas",
         "Cade McGarrh",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 413,
-      "team_count": 9,
+      "player_count": 601,
+      "team_count": 13,
       "error": null,
-      "duration_ms": 109280,
+      "duration_ms": 67942,
       "sample_players": [
         "Theo DeCicco",
         "Jonas Aponick",
@@ -64,10 +64,10 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 323,
-      "team_count": 7,
+      "player_count": 373,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 69979,
+      "duration_ms": 49527,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,31 +82,31 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 165783,
+      "duration_ms": 98877,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 278,
-      "team_count": 5,
+      "player_count": 318,
+      "team_count": 6,
       "error": null,
-      "duration_ms": 74021,
+      "duration_ms": 63350,
       "sample_players": [
-        "Tyson Gill",
-        "Max Dantoni",
-        "Aaron Forgues",
-        "AJ Kolb",
-        "Hunter Troiano"
+        "Dylan Izenman",
+        "Marco Zirpolo",
+        "Matthew Hall",
+        "Patrick Connors",
+        "Finn Ramseyer"
       ]
     },
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 569,
-      "team_count": 12,
+      "player_count": 926,
+      "team_count": 20,
       "error": null,
-      "duration_ms": 187484,
+      "duration_ms": 126564,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -130,7 +130,7 @@
       "player_count": 478,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3605,
+      "duration_ms": 5393,
       "sample_players": [
         "Alex Graber",
         "Ben Shepherd",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 27,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 9,
+  "ncaa_clients_matched": 12,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 27,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 3,
   "matched": [
     {
@@ -201,6 +201,16 @@
       "profile_url": "https://www.mlb.com/player/831815"
     },
     {
+      "player_name": "Ty Finkbeiner",
+      "college": "Michigan",
+      "summer_team": "COT",
+      "league": "Cape Cod",
+      "summer_name": "Tyler Finkbeiner",
+      "source_id": "802774",
+      "match_strength": "initial+last",
+      "profile_url": "https://www.mlb.com/player/802774"
+    },
+    {
       "player_name": "Brady Neal",
       "college": "Alabama",
       "summer_team": "Metrosouthcountybraves",
@@ -231,6 +241,16 @@
       "profile_url": "https://www.mlb.com/player/842079"
     },
     {
+      "player_name": "Eamon McDermott",
+      "college": "Duke",
+      "summer_team": "Keeneswampbats",
+      "league": "NECBL",
+      "summer_name": "Eamon McDermott",
+      "source_id": "eamonmcdermottjjsa",
+      "match_strength": "name-only",
+      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
+    },
+    {
       "player_name": "Lee Sowers",
       "college": "North Carolina",
       "summer_team": "Peninsula Pilots",
@@ -239,6 +259,16 @@
       "source_id": "",
       "match_strength": "name+college",
       "profile_url": "https://coastalplain.com/rosters/peninsula-pilots-roster/"
+    },
+    {
+      "player_name": "Luke Fithian",
+      "college": "Rutgers",
+      "summer_team": "Vermontlakemonsters",
+      "league": "FCBL",
+      "summer_name": "Luke Fithian",
+      "source_id": "lukefithianwmbe",
+      "match_strength": "name-only",
+      "profile_url": "https://thefuturesleague.com/sports/bsb/2026/teams/vermontlakemonsters?view=roster"
     },
     {
       "player_name": "Truitt Webb",
@@ -290,10 +320,6 @@
     {
       "player_name": "Cole Katayama-Stall",
       "college": "University of Portland"
-    },
-    {
-      "player_name": "Ty Finkbeiner",
-      "college": "Michigan"
     },
     {
       "player_name": "Alex Kranzler",
@@ -354,14 +380,6 @@
     {
       "player_name": "Bryce Fowler",
       "college": "Alabama"
-    },
-    {
-      "player_name": "Eamon McDermott",
-      "college": "Duke"
-    },
-    {
-      "player_name": "Luke Fithian",
-      "college": "Rutgers"
     },
     {
       "player_name": "Zack Johnson",
@@ -452,6 +470,19 @@
         "team": "Hyannis Harbor Hawks"
       },
       {
+        "player_name": "Luke Fithian",
+        "school": "Rutgers",
+        "league": "NECBL",
+        "team": "New Port Gulls",
+        "cross_league_namesake_ignored": true
+      },
+      {
+        "player_name": "Ty Finkbeiner",
+        "school": "Michigan",
+        "league": "Cape Cod",
+        "team": "Cotuit Kettleers"
+      },
+      {
         "player_name": "Bennett Edwards",
         "school": "Georgia Southern",
         "league": "Coastal Plain",
@@ -496,13 +527,6 @@
         "status": "Confirmed"
       },
       {
-        "player_name": "Luke Fithian",
-        "school": "Rutgers",
-        "placement_team": "New Port Gulls",
-        "league": "NECBL",
-        "status": "Confirmed"
-      },
-      {
         "player_name": "Cole Katayama-Stall",
         "school": "Portland",
         "placement_team": "Cotuit Kettleers",
@@ -515,13 +539,6 @@
         "placement_team": "Falmouth Commodores",
         "league": "Cape Cod",
         "status": "Pending, 2nd Half"
-      },
-      {
-        "player_name": "Ty Finkbeiner",
-        "school": "Michigan",
-        "placement_team": "Cotuit Kettleers",
-        "league": "Cape Cod",
-        "status": "2nd Half"
       },
       {
         "player_name": "Bryson Tweedy",
@@ -567,5 +584,5 @@
       }
     ]
   },
-  "all_players_count": 2867
+  "all_players_count": 3504
 }
