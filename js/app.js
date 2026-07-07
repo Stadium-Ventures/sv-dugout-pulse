@@ -607,11 +607,12 @@ function _levelLine(s, isPitcher) {
   }
   return `${s.avg ?? '--'}/${s.obp ?? '--'}/${s.slg ?? '--'} · ${s.hr ?? '--'} HR, ${s.rbi ?? '--'} RBI`;
 }
-function levelBreakdownHtml(splits, isPitcher) {
+function levelBreakdownHtml(splits, isPitcher, currentLevel) {
   if (!splits) return '';
   const rows = splits.map(sp =>
     `<div class="lvl-row"><span class="lvl-tag">${_summerEscape(sp.level)}</span>`
     + `<span class="lvl-line">${_summerEscape(_levelLine(sp.stats || {}, isPitcher))}</span>`
+    + (sp.level === currentLevel ? '<span class="lvl-now" title="Current level">now</span>' : '')
     + `<span class="lvl-g">${sp.games_played} G</span></div>`
   ).join('');
   return `<div class="level-breakdown"><div class="level-breakdown-head">Season by level</div>${rows}</div>`;
@@ -788,13 +789,14 @@ function renderWindowCard(p) {
         ${heartbeatHtml(p.player_name, isClient)}
         <span class="badge ${isClient ? 'badge-client' : 'badge-following'}">${isClient ? 'Client' : 'Recruit'}</span>
         <span class="badge ${levelBadgeClass(p.level)}">${levelBadgeLabel(p.level)}</span>
-        ${splits ? `<span class="badge" style="background:rgba(59,130,246,0.15);color:#5b9bf3" title="Played ${splits.length} levels this season">${_summerEscape(splits[0].level)} +${splits.length - 1}</span>` : ''}
+        ${p.current_level ? `<span class="badge" style="background:rgba(34,197,94,0.15);color:#4ade80" title="Current level (where he is right now)">${_summerEscape(p.current_level)}</span>` : ''}
+        ${splits ? `<span class="badge" style="background:rgba(59,130,246,0.15);color:#5b9bf3" title="Played ${splits.length} levels this season — stats above are the ${_summerEscape(splits[0].level)} line">${_summerEscape(splits[0].level)} +${splits.length - 1}</span>` : ''}
         <span class="badge" style="background:rgba(107,114,128,0.15);color:#9ca3af">${gpLabel}</span>
       </div>
       <div class="team-name">${esc(p.team)}</div>
       <div class="window-grade ${gc}">${esc(gradeStr || '— No Data')}${splits ? ` · ${_summerEscape(splits[0].level)}` : ''}${momentumChipHtml(p)}</div>
       ${statsHtml}
-      ${levelBreakdownHtml(splits, isPitcher)}
+      ${levelBreakdownHtml(splits, isPitcher, p.current_level)}
       ${gameLogHtml}
     </div>`;
 }

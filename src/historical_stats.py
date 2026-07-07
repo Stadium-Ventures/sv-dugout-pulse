@@ -112,6 +112,19 @@ class MLBHistoricalFetcher:
     def __init__(self):
         self._player_cache: dict[str, int] = {}  # name -> player_id
         self._player_sport: dict[int, int] = {}   # player_id -> sport_id
+        # player_ids whose sport came from a real currentTeam/search hit —
+        # _player_sport falls back to 1 (MLB) on lookup failure, and that
+        # guess must never surface as a "current level" on the dashboard.
+        self._sport_verified: set[int] = set()
+
+    def current_level(self, name: str, mlb_id: Optional[int] = None) -> Optional[str]:
+        """The level (MLB/AAA/…/CPX) of the player's current team, or None
+        when it couldn't be verified. Uses the same cache the game-log
+        fetch pins to, so it costs no extra API calls after a fetch."""
+        player_id = self._resolve_player_id(name, mlb_id)
+        if player_id is None or player_id not in self._sport_verified:
+            return None
+        return self._SPORT_LEVEL.get(self._player_sport.get(player_id, 0))
 
     def _aggregate(self, games: list[dict], position: str) -> Optional[dict]:
         """Aggregate a set of game splits per the player's position."""
@@ -255,6 +268,7 @@ class MLBHistoricalFetcher:
                         )
                         t = t_resp.json()["teams"][0]
                         self._player_sport[mlb_id] = t.get("sport", {}).get("id", 1)
+                        self._sport_verified.add(mlb_id)
                     else:
                         self._player_sport[mlb_id] = 1
                 except Exception:
@@ -287,6 +301,9 @@ class MLBHistoricalFetcher:
                             self._player_sport[player_id] = sport_id
                     else:
                         self._player_sport[player_id] = sport_id
+                    # A name-search hit at this sportId is a real signal of
+                    # the player's current level, unlike the MLB fallback.
+                    self._sport_verified.add(player_id)
                     logger.debug("Found %s at sportId=%d (id=%d)", name, self._player_sport[player_id], player_id)
                     return player_id
         except Exception:
@@ -1062,11 +1079,13 @@ class WindowStatsAggregator:
         mlb_id = player.get("mlb_id")
         game_log_entries = []
         raw_level_splits: list = []
+        current_level = None
         if level == "Pro":
             stats, game_log_entries, raw_level_splits = self.mlb_fetcher.fetch_window(
                 name, team, position, start_date, end_date, mlb_id=mlb_id,
                 multi_level=(window == "season"),
             )
+            current_level = self.mlb_fetcher.current_level(name, mlb_id)
         elif level == "NCAA" and window == "season":
             stats = self.d1b_fetcher.get_season_stats(name, team, position)
         elif level == "NCAA":
@@ -1110,6 +1129,11 @@ class WindowStatsAggregator:
             "games_played": stats.get("games_played", 0),
             "last_updated": datetime.utcnow().isoformat() + "Z",
         }
+
+        # Where the player is RIGHT NOW (current team's level) — distinct from
+        # the levels he logged games at this season shown in level_splits.
+        if current_level:
+            result["current_level"] = current_level
 
         # Include game log for 7D window drill-down
         if window == "7d" and game_log_entries:

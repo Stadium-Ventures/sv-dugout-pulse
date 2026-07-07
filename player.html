@@ -172,6 +172,7 @@ function renderWindows(byWindow, pitcher) {
         <div class="stat-label" style="margin-bottom:0.2rem;">Season by level</div>
         ${splits.map(sp => `<div class="lvl-row"><span class="lvl-tag">${esc(sp.level)}</span>
           <span class="lvl-line">${esc(levelLine(sp.stats || {}, pitcher))}</span>
+          ${sp.level === e.current_level ? '<span class="lvl-g" style="color:#4ade80;font-weight:700;" title="Current level">now</span>' : ''}
           <span class="lvl-g">${esc(sp.games_played)} G</span></div>`).join('')}
       </div>`;
     }
@@ -258,8 +259,11 @@ async function load() {
   }
   const tags = anchor.tags || {};
   const pitcher = isPitcherEntry(byWindow.season || byWindow['30d'] || anchor);
+  // Current affiliated level lives on the window entries (Pro only).
+  const currentLevel = (byWindow.season || byWindow['30d'] || byWindow['7d'] || {}).current_level || '';
   document.getElementById('playerName').innerHTML = esc(name)
     + `<span class="badge">${esc(anchor.level || '')}</span>`
+    + (currentLevel ? `<span class="badge" style="color:#4ade80" title="Current level">${esc(currentLevel)}</span>` : '')
     + (tags.position ? `<span class="badge">${esc(tags.position)}</span>` : '');
   document.getElementById('playerSub').textContent =
     (anchor.team || '') + (tags.draft_class && tags.draft_class !== 'N/A' ? ' · Draft ' + tags.draft_class : '');
