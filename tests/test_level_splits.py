@@ -45,3 +45,33 @@ def test_three_levels_all_present():
     games = [_hitter_game(1, 4, 12), _hitter_game(1, 4, 13), _hitter_game(1, 4, 14)]
     splits = f._aggregate_by_level(games, "Hitter")
     assert [s["level"] for s in splits] == ["AA", "A+", "A"]
+
+
+def test_complex_league_is_swept_and_ranked_last():
+    # Rookie/Complex (sportId 16) must be in the season sweep — a client
+    # rehabbing or starting at CPX otherwise vanishes from season totals.
+    f = MLBHistoricalFetcher()
+    assert 16 in f._SPORT_IDS
+    games = [_hitter_game(1, 4, 14), _hitter_game(2, 4, 16)]
+    splits = f._aggregate_by_level(games, "Hitter")
+    assert [s["level"] for s in splits] == ["A", "CPX"]
+
+
+def test_pa_includes_sac_bunts():
+    # PA comes from the API's plateAppearances (includes sac bunts); the
+    # OBP denominator (AB+BB+HBP+SF) does not.
+    f = MLBHistoricalFetcher()
+    game = _hitter_game(2, 4, 14)
+    game["stat"]["plateAppearances"] = 6   # 4 AB + 1 BB + 1 sac bunt
+    game["stat"]["baseOnBalls"] = 1
+    stats = f._aggregate_batter_stats([game])
+    assert stats["pa"] == 6
+    assert abs(stats["obp"] - 3 / 5) < 1e-9   # (2 H + 1 BB) / (4 AB + 1 BB)
+
+
+def test_pa_falls_back_when_api_field_missing():
+    f = MLBHistoricalFetcher()
+    game = _hitter_game(2, 4, 14)
+    del game["stat"]["plateAppearances"]
+    stats = f._aggregate_batter_stats([game])
+    assert stats["pa"] == 4

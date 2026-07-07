@@ -105,9 +105,9 @@ def outs_to_ip_display(outs: int) -> str:
 class MLBHistoricalFetcher:
     """Fetch and aggregate MLB stats over date ranges using game logs."""
 
-    _SPORT_IDS = [1, 11, 12, 13, 14]  # MLB, AAA, AA, High-A, A
-    _SPORT_LEVEL = {1: "MLB", 11: "AAA", 12: "AA", 13: "A+", 14: "A"}
-    _SPORT_RANK = {1: 0, 11: 1, 12: 2, 13: 3, 14: 4}  # highest → lowest
+    _SPORT_IDS = [1, 11, 12, 13, 14, 16]  # MLB, AAA, AA, High-A, A, Rookie/CPX
+    _SPORT_LEVEL = {1: "MLB", 11: "AAA", 12: "AA", 13: "A+", 14: "A", 16: "CPX"}
+    _SPORT_RANK = {1: 0, 11: 1, 12: 2, 13: 3, 14: 4, 16: 5}  # highest → lowest
 
     def __init__(self):
         self._player_cache: dict[str, int] = {}  # name -> player_id
@@ -406,13 +406,19 @@ class MLBHistoricalFetcher:
             totals["sb"] += int(stat.get("stolenBases", 0))
             totals["hbp"] += int(stat.get("hitByPitch", 0))
             totals["sf"] += int(stat.get("sacFlies", 0))
+            totals["pa"] += int(stat.get("plateAppearances", 0))
 
-        totals["pa"] = totals["ab"] + totals["bb"] + totals["hbp"] + totals["sf"]
+        # The OBP denominator (AB+BB+HBP+SF) excludes sac bunts; true PA
+        # includes them, so prefer the API's plateAppearances for PA and
+        # only fall back to the OBP denominator when it's absent.
+        obp_denom = totals["ab"] + totals["bb"] + totals["hbp"] + totals["sf"]
+        if totals["pa"] < obp_denom:
+            totals["pa"] = obp_denom
 
         avg = totals["h"] / totals["ab"] if totals["ab"] > 0 else 0
         obp = (
-            (totals["h"] + totals["bb"] + totals["hbp"]) / totals["pa"]
-            if totals["pa"] > 0 else 0
+            (totals["h"] + totals["bb"] + totals["hbp"]) / obp_denom
+            if obp_denom > 0 else 0
         )
         singles = totals["h"] - totals["doubles"] - totals["triples"] - totals["hr"]
         tb = singles + (2 * totals["doubles"]) + (3 * totals["triples"]) + (4 * totals["hr"])
