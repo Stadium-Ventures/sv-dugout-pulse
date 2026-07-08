@@ -123,15 +123,93 @@ jobs:
           python -c "import src.historical_stats; import src.window_grader; print('Historical imports OK')"
           python main.py --historical 2>&1 | tee /dev/stderr
 
+      - name: Verify output freshness
+        # Deterministic staleness guard: a run can exit 0 yet never reach
+        # write_output (early return, swallowed exception), leaving the
+        # dashboard on yesterday's numbers with no error. Only live/both
+        # regenerate current_pulse.json every run, so scope the check there;
+        # historical/backfill output (window_*.json) legitimately goes
+        # unchanged on quiet days and is covered by the write guards + LLM
+        # monitor instead. Failing here trips the "Alert on failure" step.
+        if: steps.mode.outputs.mode == 'live' || steps.mode.outputs.mode == 'both'
+        run: |
+          python - <<'PY'
+          import json, sys
+          from datetime import datetime, timezone
+          try:
+              env = json.load(open("data/current_pulse.json"))
+              ts = datetime.fromisoformat(env["generated_at"])
+          except Exception as e:
+              print(f"::error::current_pulse.json missing/unreadable or has no generated_at: {e}")
+              sys.exit(1)
+          age_min = (datetime.now(timezone.utc) - ts).total_seconds() / 60
+          print(f"current_pulse.json generated_at is {age_min:.1f} min old")
+          if age_min > 30:
+              print(f"::error::current_pulse.json is stale ({age_min:.0f} min old) — this run did not refresh the dashboard output")
+              sys.exit(1)
+          PY
+
       - name: Commit updated pulse data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/*.json
-          git diff --staged --quiet || git commit -m "Update pulse data [bot]"
-          # Merge remote changes, preferring our freshly-generated data files on conflict.
-          # Aborting and skipping the push causes sent_alerts.json to stay stale,
-          # which makes the next run re-fire the same Slack alerts (double-alert bug).
-          git fetch origin main
-          git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
-          git push
+          if git diff --staged --quiet; then
+            echo "No data changes to commit — nothing to push"
+            exit 0
+          fi
+          git commit -m "Update pulse data [bot]"
+          # Concurrent bot runs (live every 15 min + backfill/historical) can
+          # push between our fetch and our push, making a single push fail with
+          # a non-fast-forward. Retry the fetch/merge/push, preferring our
+          # freshly-generated data files on conflict. Giving up leaves
+          # sent_alerts.json unpushed, so the next run re-fires the same Slack
+          # alerts (double-alert bug) — hence we fail loudly if all retries lose.
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push attempt $attempt failed (likely a concurrent push) — retrying"
+            sleep $((attempt * 3))
+          done
+          echo "::error::git push failed after 5 attempts"
+          exit 1
+
+      - name: Alert on failure
+        # Fires for ANY failed step above (crash, stale-output guard, push
+        # exhaustion). Uses stdlib urllib, not requests, so it still posts
+        # even when the failure was pip install itself.
+        if: failure()
+        env:
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
+          RUN_MODE: ${{ steps.mode.outputs.mode }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import os, json, urllib.request
+          url = os.environ.get("SV_AUTOMATION_WEBHOOK_URL", "")
+          mode = os.environ.get("RUN_MODE", "unknown")
+          run_url = os.environ.get("RUN_URL", "")
+          text = (
+              "*Dugout Pulse*\n"
+              f":red_circle: *The stats pipeline run failed ({mode} mode).*\n"
+              "How we know: the GitHub Actions job errored before finishing, "
+              "so the dashboard may be showing older numbers.\n"
+              f"What to do: \U0001F6E0 open the run log to see which step broke — {run_url}"
+          )
+          if not url or "YOUR_WEBHOOK" in url:
+              print("SV_AUTOMATION_WEBHOOK_URL not set — would have posted:\n" + text)
+          else:
+              try:
+                  req = urllib.request.Request(
+                      url, data=json.dumps({"text": text}).encode(),
+                      headers={"Content-Type": "application/json"},
+                  )
+                  urllib.request.urlopen(req, timeout=10)
+                  print("Posted failure alert to #sv-automation")
+              except Exception as e:
+                  print(f"Failed to post failure alert: {e}")
+          PY
