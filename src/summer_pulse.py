@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import tempfile
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
@@ -23,6 +24,23 @@ from typing import Optional
 import requests
 
 logger = logging.getLogger(__name__)
+
+
+def _atomic_json_dump(data, path, **dump_kwargs) -> None:
+    """Temp file + rename so a crash mid-write can't leave truncated JSON —
+    readers of these files treat a decode error as 'start fresh'."""
+    path = str(path)
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path) or ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(data, f, **dump_kwargs)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
 
 # Repo root — this file lives at src/, json files at data/.
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -777,12 +795,10 @@ def _merge_summer_into_yesterday_pulse(entries: list[dict]) -> None:
         players = existing.get("players") or []
         non_summer = [p for p in players if p.get("level") != "Summer"]
         existing["players"] = non_summer + yest_summer
-        with open(path, "w") as f:
-            json.dump(existing, f, indent=2)
+        _atomic_json_dump(existing, path, indent=2)
     else:
         non_summer = [p for p in existing if p.get("level") != "Summer"]
-        with open(path, "w") as f:
-            json.dump(non_summer + yest_summer, f, indent=2)
+        _atomic_json_dump(non_summer + yest_summer, path, indent=2)
     logger.info("summer_pulse: wrote %d Summer entries to yesterday_pulse.json", len(yest_summer))
 
 
@@ -971,8 +987,7 @@ def _merge_summer_into_window(path, summer_entries: list[dict]) -> None:
             existing = []
     non_summer = [e for e in existing if e.get("level") != "Summer"]
     merged = non_summer + summer_entries
-    with open(path, "w") as f:
-        json.dump(merged, f, indent=2)
+    _atomic_json_dump(merged, path, indent=2)
 
 
 def _log_cross_source_disagreements(entries: list[dict]) -> None:
@@ -1052,8 +1067,7 @@ def _append_to_game_log(entries: list[dict]) -> None:
         log.setdefault(yest_key, bucket_yest)
 
     if log:
-        with open(path, "w") as f:
-            json.dump(log, f, indent=2, sort_keys=True)
+        _atomic_json_dump(log, path, indent=2, sort_keys=True)
         logger.info(
             "summer_pulse: game-log -> %s entries today, %s entries yesterday",
             len(bucket_today), len(bucket_yest),

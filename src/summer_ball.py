@@ -1337,8 +1337,28 @@ class SummerBallAggregator:
             "all_players_count": len(players),
         }
 
+        # Wipe guard: a collapsed discovery day (league scrape breaks, empty
+        # NCAA roster upstream) must not overwrite a healthy snapshot — it
+        # already happened twice (CCBL 391→0 on 2026-06-12, NECBL 529→220 on
+        # 2026-06-21) and the regression alert only fires AFTER the file is
+        # gone. Same 50% rule as main._window_write_is_safe.
+        prior_matched = 0
+        try:
+            prior = json.loads(SUMMER_ROSTER_PATH.read_text())
+            prior_matched = len(prior.get("matched", []))
+        except Exception:
+            pass
+        if prior_matched >= 10 and len(matched) < prior_matched * 0.5:
+            logger.error(
+                "Summer roster write BLOCKED: %d matched vs %d in prior snapshot — keeping old file",
+                len(matched), prior_matched,
+            )
+            return snapshot
+
         SUMMER_ROSTER_PATH.parent.mkdir(parents=True, exist_ok=True)
-        SUMMER_ROSTER_PATH.write_text(json.dumps(snapshot, indent=2))
+        tmp = SUMMER_ROSTER_PATH.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(snapshot, indent=2))
+        tmp.replace(SUMMER_ROSTER_PATH)
         return snapshot
 
 

@@ -1362,7 +1362,7 @@ def _refresh_ncaa_l7(all_players: list[dict]):
             if entry:
                 hs_entries.append(entry)
 
-        write_window_json(pro_entries + ncaa_entries + hs_entries, WINDOW_7D_PATH)
+        _write_window_guarded(pro_entries + ncaa_entries + hs_entries, WINDOW_7D_PATH, "7D (NCAA refresh)")
         logger.info("L7 refresh: %d NCAA + %d HS entries updated", len(ncaa_entries), len(hs_entries))
     except Exception:
         logger.exception("NCAA L7 refresh failed — window_7d.json unchanged")

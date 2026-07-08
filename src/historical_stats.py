@@ -116,6 +116,10 @@ class MLBHistoricalFetcher:
         # _player_sport falls back to 1 (MLB) on lookup failure, and that
         # guess must never surface as a "current level" on the dashboard.
         self._sport_verified: set[int] = set()
+        # Per-run cache of raw game logs. All four windows slice the same
+        # season log by date, so one fetch per (player, group, sport) serves
+        # every window in a run.
+        self._log_cache: dict[tuple, list] = {}
 
     def current_level(self, name: str, mlb_id: Optional[int] = None) -> Optional[str]:
         """The level (MLB/AAA/…/CPX) of the player's current team, or None
@@ -144,10 +148,9 @@ class MLBHistoricalFetcher:
         """
         Fetch aggregated stats for a player over the given date range.
         Returns (stats_dict, game_entries_list, level_splits) — stats_dict is
-        None if player not found or no games in range. When multi_level is set
-        (Season view), we sweep every affiliated level the player logged games
-        at and return per-level breakdowns in level_splits (highest → lowest);
-        otherwise level_splits is empty and only the pinned level is fetched.
+        None if player not found or no games in range. Every affiliated level
+        is always swept; multi_level (Season view) controls only whether
+        per-level breakdowns are returned in level_splits (highest → lowest).
         """
         player_id = self._resolve_player_id(player_name, mlb_id)
         if player_id is None:
@@ -329,13 +332,20 @@ class MLBHistoricalFetcher:
         When position is known, only fetches the relevant stat group
         (hitting or pitching) to cut API calls roughly in half.
 
-        all_levels=True sweeps every affiliated level (MLB→A) and tags each
-        split with its level, so Season totals capture a player who moved up
-        or down mid-year. Otherwise only the player's pinned level is queried.
+        Every affiliated level (MLB→CPX) is swept and each split is tagged
+        with its level, so windows capture a player who moved up or down
+        mid-year; the all_levels flag is retained but no longer narrows the
+        sweep. Raw logs are cached per run, so the sweep costs one fetch per
+        (player, group, level) across all four windows.
         """
         try:
             season = end_date.year
-            sport_ids = self._SPORT_IDS if all_levels else [self._player_sport.get(player_id, 1)]
+            # Always sweep every affiliated level. The pinned-level shortcut
+            # dropped prior-level games from rolling windows after a mid-window
+            # promotion, and a failed team lookup pinned MiLB players to MLB
+            # (blank windows). The per-run log cache keeps the sweep cheap.
+            del all_levels  # kept in the signature for call-site clarity
+            sport_ids = self._SPORT_IDS
 
             # Regular season only — Spring Training intentionally excluded
             game_types = ["R"]
@@ -352,12 +362,20 @@ class MLBHistoricalFetcher:
             for sid in sport_ids:
                 for group in groups:
                     for game_type in game_types:
-                        splits = self._fetch_raw_game_log(
-                            player_id, season, group, sid, game_type
-                        )
+                        cache_key = (player_id, season, group, sid, game_type)
+                        if cache_key not in self._log_cache:
+                            self._log_cache[cache_key] = self._fetch_raw_game_log(
+                                player_id, season, group, sid, game_type
+                            )
+                        splits = self._log_cache[cache_key]
                         for sp in splits:
                             sp["_sport_id"] = sid
                             sp["_level"] = self._SPORT_LEVEL.get(sid, "")
+                            # Tag the stat group: a pitching split's stat dict
+                            # carries OPPONENT hitting counters under the same
+                            # keys (hits/atBats/homeRuns/...), so aggregators
+                            # must be able to tell the two apart.
+                            sp["_group"] = group
                         all_splits.extend(splits)
 
             # Filter to date range
@@ -403,6 +421,10 @@ class MLBHistoricalFetcher:
 
     def _aggregate_batter_stats(self, games: list[dict]) -> dict:
         """Aggregate batting stats across multiple games."""
+        # Drop pitching splits — their stat dicts hold opponent hitting
+        # counters, which would contaminate the player's own batting line
+        # (Two-Way players and position players who pitched a blowout inning).
+        games = [g for g in games if g.get("_group") != "pitching"]
         totals = {
             "pa": 0, "ab": 0, "h": 0, "doubles": 0, "triples": 0,
             "hr": 0, "rbi": 0, "r": 0, "bb": 0, "k": 0, "sb": 0,
@@ -456,9 +478,12 @@ class MLBHistoricalFetcher:
 
     def _aggregate_pitcher_stats(self, games: list[dict]) -> dict:
         """Aggregate pitching stats across multiple games."""
+        # Mirror of the batter filter: hitting splits must not leak into a
+        # pitching line when both stat groups were fetched.
+        games = [g for g in games if g.get("_group") != "hitting"]
         totals = {
             "outs": 0, "h": 0, "r": 0, "er": 0,
-            "bb": 0, "k": 0, "hr": 0, "w": 0, "l": 0, "sv": 0,
+            "bb": 0, "k": 0, "hr": 0, "w": 0, "l": 0, "sv": 0, "bf": 0,
         }
 
         for game in games:
@@ -474,13 +499,16 @@ class MLBHistoricalFetcher:
             totals["w"] += int(stat.get("wins", 0))
             totals["l"] += int(stat.get("losses", 0))
             totals["sv"] += int(stat.get("saves", 0))
+            totals["bf"] += int(stat.get("battersFaced", 0))
 
         ip = totals["outs"] / 3
         era = (totals["er"] * 9) / ip if ip > 0 else 0
         whip = (totals["bb"] + totals["h"]) / ip if ip > 0 else 0
         k_per_9 = (totals["k"] * 9) / ip if ip > 0 else 0
         bb_per_9 = (totals["bb"] * 9) / ip if ip > 0 else 0
-        bf = totals["outs"] + totals["h"] + totals["bb"]
+        # Prefer the API's battersFaced; the outs+H+BB approximation drops
+        # HBP and ROE, inflating K%/BB%.
+        bf = totals["bf"] or (totals["outs"] + totals["h"] + totals["bb"])
         k_pct = totals["k"] / bf if bf > 0 else 0
         bb_pct = totals["bb"] / bf if bf > 0 else 0
 
@@ -769,11 +797,14 @@ class D1BaseballSeasonFetcher:
         sv = self._safe_int(row.get("SV", "0"))
 
         era = self._safe_float(row.get("ERA", "0"))
-        # WHIP not in D1B pitching table — calculate from (H + BB) / IP
-        whip = (h + bb) / ip if ip > 0 else 0.0
-        k_per_9 = (k * 9) / ip if ip > 0 else 0
-        bb_per_9 = (bb * 9) / ip if ip > 0 else 0
+        # IP is baseball notation ("45.1" = 45⅓) — rate denominators must use
+        # true innings from outs, not the raw decimal.
         outs = ip_to_outs(ip_str)
+        true_ip = outs / 3
+        # WHIP not in D1B pitching table — calculate from (H + BB) / IP
+        whip = (h + bb) / true_ip if true_ip > 0 else 0.0
+        k_per_9 = (k * 9) / true_ip if true_ip > 0 else 0
+        bb_per_9 = (bb * 9) / true_ip if true_ip > 0 else 0
         bf = outs + h + bb
         k_pct = k / bf if bf > 0 else 0
         bb_pct = bb / bf if bf > 0 else 0
@@ -783,7 +814,7 @@ class D1BaseballSeasonFetcher:
 
         return {
             "games_played": app,
-            "ip": ip,
+            "ip": true_ip,
             "ip_display": outs_to_ip_display(outs),
             "h": h, "er": er, "bb": bb, "k": k, "hr": 0,
             "w": w, "l": l, "sv": sv,
@@ -817,15 +848,19 @@ class NCAAGameLogAggregator:
                     logger.error("Corrupted log backed up to %s", backup)
                 except Exception:
                     pass
-        # Normalize dates and deduplicate
+        # Normalize dates and deduplicate. The dedup key MUST match the
+        # writer's (main._flush_ncaa_game_log): date|opponent|game_number —
+        # keying by date alone silently drops the second game of NCAA
+        # doubleheaders and same-date tournament games.
         for key, entries in self._log.items():
             seen = set()
             clean = []
             for e in entries:
                 d = self._normalize_date(e.get("date", ""))
                 e["date"] = d
-                if d and d not in seen:
-                    seen.add(d)
+                dedup = (d, e.get("opponent", ""), e.get("game_number") or 0)
+                if d and dedup not in seen:
+                    seen.add(dedup)
                     clean.append(e)
             self._log[key] = clean
 
@@ -1171,9 +1206,12 @@ class WindowStatsAggregator:
     @staticmethod
     def _fmt_rate(val: float) -> str:
         """Format a rate stat: .455 for <1.000, 1.363 for >=1.000."""
-        if val >= 1.0:
-            return f"{val:.3f}"
-        return f"{val:.3f}"[1:]  # strip leading "0" → ".455"
+        s = f"{val:.3f}"
+        # Decide on the ROUNDED string, not the raw value: 0.9996 formats to
+        # "1.000" and stripping its first char would display ".000".
+        if s.startswith("0."):
+            return s[1:]  # strip leading "0" → ".455"
+        return s
 
     def _format_stats(self, stats: dict, window: str, position: str) -> dict:
         is_pitcher = stats.get("is_pitcher", _is_pitcher_pos(position))

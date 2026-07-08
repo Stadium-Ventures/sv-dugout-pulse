@@ -53,6 +53,13 @@ def fetch_roster(url: Optional[str] = None) -> list[dict]:
     if missing:
         logger.warning("Missing expected columns in sheet: %s", missing)
 
+    # Identity-critical columns missing means this isn't the roster sheet at
+    # all (Sheets perm change / error page served with HTTP 200) — hard-fail
+    # so the caller falls back to the cache instead of parsing garbage.
+    critical = [c for c in ("Player Name", "Level") if c not in reader.fieldnames]
+    if critical:
+        raise ValueError(f"Roster CSV missing critical columns {critical} — not a roster sheet")
+
     rows = list(reader)
     logger.info("Fetched %d rows from roster", len(rows))
     return rows
@@ -185,6 +192,16 @@ def _save_roster_cache(players: list[dict]):
         logger.debug("Failed to save roster cache — non-fatal")
 
 
+def _cached_roster_count() -> int:
+    """Player count in the on-disk cache regardless of age — used only for
+    the plausibility comparison, where staleness doesn't matter."""
+    try:
+        with open(ROSTER_CACHE_PATH) as f:
+            return len(json.load(f).get("players", []))
+    except Exception:
+        return 0
+
+
 def _load_roster_cache() -> list[dict] | None:
     """Load cached roster if it exists and is < 24 h old."""
     if not os.path.exists(ROSTER_CACHE_PATH):
@@ -308,11 +325,19 @@ def get_all_players() -> list[dict]:
         clients = get_active_roster()
         recruits = get_recruits()
         players = clients + recruits
+        # Plausibility guard: a truncated export or a non-roster page served
+        # with HTTP 200 can yield an empty or sharply shrunken list. Never
+        # let that flow downstream or overwrite the good fallback cache.
+        prior = _cached_roster_count()
+        if prior >= 20 and len(players) < prior * 0.5:
+            raise ValueError(
+                f"implausible roster: fetched {len(players)} players vs {prior} cached"
+            )
         _enrich_pro_team_from_api(players)
         _save_roster_cache(players)
         return players
     except Exception:
-        logger.warning("Roster fetch failed — trying cached roster")
+        logger.exception("Roster fetch failed or implausible — trying cached roster")
         cached = _load_roster_cache()
         if cached:
             return cached

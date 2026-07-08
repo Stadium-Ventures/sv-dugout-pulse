@@ -11,6 +11,7 @@ Keys include the game date, so stale entries auto-expire.
 import json
 import logging
 import os
+import tempfile
 from datetime import date, datetime, timedelta
 from typing import Optional
 from zoneinfo import ZoneInfo
@@ -80,11 +81,26 @@ def _load_sent_alerts():
     logger.info("Loaded %d active alert entries", len(_sent_alerts))
 
 
+def _atomic_json_dump(data, path: str, **dump_kwargs) -> None:
+    """Write JSON via a temp file + rename so a crash mid-write can't leave
+    truncated JSON (which downstream readers treat as 'start fresh')."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=os.path.dirname(path), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(data, f, **dump_kwargs)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
 def _save_sent_alerts():
     """Persist sent alerts to disk."""
-    os.makedirs(os.path.dirname(SENT_ALERTS_PATH), exist_ok=True)
-    with open(SENT_ALERTS_PATH, "w") as f:
-        json.dump(_sent_alerts, f, indent=2, ensure_ascii=False)
+    _atomic_json_dump(_sent_alerts, SENT_ALERTS_PATH, indent=2, ensure_ascii=False)
 
 
 # ---------------------------------------------------------------------------
@@ -700,7 +716,7 @@ _TEAM_STATE_PATH = os.path.join(
 # Source: statsapi.mlb.com /sports
 _SPORT_LEVEL_NAME = {
     1: "MLB", 11: "AAA", 12: "AA", 13: "A+", 14: "A",
-    15: "Short-Season A", 16: "Rookie", 17: "Winter",
+    15: "Short-Season A", 16: "CPX", 17: "Winter",  # 16 matches the dashboard's "CPX" label
     21: "Minors (rollup)", 22: "College", 23: "Independent",
 }
 
@@ -727,9 +743,7 @@ def _load_team_state() -> dict:
 
 def _save_team_state(state: dict) -> None:
     try:
-        os.makedirs(os.path.dirname(_TEAM_STATE_PATH), exist_ok=True)
-        with open(_TEAM_STATE_PATH, "w") as f:
-            json.dump(state, f, indent=2, sort_keys=True)
+        _atomic_json_dump(state, _TEAM_STATE_PATH, indent=2, sort_keys=True)
     except Exception:
         logger.exception("Failed to write team-state file")
 
@@ -828,15 +842,24 @@ def _check_promotion(player, stats, name, team):
     # Level changed — queue a season-window rebuild regardless of whether
     # the Slack alert below dedups or fails.
     _level_moves.append(name)
+    new_state = {"team_id": team_id, "sport_id": sport_id,
+                 "team_name": team_name, "name": name}
 
     # Dedup: per-player per-promotion-destination so re-pulses don't re-fire.
+    # If the alert was already delivered, persist the team state too — the
+    # send path's save can be lost (git race, crash), and without this the
+    # same move re-detects every 15-minute run: season-rebuild churn, then a
+    # duplicate alert once the date-keyed dedup ages out.
     today = date.today().isoformat()
     if _already_sent(today, name, f"promo_{team_id}"):
+        state[key] = new_state
+        _save_team_state(state)
         return
+    # On a failed send, deliberately leave state unsaved so the next run
+    # re-detects and retries the alert.
     if send_slack_message(msg):
         _mark_sent(today, name, f"promo_{team_id}")
-        state[key] = {"team_id": team_id, "sport_id": sport_id,
-                      "team_name": team_name, "name": name}
+        state[key] = new_state
         _save_team_state(state)
 
 
