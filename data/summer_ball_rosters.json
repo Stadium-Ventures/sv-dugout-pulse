@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-08T15:30:09.396171+00:00",
+  "generated_at": "2026-07-08T18:30:41.058879+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 328,
+      "player_count": 327,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1569,
+      "duration_ms": 546,
       "sample_players": [
         "Brody DeLamielleure",
         "Camden Wimbish",
@@ -22,7 +22,7 @@
       "player_count": 257,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1274,
+      "duration_ms": 433,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 233,
+      "player_count": 230,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1236,
+      "duration_ms": 428,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 603,
+      "player_count": 605,
       "team_count": 13,
       "error": null,
-      "duration_ms": 64312,
+      "duration_ms": 60061,
       "sample_players": [
         "Theo DeCicco",
         "Gavin Collins",
@@ -67,7 +67,7 @@
       "player_count": 376,
       "team_count": 8,
       "error": null,
-      "duration_ms": 63798,
+      "duration_ms": 59055,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 90944,
+      "duration_ms": 80589,
       "sample_players": []
     },
     {
@@ -91,7 +91,7 @@
       "player_count": 385,
       "team_count": 7,
       "error": null,
-      "duration_ms": 42850,
+      "duration_ms": 46850,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -106,7 +106,7 @@
       "player_count": 926,
       "team_count": 20,
       "error": null,
-      "duration_ms": 128271,
+      "duration_ms": 131639,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -127,16 +127,16 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 472,
+      "player_count": 474,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4731,
+      "duration_ms": 7363,
       "sample_players": [
         "AJ Malzone",
         "Alex Graber",
-        "Ben Shepherd",
         "Blake Brookins",
-        "Brady McGuire"
+        "Brady McGuire",
+        "Braxton Walker"
       ]
     },
     {
@@ -159,17 +159,27 @@
     }
   ],
   "baseballcube": {
-    "attempted": 24,
+    "attempted": 23,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 12,
+  "ncaa_clients_matched": 13,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 24,
+  "ncaa_clients_unmatched": 23,
   "ncaa_clients_ambiguous": 3,
   "matched": [
+    {
+      "player_name": "Kyle Jones",
+      "college": "Florida",
+      "summer_team": "WV",
+      "league": "MLB Draft",
+      "summer_name": "Kevin Jones",
+      "source_id": "823980",
+      "match_strength": "initial+last",
+      "profile_url": "https://www.mlb.com/player/823980"
+    },
     {
       "player_name": "Caleb Daniel",
       "college": "Georgia Tech",
@@ -300,10 +310,6 @@
     {
       "player_name": "Cam Flukey",
       "college": "Coastal Carolina"
-    },
-    {
-      "player_name": "Kyle Jones",
-      "college": "Florida"
     },
     {
       "player_name": "Myles Bailey",
