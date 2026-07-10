@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-07-09T23:27:59.419837+00:00",
+  "generated_at": "2026-07-10T11:10:06.146890+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 295,
+      "player_count": 294,
       "team_count": 10,
       "error": null,
-      "duration_ms": 2257,
+      "duration_ms": 716,
       "sample_players": [
         "Blaine Brown",
         "Brody DeLamielleure",
-        "Camden Wimbish",
         "Cash Strayer",
-        "Charlie Willcox"
+        "Charlie Willcox",
+        "Dane Harvey"
       ]
     },
     {
@@ -22,7 +22,7 @@
       "player_count": 265,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1596,
+      "duration_ms": 559,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -37,7 +37,7 @@
       "player_count": 213,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1682,
+      "duration_ms": 566,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -49,49 +49,49 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 110,
-      "team_count": 2,
+      "player_count": 609,
+      "team_count": 13,
       "error": null,
-      "duration_ms": 98522,
+      "duration_ms": 91406,
       "sample_players": [
-        "Nick Tomasetto",
-        "Gabriel Cavazzoni",
-        "Jack Myers",
-        "Traigh Skiffington",
-        "Chris Carson"
+        "Theo DeCicco",
+        "Gavin Collins",
+        "Trent Rice",
+        "Christopher DiPrima",
+        "Antonio Ducatelli"
       ]
     },
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 175,
-      "team_count": 4,
+      "player_count": 376,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 74742,
+      "duration_ms": 59675,
       "sample_players": [
-        "Tyler Bassett",
-        "Zach Beyra",
-        "Kenan Bowman",
-        "Jack Brafa",
-        "Kieran Coleman"
+        "Alex Cromwell",
+        "Connor Doherty",
+        "Dylan McClellan",
+        "Parker McRay",
+        "Jay Newton"
       ]
     },
     {
       "league": "PGCBL",
-      "status": "failed",
+      "status": "ok",
       "player_count": 0,
       "team_count": 0,
-      "error": "PGCBL: teams index returned empty and no fallback_team_slugs configured",
-      "duration_ms": 13718,
+      "error": null,
+      "duration_ms": 168483,
       "sample_players": []
     },
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 157,
-      "team_count": 3,
+      "player_count": 273,
+      "team_count": 5,
       "error": null,
-      "duration_ms": 56798,
+      "duration_ms": 107612,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,16 +103,16 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 796,
-      "team_count": 17,
+      "player_count": 837,
+      "team_count": 18,
       "error": null,
-      "duration_ms": 205363,
+      "duration_ms": 247730,
       "sample_players": [
-        "Caynen Patterson",
-        "Hayden Wilson",
-        "Graham Laxton",
-        "Brandon Gour",
-        "Bryce Duszak"
+        "Kolt Kurzman",
+        "Foti Rigopoulos",
+        "Ty Mikkelsen",
+        "Juan Fernandez",
+        "Lucas Krebs"
       ]
     },
     {
@@ -130,7 +130,7 @@
       "player_count": 474,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5160,
+      "duration_ms": 4443,
       "sample_players": [
         "AJ Malzone",
         "Alex Graber",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 26,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 10,
+  "ncaa_clients_matched": 12,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 26,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 3,
   "matched": [
     {
@@ -221,6 +221,16 @@
       "profile_url": "https://www.mlb.com/player/802774"
     },
     {
+      "player_name": "Brady Neal",
+      "college": "Alabama",
+      "summer_team": "Metrosouthcountybraves",
+      "league": "Cal Ripken",
+      "summer_name": "Ben Neal",
+      "source_id": "bennealxp7o",
+      "match_strength": "initial+last",
+      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
+    },
+    {
       "player_name": "Brady St. Pierre",
       "college": "SE Louisiana",
       "summer_team": "HYA",
@@ -239,6 +249,16 @@
       "source_id": "842079",
       "match_strength": "name+college",
       "profile_url": "https://www.mlb.com/player/842079"
+    },
+    {
+      "player_name": "Eamon McDermott",
+      "college": "Duke",
+      "summer_team": "Keeneswampbats",
+      "league": "NECBL",
+      "summer_name": "Eamon McDermott",
+      "source_id": "eamonmcdermottjjsa",
+      "match_strength": "name-only",
+      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
     },
     {
       "player_name": "Lee Sowers",
@@ -310,10 +330,6 @@
       "college": "Wake Forest"
     },
     {
-      "player_name": "Brady Neal",
-      "college": "Alabama"
-    },
-    {
       "player_name": "Braydon Kersey",
       "college": "Mercer"
     },
@@ -360,10 +376,6 @@
     {
       "player_name": "Bryce Fowler",
       "college": "Alabama"
-    },
-    {
-      "player_name": "Eamon McDermott",
-      "college": "Duke"
     },
     {
       "player_name": "Luke Fithian",
@@ -572,5 +584,5 @@
       }
     ]
   },
-  "all_players_count": 2485
+  "all_players_count": 3341
 }
