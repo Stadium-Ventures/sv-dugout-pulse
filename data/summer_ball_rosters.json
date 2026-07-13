@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13T18:28:39.261123+00:00",
+  "generated_at": "2026-07-13T18:43:50.585415+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 296,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1989,
+      "duration_ms": 868,
       "sample_players": [
         "Blaine Brown",
         "Brody DeLamielleure",
@@ -22,7 +22,7 @@
       "player_count": 262,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1591,
+      "duration_ms": 699,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -37,7 +37,7 @@
       "player_count": 224,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1521,
+      "duration_ms": 654,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -52,7 +52,7 @@
       "player_count": 615,
       "team_count": 13,
       "error": null,
-      "duration_ms": 67609,
+      "duration_ms": 73918,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -67,7 +67,7 @@
       "player_count": 376,
       "team_count": 8,
       "error": null,
-      "duration_ms": 65294,
+      "duration_ms": 69128,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -79,16 +79,16 @@
     {
       "league": "PGCBL",
       "status": "ok",
-      "player_count": 125,
-      "team_count": 1,
+      "player_count": 359,
+      "team_count": 16,
       "error": null,
-      "duration_ms": 15124,
+      "duration_ms": 18493,
       "sample_players": [
-        "D Denten",
-        "A Jacobs",
-        "B Carrothers",
-        "M Gunn Jr.",
-        "R Stalony"
+        "A DeCesare",
+        "R Melo",
+        "E Brock",
+        "A Dill",
+        "J Perry"
       ]
     },
     {
@@ -97,7 +97,7 @@
       "player_count": 395,
       "team_count": 7,
       "error": null,
-      "duration_ms": 36186,
+      "duration_ms": 38656,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -112,7 +112,7 @@
       "player_count": 951,
       "team_count": 20,
       "error": null,
-      "duration_ms": 115067,
+      "duration_ms": 119553,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -136,7 +136,7 @@
       "player_count": 489,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5367,
+      "duration_ms": 4876,
       "sample_players": [
         "AJ Malzone",
         "Alex Graber",
@@ -247,14 +247,14 @@
       "profile_url": "https://www.mlb.com/player/842081"
     },
     {
-      "player_name": "Evan Taylor",
-      "college": "Alabama",
-      "summer_team": "PGCBL",
+      "player_name": "Lee Ellis",
+      "college": "Ohio State",
+      "summer_team": "Oneonta Outlaws",
       "league": "PGCBL",
-      "summer_name": "E Taylor",
-      "source_id": "evantaylorvx6g",
+      "summer_name": "L Ellis",
+      "source_id": "loganellisbdyn",
       "match_strength": "initial+last",
-      "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/evantaylorvx6g"
+      "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/loganellisbdyn"
     },
     {
       "player_name": "Taylor Kirk",
@@ -364,6 +364,10 @@
       "college": "UCF"
     },
     {
+      "player_name": "Evan Taylor",
+      "college": "Alabama"
+    },
+    {
       "player_name": "Henry Zatkowski",
       "college": "Virginia"
     },
@@ -382,10 +386,6 @@
     {
       "player_name": "Tanner Chun",
       "college": "Tulane"
-    },
-    {
-      "player_name": "Lee Ellis",
-      "college": "Ohio State"
     },
     {
       "player_name": "Lucas Steele",
@@ -507,18 +507,7 @@
         "team": "Lexington Blowfish"
       }
     ],
-    "conflicts": [
-      {
-        "player_name": "Evan Taylor",
-        "school": "Alabama",
-        "placement_team": "Amsterdam Mohawks",
-        "placement_league": "PGCBL",
-        "auto_team": "PGCBL",
-        "auto_league": "PGCBL",
-        "status": "Confirmed",
-        "reason": "auto-match team differs from spreadsheet \u2014 likely stale roster"
-      }
-    ],
+    "conflicts": [],
     "unmatched": [
       {
         "player_name": "Ben Tryon",
@@ -598,6 +587,13 @@
         "status": "Confirmed"
       },
       {
+        "player_name": "Evan Taylor",
+        "school": "Alabama",
+        "placement_team": "Amsterdam Mohawks",
+        "league": "PGCBL",
+        "status": "Confirmed"
+      },
+      {
         "player_name": "Devin Diaz",
         "school": "Miami",
         "placement_team": "New Britian Bees",
@@ -606,5 +602,5 @@
       }
     ]
   },
-  "all_players_count": 3733
+  "all_players_count": 3967
 }
