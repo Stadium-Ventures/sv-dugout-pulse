@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-13T11:23:00.188487+00:00",
+  "generated_at": "2026-07-13T15:52:05.278382+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 301,
+      "player_count": 302,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1793,
+      "duration_ms": 551,
       "sample_players": [
         "Blaine Brown",
         "Brody DeLamielleure",
@@ -22,7 +22,7 @@
       "player_count": 263,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1523,
+      "duration_ms": 474,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -37,7 +37,7 @@
       "player_count": 224,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1557,
+      "duration_ms": 401,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 614,
-      "team_count": 13,
+      "player_count": 387,
+      "team_count": 8,
       "error": null,
-      "duration_ms": 61926,
+      "duration_ms": 95328,
       "sample_players": [
         "Gavin Collins",
         "Trent Rice",
@@ -64,16 +64,16 @@
     {
       "league": "Cal Ripken",
       "status": "ok",
-      "player_count": 376,
-      "team_count": 8,
+      "player_count": 173,
+      "team_count": 4,
       "error": null,
-      "duration_ms": 51776,
+      "duration_ms": 65874,
       "sample_players": [
-        "Alex Cromwell",
-        "Connor Doherty",
-        "Dylan McClellan",
-        "Parker McRay",
-        "Jay Newton"
+        "Nicholas Dolbin",
+        "Nelson Hayes",
+        "Austin Keefer",
+        "Carter Sweeney-Strawberry",
+        "Keegan McGraw"
       ]
     },
     {
@@ -82,7 +82,7 @@
       "player_count": 0,
       "team_count": 0,
       "error": null,
-      "duration_ms": 98409,
+      "duration_ms": 135847,
       "sample_players": []
     },
     {
@@ -91,7 +91,7 @@
       "player_count": 394,
       "team_count": 7,
       "error": null,
-      "duration_ms": 36098,
+      "duration_ms": 40703,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -103,10 +103,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 908,
-      "team_count": 19,
+      "player_count": 947,
+      "team_count": 20,
       "error": null,
-      "duration_ms": 131679,
+      "duration_ms": 142952,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -127,10 +127,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 467,
+      "player_count": 477,
       "team_count": 15,
       "error": null,
-      "duration_ms": 6076,
+      "duration_ms": 4298,
       "sample_players": [
         "AJ Malzone",
         "Alex Graber",
@@ -159,15 +159,15 @@
     }
   ],
   "baseballcube": {
-    "attempted": 23,
+    "attempted": 24,
     "matched": 0,
     "blocked": 0,
     "errors": 0
   },
   "ncaa_clients_total": 39,
-  "ncaa_clients_matched": 13,
+  "ncaa_clients_matched": 12,
   "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 23,
+  "ncaa_clients_unmatched": 24,
   "ncaa_clients_ambiguous": 3,
   "matched": [
     {
@@ -219,16 +219,6 @@
       "source_id": "802774",
       "match_strength": "initial+last",
       "profile_url": "https://www.mlb.com/player/802774"
-    },
-    {
-      "player_name": "Brady Neal",
-      "college": "Alabama",
-      "summer_team": "Metrosouthcountybraves",
-      "league": "Cal Ripken",
-      "summer_name": "Ben Neal",
-      "source_id": "bennealxp7o",
-      "match_strength": "initial+last",
-      "profile_url": "https://calripkensrleague.org/sports/bsb/2026/teams/metrosouthcountybraves?view=roster"
     },
     {
       "player_name": "Brady St. Pierre",
@@ -338,6 +328,10 @@
     {
       "player_name": "Boston Torres",
       "college": "Wake Forest"
+    },
+    {
+      "player_name": "Brady Neal",
+      "college": "Alabama"
     },
     {
       "player_name": "Braydon Kersey",
@@ -590,5 +584,5 @@
       }
     ]
   },
-  "all_players_count": 3547
+  "all_players_count": 3167
 }
