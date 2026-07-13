@@ -1,0 +1,22 @@
+name: Debug PGCBL scrape (temporary)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install --quiet -r requirements.txt
+      - name: Inspect PGCBL pages
+        env:
+          SB_HTTP_PROXY: ${{ secrets.SB_HTTP_PROXY }}
+          SB_HTTP_PROXY_2: ${{ secrets.SB_HTTP_PROXY_2 }}
+          SB_HTTP_PROXY_3: ${{ secrets.SB_HTTP_PROXY_3 }}
+        run: python scripts/debug_pgcbl.py
