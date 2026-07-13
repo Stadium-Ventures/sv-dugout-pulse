@@ -1,7 +1,7 @@
-"""One-off diagnostic round 5: per-team players list on the presto subdomain.
+"""One-off diagnostic round 6: does r= paginate when sort is set?
 
-Team cells on the leaderboard link to `teams?id={teamId}`. Probe
-players?teamId={id}(&view=ext) as a full-roster source for one team.
+Sort links enumerate r=0/1/2. Compare slug sets across r values for a
+sorted hitters view and a sorted pitchers view.
 Temporary — delete along with debug_pgcbl.yml once PGCBL is fixed.
 """
 import re
@@ -13,27 +13,33 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.summer_ball import fetch_via_residential_proxy
 
 BASE = "https://pgcbl.prestosports.com/sports/bsb/2025-26/players"
-MOHAWKS = "96npryi9vztnt1yi"
 
-
-def inspect(label: str, url: str) -> None:
-    print(f"\n===== {label}: {url}")
+sets = {}
+for label, url in [
+    ("h r0", f"{BASE}?sort=gp&view=&pos=h&r=0"),
+    ("h r1", f"{BASE}?sort=gp&view=&pos=h&r=1"),
+    ("h r2", f"{BASE}?sort=gp&view=&pos=h&r=2"),
+    ("p r0", f"{BASE}?sort=ip&view=&pos=p&r=0"),
+    ("p r1", f"{BASE}?sort=ip&view=&pos=p&r=1"),
+    ("f r0", f"{BASE}?sort=gp&view=&pos=f&r=0"),
+    ("f r1", f"{BASE}?sort=gp&view=&pos=f&r=1"),
+]:
     html, diag = fetch_via_residential_proxy(url, timeout=40)
     if not html:
-        print(f"FETCH FAILED: {diag}")
-        return
-    print(f"bytes: {len(html)}")
+        print(f"{label}: FETCH FAILED {diag.get('error')}")
+        continue
     slugs = set(re.findall(r"/sports/bsb/2025-26/players/([a-z0-9-]+)", html))
-    print(f"unique player slugs: {len(slugs)}")
-    print(f"johnson/taylor slugs: {[s for s in slugs if 'johnson' in s or 'taylor' in s]}")
-    teams = set(re.findall(r'teams\?id=([a-z0-9]+)"[^>]*>([^<]{2,40})<', html))
-    print(f"team id links: {len(teams)} -> {sorted(t[1] for t in teams)[:20]}")
-    # first player row, whitespace-collapsed, log-safe
-    m = re.search(r"<tr>(?:(?!</tr>).)*?/players/(?:(?!</tr>).)*?</tr>", html, re.S)
-    if m:
-        print(f"player row: {re.sub(chr(92)+'s+', ' ', m.group(0))[:400]!r}")
+    sets[label] = slugs
+    print(f"{label}: {len(html)}b, {len(slugs)} slugs")
 
-
-inspect("team players view=ext", f"{BASE}?teamId={MOHAWKS}&view=ext")
-inspect("team players plain", f"{BASE}?teamId={MOHAWKS}")
-inspect("team players view=lineup", f"{BASE}?teamId={MOHAWKS}&view=lineup")
+if "h r0" in sets and "h r1" in sets:
+    print(f"h r0 ∩ r1: {len(sets['h r0'] & sets['h r1'])}, r0 ∪ r1: {len(sets['h r0'] | sets['h r1'])}")
+if "h r2" in sets:
+    print(f"h r0 ∪ r1 ∪ r2: {len(sets['h r0'] | sets['h r1'] | sets['h r2'])}")
+if "p r0" in sets and "p r1" in sets:
+    print(f"p r0 ∩ r1: {len(sets['p r0'] & sets['p r1'])}, union: {len(sets['p r0'] | sets['p r1'])}")
+if "f r0" in sets and "f r1" in sets:
+    print(f"f r0 ∩ r1: {len(sets['f r0'] & sets['f r1'])}, union: {len(sets['f r0'] | sets['f r1'])}")
+everything = set().union(*sets.values()) if sets else set()
+print(f"union of all views: {len(everything)}")
+print(f"zackjohnson-ish: {[s for s in everything if 'johnson' in s]}")
