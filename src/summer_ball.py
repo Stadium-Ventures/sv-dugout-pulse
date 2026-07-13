@@ -355,16 +355,24 @@ class NorthwoodsLeague(SummerLeague):
     do NOT pull from it. The live data is on northwoodsleague.com itself but
     has no documented JSON API; HTML scraping required.
 
-    Adapter pending — research dated 2026-06-02 confirmed in-house system but
-    we haven't reverse-engineered the page structure yet.
+    Adapter pending — research dated 2026-06-02 confirmed in-house system.
+    2026-07-13 follow-up: team roster pages (e.g. /willmar-stingers/roster/)
+    ship NO roster HTML — a React component in the NWL-Extend theme renders
+    it client-side from an undocumented AJAX source. Building this adapter
+    would mean extracting their private API, which is against our scraping
+    posture (sanctioned channels / public HTML only), so it stays pending
+    unless the league exposes a static page or a sanctioned feed.
+
+    Raises NotImplementedError (not RuntimeError) so the health envelope
+    reports "not_implemented" — this is an unbuilt adapter, not a breakage.
     """
     name = "Northwoods League"
     short_name = "Northwoods"
 
     def discover_rosters(self) -> list[PlayerEntry]:
-        raise RuntimeError(
+        raise NotImplementedError(
             "Northwoods: in-house stats system at northwoodsleague.com "
-            "(post-2020); HTML adapter pending"
+            "(post-2020); roster is JS-rendered, no sanctioned data channel"
         )
 
 
@@ -954,7 +962,12 @@ class PGCBL(PrestoSportsLeague):
             if slug in seen:
                 continue
             seen.add(slug)
-            name = a.get_text(" ", strip=True)
+            # Presto renders the visible name as "A\r\n<70 spaces>DeCesare"
+            # inside the anchor — collapse ALL interior whitespace before the
+            # length guard, or every player link fails it (the 2026-07-13
+            # "PGCBL ok players=0" root cause). Display form is initial+last;
+            # NCAA matching handles that via the initial+last fuzzy key.
+            name = re.sub(r"\s+", " ", a.get_text(" ", strip=True))
             if not name or len(name) > 60:
                 continue
             # Walk up to find the row, then look for a team link in that row.
