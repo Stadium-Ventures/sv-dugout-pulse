@@ -36,6 +36,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import time
 import unicodedata
 from dataclasses import dataclass, asdict, field
 from datetime import date, datetime, timezone
@@ -658,6 +659,41 @@ class CoastalPlainLeague(SummerLeague):
 # full-name match or fuzzy initial+last (auto-promoted when single
 # candidate). Plan to backfill college via The Baseball Cube cross-ref.
 
+# Per-team roster cache for the Cloudflare-gated Presto sites. The proxy
+# randomly fails on individual team pages (Cal Ripken 376→173 on 2026-07-13:
+# 4 of 8 pages empty; a re-run 15 min later failed a *different* 2 of 8), so
+# a team whose fetch comes back empty twice is restored from the last good
+# scrape instead of silently dropping out of coverage. Committed by the
+# workflow so it survives ephemeral runners. Entries older than the max age
+# are NOT restored — a genuinely broken parser must eventually drain the
+# cache and trip the regression alert rather than being masked forever.
+PRESTO_CACHE_PATH = REPO_ROOT / "data" / "_presto_roster_cache.json"
+PRESTO_CACHE_MAX_AGE_DAYS = 7
+
+
+def _load_presto_cache() -> dict:
+    try:
+        return json.loads(PRESTO_CACHE_PATH.read_text())
+    except Exception:
+        return {}
+
+
+def _save_presto_cache(cache: dict) -> None:
+    PRESTO_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = PRESTO_CACHE_PATH.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(cache, indent=2))
+    tmp.replace(PRESTO_CACHE_PATH)
+
+
+def _presto_cache_fresh(entry: dict) -> bool:
+    try:
+        cached_at = datetime.fromisoformat(entry["cached_at"])
+    except Exception:
+        return False
+    age = datetime.now(timezone.utc) - cached_at
+    return age.days < PRESTO_CACHE_MAX_AGE_DAYS
+
+
 class PrestoSportsLeague(SummerLeague):
     """Base class for leagues hosted on PrestoSports under their own domain.
 
@@ -729,16 +765,42 @@ class PrestoSportsLeague(SummerLeague):
         else:
             logger.info("%s: %d team slugs discovered for %d", self.short_name, len(slugs), year)
         entries: list[PlayerEntry] = []
+        cache = _load_presto_cache()
+        cache_dirty = False
         for slug in sorted(slugs):
             url = f"{self.host_url}/sports/bsb/{year}/teams/{slug}?view=roster"
             html = self._fetch_page(url)
             if not html:
-                logger.info("%s/%s: roster fetch returned empty", self.short_name, slug)
+                logger.info("%s/%s: roster fetch returned empty; retrying once",
+                            self.short_name, slug)
+                time.sleep(3)
+                html = self._fetch_page(url)
+            cache_key = f"{self.short_name}/{slug}"
+            if not html:
+                cached = cache.get(cache_key)
+                if cached and _presto_cache_fresh(cached):
+                    restored = [PlayerEntry(**p) for p in cached["players"]]
+                    entries.extend(restored)
+                    logger.warning(
+                        "%s/%s: fetch failed twice; restored %d players from cache (%s)",
+                        self.short_name, slug, len(restored), cached["cached_at"])
+                else:
+                    logger.warning(
+                        "%s/%s: fetch failed twice and no fresh cache — team dropped this run",
+                        self.short_name, slug)
                 continue
-            count_before = len(entries)
-            entries.extend(self._parse_roster_table(html, team_slug=slug, profile_url=url))
+            team_entries = self._parse_roster_table(html, team_slug=slug, profile_url=url)
+            entries.extend(team_entries)
             logger.info("%s/%s: extracted %d players",
-                        self.short_name, slug, len(entries) - count_before)
+                        self.short_name, slug, len(team_entries))
+            if team_entries:
+                cache[cache_key] = {
+                    "cached_at": datetime.now(timezone.utc).isoformat(),
+                    "players": [e.to_dict() for e in team_entries],
+                }
+                cache_dirty = True
+        if cache_dirty:
+            _save_presto_cache(cache)
         return entries
 
     @staticmethod
