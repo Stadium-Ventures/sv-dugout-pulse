@@ -42,7 +42,7 @@ def inspect(label: str, url: str) -> None:
     # Roster/leaderboard table shapes
     tables = soup.find_all("table")
     print(f"tables: {len(tables)}")
-    for i, t in enumerate(tables[:6]):
+    for i, t in enumerate(tables):
         rows = t.find_all("tr")
         if not rows:
             continue
@@ -51,6 +51,12 @@ def inspect(label: str, url: str) -> None:
         if len(rows) > 1:
             first = [c.get_text(strip=True)[:25] for c in rows[1].find_all(["th", "td"])]
             print(f"    row[1]: {first[:12]}")
+        # Raw HTML of the second cell in the first two data rows (the Name
+        # cell in leaderboard tables) so we can see the actual markup.
+        for r in rows[1:3]:
+            cells = r.find_all(["th", "td"])
+            if len(cells) > 1:
+                print(f"    name-cell html: {str(cells[1])[:300]}")
 
     # JS-rendered hints
     for marker in ("window.__INITIAL_STATE__", "data-reactroot", "id=\"app\"",
@@ -59,9 +65,9 @@ def inspect(label: str, url: str) -> None:
             print(f"  marker present: {marker}")
 
 
-inspect("league players index (2025-26)",
-        "https://pgcbl.prestosports.com/sports/bsb/2025-26/players")
-inspect("league players index (2026)",
-        "https://pgcbl.prestosports.com/sports/bsb/2026/players")
-inspect("team roster amsterdammohawks (2025-26)",
-        "https://pgcbl.com/sports/bsb/2025-26/teams/amsterdammohawks?view=roster")
+inspect("team players list (view=ext)",
+        "https://pgcbl.com/sports/bsb/2025-26/players?teamId=96npryi9vztnt1yi&view=ext")
+inspect("team roster (path form)",
+        "https://pgcbl.com/sports/bsb/2025-26/teams/amsterdammohawks/roster")
+inspect("league index name cells",
+        "https://pgcbl.prestosports.com/sports/bsb/2025-26/players?pos=h&r=0")
