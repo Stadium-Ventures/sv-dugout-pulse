@@ -950,6 +950,7 @@ class PGCBL(PrestoSportsLeague):
     # removed this season, so leaderboard union is the whole sanctioned
     # surface. Players with no game action yet are simply not published.
     _INDEX_VIEWS = [
+        "",  # default view surfaces players the sorted views miss (E Taylor)
         "?sort=gp&view=&pos=h&r=0",
         "?sort=gp&view=&pos=h&r=2",
         "?sort=ip&view=&pos=p&r=0",
@@ -1212,6 +1213,30 @@ def _extract_baseballcube_summer_assignment(body_text: str) -> tuple[str, str]:
     return "", ""
 
 
+def _slug_contradicts_first_name(source_id: str, ncaa_full_name: str) -> bool:
+    """True when a name-bearing Presto slug disagrees with the NCAA first name.
+
+    Presto slugs are fullname+hash ('evantaylorvx6g', 'loganellisbdyn').
+    When the roster displays only "L Ellis", the slug is the sole evidence
+    of the real first name — compare its first two letters against the NCAA
+    first name so 'Lee' can't claim 'loganellis...'. Two letters (not more)
+    keeps common nicknames matching their formal forms (Zack/Zachary,
+    Mike/Michael); Tony/Anthony-style mismatches land in manual review,
+    which is the safe failure mode. Slugs that don't contain the last name
+    aren't name-bearing (numeric ids etc.) — no evidence, no veto.
+    """
+    parts = ncaa_full_name.split()
+    if len(parts) < 2:
+        return False
+    slug = re.sub(r"[^a-z]", "", _normalize_name(source_id or ""))
+    first = re.sub(r"[^a-z]", "", _normalize_name(parts[0]))
+    last = re.sub(r"[^a-z]", "", _normalize_name(parts[-1]))
+    if not slug or not first or not last or last not in slug:
+        return False
+    k = min(len(first), 2)
+    return not slug.startswith(first[:k])
+
+
 # =============================================================================
 # Aggregator + transparency
 # =============================================================================
@@ -1357,6 +1382,24 @@ class SummerBallAggregator:
             # rare. Multiple candidates still route to possible_matches for
             # manual review.
             fuzzy_candidates = by_initial_last.get(_initial_last_key(ncaa_full_name), [])
+            if (len(fuzzy_candidates) == 1
+                    and _slug_contradicts_first_name(
+                        fuzzy_candidates[0].source_id, ncaa_full_name)):
+                # Presto slugs embed the real full name; when it disagrees
+                # with the NCAA first name this is a same-initial collision
+                # (2026-07-13: 'Lee Ellis' auto-matched loganellisbdyn).
+                possible_matches.append({
+                    "player_name": ncaa_full_name, "college": c.get("team"),
+                    "match_strength": "initial+last (slug disagrees — manual review)",
+                    "candidates": [{
+                        "summer_team": fuzzy_candidates[0].summer_team,
+                        "league": fuzzy_candidates[0].league,
+                        "summer_name": fuzzy_candidates[0].raw_name or fuzzy_candidates[0].name,
+                        "summer_college": fuzzy_candidates[0].raw_college or fuzzy_candidates[0].college,
+                        "profile_url": fuzzy_candidates[0].profile_url,
+                    }],
+                })
+                continue
             if len(fuzzy_candidates) == 1:
                 p = fuzzy_candidates[0]
                 matched.append({

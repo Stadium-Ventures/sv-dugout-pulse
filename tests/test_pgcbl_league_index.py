@@ -67,3 +67,15 @@ def test_league_index_tolerates_failed_views(monkeypatch):
     monkeypatch.setattr(PGCBL, "_fetch_page", fake_fetch)
     entries = PGCBL()._discover_via_league_index()
     assert {e.source_id for e in entries} == {"anthonydecesared74j", "zackjohnsonab12"}
+
+
+def test_slug_veto_on_initial_last_collisions():
+    # Real collision from 2026-07-13: 'Lee Ellis' vs loganellisbdyn
+    assert sb._slug_contradicts_first_name("loganellisbdyn", "Lee Ellis")
+    # True matches and nickname/formal pairs must NOT be vetoed
+    assert not sb._slug_contradicts_first_name("evantaylorvx6g", "Evan Taylor")
+    assert not sb._slug_contradicts_first_name("zacharyjohnson12ab", "Zack Johnson")
+    assert not sb._slug_contradicts_first_name("michaelsmithq1w2", "Mike Smith")
+    # Non-name-bearing ids (MLB numeric etc.) carry no evidence
+    assert not sb._slug_contradicts_first_name("842079", "Taylor Kirk")
+    assert not sb._slug_contradicts_first_name("", "Evan Taylor")
