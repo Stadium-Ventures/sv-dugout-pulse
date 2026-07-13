@@ -135,10 +135,17 @@ _MLB_LEAGUES = set(_MLB_LEAGUE_IDS.keys())
 _PRESTO_HOSTS = {
     "NECBL": "https://necbl.com",
     "Cal Ripken": "https://calripkensrleague.org",
-    "PGCBL": "https://pgcbl.com",
-    "FCBL": "https://fcbl.prestosports.com",
+    # pgcbl.com ignores player-page paths; the prestosports subdomain serves
+    # them (proxy required — Cloudflare-gated, like calripkensrleague.org).
+    "PGCBL": "https://pgcbl.prestosports.com",
+    # fcbl.prestosports.com fails (see summer_ball.FCBL docstring) — the
+    # league's real domain is thefuturesleague.com.
+    "FCBL": "https://thefuturesleague.com",
     "Prospect": "https://prospectleague.com",
 }
+# Leagues whose Presto URLs use academic-year format ("2025-26"), mirroring
+# use_academic_year on the summer_ball classes. Calendar-year URLs 404 there.
+_PRESTO_ACADEMIC_YEAR = {"PGCBL", "Prospect"}
 _STUB_LEAGUES = set(_PRESTO_HOSTS.keys())
 
 _STATSAPI = "https://statsapi.mlb.com/api/v1"
@@ -422,14 +429,24 @@ def _presto_entry(match: dict) -> dict:
 
     today = _today_et()
     yesterday = _yesterday_et()
-    url = f"{host}/sports/bsb/{today.year}/players/{slug}"
+    if league in _PRESTO_ACADEMIC_YEAR:
+        year = f"{today.year - 1}-{str(today.year)[-2:]}"
+    else:
+        year = str(today.year)
+    url = f"{host}/sports/bsb/{year}/players/{slug}"
+    html = ""
     try:
         resp = _session.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
-        if resp.status_code != 200 or not resp.text:
-            return _holding_entry(match, reason=f"player page HTTP {resp.status_code}")
-        html = resp.text
+        if resp.status_code == 200 and resp.text and len(resp.text) > 5000:
+            html = resp.text
     except Exception:
-        logger.exception("summer_pulse/presto: fetch failed for %s", url)
+        pass
+    if not html:
+        # Cloudflare-gated hosts (PGCBL, Cal Ripken) need the proxy pool.
+        from src.summer_ball import fetch_via_residential_proxy
+        html, _diag = fetch_via_residential_proxy(url, timeout=25)
+    if not html:
+        logger.warning("summer_pulse/presto: fetch failed for %s", url)
         return _holding_entry(match, reason="player page fetch failed")
 
     line = _parse_presto_player_page(html, today=today, yesterday=yesterday)
