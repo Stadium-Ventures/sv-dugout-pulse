@@ -1,8 +1,7 @@
-"""One-off diagnostic round 4: PGCBL coverage + team attribution.
+"""One-off diagnostic round 5: per-team players list on the presto subdomain.
 
-125 players parsed (one alphabetical page) and teams=1 (team cell not an
-anchor?). Probe the printer-decorator view for a full unpaginated list and
-dump real team-cell markup.
+Team cells on the leaderboard link to `teams?id={teamId}`. Probe
+players?teamId={id}(&view=ext) as a full-roster source for one team.
 Temporary — delete along with debug_pgcbl.yml once PGCBL is fixed.
 """
 import re
@@ -11,11 +10,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from bs4 import BeautifulSoup
-
 from src.summer_ball import fetch_via_residential_proxy
 
 BASE = "https://pgcbl.prestosports.com/sports/bsb/2025-26/players"
+MOHAWKS = "96npryi9vztnt1yi"
 
 
 def inspect(label: str, url: str) -> None:
@@ -26,22 +24,16 @@ def inspect(label: str, url: str) -> None:
         return
     print(f"bytes: {len(html)}")
     slugs = set(re.findall(r"/sports/bsb/2025-26/players/([a-z0-9-]+)", html))
-    print(f"unique player slugs on page: {len(slugs)}")
-    print(f"'johnson' in slugs: {[s for s in slugs if 'johnson' in s][:5]}")
-    soup = BeautifulSoup(html, "html.parser")
-    # first row that contains a player link: dump full row markup, log-safe
-    for a in soup.find_all("a", href=True):
-        if re.search(r"/sports/bsb/2025-26/players/[a-z0-9-]+", a["href"]):
-            row = a.find_parent("tr")
-            if row:
-                print(f"row markup: {re.sub(r's+', ' ', str(row))!r}"[:700])
-            break
-    # pagination hints
-    pag = {a["href"] for a in soup.find_all("a", href=True)
-           if re.search(r"[?&](page|start|offset|begin|r)=", a["href"])}
-    print(f"pagination-ish hrefs: {sorted(pag)[:10]}")
+    print(f"unique player slugs: {len(slugs)}")
+    print(f"johnson/taylor slugs: {[s for s in slugs if 'johnson' in s or 'taylor' in s]}")
+    teams = set(re.findall(r'teams\?id=([a-z0-9]+)"[^>]*>([^<]{2,40})<', html))
+    print(f"team id links: {len(teams)} -> {sorted(t[1] for t in teams)[:20]}")
+    # first player row, whitespace-collapsed, log-safe
+    m = re.search(r"<tr>(?:(?!</tr>).)*?/players/(?:(?!</tr>).)*?</tr>", html, re.S)
+    if m:
+        print(f"player row: {re.sub(chr(92)+'s+', ' ', m.group(0))[:400]!r}")
 
 
-inspect("printer-decorator", f"{BASE}?dec=printer-decorator")
-inspect("printer-decorator hitters", f"{BASE}?pos=h&dec=printer-decorator")
-inspect("default", BASE)
+inspect("team players view=ext", f"{BASE}?teamId={MOHAWKS}&view=ext")
+inspect("team players plain", f"{BASE}?teamId={MOHAWKS}")
+inspect("team players view=lineup", f"{BASE}?teamId={MOHAWKS}&view=lineup")
