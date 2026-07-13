@@ -941,19 +941,45 @@ class PGCBL(PrestoSportsLeague):
             e.league = self.short_name
         return entries
 
+    # The leaderboard displays at most 125 rows per view, and each (pos, r)
+    # combination surfaces a different-but-overlapping 125 (r=0 ≡ r=1;
+    # r=2 is a distinct subset — qualified vs all, both display-capped).
+    # 2026-07-13 probe: the union of these four views yields ~311 unique
+    # players ≈ everyone with game action. teamId=/view= query params are
+    # ignored by the host, and pgcbl.com's per-team roster views were
+    # removed this season, so leaderboard union is the whole sanctioned
+    # surface. Players with no game action yet are simply not published.
+    _INDEX_VIEWS = [
+        "?sort=gp&view=&pos=h&r=0",
+        "?sort=gp&view=&pos=h&r=2",
+        "?sort=ip&view=&pos=p&r=0",
+        "?sort=ip&view=&pos=p&r=2",
+    ]
+
     def _discover_via_league_index(self) -> list[PlayerEntry]:
         year = self._year()
-        url = f"{self.host_url}/sports/bsb/{year}/players"
-        html = self._fetch_page(url)
-        if not html or len(html) < 50000:
-            logger.info("%s: league-wide /players index empty/short (%d bytes)",
-                        self.short_name, len(html))
-            return []
         out: list[PlayerEntry] = []
+        seen: set[str] = set()
+        for view in self._INDEX_VIEWS:
+            url = f"{self.host_url}/sports/bsb/{year}/players{view}"
+            html = self._fetch_page(url)
+            if not html or len(html) < 50000:
+                logger.info("%s: players index view %s empty/short (%d bytes)",
+                            self.short_name, view, len(html or ""))
+                continue
+            before = len(out)
+            self._parse_league_index_page(html, year=year, seen=seen, out=out)
+            logger.info("%s: view %s added %d players",
+                        self.short_name, view, len(out) - before)
+        logger.info("%s: %d players from league-wide index", self.short_name, len(out))
+        return out
+
+    def _parse_league_index_page(
+        self, html: str, *, year, seen: set, out: list[PlayerEntry],
+    ) -> None:
         soup = BeautifulSoup(html, "html.parser")
         # Each leaderboard row has the player slug in an <a href> and the team
-        # abbreviation/name in an adjacent cell.
-        seen: set[str] = set()
+        # name in an adjacent `teams?id={teamId}` link.
         for a in soup.find_all("a", href=True):
             m = re.search(rf"/sports/bsb/{year}/players/([a-z0-9-]+)/?$", a["href"])
             if not m:
@@ -970,11 +996,15 @@ class PGCBL(PrestoSportsLeague):
             name = re.sub(r"\s+", " ", a.get_text(" ", strip=True))
             if not name or len(name) > 60:
                 continue
-            # Walk up to find the row, then look for a team link in that row.
+            # Walk up to find the row, then take the team link's text. This
+            # host links teams as `teams?id={teamId}`, not /teams/{slug}.
             row = a.find_parent("tr")
             team = ""
             if row:
                 for ta in row.find_all("a", href=True):
+                    if re.search(r"teams\?id=[a-z0-9]+", ta["href"]):
+                        team = re.sub(r"\s+", " ", ta.get_text(" ", strip=True))
+                        break
                     tm = re.search(rf"/sports/bsb/{year}/teams/([a-z0-9-]+)", ta["href"])
                     if tm:
                         team = tm.group(1).replace("-", " ").title()
@@ -989,8 +1019,6 @@ class PGCBL(PrestoSportsLeague):
                 raw_name=name,
                 raw_college="",
             ))
-        logger.info("%s: %d players from league-wide index", self.short_name, len(out))
-        return out
 
 
 class FCBL(PrestoSportsLeague):
