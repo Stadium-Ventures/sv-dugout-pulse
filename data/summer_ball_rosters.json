@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-14T10:13:46.769961+00:00",
+  "generated_at": "2026-07-14T15:00:09.475448+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 296,
       "team_count": 10,
       "error": null,
-      "duration_ms": 506,
+      "duration_ms": 544,
       "sample_players": [
         "Blaine Brown",
         "Brody DeLamielleure",
@@ -22,7 +22,7 @@
       "player_count": 256,
       "team_count": 8,
       "error": null,
-      "duration_ms": 403,
+      "duration_ms": 415,
       "sample_players": [
         "Aiden Cope",
         "Austin Rose",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 224,
+      "player_count": 223,
       "team_count": 8,
       "error": null,
-      "duration_ms": 386,
+      "duration_ms": 377,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -52,7 +52,7 @@
       "player_count": 618,
       "team_count": 13,
       "error": null,
-      "duration_ms": 153181,
+      "duration_ms": 111961,
       "sample_players": [
         "TJ Schmalzle",
         "Gavin Collins",
@@ -67,7 +67,7 @@
       "player_count": 376,
       "team_count": 8,
       "error": null,
-      "duration_ms": 90917,
+      "duration_ms": 119433,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 407,
       "team_count": 16,
       "error": null,
-      "duration_ms": 46557,
+      "duration_ms": 53482,
       "sample_players": [
         "D Denten",
         "A Jacobs",
@@ -97,7 +97,7 @@
       "player_count": 397,
       "team_count": 7,
       "error": null,
-      "duration_ms": 92774,
+      "duration_ms": 86444,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -108,18 +108,12 @@
     },
     {
       "league": "Prospect",
-      "status": "ok",
-      "player_count": 951,
-      "team_count": 20,
-      "error": null,
-      "duration_ms": 206784,
-      "sample_players": [
-        "Caynen Patterson",
-        "Hayden Wilson",
-        "Graham Laxton",
-        "Brandon Gour",
-        "Bryce Duszak"
-      ]
+      "status": "failed",
+      "player_count": 0,
+      "team_count": 0,
+      "error": "Prospect: teams index returned empty and no fallback_team_slugs configured",
+      "duration_ms": 5226,
+      "sample_players": []
     },
     {
       "league": "Northwoods",
@@ -136,7 +130,7 @@
       "player_count": 483,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3723,
+      "duration_ms": 3884,
       "sample_players": [
         "AJ Malzone",
         "Alex Graber",
@@ -616,5 +610,5 @@
       }
     ]
   },
-  "all_players_count": 4008
+  "all_players_count": 3056
 }
