@@ -1051,11 +1051,26 @@ class FCBL(PrestoSportsLeague):
 class ProspectLeagueBaseball(PrestoSportsLeague):
     """Prospect League — longstanding PrestoSports customer.
     Uses academic-year format (2025-26).
+
+    2026-07-16: two consecutive runs lost the whole league (958 → 0) when
+    the teams index failed through both direct fetch and the residential
+    proxy on the runner. Hard-coding the 20-team fallback so an index
+    failure degrades to per-team fetches + cache restore instead of zero.
     """
     name = "Prospect League"
     short_name = "Prospect"
     host_url = "https://prospectleague.com"
     use_academic_year = True
+    fallback_team_slugs = [
+        "altonriverdragons", "burlingtonbees", "capecatfish",
+        "championcityhalftrax", "chillicothepaints", "clintonlumberkings",
+        "danvilledans", "decaturbeanballers", "duboiscountybombers",
+        "illinoisvalleypistolshrimp", "jacksonrockabillys",
+        "johnstownmillrats", "kokomocreekchubs", "lafayetteaviators",
+        "normalcornbelters", "ofallonhoots", "quincydoggypaddlers",
+        "springfieldluckyhorseshoes", "terrehauterex",
+        "thrillvillethrillbillies",
+    ]
 
     def discover_rosters(self) -> list[PlayerEntry]:
         entries = super().discover_rosters()
