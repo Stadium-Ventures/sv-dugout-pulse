@@ -20,6 +20,7 @@ from .config import (
     COLUMN_MAP,
     EXCLUDED_MLB_IDS,
     INCLUDED_LEVELS,
+    MLB_CLUB_NAMES,
     RECRUITS_URL,
     ROSTER_CACHE_PATH,
     ROSTER_URL,
@@ -86,6 +87,17 @@ def normalize_player(raw: dict) -> dict:
         player["mlb_id"] = int(raw_id) if raw_id else None
     except (ValueError, TypeError):
         player["mlb_id"] = None
+
+    # Drafted-but-unsigned: the sheet keeps Level=NCAA/HS until the player
+    # signs, but Org already names the drafting MLB club. Treat as Pro —
+    # the pro fetcher name-searches the MLB API (stats start at debut, empty
+    # card until then) and summer-ball tracking drops them automatically.
+    if player["level"] in ("NCAA", "HS") and player["team"].lower() in MLB_CLUB_NAMES:
+        logger.info(
+            "%s: Org is an MLB club (%s) with Level=%s — treating as Pro (drafted)",
+            player["player_name"], player["team"], player["level"],
+        )
+        player["level"] = "Pro"
 
     return player
 

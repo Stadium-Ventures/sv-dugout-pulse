@@ -45,6 +45,25 @@ COLUMN_MAP = {
 # Levels to include (everything else is excluded)
 INCLUDED_LEVELS = {"Pro", "NCAA", "HS"}
 
+# The 30 MLB clubs, lowercased, plus naming variants. A drafted-but-unsigned
+# client keeps Level=NCAA/HS on the master sheet but gets the drafting club in
+# the Org column (sheet convention since the 2026 draft; school moves to
+# "Amateur Org"). Any NCAA/HS row whose Org matches one of these is treated as
+# Pro internally — see normalize_player().
+MLB_CLUB_NAMES = {
+    "arizona diamondbacks", "atlanta braves", "baltimore orioles",
+    "boston red sox", "chicago cubs", "chicago white sox",
+    "cincinnati reds", "cleveland guardians", "colorado rockies",
+    "detroit tigers", "houston astros", "kansas city royals",
+    "los angeles angels", "los angeles dodgers", "miami marlins",
+    "milwaukee brewers", "minnesota twins", "new york mets",
+    "new york yankees", "philadelphia phillies", "pittsburgh pirates",
+    "san diego padres", "san francisco giants", "seattle mariners",
+    "st. louis cardinals", "st louis cardinals", "tampa bay rays",
+    "texas rangers", "toronto blue jays", "washington nationals",
+    "athletics", "oakland athletics", "las vegas athletics",
+}
+
 # MLB IDs to always exclude (retired clients still on the master sheet, etc.)
 # Why: Forrest Wall is retired but appeared with Iowa Cubs; keep him off the dashboard.
 EXCLUDED_MLB_IDS = {

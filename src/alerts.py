@@ -294,7 +294,11 @@ def check_and_send_alerts(player: dict, stats: dict, grade: str = ""):
     except (ValueError, TypeError):
         ip = 0.0
 
-    if is_pitching and ip > 0 and not _already_sent(game_date, name, "entered", game_number=game_number):
+    # Skip when the outing is first seen post-game (game already Final) —
+    # "is pitching!" on a finished game is noise; the K/QS/standout recap
+    # alerts below still cover a notable line.
+    if (is_pitching and ip > 0 and game_status != "Final"
+            and not _already_sent(game_date, name, "entered", game_number=game_number)):
         if send_slack_message(
             f"🔥 *{name}* ({tier_label}) is pitching{gm_label}!\n"
             f"_{team}_ — {summary} — {game_context}{box_link}"

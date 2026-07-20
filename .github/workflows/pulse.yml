@@ -34,10 +34,21 @@ on:
 jobs:
   pulse:
     runs-on: ubuntu-latest
+    # Normal runs finish in 5-8 min. A hung scraper once held the concurrency
+    # queue for 2h21m (2026-07-20), cancelling every queued run behind it and
+    # forcing stale-state re-alerts — kill runaways instead.
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+        with:
+          # Check out main as of JOB start, not the SHA pinned at run
+          # creation. Runs queue behind each other (concurrency group), so
+          # the default pinned SHA predates the previous run's
+          # sent_alerts.json push — every queued run then re-fired the
+          # previous run's Slack alerts (duplicate-alert bug, 2026-07-19).
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v6
