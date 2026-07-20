@@ -23,6 +23,8 @@ from typing import Optional
 
 import requests
 
+from .roster_manager import pro_player_names
+
 logger = logging.getLogger(__name__)
 
 
@@ -186,11 +188,20 @@ def _load_placements() -> list[dict]:
     try:
         with open(_PLACEMENTS_PATH) as f:
             data = json.load(f)
+        pro_names = pro_player_names()
         out = []
         for p in data.get("placements", []):
             name = (p.get("player_name") or "").strip()
             # Reject all-caps placeholder rows that don't look like real names.
             if not name or name.isupper() and len(name) > 5:
+                continue
+            # Drafted/signed players flip to Pro on the master sheet; their
+            # summer placement is over even if Kent's sheet still lists it.
+            if name.lower() in pro_names:
+                logger.info(
+                    "summer_pulse: %s is Pro on the master sheet — dropping summer placement",
+                    name,
+                )
                 continue
             out.append(p)
         return out

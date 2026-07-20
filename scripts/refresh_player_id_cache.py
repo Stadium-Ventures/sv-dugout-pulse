@@ -151,6 +151,20 @@ def _load_overrides() -> dict:
         return {}
 
 
+def _master_sheet_pro_names() -> set[str]:
+    """Lowercased names with Level=Pro in the master-sheet roster cache —
+    drafted/signed players whose summer placement is over."""
+    try:
+        cache = json.loads((_REPO_ROOT / "data" / "roster_cache.json").read_text())
+    except Exception:
+        return set()
+    return {
+        (p.get("player_name") or "").strip().lower()
+        for p in cache.get("players", [])
+        if p.get("level") == "Pro"
+    }
+
+
 def main():
     if not _PLACEMENTS_PATH.exists():
         logger.error("Missing %s", _PLACEMENTS_PATH)
@@ -160,6 +174,13 @@ def main():
         p for p in placements
         if p.get("player_name")
         and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)
+    ]
+    # Drafted/signed players (Level=Pro on the master sheet) no longer need
+    # summer-league ID resolution — their pro pipeline keys off MLB_ID.
+    pro_names = _master_sheet_pro_names()
+    placements = [
+        p for p in placements
+        if (p.get("player_name") or "").strip().lower() not in pro_names
     ]
     overrides = _load_overrides()
     logger.info(

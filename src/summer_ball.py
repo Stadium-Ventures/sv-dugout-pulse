@@ -50,6 +50,8 @@ from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+from .roster_manager import pro_player_names
+
 logger = logging.getLogger(__name__)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -1551,6 +1553,7 @@ def _validate_against_placements(matched: list[dict], possible: list[dict]) -> d
         and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)
     ]
     auto_by_name = {(m.get("player_name") or "").lower(): m for m in matched}
+    pro_names = pro_player_names()
 
     for p in placements:
         name = (p.get("player_name") or "").strip()
@@ -1559,6 +1562,10 @@ def _validate_against_placements(matched: list[dict], possible: list[dict]) -> d
         status = p.get("status", "")
         # Skip status-only entries (Shut Down, Injured); no team to validate.
         if status in ("Shut Down", "Injured") or not p.get("summer_team"):
+            continue
+        # Drafted/signed players (Pro on the master sheet) have left their
+        # summer team — an unmatched placement for them is expected, not stale.
+        if name.lower() in pro_names:
             continue
         placement_team = p["summer_team"].lower()
         placement_league = (p.get("league") or "").lower()

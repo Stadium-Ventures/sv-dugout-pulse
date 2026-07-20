@@ -666,6 +666,20 @@ def build_payload(today: date | None = None) -> dict:
     }
 
 
+def _master_sheet_pro_names() -> set[str]:
+    """Lowercased names with Level=Pro in the master-sheet roster cache —
+    drafted/signed players whose summer placement is over."""
+    try:
+        cache = json.loads((REPO_ROOT / "data" / "roster_cache.json").read_text())
+    except Exception:
+        return set()
+    return {
+        (p.get("player_name") or "").strip().lower()
+        for p in cache.get("players", [])
+        if p.get("level") == "Pro"
+    }
+
+
 def _render_summer_placements_section() -> str:
     """Render the per-player summer-ball placement list for the email.
 
@@ -688,6 +702,11 @@ def _render_summer_placements_section() -> str:
     placements = data.get("placements") or []
     placements = [p for p in placements if p.get("player_name")
                   and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)]
+    # Drafted/signed players (Level=Pro on the master sheet) have left their
+    # summer team — they belong in the pro sections, not here.
+    pro_names = _master_sheet_pro_names()
+    placements = [p for p in placements
+                  if (p.get("player_name") or "").strip().lower() not in pro_names]
     if not placements:
         return ""
 

@@ -202,6 +202,28 @@ def _cached_roster_count() -> int:
         return 0
 
 
+def pro_player_names() -> set[str]:
+    """Lowercased names of every player whose master-sheet Level is Pro.
+
+    The summer-ball tracker uses this to drop placements for players who
+    signed pro after Kent's placement sheet was uploaded (drafted mid-summer),
+    so flipping a player to Pro on the master sheet is the only edit needed.
+    Reads the on-disk cache regardless of age — a stale answer beats
+    resurrecting a drafted player's summer cards when the sheet fetch flakes.
+    """
+    try:
+        with open(ROSTER_CACHE_PATH) as f:
+            players = json.load(f).get("players", [])
+    except Exception:
+        return set()
+    return {
+        name
+        for p in players
+        if p.get("level") == "Pro"
+        and (name := (p.get("player_name") or "").strip().lower())
+    }
+
+
 def _load_roster_cache() -> list[dict] | None:
     """Load cached roster if it exists and is < 24 h old."""
     if not os.path.exists(ROSTER_CACHE_PATH):
