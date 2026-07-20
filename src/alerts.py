@@ -37,10 +37,10 @@ logger = logging.getLogger(__name__)
 # Webhook URL — MUST be set via environment variable (GitHub secret)
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 
-# Feature flag: pitcher-removed Slack alerts are muted for now. Detection in
-# stats_engine.py still populates stats["pitcher_removed"], so flipping this
-# back to True re-enables notifications without any other code changes.
-ALERT_PITCHER_REMOVED = False
+# Feature flag: pitcher-removed Slack alerts (includes the pitcher's line).
+# Muted 2026-04-23 for noise, re-enabled 2026-07-20 per Tom. Set False to mute
+# again — detection in stats_engine.py runs either way.
+ALERT_PITCHER_REMOVED = True
 
 # Persistent alert state loaded from disk: {"date|player:type": value, ...}
 _sent_alerts: dict = {}

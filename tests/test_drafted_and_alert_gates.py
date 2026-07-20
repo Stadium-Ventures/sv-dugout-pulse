@@ -37,19 +37,25 @@ def test_existing_pro_player_untouched():
     assert p["level"] == "Pro"
 
 
-def _pitcher_alert_calls(monkeypatch, game_status):
+def _run_pitcher_alerts(monkeypatch, game_status, extra_stats=None, pre_sent=None):
     sent = []
     monkeypatch.setattr(alerts, "send_slack_message", lambda *a, **k: sent.append(a[0]) or True)
     monkeypatch.setattr(alerts, "_check_promotion", lambda *a, **k: None)
     monkeypatch.setattr(alerts, "_save_sent_alerts", lambda: None)
-    monkeypatch.setattr(alerts, "_sent_alerts", {})
+    monkeypatch.setattr(alerts, "_sent_alerts", dict(pre_sent or {}))
     monkeypatch.setattr(alerts, "_loaded", True, raising=False)
     player = {"player_name": "Test Arm", "team": "Athletics",
               "roster_priority": 3, "position": "Pitcher"}
     stats = {"game_status": game_status, "game_date": "2026-07-19",
              "is_pitcher_line": True, "ip": 1.0, "stats_summary": "1.0 IP, 0 ER",
              "game_context": "A 1, B 0"}
+    stats.update(extra_stats or {})
     alerts.check_and_send_alerts(player, stats)
+    return sent
+
+
+def _pitcher_alert_calls(monkeypatch, game_status):
+    sent = _run_pitcher_alerts(monkeypatch, game_status)
     return [m for m in sent if "is pitching" in m]
 
 
@@ -59,3 +65,20 @@ def test_pitcher_entered_fires_live(monkeypatch):
 
 def test_pitcher_entered_skipped_on_final(monkeypatch):
     assert len(_pitcher_alert_calls(monkeypatch, "Final")) == 0
+
+
+def test_pitcher_removed_fires_with_line(monkeypatch):
+    entered_key = alerts._alert_key("2026-07-19", "Test Arm", "entered")
+    sent = _run_pitcher_alerts(monkeypatch, "Live",
+                               extra_stats={"pitcher_removed": True},
+                               pre_sent={entered_key: True})
+    removed = [m for m in sent if "taken out of the game" in m]
+    assert len(removed) == 1
+    assert "1.0 IP, 0 ER" in removed[0]
+
+
+def test_pitcher_removed_skipped_without_entered_alert(monkeypatch):
+    # Game never observed live before the exit — don't retro-page.
+    sent = _run_pitcher_alerts(monkeypatch, "Final",
+                               extra_stats={"pitcher_removed": True})
+    assert not [m for m in sent if "taken out of the game" in m]
