@@ -148,7 +148,6 @@ function renderToday(entries) {
       ${grade}
       <div class="today-line">${esc(e.stats_summary || e.game_status || '')}</div>
       ${e.game_context ? `<div class="today-ctx">${esc(e.game_context)}${e.game_time ? ' — ' + esc(e.game_time) : ''}</div>` : ''}
-      ${e.data_source ? `<div class="today-ctx">via ${esc(e.data_source)}</div>` : ''}
     </div>`;
   }).join('');
   return `<div class="card"><h2>Today</h2>${rows}</div>`;

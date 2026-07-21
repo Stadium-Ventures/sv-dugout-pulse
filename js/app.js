@@ -444,7 +444,6 @@ function renderCard(p) {
       ${p.game_context ? (p.box_score_url
         ? `<a class="game-context" href="${esc(p.box_score_url, true)}" target="_blank" rel="noopener">${esc(p.game_context)}</a>`
         : `<div class="game-context">${esc(p.game_context)}</div>`) : ''}
-      ${p.data_source ? `<div class="data-source">via ${esc(p.data_source)}</div>` : ''}
       ${fetchDiagHtml}
       ${gameDateHtml}
       ${gameTimeHtml}
