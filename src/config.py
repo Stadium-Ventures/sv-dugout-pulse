@@ -40,6 +40,11 @@ COLUMN_MAP = {
     "IG Handle": "ig_handle",
     "DOB": "dob",
     "Age": "age",
+    # Scout the Statline peak projections — written to the roster sheet daily
+    # by sv-scouting-data's roster-sync; Pro players with pro stats only.
+    "Peak WAR": "peak_war",
+    "Peak wRC+": "peak_wrc_plus",
+    "Peak ERA (20 TBF)": "peak_era_20tbf",
 }
 
 # Levels to include (everything else is excluded)

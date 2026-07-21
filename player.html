@@ -215,6 +215,18 @@ function renderGameLog(e7) {
   return `<div class="card"><h2>Game log (last 7 days)</h2>${rows}</div>`;
 }
 
+// Peak projection (Scout the Statline, via the roster sheet) — Pro players
+// with pro stats only; renders nothing for everyone else.
+function renderPeak(tags) {
+  const cells = [];
+  if (tags.peak_war) cells.push(cell('Peak WAR', tags.peak_war));
+  if (tags.peak_wrc_plus) cells.push(cell('Peak wRC+', tags.peak_wrc_plus));
+  if (tags.peak_era_20tbf) cells.push(cell('Peak ERA / 20 TBF', tags.peak_era_20tbf));
+  if (!cells.length) return '';
+  return `<div class="card"><h2>Peak projection <span style="text-transform:none;letter-spacing:0;font-weight:400;">— Scout the Statline</span></h2>
+    <div class="stat-grid">${cells.join('')}</div></div>`;
+}
+
 function renderLinks(entry, name) {
   const links = [];
   if (entry && entry.player_profile_url) {
@@ -272,6 +284,7 @@ async function load() {
 
   document.getElementById('content').innerHTML = [
     renderToday(todayEntries),
+    renderPeak(tags),
     renderWindows(byWindow, pitcher),
     renderGameLog(byWindow['7d']),
     renderLinks(anchor, name),

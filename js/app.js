@@ -452,6 +452,7 @@ function renderCard(p) {
       <div class="card-tags">
         <span class="tag">${esc(p.tags.position)}</span>
         ${p.tags.draft_class && p.tags.draft_class !== 'N/A' ? `<span class="tag">${esc(p.tags.draft_class)}</span>` : ''}
+        ${peakChipHtml(p)}
       </div>
       ${summerSparklineHtml(p)}
       ${summerNoDataHint(p)}
@@ -534,6 +535,18 @@ function summerPendingHint(p) {
   return _summerHintBox(
     `Pending roster spot${half} — rostered but not appearing in games yet. `
     + `Stats fill in automatically once they get on the field.`);
+}
+
+// Peak projection chip (Scout the Statline, via the roster sheet). Pro
+// players with pro stats only — everyone else renders nothing.
+function peakChipHtml(p) {
+  const t = p.tags || {};
+  const parts = [];
+  if (t.peak_war) parts.push(`${esc(t.peak_war)} WAR`);
+  if (t.peak_wrc_plus) parts.push(`${esc(t.peak_wrc_plus)} wRC+`);
+  if (t.peak_era_20tbf) parts.push(`${esc(t.peak_era_20tbf)} ERA/20`);
+  if (!parts.length) return '';
+  return `<span class="tag" title="Peak projection — Scout the Statline">Peak: ${parts.join(' · ')}</span>`;
 }
 
 function levelBadgeClass(level) {

@@ -615,6 +615,12 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
             "roster_priority": player.get("roster_priority", 99),
         },
     }
+    # Scout the Statline peak projections, passed through from the roster
+    # sheet (roster-sync fills them for Pro players with pro stats).
+    for key in ("peak_war", "peak_wrc_plus", "peak_era_20tbf"):
+        if player.get(key):
+            entry["tags"][key] = player[key]
+
     # Current affiliated level for the Today-card badge (Pro only; the level
     # field itself is the roster bucket Pro/NCAA/HS, not the minors rung).
     if player["level"] == "Pro":
