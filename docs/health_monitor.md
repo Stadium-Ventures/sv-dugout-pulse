@@ -4,15 +4,19 @@ Two layers watch Dugout Pulse. Both post to **`#sv-automation`** — the muted,
 cross-product channel — never to `#dugout-pulse` (Kent's request, 2026-06-29).
 Live milestone alerts and performance recaps stay on `#dugout-pulse`.
 
-## Layer 1 — rule-based alerts (already existed; now routed to #sv-automation)
+## Layer 1 — rule-based alerts (silent when healthy)
 
 | Script | Fires when | Workflow |
 |---|---|---|
-| `scripts/cron_health_alert.py` | BBRef refresh hasn't run in 24h+ | `cron_health_alert.yml` (6 PM ET) |
+| `scripts/cron_health_alert.py` — **daily self-health-check** | Any scheduled data product is stale: live pulse >12h, BBRef stats >24h/>48h, summer rosters >36h. Catches silent cron skips AND timeout-cancelled runs (which never trigger `if: failure()` alerts). | `cron_health_alert.yml` (6 PM ET; `workflow_dispatch` with `test=true` sends a labeled test post) |
 | `scripts/summer_roster_regression_alert.py` | A summer league's roster count drops >50% | `summer_rosters.yml` (4×/day) |
 | `scripts/summer_quiet_streak_alert.py` | A client hasn't appeared in a game in 5+ days | `summer_rosters.yml` (4×/day) |
 
 All three post through `scripts/_automation_notify.py` → `SV_AUTOMATION_WEBHOOK_URL`.
+**No "all good" posts** — every layer stays silent when healthy, and every post
+follows the SV message contract: lead with the product label, tag each finding
+`🛠️ Code change` vs `👤 Manual`, and read as plain English (what broke / how we
+know / what to do).
 
 ## Layer 2 — LLM health monitor (`scripts/health_monitor.py`)
 

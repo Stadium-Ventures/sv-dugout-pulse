@@ -1,15 +1,22 @@
-name: Cron Health Alert (BBRef)
+name: Daily Health Check
 
-# Daily plain-English check: did the BBRef refresh fire in the last 24h?
-# Runs at 22:00 UTC = 6 PM ET — after all three BBRef windows
-# (9 AM, 12 PM, 5 PM ET) have had their shot.
+# Daily self-health-check → #sv-automation. Silent when healthy.
+# Runs at 22:00 UTC = 6 PM ET — after the BBRef windows (9 AM / 12 PM /
+# 5 PM ET) and mid live-pulse hours, so every data product should be fresh.
+# Checks freshness of: current_pulse.json, bbref_stats.json,
+# summer_ball_rosters.json (see scripts/cron_health_alert.py).
 #
-# Drop this once cron-job.org takes over BBRef dispatch (memory note:
-# project_dugout_pulse_cronjob_org_bbref).
+# Manual test: run via workflow_dispatch with test=true to send a clearly
+# labeled test post through the real code path.
 on:
   schedule:
     - cron: "0 22 * * *"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Send a labeled test post to #sv-automation (ignores health)"
+        type: boolean
+        default: false
 
 jobs:
   check:
@@ -22,7 +29,12 @@ jobs:
         with: { python-version: "3.11" }
       - name: Install
         run: pip install --quiet requests
-      - name: Send health alert
+      - name: Run health check
         env:
           SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
-        run: python -m scripts.cron_health_alert
+        run: |
+          if [ "${{ inputs.test }}" = "true" ]; then
+            python -m scripts.cron_health_alert --test
+          else
+            python -m scripts.cron_health_alert
+          fi

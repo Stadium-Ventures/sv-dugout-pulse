@@ -1,0 +1,125 @@
+{
+  "slug": "sv-dugout-pulse",
+  "name": "SV Dugout Pulse",
+  "category": "Scouting",
+  "status": "active",
+  "description": "Live stats, performance grades, and alerts for pro, NCAA, and summer-ball players we represent or follow. Python scrapers rebuild a static dashboard every 15 minutes during game hours and post milestone alerts to Slack.",
+  "url": "https://stadium-ventures.github.io/sv-dugout-pulse/",
+  "repo": "Stadium-Ventures/sv-dugout-pulse",
+  "owner": "Tom Trudeau",
+  "builder": "Mike DeCicco",
+  "maintainer": "Mike DeCicco",
+  "users": "All agents (dashboard + #dugout-pulse alerts + Monday/monthly recap emails); Kent for summer-ball placements",
+  "docs": "https://github.com/Stadium-Ventures/sv-dugout-pulse#readme",
+  "stack": [
+    "Python",
+    "GitHub Actions",
+    "GitHub Pages",
+    "Anthropic API (LLM health monitor)",
+    "Resend (email)"
+  ],
+  "hosting": "GitHub Pages (static site, rebuilt by scheduled GitHub Actions workflows; repo is public)",
+  "access": "Dashboard is public (unauthenticated GitHub Pages). Repo + Actions require Stadium-Ventures org membership.",
+  "links": [
+    {
+      "label": "Live dashboard",
+      "url": "https://stadium-ventures.github.io/sv-dugout-pulse/",
+      "note": "Check the 'Last updated' stamp first when something looks stale."
+    },
+    {
+      "label": "Workflow runs — GitHub Actions",
+      "url": "https://github.com/Stadium-Ventures/sv-dugout-pulse/actions",
+      "note": "All scheduled jobs run here. Stale data? Look for red (failed) or grey (cancelled — usually a timeout) runs, then re-run via workflow_dispatch."
+    },
+    {
+      "label": "Diagnostics — source health & coverage",
+      "url": "https://stadium-ventures.github.io/sv-dugout-pulse/diagnostics.html",
+      "note": "Per-school scraper health — which players' stats came from which source, and what's failing."
+    },
+    {
+      "label": "Health-monitor design doc",
+      "url": "https://github.com/Stadium-Ventures/sv-dugout-pulse/blob/main/docs/health_monitor.md",
+      "note": "How the monitoring layers work and the #sv-automation message contract."
+    },
+    {
+      "label": "Secrets inventory",
+      "url": "https://github.com/Stadium-Ventures/sv-dugout-pulse/blob/main/docs/SECRETS.md",
+      "note": "Every secret the repo uses and where its value comes from (no values)."
+    }
+  ],
+  "pipes": {
+    "inputs": [
+      "Master roster + recruits Google Sheets (published CSVs — ROSTER_URL / RECRUITS_URL secrets)",
+      "MLB Stats API (pro), NCAA school-site scraper waterfall (D1Baseball → ESPN → NCAA.com → Sidearm → StatBroadcast → stats.ncaa.org)",
+      "Baseball-Reference Register (summer-ball stats; next-day lag is normal)",
+      "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)"
+    ],
+    "outputs": [
+      "Static dashboard + player pages on GitHub Pages",
+      "Live milestone/performance alerts + daily summer recap → #dugout-pulse (SLACK_WEBHOOK_URL)",
+      "Summer placement-conflict review pings → #dugout-pulse (for Kent to reconcile his sheet)",
+      "Monday hitter recap + monthly recap emails via Resend (recipients hardcoded in scripts/monday_email.py / monthly_email.py)",
+      "Health findings only → #sv-automation via SV_AUTOMATION_WEBHOOK_URL: pipeline failure alerts, daily freshness check, roster-regression + quiet-streak alerts, LLM health-monitor digest (silent when healthy)",
+      "GitHub issues labelled 'pulse-health' opened by the LLM health monitor, each with a paste-ready Claude Code fix prompt"
+    ]
+  },
+  "crons": [
+    {
+      "what": "Main pulse — live stats every 15 min during game hours (10 AM–2:45 AM ET)",
+      "schedule": "*/15 14-23 * * * and */15 0-6 * * * (UTC)",
+      "runner": "GitHub Actions (pulse.yml)"
+    },
+    {
+      "what": "Historical aggregation (6 AM ET), yesterday rotation (4:15 AM ET), overnight backfills (3 + 5 AM ET)",
+      "schedule": "0 11 / 15 9 / 0 7 / 0 9 * * * (UTC)",
+      "runner": "GitHub Actions (pulse.yml)"
+    },
+    {
+      "what": "Baseball-Reference summer stats refresh (9 AM / 12 PM / 5 PM ET)",
+      "schedule": "0 13,16,21 * * * (UTC)",
+      "runner": "GitHub Actions (refresh_bbref_stats.yml)"
+    },
+    {
+      "what": "Summer roster refresh + regression & quiet-streak alerts (4×/day)",
+      "schedule": "0 8,13,17,22 * * * (UTC)",
+      "runner": "GitHub Actions (summer_rosters.yml)"
+    },
+    {
+      "what": "Daily summer recap → #dugout-pulse (9:30 AM ET)",
+      "schedule": "30 13 * * * (UTC)",
+      "runner": "GitHub Actions (summer_daily_slack.yml)"
+    },
+    {
+      "what": "LLM health monitor → #sv-automation (9 AM + 7 PM ET)",
+      "schedule": "0 13,23 * * * (UTC)",
+      "runner": "GitHub Actions (health_monitor.yml)"
+    },
+    {
+      "what": "Daily self-health-check — data-freshness audit → #sv-automation, silent when healthy (6 PM ET)",
+      "schedule": "0 22 * * * (UTC)",
+      "runner": "GitHub Actions (cron_health_alert.yml)"
+    },
+    {
+      "what": "Monday + monthly recap emails (Resend)",
+      "schedule": "Mon 7:30 AM ET / 1st of month — external cron-job.org fires workflow_dispatch",
+      "runner": "cron-job.org → GitHub Actions (monday_email.yml / monthly_email.yml)"
+    }
+  ],
+  "monitoring": "All health findings go to #sv-automation, silent when healthy. Four layers: (1) daily self-health-check at 6 PM ET verifies freshness of every scheduled data product (live pulse, BBRef stats, summer rosters) — catches silent cron skips AND timeout-cancelled runs that never trigger failure alerts; (2) per-run failure alert step on the main pulse workflow; (3) rule-based summer alerts (roster-count regression, client quiet streaks); (4) an LLM health monitor twice daily that reads the health envelope, #dugout-pulse colleague comments, and CI runs, opens 'pulse-health' GitHub issues, and posts a digest only when actionable. Every post follows the SV message contract (product label, 🛠️/👤 tag, what broke / how we know / what to do).",
+  "knownIssues": [
+    "Summer Ball Roster Refresh workflow has been hitting its 15-min timeout and getting CANCELLED on every scheduled run since ~2026-07-20 (roster snapshot stale since 2026-07-16). Cancelled runs don't trigger failure alerts — the new daily health check now flags the staleness, but the refresh itself needs a 🛠️ fix (speed it up or raise timeout-minutes). 👤 Mike DeCicco",
+    "GitHub Actions cron occasionally skips runs silently — the email digests already moved to cron-job.org triggers; a cron-job.org backup trigger for the BBRef refresh is planned but not wired. 👤 Mike DeCicco",
+    "NCAA/summer scrapes depend on a rotating proxy pool (SB_PROXY_URL + SB_HTTP_PROXY, _2, _3 secrets) to get past Cloudflare/Incapsula — proxy exhaustion shows up as 403s and blocked-client alerts. 👤 Mike DeCicco",
+    "HS_STATS_URL is referenced in a workflow but not set as a repo secret — the HS stats path is dormant until it's set. 👤 Mike DeCicco"
+  ],
+  "notes": "Ownership: this entry previously listed Tom Trudeau as owner/builder/maintainer. The repo started on Tom's personal account (thomasmtrudeau-cell) and moved into the org ~2026-05, but Mike DeCicco built the app and does all maintenance — owner field left as Tom pending confirmation between Tom and Mike. Scope-rule open question for the team: quiet-streak alerts ('client hasn't played in 5+ days — could be injury/scratch') are agent-facing info rather than a system failure, but were deliberately routed to #sv-automation with the rest of the automated output at Kent's 2026-06-29 request — revisit whether they belong on a product channel.",
+  "runbook": [
+    "No server — Python scripts + GitHub Actions rebuild a static site on GitHub Pages; deploy = push to main",
+    "Clone Stadium-Ventures/sv-dugout-pulse, pip install -r requirements.txt (Python 3.11), run `python main.py` locally to test a pulse pass",
+    "Secrets are GitHub Actions secrets on the repo — every one is documented (purpose + where to get the value) in docs/SECRETS.md; set with `gh secret set NAME -R Stadium-Ventures/sv-dugout-pulse`",
+    "Data stale? Check the dashboard's 'Last updated' stamp → the Actions runs (red = failed, grey = cancelled/timeout) → #sv-automation; diagnostics.html shows which per-school source is failing",
+    "Summer assignments change: edit data/summer_ball_placements.json in the repo (Kent's sheet is transcribed by hand, not fetched)",
+    "Test the #sv-automation wiring: `gh workflow run cron_health_alert.yml -R Stadium-Ventures/sv-dugout-pulse -f test=true` sends a labeled test post",
+    "Bot commits ('Update pulse data [bot]') land every 15 min — always `git pull` before pushing, and never force-push main"
+  ]
+}

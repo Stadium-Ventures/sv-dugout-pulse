@@ -216,7 +216,9 @@ what to do. No jargon, no thresholds, no raw field names in the summary.
 straight into Claude Code in this repo to start the fix — name the likely \
 files/area and the symptom.
 - digest_summary is ONE short paragraph for a muted Slack channel; write it \
-only when something is actionable, else leave it empty."""
+only when something is actionable, else leave it empty. In the digest, tag \
+each action as 🛠️ Code change (something to open in Claude Code) or \
+👤 Manual (a human/ops step) so the reader knows what kind of fix it needs."""
 
 _SCHEMA = {
     "type": "object",
