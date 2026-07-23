@@ -30,8 +30,20 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 _CURRENT_PATH = _REPO_ROOT / "data" / "current_pulse.json"
 _YESTERDAY_PATH = _REPO_ROOT / "data" / "yesterday_pulse.json"
 _SEASON_PATH = _REPO_ROOT / "data" / "window_season.json"
+_GAME_LOG_PATH = _REPO_ROOT / "data" / "summer_game_log.json"
 _SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL", "")
 _ET = timezone(timedelta(hours=-4))  # EDT for summer
+
+# A client only counts as active on a summer team while they keep appearing
+# in its games. Someone whose team has played _MOVED_ON_MIN_TEAM_GAMES+
+# game-days across _MOVED_ON_MIN_DAYS+ days since their last appearance has
+# moved on (drafted, released, went home) — stop recapping them under that
+# team. Kent, 2026-07-20: "Can we clean this up with guys that are finished
+# with these teams?" Calibrated against data/summer_game_log.json: the
+# finished guys (Kranzler 14, Tryon 12, Chun 21 team game-days missed) clear
+# both bars; normal pitcher rest (St. Pierre, 6 game-days) clears neither.
+_MOVED_ON_MIN_DAYS = 10
+_MOVED_ON_MIN_TEAM_GAMES = 8
 
 
 def _season_lookup() -> dict[str, str]:
@@ -101,6 +113,68 @@ def _summer_clients(entries: list[dict]) -> list[dict]:
         e for e in entries
         if e.get("level") == "Summer" and e.get("is_client") is not False
     ]
+
+
+def _moved_on_players(entries: list[dict]) -> dict[str, str]:
+    """Map player_name → team label for clients who look finished with the
+    summer team they're shown with.
+
+    Evidence comes from data/summer_game_log.json (every pulse entry, with
+    dates). Two ways to be "moved on" from the shown team:
+      1. Their most recent logged appearance is with a DIFFERENT team —
+         the shown affiliation is the older one; drop it.
+      2. They last appeared for the shown team _MOVED_ON_MIN_DAYS+ days ago
+         and the team has played _MOVED_ON_MIN_TEAM_GAMES+ game-days since
+         without them.
+    Players with no logged appearance anywhere are left alone — the log
+    can't distinguish "hasn't debuted yet" from "gone."
+    """
+    try:
+        log = json.loads(_GAME_LOG_PATH.read_text())
+    except Exception:
+        return {}
+    if not isinstance(log, dict):
+        return {}
+
+    # last actual appearance per (player, team) + game-days per team
+    last_app: dict[str, dict[str, str]] = {}
+    team_days: dict[str, set[str]] = {}
+    for day in sorted(log):
+        for e in log[day] or []:
+            name, team = e.get("player_name"), e.get("team")
+            if not name or not team:
+                continue
+            team_days.setdefault(team, set()).add(day)
+            summary = e.get("stats_summary") or ""
+            if summary and "Did not appear" not in summary and "No game" not in summary:
+                last_app.setdefault(name, {})[team] = day
+
+    today_iso = datetime.now(_ET).date().isoformat()
+    out: dict[str, str] = {}
+    for e in entries:
+        name = e.get("player_name", "")
+        team = e.get("team", "")
+        if not name or not team or name in out:
+            continue
+        apps = last_app.get(name)
+        if not apps:
+            continue
+        newest_team = max(apps, key=lambda t: apps[t])
+        if newest_team != team:
+            if apps.get(team, "") < apps[newest_team]:
+                out[name] = team  # shown with an older affiliation
+            continue
+        last_day = apps[team]
+        try:
+            days_since = (
+                datetime.fromisoformat(today_iso) - datetime.fromisoformat(last_day)
+            ).days
+        except ValueError:
+            continue
+        games_since = sum(1 for d in team_days.get(team, ()) if d > last_day)
+        if days_since >= _MOVED_ON_MIN_DAYS and games_since >= _MOVED_ON_MIN_TEAM_GAMES:
+            out[name] = team
+    return out
 
 
 def _team_md(e: dict) -> str:
@@ -185,6 +259,13 @@ def build_message() -> str:
     yest = _summer_clients(_load(_YESTERDAY_PATH))
     today = _summer_clients(_load(_CURRENT_PATH))
     season_map = _season_lookup()
+
+    # Drop clients who are finished with the team they'd be shown under —
+    # no more daily "Did not appear" rows for guys who moved on.
+    moved_on = _moved_on_players(yest + today)
+    if moved_on:
+        yest = [e for e in yest if e.get("player_name") not in moved_on]
+        today = [e for e in today if e.get("player_name") not in moved_on]
 
     # Yesterday: finals only.
     yest_lines = []
@@ -292,6 +373,16 @@ def build_message() -> str:
                 f"\n_No game in the last day for {names_md} — just idle; "
                 f"they'll reappear the next time they play._"
             )
+
+    if moved_on:
+        names_md = ", ".join(
+            f"{n} ({t.split('(')[0].strip()})" for n, t in sorted(moved_on.items())
+        )
+        parts.append(
+            f"\n_Not shown — looks finished with this team (hasn't appeared in "
+            f"its last {_MOVED_ON_MIN_TEAM_GAMES}+ games): {names_md}. "
+            f"They'll return automatically if they play again._"
+        )
 
     parts.append("\n_<https://stadium-ventures.github.io/sv-dugout-pulse/|Open Dugout Pulse>_")
     return "\n".join(parts)
