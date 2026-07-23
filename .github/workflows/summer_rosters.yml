@@ -27,7 +27,12 @@ on:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # League discovery alone has taken ~12 min on proxy-flaky days (every
+    # 2026-07-17..23 run was cancelled at the old 15-min limit once blocked
+    # Baseball Cube lookups piled on top). The Cube phase is now capped in
+    # code (circuit breaker + 5-min budget), so 25 min covers the worst
+    # observed discovery day with room for the alert + commit steps.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:

@@ -773,7 +773,7 @@ class PrestoSportsLeague(SummerLeague):
                     f"fallback_team_slugs configured"
                 )
         else:
-            logger.info("%s: %d team slugs discovered for %d", self.short_name, len(slugs), year)
+            logger.info("%s: %d team slugs discovered for %s", self.short_name, len(slugs), year)
         entries: list[PlayerEntry] = []
         cache = _load_presto_cache()
         cache_dirty = False
@@ -1131,6 +1131,12 @@ class BaseballCubeLookup:
     BASE = "https://www.thebaseballcube.com"
     name = "The Baseball Cube"
     short_name = "BaseballCube"
+    # Set by find_player: True when the last search never got past the
+    # proxy pool (Cloudflare blocking every proxy). The aggregator's
+    # circuit breaker reads this to stop burning ~26s per lookup on a day
+    # Cube is unreachable — 20 blocked lookups was enough to push the
+    # refresh workflow past its timeout (cancelled runs 2026-07-17..23).
+    last_search_blocked = False
 
     def find_player(self, full_name: str, college: str) -> Optional[PlayerEntry]:
         """Return a PlayerEntry if the Cube knows this NCAA player and they
@@ -1142,12 +1148,14 @@ class BaseballCubeLookup:
         the player profile.
         """
         from urllib.parse import quote_plus
+        self.last_search_blocked = False
         q = quote_plus(full_name)
         search_url = f"{self.BASE}/content/search/?search={q}"
         html, diag = fetch_via_residential_proxy(search_url, timeout=25)
         if not html:
             logger.info("BaseballCube: search blocked for %s (%s)",
                         full_name, diag.get("error"))
+            self.last_search_blocked = True
             return None
 
         soup = BeautifulSoup(html, "html.parser")
@@ -1257,6 +1265,17 @@ def _slug_contradicts_first_name(source_id: str, ncaa_full_name: str) -> bool:
 # =============================================================================
 # Aggregator + transparency
 # =============================================================================
+
+# Cube-phase guards (2026-07-23): when Cloudflare blocks every proxy, each
+# Cube lookup wastes ~26s failing through the pool. With ~20 unmatched
+# clients that's ~9 min of nothing, which pushed the roster refresh past
+# its workflow timeout — every run 2026-07-17..23 was CANCELLED and the
+# snapshot went stale. Stop after a few consecutive blocks (Cube is down
+# for the day; the next scheduled pass retries), and cap the whole phase
+# so a half-blocked day can't eat the run either.
+_CUBE_MAX_CONSECUTIVE_BLOCKS = 3
+_CUBE_PHASE_BUDGET_S = 300
+
 
 class SummerBallAggregator:
     """Coordinates per-league discovery + writes the daily roster snapshot."""
@@ -1449,10 +1468,31 @@ class SummerBallAggregator:
         # clients. Cube includes college affiliation on player profiles, so
         # matches found here are high-confidence (name+college, like our
         # primary path).
-        cube_status: dict = {"attempted": 0, "matched": 0, "blocked": 0, "errors": 0}
+        cube_status: dict = {"attempted": 0, "matched": 0, "blocked": 0,
+                             "errors": 0, "skipped": 0}
         if self.cube and unmatched:
             still_unmatched: list[dict] = []
-            for u in unmatched:
+            consecutive_blocks = 0
+            cube_deadline = time.monotonic() + _CUBE_PHASE_BUDGET_S
+            for i, u in enumerate(unmatched):
+                if consecutive_blocks >= _CUBE_MAX_CONSECUTIVE_BLOCKS:
+                    cube_status["skipped"] = len(unmatched) - i
+                    logger.warning(
+                        "BaseballCube: %d consecutive blocked searches — Cube looks "
+                        "unreachable; skipping remaining %d lookups this run",
+                        consecutive_blocks, cube_status["skipped"],
+                    )
+                    still_unmatched.extend(unmatched[i:])
+                    break
+                if time.monotonic() > cube_deadline:
+                    cube_status["skipped"] = len(unmatched) - i
+                    logger.warning(
+                        "BaseballCube: phase budget (%ds) spent — skipping "
+                        "remaining %d lookups this run",
+                        _CUBE_PHASE_BUDGET_S, cube_status["skipped"],
+                    )
+                    still_unmatched.extend(unmatched[i:])
+                    break
                 cube_status["attempted"] += 1
                 try:
                     entry = self.cube.find_player(u["player_name"], u["college"])
@@ -1461,6 +1501,11 @@ class SummerBallAggregator:
                     cube_status["errors"] += 1
                     still_unmatched.append(u)
                     continue
+                if getattr(self.cube, "last_search_blocked", False):
+                    cube_status["blocked"] += 1
+                    consecutive_blocks += 1
+                else:
+                    consecutive_blocks = 0
                 if entry is None:
                     still_unmatched.append(u)
                     continue
