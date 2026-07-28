@@ -57,9 +57,9 @@
     "outputs": [
       "Static dashboard + player pages on GitHub Pages",
       "Live milestone/performance alerts + daily summer recap → #dugout-pulse (SLACK_WEBHOOK_URL)",
-      "Summer placement-conflict review pings → #dugout-pulse (for Kent to reconcile his sheet)",
+      "Summer placement-conflict review pings + quiet-streak alerts (client hasn't played in 8+ days) → #dugout-pulse (for Kent)",
       "Monday hitter recap + monthly recap emails via Resend (recipients hardcoded in scripts/monday_email.py / monthly_email.py)",
-      "Health findings only → #sv-automation via SV_AUTOMATION_WEBHOOK_URL: pipeline failure alerts, daily freshness check, roster-regression + quiet-streak alerts, LLM health-monitor digest (silent when healthy)",
+      "Health findings only → #sv-automation via SV_AUTOMATION_WEBHOOK_URL: pipeline failure alerts, daily freshness check, roster-regression alerts, LLM health-monitor digest (silent when healthy)",
       "GitHub issues labelled 'pulse-health' opened by the LLM health monitor, each with a paste-ready Claude Code fix prompt"
     ]
   },
@@ -105,14 +105,14 @@
       "runner": "cron-job.org → GitHub Actions (monday_email.yml / monthly_email.yml)"
     }
   ],
-  "monitoring": "All health findings go to #sv-automation, silent when healthy. Four layers: (1) daily self-health-check at 6 PM ET verifies freshness of every scheduled data product (live pulse, BBRef stats, summer rosters) — catches silent cron skips AND timeout-cancelled runs that never trigger failure alerts; (2) per-run failure alert step on the main pulse workflow; (3) rule-based summer alerts (roster-count regression, client quiet streaks); (4) an LLM health monitor twice daily that reads the health envelope, #dugout-pulse colleague comments, and CI runs, opens 'pulse-health' GitHub issues, and posts a digest only when actionable. Every post follows the SV message contract (product label, 🛠️/👤 tag, what broke / how we know / what to do).",
+  "monitoring": "All health findings go to #sv-automation, silent when healthy. Four layers: (1) daily self-health-check at 6 PM ET verifies freshness of every scheduled data product (live pulse, BBRef stats, summer rosters) — catches silent cron skips AND timeout-cancelled runs that never trigger failure alerts; (2) per-run failure alert step on the main pulse workflow; (3) rule-based summer alerts (roster-count regression; client quiet streaks post to #dugout-pulse as feature output since 2026-07-28); (4) an LLM health monitor twice daily that reads the health envelope, #dugout-pulse colleague comments, and CI runs, opens 'pulse-health' GitHub issues, and posts a digest only when actionable. Every post follows the SV message contract (product label, 🛠️/👤 tag, what broke / how we know / what to do).",
   "knownIssues": [
     "Summer Ball Roster Refresh workflow has been hitting its 15-min timeout and getting CANCELLED on every scheduled run since ~2026-07-20 (roster snapshot stale since 2026-07-16). Cancelled runs don't trigger failure alerts — the new daily health check now flags the staleness, but the refresh itself needs a 🛠️ fix (speed it up or raise timeout-minutes). 👤 Mike DeCicco",
     "GitHub Actions cron occasionally skips runs silently — the email digests already moved to cron-job.org triggers; a cron-job.org backup trigger for the BBRef refresh is planned but not wired. 👤 Mike DeCicco",
     "NCAA/summer scrapes depend on a rotating proxy pool (SB_PROXY_URL + SB_HTTP_PROXY, _2, _3 secrets) to get past Cloudflare/Incapsula — proxy exhaustion shows up as 403s and blocked-client alerts. 👤 Mike DeCicco",
     "HS_STATS_URL is referenced in a workflow but not set as a repo secret — the HS stats path is dormant until it's set. 👤 Mike DeCicco"
   ],
-  "notes": "Ownership: this entry previously listed Tom Trudeau as owner/builder/maintainer. The repo started on Tom's personal account (thomasmtrudeau-cell) and moved into the org ~2026-05, but Mike DeCicco built the app and does all maintenance — owner field left as Tom pending confirmation between Tom and Mike. Scope-rule open question for the team: quiet-streak alerts ('client hasn't played in 5+ days — could be injury/scratch') are agent-facing info rather than a system failure, but were deliberately routed to #sv-automation with the rest of the automated output at Kent's 2026-06-29 request — revisit whether they belong on a product channel.",
+  "notes": "Ownership: this entry previously listed Tom Trudeau as owner/builder/maintainer. The repo started on Tom's personal account (thomasmtrudeau-cell) and moved into the org ~2026-05, but Mike DeCicco built the app and does all maintenance — owner field left as Tom pending confirmation between Tom and Mike. Scope-rule question RESOLVED 2026-07-28 (Tom): quiet-streak alerts are agent-facing info, not a system failure — moved to #dugout-pulse with the bar raised from 5 to 8 quiet days (re-alert cooldown 7 → 10 days).",
   "runbook": [
     "No server — Python scripts + GitHub Actions rebuild a static site on GitHub Pages; deploy = push to main",
     "Clone Stadium-Ventures/sv-dugout-pulse, pip install -r requirements.txt (Python 3.11), run `python main.py` locally to test a pulse pass",

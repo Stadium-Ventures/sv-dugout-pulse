@@ -16,6 +16,10 @@ Behavior:
 - Alert when days_since >= THRESHOLD and games_played > 0 (skip players
   who haven't played a game yet — different problem, different alert).
 - Persist state file so the next run has the baseline.
+
+Posts to #dugout-pulse (feature output, not a system failure — per the
+channel scope rule in CLAUDE.md; moved off #sv-automation 2026-07-28 at
+Tom's request).
 """
 
 from __future__ import annotations
@@ -27,7 +31,7 @@ import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from scripts._automation_notify import post_automation
+import requests
 
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -36,12 +40,14 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 _SEASON_PATH = _REPO_ROOT / "data" / "window_season.json"
 _STATE_PATH = _REPO_ROOT / "data" / "_last_summer_games.json"
 
-# Quiet for >= this many days fires an alert. 5 = "missed roughly two
-# series of games" — enough to be meaningful, not a typical day off.
-_THRESHOLD_DAYS = 5
+# Quiet for >= this many days fires an alert. Summer clubs play 5-6
+# games a week, so 8 = missed a full week-plus — clearly notable, and
+# won't fire on league-wide gaps like the all-star break the way the
+# old 5-day bar did.
+_THRESHOLD_DAYS = 8
 # Once we alert, suppress for this many days before re-alerting on the
 # same player. Avoids re-firing every day on the same multi-week stretch.
-_REALERT_COOLDOWN_DAYS = 7
+_REALERT_COOLDOWN_DAYS = 10
 _ET = timezone(timedelta(hours=-4))
 
 
@@ -130,7 +136,7 @@ def main() -> int:
         logger.info("No quiet-streak alerts (%d tracked)", len(new_state))
         return 0
 
-    lines = [":mute: *Quiet streak — clients who haven't appeared recently*"]
+    lines = ["*Quiet streak — clients who haven't appeared recently*"]
     for q in sorted(quiet, key=lambda x: -x["days"]):
         lines.append(
             f"• *{q['name']}* ({q['team']}): {q['days']} days since last game "
@@ -141,7 +147,27 @@ def main() -> int:
         "long off-stretch._"
     )
     text = "\n".join(lines)
-    return 0 if post_automation(text) else 1
+
+    webhook = os.environ.get("SLACK_WEBHOOK_URL", "")
+    if not webhook:
+        logger.warning("SLACK_WEBHOOK_URL not set — would have posted:")
+        print(text)
+        return 0
+    try:
+        resp = requests.post(
+            webhook,
+            json={"text": text},
+            headers={"Content-Type": "application/json"},
+            timeout=15,
+        )
+        if resp.status_code != 200:
+            logger.error("Slack send failed: %s %s", resp.status_code, resp.text)
+            return 1
+        logger.info("Posted %d quiet-streak player(s)", len(quiet))
+        return 0
+    except Exception:
+        logger.exception("Slack send errored")
+        return 1
 
 
 if __name__ == "__main__":
