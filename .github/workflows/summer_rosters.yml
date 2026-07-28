@@ -70,10 +70,10 @@ jobs:
           SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
         run: python -m scripts.summer_roster_regression_alert
 
-      - name: Quiet-streak alert (#sv-automation)
+      - name: Quiet-streak alert (#dugout-pulse)
         if: ${{ inputs.dry_run != true }}
         env:
-          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python -m scripts.summer_quiet_streak_alert
 
       - name: Commit roster snapshot
