@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-28T18:31:33.008049+00:00",
+  "generated_at": "2026-07-28T23:18:27.876157+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 285,
+      "player_count": 286,
       "team_count": 10,
       "error": null,
-      "duration_ms": 2801,
+      "duration_ms": 973,
       "sample_players": [
         "Adam Haight",
         "Blaine Brown",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 240,
+      "player_count": 238,
       "team_count": 8,
       "error": null,
-      "duration_ms": 2145,
+      "duration_ms": 648,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 165,
+      "player_count": 166,
       "team_count": 7,
       "error": null,
-      "duration_ms": 2094,
+      "duration_ms": 726,
       "sample_players": [
         "Alex Kanipe",
         "Alexander Llinas",
@@ -49,10 +49,10 @@
     {
       "league": "NECBL",
       "status": "ok",
-      "player_count": 644,
+      "player_count": 645,
       "team_count": 13,
       "error": null,
-      "duration_ms": 133680,
+      "duration_ms": 138576,
       "sample_players": [
         "TJ Schmalzle",
         "Aaron Forgues",
@@ -67,7 +67,7 @@
       "player_count": 381,
       "team_count": 8,
       "error": null,
-      "duration_ms": 103425,
+      "duration_ms": 93627,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 411,
       "team_count": 16,
       "error": null,
-      "duration_ms": 49010,
+      "duration_ms": 38782,
       "sample_players": [
         "D Denten",
         "M Helmer Jr.",
@@ -97,7 +97,7 @@
       "player_count": 440,
       "team_count": 7,
       "error": null,
-      "duration_ms": 70697,
+      "duration_ms": 84365,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -109,10 +109,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 1028,
+      "player_count": 1029,
       "team_count": 20,
       "error": null,
-      "duration_ms": 202964,
+      "duration_ms": 190532,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -133,10 +133,10 @@
     {
       "league": "Coastal Plain",
       "status": "ok",
-      "player_count": 483,
+      "player_count": 488,
       "team_count": 15,
       "error": null,
-      "duration_ms": 7353,
+      "duration_ms": 3932,
       "sample_players": [
         "Abdriel Figueroa",
         "AJ Malzone",
@@ -169,12 +169,12 @@
     "matched": 0,
     "blocked": 3,
     "errors": 0,
-    "skipped": 15
+    "skipped": 14
   },
   "ncaa_clients_total": 33,
-  "ncaa_clients_matched": 8,
+  "ncaa_clients_matched": 9,
   "ncaa_clients_possible": 2,
-  "ncaa_clients_unmatched": 18,
+  "ncaa_clients_unmatched": 17,
   "ncaa_clients_ambiguous": 5,
   "matched": [
     {
@@ -196,6 +196,16 @@
       "source_id": "802774",
       "match_strength": "initial+last",
       "profile_url": "https://www.mlb.com/player/802774"
+    },
+    {
+      "player_name": "Lucas Lawrence",
+      "college": "Ole Miss",
+      "summer_team": "Lexington County Blowfish",
+      "league": "Coastal Plain",
+      "summer_name": "Logan Lawrence",
+      "source_id": "",
+      "match_strength": "initial+last",
+      "profile_url": "https://coastalplain.com/rosters/lexington-county-blowfish-roster/"
     },
     {
       "player_name": "Brady St. Pierre",
@@ -311,10 +321,6 @@
     {
       "player_name": "Cole Katayama-Stall",
       "college": "University of Portland"
-    },
-    {
-      "player_name": "Lucas Lawrence",
-      "college": "Ole Miss"
     },
     {
       "player_name": "Phinn Beaird",
@@ -577,5 +583,5 @@
       }
     ]
   },
-  "all_players_count": 4077
+  "all_players_count": 4084
 }
