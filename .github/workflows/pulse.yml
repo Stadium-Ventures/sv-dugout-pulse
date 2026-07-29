@@ -80,6 +80,9 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # Roster-move fast path → sv-registry repository_dispatch (fire-and-forget;
+          # a missing token just falls back to sv-registry's hourly tripwire).
+          SV_REGISTRY_DISPATCH_TOKEN: ${{ secrets.SV_REGISTRY_DISPATCH_TOKEN }}
           SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           # TEMP: proxy was returning 403 from SB's WAF — testing direct
@@ -107,6 +110,9 @@ jobs:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          # Roster-move fast path → sv-registry repository_dispatch (fire-and-forget;
+          # a missing token just falls back to sv-registry's hourly tripwire).
+          SV_REGISTRY_DISPATCH_TOKEN: ${{ secrets.SV_REGISTRY_DISPATCH_TOKEN }}
           SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           SB_PROXY_URL: ""

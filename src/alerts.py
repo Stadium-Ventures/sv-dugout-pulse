@@ -838,6 +838,12 @@ def _check_promotion(player, stats, name, team):
     else:
         # Lateral move (same level, different team — e.g., trade between
         # affiliates). Update state silently.
+        #
+        # Silent on Slack, but NOT silent to the registry: a lateral move still
+        # changes current_team, which every surface projects. BE's handoff is
+        # explicit — dispatch on ANY team change Dugout Pulse detects, not just
+        # promotions.
+        _dispatch_roster_move(name, mlb_id, prior_team, team_name, "lateral")
         state[key] = {"team_id": team_id, "sport_id": sport_id,
                       "team_name": team_name, "name": name}
         _save_team_state(state)
@@ -859,12 +865,92 @@ def _check_promotion(player, stats, name, team):
         state[key] = new_state
         _save_team_state(state)
         return
+    # Dispatch to sv-registry BEFORE the Slack send, and independently of it:
+    # canon should learn about the move even if Slack is down, and this must
+    # never gate the post. The _already_sent guard above means an already-alerted
+    # move won't re-dispatch on the next 15-minute pulse; a genuinely failed
+    # send leaves state unsaved and may re-dispatch, which is harmless (the
+    # receiver re-derives from the API and no-ops).
+    kind = ("mlb_callup" if is_mlb_callup else "promotion" if is_promotion
+            else "mlb_optioned" if is_mlb_optioned else "demotion")
+    _dispatch_roster_move(name, mlb_id, prior_team, team_name, kind)
+
     # On a failed send, deliberately leave state unsaved so the next run
     # re-detects and retries the alert.
     if send_slack_message(msg):
         _mark_sent(today, name, f"promo_{team_id}")
         state[key] = new_state
         _save_team_state(state)
+
+
+def _registry_slug(name: str) -> str:
+    """Best-effort sv-registry slug from a display name ("Aaron Watson" →
+    "aaron-watson"). Informational only — `mlbam_id` is the authoritative key
+    in the dispatch payload, and the receiver re-derives everything from the
+    MLB Stats API through its governed reconciler regardless."""
+    s = (name or "").lower().strip()
+    out = []
+    for ch in s:
+        if ch.isalnum():
+            out.append(ch)
+        elif ch in " -_.":
+            out.append("-")
+        # apostrophes are DROPPED, not hyphenated: O'Neill → oneill, matching
+        # the registry's slug convention.
+    return "-".join(filter(None, "".join(out).split("-")))
+
+
+def _dispatch_roster_move(name, mlb_id, prior_team, new_team, kind):
+    """Fire-and-forget repository_dispatch to sv-registry so a roster move takes
+    effect in the registry in minutes instead of waiting on its hourly tripwire.
+
+    Why this exists: Aaron Watson's promotion (ACL Reds → Daytona) hit
+    #dugout-pulse at 15:16:53 EDT on 2026-07-29, but sv-registry only polled
+    hourly, so canon — and every surface projecting it — lagged the Slack post.
+    sv-registry's dugout-pulse-watch.yml now accepts event_type
+    "dugout-pulse-roster-move" (its PR #93).
+
+    NEVER let this affect the Slack post or the pulse run: a missing token, a
+    timeout, an HTTP error, or a DNS failure all return quietly. sv-registry's
+    hourly cron remains the fallback heartbeat, so the worst case of a failed
+    dispatch is the latency we had before this existed.
+    """
+    token = os.environ.get("SV_REGISTRY_DISPATCH_TOKEN")
+    if not token:
+        return  # not configured (e.g. local run) — hourly cron still covers it
+    try:
+        r = requests.post(
+            "https://api.github.com/repos/Stadium-Ventures/sv-registry/dispatches",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Accept": "application/vnd.github+json",
+            },
+            json={
+                "event_type": "dugout-pulse-roster-move",
+                "client_payload": {
+                    "player": _registry_slug(name),
+                    "mlbam_id": int(mlb_id) if str(mlb_id).isdigit() else mlb_id,
+                    "from": prior_team,
+                    "to": new_team,
+                    "kind": kind,
+                    "detected_at": datetime.now(ZoneInfo("UTC")).isoformat(),
+                },
+            },
+            timeout=10,
+        )
+        # 204 = accepted. Anything else is logged and ignored on purpose.
+        if r.status_code != 204:
+            logger.warning(
+                "sv-registry dispatch for %s returned %s (ignored; hourly cron is the fallback)",
+                name, r.status_code,
+            )
+        else:
+            logger.info("sv-registry dispatch sent: %s %s → %s", name, prior_team, new_team)
+    except Exception as e:  # noqa: BLE001 — deliberately total
+        logger.warning(
+            "sv-registry dispatch for %s failed: %s (ignored; hourly cron is the fallback)",
+            name, e,
+        )
 
 
 def save_sent_alerts():
