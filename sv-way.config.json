@@ -1,0 +1,27 @@
+{
+  "_note": "Per-repo inputs for the SV Way compliance checker (canonical copy: Stadium-Ventures/sv-registry scripts/compliance/sv-way-check.cjs). Authored 2026-07-29 (WP1 role-declaration pass); values established by reading this repo's files, not inference.",
+  "repo": "Stadium-Ventures/sv-dugout-pulse",
+  "roles": {
+    "data/summer_ball_placements.json": "write-home",
+    "data/": "surface",
+    "docs/": "surface",
+    "index.html + player pages": "surface"
+  },
+  "_roles_why": "Per CLAUDE.md and sv-app.json: this is a GitHub Actions player-monitoring dashboard whose data/** tree is machine-written scraper output (MLB Stats API, NCAA school-site waterfall, Baseball-Reference Register) rebuilt every 15 min — generated projections, not canon. The one declared exception in CLAUDE.md is data/summer_ball_placements.json, hand-transcribed from Kent's summer placement sheet and described in sv-app.json as the 'source of truth for summer assignments' — that single file is a canon tree homed here. Everything else (dashboard HTML, diagnostics, window/pulse JSON, alerts to #dugout-pulse) is surface output.",
+  "canon_trees": [
+    "data/summer_ball_placements.json"
+  ],
+  "write_door": null,
+  "upstream": {
+    "repo": null,
+    "mechanism": "Player identity comes from the master roster + recruits Google Sheets (ROSTER_URL / RECRUITS_URL secrets), NOT from Stadium-Ventures/sv-registry."
+  },
+  "canon_doc": "THE-SV-WAY.md",
+  "canon_doc_home": false,
+  "hub_registration": "sv-app.json",
+  "_open_questions": [
+    "Read-duty gap: this repo names and serves SV client player facts (stats, placements, alerts) but resolves players against Google Sheets rosters, not against sv-registry canon — no resolution step against data/players/** exists in this repo today.",
+    "data/summer_ball_placements.json is hand-edited directly (no governed writer/write door); whether it should route through a chokepoint or migrate its home-of-record to sv-registry is undecided.",
+    "data/bbref_id_overrides.json appears to be hand-curated correction data (filename suggests manual overrides), but CLAUDE.md only names summer_ball_placements.json as hand-transcribed — confirm with Mike DeCicco whether it is also canon homed here."
+  ]
+}
