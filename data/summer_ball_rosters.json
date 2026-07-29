@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-29T18:26:32.660066+00:00",
+  "generated_at": "2026-07-29T23:19:38.957783+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 283,
       "team_count": 10,
       "error": null,
-      "duration_ms": 856,
+      "duration_ms": 1748,
       "sample_players": [
         "Adam Haight",
         "Blaine Brown",
@@ -22,7 +22,7 @@
       "player_count": 238,
       "team_count": 8,
       "error": null,
-      "duration_ms": 652,
+      "duration_ms": 1479,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 166,
       "team_count": 7,
       "error": null,
-      "duration_ms": 598,
+      "duration_ms": 1321,
       "sample_players": [
         "Alex Kanipe",
         "Alexander Llinas",
@@ -52,7 +52,7 @@
       "player_count": 645,
       "team_count": 13,
       "error": null,
-      "duration_ms": 186254,
+      "duration_ms": 153611,
       "sample_players": [
         "TJ Schmalzle",
         "Aaron Forgues",
@@ -67,7 +67,7 @@
       "player_count": 381,
       "team_count": 8,
       "error": null,
-      "duration_ms": 97369,
+      "duration_ms": 148923,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -79,10 +79,10 @@
     {
       "league": "PGCBL",
       "status": "ok",
-      "player_count": 411,
+      "player_count": 373,
       "team_count": 16,
       "error": null,
-      "duration_ms": 66413,
+      "duration_ms": 54054,
       "sample_players": [
         "D Denten",
         "M Helmer Jr.",
@@ -97,7 +97,7 @@
       "player_count": 442,
       "team_count": 7,
       "error": null,
-      "duration_ms": 127789,
+      "duration_ms": 120095,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -109,10 +109,10 @@
     {
       "league": "Prospect",
       "status": "ok",
-      "player_count": 1031,
+      "player_count": 1032,
       "team_count": 20,
       "error": null,
-      "duration_ms": 317430,
+      "duration_ms": 309397,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -136,7 +136,7 @@
       "player_count": 488,
       "team_count": 15,
       "error": null,
-      "duration_ms": 4858,
+      "duration_ms": 5372,
       "sample_players": [
         "Abdriel Figueroa",
         "AJ Malzone",
@@ -169,12 +169,12 @@
     "matched": 0,
     "blocked": 3,
     "errors": 0,
-    "skipped": 15
+    "skipped": 16
   },
   "ncaa_clients_total": 33,
   "ncaa_clients_matched": 8,
-  "ncaa_clients_possible": 2,
-  "ncaa_clients_unmatched": 18,
+  "ncaa_clients_possible": 1,
+  "ncaa_clients_unmatched": 19,
   "ncaa_clients_ambiguous": 5,
   "matched": [
     {
@@ -279,20 +279,6 @@
           "profile_url": "https://coastalplain.com/rosters/morehead-city-marlins-roster/"
         }
       ]
-    },
-    {
-      "player_name": "Lee Ellis",
-      "college": "University of Kentucky",
-      "match_strength": "initial+last (slug disagrees \u2014 manual review)",
-      "candidates": [
-        {
-          "summer_team": "Oneonta Outlaws",
-          "league": "PGCBL",
-          "summer_name": "L Ellis",
-          "summer_college": "",
-          "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/loganellisbdyn"
-        }
-      ]
     }
   ],
   "unmatched": [
@@ -347,6 +333,10 @@
     {
       "player_name": "Tanner Chun",
       "college": "Hawaii"
+    },
+    {
+      "player_name": "Lee Ellis",
+      "college": "University of Kentucky"
     },
     {
       "player_name": "Lucas Steele",
@@ -578,5 +568,5 @@
       }
     ]
   },
-  "all_players_count": 4085
+  "all_players_count": 4048
 }
