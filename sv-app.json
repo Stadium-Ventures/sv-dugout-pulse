@@ -60,7 +60,8 @@
       "Summer placement-conflict review pings + quiet-streak alerts (client hasn't played in 8+ days) → #dugout-pulse (for Kent)",
       "Monday hitter recap + monthly recap emails via Resend (recipients hardcoded in scripts/monday_email.py / monthly_email.py)",
       "Health findings only → #sv-automation via SV_AUTOMATION_WEBHOOK_URL: pipeline failure alerts, daily freshness check, roster-regression alerts, LLM health-monitor digest (silent when healthy)",
-      "GitHub issues labelled 'pulse-health' opened by the LLM health monitor, each with a paste-ready Claude Code fix prompt"
+      "GitHub issues labelled 'pulse-health' opened by the LLM health monitor, each with a paste-ready Claude Code fix prompt",
+      "Roster-move fast path: on ANY detected team change (promotion, MLB call-up, option, demotion, or lateral affiliate move) fires a GitHub repository_dispatch — event_type \"dugout-pulse-roster-move\" — at Stadium-Ventures/sv-registry, so the registry reconciles the move within ~1 minute instead of waiting for its hourly tripwire. Fire-and-forget: a failed dispatch never blocks the Slack post, and sv-registry's hourly cron remains the fallback. Auth: SV_REGISTRY_DISPATCH_TOKEN (fine-grained PAT, contents r/w on sv-registry only)."
     ]
   },
   "crons": [
