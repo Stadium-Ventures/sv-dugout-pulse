@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-01T14:37:28.680640+00:00",
+  "generated_at": "2026-08-01T18:15:24.824297+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 286,
+      "player_count": 293,
       "team_count": 10,
       "error": null,
-      "duration_ms": 553,
+      "duration_ms": 789,
       "sample_players": [
         "Adam Haight",
         "Blaine Brown",
@@ -22,7 +22,7 @@
       "player_count": 233,
       "team_count": 8,
       "error": null,
-      "duration_ms": 455,
+      "duration_ms": 571,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 165,
       "team_count": 7,
       "error": null,
-      "duration_ms": 385,
+      "duration_ms": 536,
       "sample_players": [
         "Alex Kanipe",
         "Alexander Llinas",
@@ -52,7 +52,7 @@
       "player_count": 645,
       "team_count": 13,
       "error": null,
-      "duration_ms": 131363,
+      "duration_ms": 114489,
       "sample_players": [
         "TJ Schmalzle",
         "Aaron Forgues",
@@ -67,7 +67,7 @@
       "player_count": 381,
       "team_count": 8,
       "error": null,
-      "duration_ms": 85630,
+      "duration_ms": 90524,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 373,
       "team_count": 16,
       "error": null,
-      "duration_ms": 48694,
+      "duration_ms": 47055,
       "sample_players": [
         "D Denten",
         "M Helmer Jr.",
@@ -97,7 +97,7 @@
       "player_count": 452,
       "team_count": 7,
       "error": null,
-      "duration_ms": 60362,
+      "duration_ms": 64509,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -112,7 +112,7 @@
       "player_count": 1037,
       "team_count": 20,
       "error": null,
-      "duration_ms": 226801,
+      "duration_ms": 241230,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -136,7 +136,7 @@
       "player_count": 477,
       "team_count": 15,
       "error": null,
-      "duration_ms": 3765,
+      "duration_ms": 4922,
       "sample_players": [
         "Abdriel Figueroa",
         "AJ Malzone",
@@ -169,24 +169,14 @@
     "matched": 0,
     "blocked": 3,
     "errors": 0,
-    "skipped": 15
+    "skipped": 16
   },
   "ncaa_clients_total": 32,
-  "ncaa_clients_matched": 8,
+  "ncaa_clients_matched": 7,
   "ncaa_clients_possible": 1,
-  "ncaa_clients_unmatched": 18,
+  "ncaa_clients_unmatched": 19,
   "ncaa_clients_ambiguous": 5,
   "matched": [
-    {
-      "player_name": "Adam McKelvey",
-      "college": "Georgia Tech",
-      "summer_team": "COT",
-      "league": "Cape Cod",
-      "summer_name": "Adam McKelvey",
-      "source_id": "831815",
-      "match_strength": "name+college",
-      "profile_url": "https://www.mlb.com/player/831815"
-    },
     {
       "player_name": "Ty Finkbeiner",
       "college": "Michigan",
@@ -293,6 +283,10 @@
     {
       "player_name": "Will Rhine",
       "college": "Alabama"
+    },
+    {
+      "player_name": "Adam McKelvey",
+      "college": "Georgia Tech"
     },
     {
       "player_name": "Cole Katayama-Stall",
@@ -425,12 +419,6 @@
   "placement_validation": {
     "agrees": [
       {
-        "player_name": "Adam McKelvey",
-        "school": "Georgia Tech",
-        "league": "Cape Cod",
-        "team": "Cotuit Kettleers"
-      },
-      {
         "player_name": "Truitt Webb",
         "school": "SE Louisiana",
         "league": "Cape Cod",
@@ -482,6 +470,13 @@
         "player_name": "Caleb Daniel",
         "school": "Georgia Tech",
         "placement_team": "Yarmouth-Dennis Red Sox",
+        "league": "Cape Cod",
+        "status": "Confirmed"
+      },
+      {
+        "player_name": "Adam McKelvey",
+        "school": "Georgia Tech",
+        "placement_team": "Cotuit Kettleers",
         "league": "Cape Cod",
         "status": "Confirmed"
       },
@@ -564,5 +559,5 @@
       }
     ]
   },
-  "all_players_count": 4049
+  "all_players_count": 4056
 }
