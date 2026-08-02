@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-08-02T14:50:13.640081+00:00",
+  "generated_at": "2026-08-02T18:17:33.483529+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
       "status": "ok",
-      "player_count": 293,
+      "player_count": 295,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1871,
+      "duration_ms": 890,
       "sample_players": [
         "Adam Haight",
         "Blaine Brown",
@@ -19,10 +19,10 @@
     {
       "league": "Appalachian",
       "status": "ok",
-      "player_count": 233,
+      "player_count": 232,
       "team_count": 8,
       "error": null,
-      "duration_ms": 1523,
+      "duration_ms": 710,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -34,10 +34,10 @@
     {
       "league": "MLB Draft",
       "status": "ok",
-      "player_count": 165,
+      "player_count": 154,
       "team_count": 7,
       "error": null,
-      "duration_ms": 1547,
+      "duration_ms": 663,
       "sample_players": [
         "Alex Kanipe",
         "Alexander Llinas",
@@ -52,7 +52,7 @@
       "player_count": 645,
       "team_count": 13,
       "error": null,
-      "duration_ms": 149296,
+      "duration_ms": 156037,
       "sample_players": [
         "TJ Schmalzle",
         "Aaron Forgues",
@@ -67,7 +67,7 @@
       "player_count": 381,
       "team_count": 8,
       "error": null,
-      "duration_ms": 112897,
+      "duration_ms": 111629,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 373,
       "team_count": 16,
       "error": null,
-      "duration_ms": 55730,
+      "duration_ms": 67950,
       "sample_players": [
         "D Denten",
         "M Helmer Jr.",
@@ -94,10 +94,10 @@
     {
       "league": "FCBL",
       "status": "ok",
-      "player_count": 460,
+      "player_count": 461,
       "team_count": 7,
       "error": null,
-      "duration_ms": 100896,
+      "duration_ms": 71963,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -112,7 +112,7 @@
       "player_count": 1040,
       "team_count": 20,
       "error": null,
-      "duration_ms": 301460,
+      "duration_ms": 252165,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -136,7 +136,7 @@
       "player_count": 477,
       "team_count": 15,
       "error": null,
-      "duration_ms": 5545,
+      "duration_ms": 4876,
       "sample_players": [
         "Abdriel Figueroa",
         "AJ Malzone",
@@ -169,13 +169,13 @@
     "matched": 0,
     "blocked": 3,
     "errors": 0,
-    "skipped": 16
+    "skipped": 17
   },
   "ncaa_clients_total": 32,
   "ncaa_clients_matched": 7,
   "ncaa_clients_possible": 1,
-  "ncaa_clients_unmatched": 19,
-  "ncaa_clients_ambiguous": 5,
+  "ncaa_clients_unmatched": 20,
+  "ncaa_clients_ambiguous": 4,
   "matched": [
     {
       "player_name": "Ty Finkbeiner",
@@ -317,6 +317,10 @@
       "college": "Virginia"
     },
     {
+      "player_name": "Sam Mitchell",
+      "college": "Southern Miss"
+    },
+    {
       "player_name": "Sam Harry",
       "college": "Sacramento State"
     },
@@ -359,19 +363,6 @@
           "league": "Coastal Plain",
           "summer_name": "Brooks Wright",
           "summer_college": "Appalachian State"
-        }
-      ],
-      "conflict_reason": "college mismatch"
-    },
-    {
-      "player_name": "Sam Mitchell",
-      "college": "Southern Miss",
-      "candidates": [
-        {
-          "summer_team": "HYA",
-          "league": "Cape Cod",
-          "summer_name": "Sam Mitchell",
-          "summer_college": "Southern Mississippi"
         }
       ],
       "conflict_reason": "college mismatch"
@@ -559,5 +550,5 @@
       }
     ]
   },
-  "all_players_count": 4067
+  "all_players_count": 4058
 }
