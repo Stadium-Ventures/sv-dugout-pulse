@@ -9,7 +9,7 @@
   "owner": "Tom Trudeau",
   "builder": "Mike DeCicco",
   "maintainer": "Mike DeCicco",
-  "users": "All agents (dashboard + #dugout-pulse alerts + Monday/monthly recap emails); Kent for summer-ball placements",
+  "users": "All agents (dashboard + #dugout-pulse alerts + Monday/monthly recap emails); Kent for summer-ball placements + the daily MiLB watch",
   "docs": "https://github.com/Stadium-Ventures/sv-dugout-pulse#readme",
   "stack": [
     "Python",
@@ -52,12 +52,14 @@
       "Master roster + recruits Google Sheets (published CSVs — ROSTER_URL / RECRUITS_URL secrets)",
       "MLB Stats API (pro), NCAA school-site scraper waterfall (D1Baseball → ESPN → NCAA.com → Sidearm → StatBroadcast → stats.ncaa.org)",
       "Baseball-Reference Register (summer-ball stats; next-day lag is normal)",
-      "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)"
+      "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)",
+      "MLB Stats API roster entries (person endpoint, rosterEntries hydration) — used by the MiLB watch to drop absence findings for players who are on the IL or rehabbing"
     ],
     "outputs": [
       "Static dashboard + player pages on GitHub Pages",
       "Live milestone/performance alerts + daily summer recap → #dugout-pulse (SLACK_WEBHOOK_URL)",
       "Summer placement-conflict review pings + quiet-streak alerts (client hasn't played in 8+ days) → #dugout-pulse (for Kent)",
+      "Daily MiLB watch (8:30 AM ET) → #dugout-pulse (SLACK_WEBHOOK_URL): for every client at an affiliated level (CPX/A/A+/AA/AAA), recent form (trailing 14d and 30d) graded against that player's own season line with the compared window removed, plus a usage read (playing time cut 40%+ over the last 14 days vs the 16 before it). Posts lull, usage-down, no-games-and-not-IL, and trending-up findings so front-office / farm-director calls get scheduled off data. Silent when nothing is actionable; one alert per player per 10 days. Message format is locked and pinned by a byte-for-byte test (BE, 2026-08-14). Full tracking snapshot (every MiLB client, alerting or not) in data/milb_watch.json.",
       "Monday hitter recap + monthly recap emails via Resend (recipients hardcoded in scripts/monday_email.py / monthly_email.py)",
       "Health findings only → #sv-automation via SV_AUTOMATION_WEBHOOK_URL: pipeline failure alerts, daily freshness check, roster-regression alerts, LLM health-monitor digest (silent when healthy)",
       "GitHub issues labelled 'pulse-health' opened by the LLM health monitor, each with a paste-ready Claude Code fix prompt",
@@ -86,6 +88,12 @@
       "runner": "GitHub Actions (summer_rosters.yml)"
     },
     {
+      "what": "MiLB watch — form + usage vs. season baseline → #dugout-pulse, silent when nothing is actionable (8:30 AM ET)",
+      "schedule": "30 12 * * * (UTC)",
+      "runner": "GitHub Actions (milb_watch.yml)",
+      "note": "Must run after the 11:00 UTC historical pass in pulse.yml — that pass rebuilds the window_*.json files this reads."
+    },
+    {
       "what": "Daily summer recap → #dugout-pulse (9:30 AM ET)",
       "schedule": "30 13 * * * (UTC)",
       "runner": "GitHub Actions (summer_daily_slack.yml)"
@@ -106,7 +114,7 @@
       "runner": "cron-job.org → GitHub Actions (monday_email.yml / monthly_email.yml)"
     }
   ],
-  "monitoring": "All health findings go to #sv-automation, silent when healthy. Four layers: (1) daily self-health-check at 6 PM ET verifies freshness of every scheduled data product (live pulse, BBRef stats, summer rosters) — catches silent cron skips AND timeout-cancelled runs that never trigger failure alerts; (2) per-run failure alert step on the main pulse workflow; (3) rule-based summer alerts (roster-count regression; client quiet streaks post to #dugout-pulse as feature output since 2026-07-28); (4) an LLM health monitor twice daily that reads the health envelope, #dugout-pulse colleague comments, and CI runs, opens 'pulse-health' GitHub issues, and posts a digest only when actionable. Every post follows the SV message contract (product label, 🛠️/👤 tag, what broke / how we know / what to do).",
+  "monitoring": "All health findings go to #sv-automation, silent when healthy. Four layers: (1) daily self-health-check at 6 PM ET verifies freshness of every scheduled data product (live pulse, BBRef stats, summer rosters) — catches silent cron skips AND timeout-cancelled runs that never trigger failure alerts; (2) per-run failure alert steps on the main pulse workflow and on MiLB Watch; (3) rule-based summer alerts (roster-count regression; client quiet streaks post to #dugout-pulse as feature output since 2026-07-28); (4) an LLM health monitor twice daily that reads the health envelope, #dugout-pulse colleague comments, and CI runs, opens 'pulse-health' GitHub issues, and posts a digest only when actionable. Every post follows the SV message contract (product label, 🛠️/👤 tag, what broke / how we know / what to do).",
   "knownIssues": [
     "Summer Ball Roster Refresh workflow has been hitting its 15-min timeout and getting CANCELLED on every scheduled run since ~2026-07-20 (roster snapshot stale since 2026-07-16). Cancelled runs don't trigger failure alerts — the new daily health check now flags the staleness, but the refresh itself needs a 🛠️ fix (speed it up or raise timeout-minutes). 👤 Mike DeCicco",
     "GitHub Actions cron occasionally skips runs silently — the email digests already moved to cron-job.org triggers; a cron-job.org backup trigger for the BBRef refresh is planned but not wired. 👤 Mike DeCicco",
@@ -120,6 +128,7 @@
     "Secrets are GitHub Actions secrets on the repo — every one is documented (purpose + where to get the value) in docs/SECRETS.md; set with `gh secret set NAME -R Stadium-Ventures/sv-dugout-pulse`",
     "Data stale? Check the dashboard's 'Last updated' stamp → the Actions runs (red = failed, grey = cancelled/timeout) → #sv-automation; diagnostics.html shows which per-school source is failing",
     "Summer assignments change: edit data/summer_ball_placements.json in the repo (Kent's sheet is transcribed by hand, not fetched)",
+    "MiLB watch thresholds/copy live in scripts/milb_watch.py — preview any change with `python -m scripts.milb_watch --dry` (prints the Slack post and the status counts, writes nothing, posts nothing); unit tests in tests/test_milb_watch.py",
     "Test the #sv-automation wiring: `gh workflow run cron_health_alert.yml -R Stadium-Ventures/sv-dugout-pulse -f test=true` sends a labeled test post",
     "Bot commits ('Update pulse data [bot]') land every 15 min — always `git pull` before pushing, and never force-push main"
   ]

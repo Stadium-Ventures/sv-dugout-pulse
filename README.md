@@ -29,6 +29,7 @@ Real-time baseball player tracker for Stadium Ventures. Monitors MLB, MiLB, and 
 | `src/alerts.py` | Slack alert logic |
 | `src/config.py` | Settings, thresholds, column mappings |
 | `main.py` | Main script that orchestrates everything |
+| `scripts/milb_watch.py` | Daily MiLB watch — form + usage vs. season baseline (lull / usage-down / no-games / trending-up) → #dugout-pulse, 8:30 AM ET |
 | `generate_test_data.py` | Creates fake data for UI testing |
 | `.github/workflows/pulse.yml` | Automated cron schedule |
 
@@ -46,6 +47,43 @@ Alerts are sent to #dugout-pulse when:
 ### Adjusting Alert Rules
 
 Edit `src/alerts.py` to change thresholds or add new triggers. The `check_and_send_alerts()` function contains all the logic.
+
+### MiLB Watch (daily, 8:30 AM ET)
+
+The alerts above fire off a single game. `scripts/milb_watch.py` answers a
+different question — *is this guy playing differently than he has all year?* —
+which is what earns a front-office or farm-director call.
+
+For every client at an affiliated level (CPX/A/A+/AA/AAA) it grades the last 14
+**and** 30 days against that player's own season line with the compared window
+removed, using the same OPS/ERA thresholds as the dashboard's window grades
+(`src/window_grader.py`), and posts four kinds of finding to #dugout-pulse:
+
+| Trigger | Meaning |
+|---------|---------|
+| 🔻 Lull | Form dropped ≥ .150 OPS (or ERA rose ≥ 1.50) off his own baseline *and* landed in Steady/Cold |
+| ⏳ Usage down | Playing time cut ≥ 40% — trailing 14 days vs the 16 before it, whichever fell further of appearances or PA/IP |
+| 😶 No games | Played this year, nothing in 14 days, **and not on the IL** |
+| 📈 Trending up | Form gained ≥ .150 OPS (or ERA dropped ≥ 1.50) *and* landed in Solid/Hot — call while it's live |
+
+A lull isn't only a rate collapse: losing playing time is a lull too, and it
+shows up first, so a thin recent sample gets read for usage rather than
+dismissed. Absence findings are checked against the MLB Stats API's roster
+entries and dropped when the player is on the IL or rehabbing — the org already
+told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
+15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).
+
+Silent when nothing is actionable, one alert per player per 10 days. Every
+tracked player — alerting or not — lands in `data/milb_watch.json` with both
+windows' reads.
+
+**The Slack layout is locked** and pinned byte-for-byte by
+`test_locked_message_format` in `tests/test_milb_watch.py`. If that test fails,
+the format changed — that's the point. Preview without sending:
+
+```bash
+python -m scripts.milb_watch --dry
+```
 
 ## Data Sources
 
