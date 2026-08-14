@@ -13,8 +13,12 @@ docs: `README.md`, `docs/health_monitor.md`, `docs/SECRETS.md`.
 ## Slack channels — scope rule (keep every new alert compliant)
 
 - **#dugout-pulse** (`SLACK_WEBHOOK_URL`) — feature output humans read on
-  purpose: milestone alerts, daily summer recap, placement-conflict pings,
-  the daily MiLB watch (lull / trending-up / no-games-in-14-days).
+  purpose: milestone alerts, daily summer recap, placement-conflict pings.
+- **DM to Brandon** (`SLACK_BOT_TOKEN` + `MILB_WATCH_DM_CHANNEL`) — the daily
+  MiLB watch, deliberately NOT on #dugout-pulse while its thresholds are being
+  tuned (BE, 2026-08-14). A third destination is a real exception to the
+  two-channel rule above, so keep it to this one job; don't grow a habit of
+  DMing product output.
 - **#sv-automation** (`SV_AUTOMATION_WEBHOOK_URL`, channel ID `C0BE0ELP92Q`) —
   bugs, failures, and health findings ONLY. It's muted; a post there means
   "act on this." Never move feature output here, never leave ops noise on
@@ -50,7 +54,11 @@ game or a fixed league threshold: baseline = season to date minus the compared
 window, recent = trailing 14d and 30d (the more actionable read wins), verdict =
 `src/window_grader.py` thresholds applied to both. Built for Kent's 2026-08-13
 ask in #justin-riemer — MiLB clients whose form has moved enough to justify a
-front-office or farm-director call. Preview any change with
+front-office or farm-director call. It reads four things: a rate lull, a **usage
+lull** (playing time cut 40%+, trailing 14 days vs the 16 before it — a lull is
+also a drop in usage, so a thin sample is a signal not a gate), an absence, and
+a surge. Absences are IL-checked against the MLB Stats API and dropped when the
+org already explained them. Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads.

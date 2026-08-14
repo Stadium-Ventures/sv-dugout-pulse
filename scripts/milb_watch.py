@@ -28,15 +28,25 @@ is the timely read, 30 days is the stable one. Taking the stronger of the two
 means a slow four-week slide alerts even when the last two weeks look flat, and
 a two-week collapse alerts before the monthly line has caught up.
 
-Three things are worth a call, and all three post:
+Four things are worth a call, and all four post:
 
-  🔻 lull   — recent form materially below his own baseline AND landing in
-              Steady/Cold. The alert Kent asked for.
-  🔺 surge  — recent form materially above baseline AND landing in Solid/Hot.
-              This is the Riemer case: the call you make to get a guy noticed,
-              not the one you make to defend him.
-  😶 idle   — played this year, no games at all in 14 days. Injury, IL, phantom
-              IL, benched, or lost the job — the farm director knows which.
+  🔻 lull       — recent form materially below his own baseline AND landing in
+                  Steady/Cold. The alert Kent asked for.
+  ⏳ usage lull — playing time cut by 40%+ (trailing 14 days vs the 16 before
+                  it). A lull is also a drop in usage, and it shows up before
+                  the rate does, so a thin recent sample is read as a signal
+                  rather than gated out as noise (BE, 2026-08-14).
+  😶 idle       — played this year, nothing in 14 days, and NOT on the IL.
+  📈 surge      — recent form materially above baseline AND landing in
+                  Solid/Hot. This is the Riemer case: the call you make to get a
+                  guy noticed, not the one you make to defend him.
+
+Absence findings (idle, usage lull) are checked against the MLB Stats API's
+roster entries first and dropped when the player is on the IL, rehabbing, or
+otherwise unavailable — the org already told us why he isn't playing, so it
+isn't a call (BE, 2026-08-14). Status `il` keeps those in the snapshot with the
+reason instead of vanishing. A failed lookup leaves the finding standing and
+says the check didn't run.
 
 MiLB only: Pro clients whose `current_level` is CPX/A/A+/AA/AAA. MLB guys are
 out of scope (different conversation, different people to call).
@@ -50,8 +60,10 @@ rounded SLG/OBP/ERA/WHIP strings and land within a rounding error of the true
 count. Immaterial at the .150-OPS / 1.50-ERA bars this fires on, but it's why
 `data/milb_watch.json` records the derived counts alongside the rates.
 
-Posts to #dugout-pulse (`SLACK_WEBHOOK_URL`) — this is feature output an agent
-reads on purpose, not an ops finding, per the channel scope rule in CLAUDE.md.
+DMs Brandon (`SLACK_BOT_TOKEN` + chat.postMessage, `MILB_WATCH_DM_CHANNEL`) —
+NOT #dugout-pulse, on purpose and per BE 2026-08-14, while the thresholds are
+still being tuned: a noisy morning costs one person's attention rather than the
+whole channel's. There is deliberately no fallback to the product channel.
 Silent when nothing is actionable.
 
 State: `data/_milb_watch_state.json` (per-player cooldown, so a two-month slump
@@ -96,6 +108,8 @@ _RECENT_PATHS = {
 _IDLE_WINDOW = "14d"
 _STATE_PATH = _REPO_ROOT / "data" / "_milb_watch_state.json"
 _SNAPSHOT_PATH = _REPO_ROOT / "data" / "milb_watch.json"
+# Name -> mlb_id, for the IL lookup. Refreshed by every pulse run.
+_ROSTER_CACHE_PATH = _REPO_ROOT / "data" / "roster_cache.json"
 
 _ET = timezone(timedelta(hours=-4))
 
@@ -128,6 +142,28 @@ ERA_SURGE_DROP = 1.50
 # Idle: has played this year but hasn't appeared in the 14-day window at all.
 IDLE_MIN_SEASON_GAMES = 10
 
+# ── Usage lull ──
+# A lull isn't only a rate collapse — losing playing time IS the lull, and it
+# shows up before the rate does (BE, 2026-08-14: "a lull can be a drop in usage
+# so a small sample is ok for the net here as a potential indicator"). So the
+# small-sample gates above no longer end the evaluation: a thin recent line gets
+# checked for usage instead of dismissed, because 8 PA in two weeks from an
+# everyday guy is the finding, not a reason to stay quiet.
+#
+# The comparison needs no dates. The 30-day window minus the 14-day window is
+# the 16 days before last fortnight, so trailing-14 vs prior-16 is a fair
+# like-for-like usage read straight out of the two files already loaded.
+_RECENT_DAYS = 14
+_PRIOR_DAYS = 16
+# 40% of a guy's playing time gone is a role change, not a couple of rest days.
+USAGE_DROP_PCT = 0.40
+# Don't read a drop off a prior stretch that was itself nearly empty.
+USAGE_MIN_PRIOR_PA = 20
+USAGE_MIN_PRIOR_IP = 5.0
+# Fewer than this many appearances in the prior 16 days and the games-played
+# read is too coarse to mean anything (2 G → 1 G is not a benching).
+USAGE_MIN_PRIOR_GAMES = 4
+
 # One alert per player per this many days, per the summer quiet-streak
 # precedent (CLAUDE.md / Tom, 2026-07-28).
 REALERT_COOLDOWN_DAYS = 10
@@ -138,6 +174,11 @@ _LULL_LANDING = {GRADE_QUIET, GRADE_COLD}
 _SURGE_LANDING = {GRADE_HOT, GRADE_SOLID}
 
 _PITCHER_POSITIONS = {"Pitcher", "RHP", "LHP", "P", "SP", "RP"}
+
+# Findings DM Brandon rather than posting to #dugout-pulse (BE, 2026-08-14) —
+# this is his IM conversation ID, not a secret. Override with
+# MILB_WATCH_DM_CHANNEL to send somewhere else.
+DEFAULT_DM_CHANNEL = "D09H0FY88FL"
 
 
 # ---------------------------------------------------------------------------
@@ -505,6 +546,177 @@ def _pitcher_detail(baseline: dict, recent: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Usage — playing time, trailing 14 days vs the 16 days before that
+# ---------------------------------------------------------------------------
+
+def usage_signal(recent_14: dict | None, recent_30: dict | None,
+                 kind: str) -> dict | None:
+    """Per-day playing time in the last 14 days vs the 16 days before it.
+
+    Returns None when the comparison can't be made (a window missing, or a
+    prior stretch too thin to read a drop off). Otherwise a dict with both
+    rates, the drop as a fraction, and `dropped` set when it clears the bar.
+    """
+    if not recent_14 or not recent_30:
+        return None
+    stats_14 = recent_14.get("stats") or {}
+    stats_30 = recent_30.get("stats") or {}
+    games_14 = int(_num(recent_14.get("games_played")) or 0)
+    games_30 = int(_num(recent_30.get("games_played")) or 0)
+    games_prior = games_30 - games_14
+
+    if kind == "pitcher":
+        outs_14 = _ip_to_outs(stats_14.get("ip")) or 0
+        outs_30 = _ip_to_outs(stats_30.get("ip")) or 0
+        recent_volume = _outs_to_ip(outs_14)
+        prior_volume = _outs_to_ip(max(outs_30 - outs_14, 0))
+        unit, floor = "IP", USAGE_MIN_PRIOR_IP
+        recent_label = f"{_outs_to_ip_str(outs_14)} IP"
+        prior_label = f"{_outs_to_ip_str(max(outs_30 - outs_14, 0))} IP"
+    else:
+        pa_14 = _num(stats_14.get("pa")) or 0
+        pa_30 = _num(stats_30.get("pa")) or 0
+        recent_volume = float(pa_14)
+        prior_volume = float(max(pa_30 - pa_14, 0))
+        unit, floor = "PA", USAGE_MIN_PRIOR_PA
+        recent_label = f"{int(pa_14)} PA"
+        prior_label = f"{int(max(pa_30 - pa_14, 0))} PA"
+
+    if games_prior < 0 or prior_volume < floor:
+        return None
+
+    def _drop(prior: float, recent: float) -> float:
+        prior_rate = prior / _PRIOR_DAYS
+        recent_rate = recent / _RECENT_DAYS
+        return 1.0 - (recent_rate / prior_rate) if prior_rate else 0.0
+
+    # Two ways to lose playing time, and they don't move together: dropped from
+    # the lineup (games), or still in it but hitting lower / pitching shorter
+    # (volume). Take whichever fell further — a guy at 7 G → 3 G is benched even
+    # when his PA-per-game held up, which is how Cade Doughty read on
+    # 2026-08-14 (37% on PA, 51% on games).
+    volume_drop = _drop(prior_volume, recent_volume)
+    games_drop = _drop(games_prior, games_14) if games_prior >= USAGE_MIN_PRIOR_GAMES else None
+    candidates = [("appearances", games_drop), ("volume", volume_drop)]
+    driver, drop = max(
+        ((name, value) for name, value in candidates if value is not None),
+        key=lambda pair: pair[1],
+    )
+
+    counts = (
+        f"{prior_label} in the prior 16 days ({max(games_prior, 0)} G) → "
+        f"{recent_label} in the last 14 ({games_14} G)"
+    )
+    lead = "Appearances down" if driver == "appearances" else "Playing time down"
+    return {
+        "unit": unit,
+        "prior": prior_label,
+        "recent": recent_label,
+        "prior_games": max(games_prior, 0),
+        "recent_games": games_14,
+        "driver": driver,
+        "drop_pct": round(100.0 * drop, 1),
+        "volume_drop_pct": round(100.0 * volume_drop, 1),
+        "games_drop_pct": round(100.0 * games_drop, 1) if games_drop is not None else None,
+        "dropped": drop >= USAGE_DROP_PCT,
+        "summary": f"{lead} {100.0 * drop:.0f}% — {counts}",
+    }
+
+
+# ---------------------------------------------------------------------------
+# Injured list — an IL guy isn't a mystery, so he isn't a finding
+# ---------------------------------------------------------------------------
+
+# MLB Stats API roster-entry status codes that mean "not available to play".
+# An absence with one of these attached explains itself; Kent doesn't need a
+# nudge to call about a guy the org already told us is hurt (BE, 2026-08-14).
+_UNAVAILABLE_STATUS_CODES = {"D7", "D10", "D15", "D60", "DL", "RA", "RM7"}
+_UNAVAILABLE_KEYWORDS = (
+    "injured", "rehab", "suspend", "restricted", "bereavement", "paternity",
+    "leave",
+)
+
+
+def _mlb_id_index(roster_cache: dict | None) -> dict:
+    """player_name -> mlb_id, from the roster cache the pulse run refreshes."""
+    players = (roster_cache or {}).get("players") or []
+    return {
+        p.get("player_name"): p.get("mlb_id")
+        for p in players
+        if p.get("player_name") and p.get("mlb_id")
+    }
+
+
+def lookup_unavailable(mlb_id) -> dict | None:
+    """Current IL/unavailable roster status for one player, or None if active.
+
+    Hydrating `rosterEntries` off the person endpoint gives every roster stint
+    with a status code; the open-ended ones (no endDate, or isActive) are where
+    he stands today. Raises on network/API failure so the caller can distinguish
+    "active" from "couldn't check" — silently dropping a real absence because an
+    API call failed is the one outcome worse than a noisy line.
+    """
+    import statsapi  # imported lazily so unit tests don't need the dep
+
+    people = statsapi.get(
+        "person", {"personId": mlb_id, "hydrate": "rosterEntries"}
+    ).get("people") or []
+    if not people:
+        return None
+    for entry in people[0].get("rosterEntries") or []:
+        if entry.get("endDate") and not entry.get("isActive"):
+            continue
+        status = entry.get("status") or {}
+        code = (status.get("code") or "").upper()
+        description = (status.get("description") or "").strip()
+        if code in _UNAVAILABLE_STATUS_CODES or any(
+            word in description.lower() for word in _UNAVAILABLE_KEYWORDS
+        ):
+            return {
+                "code": code,
+                "description": description or code,
+                "since": entry.get("startDate"),
+                "team": (entry.get("team") or {}).get("name"),
+            }
+    return None
+
+
+def apply_availability(verdicts: list, mlb_ids: dict, lookup=lookup_unavailable) -> None:
+    """Mark absence findings that are just an IL stint, in place.
+
+    Only players whose finding IS an absence get looked up — the API call is
+    per-player and nothing else in the verdict depends on it. A finding that
+    turns out to be IL becomes status `il`, which never alerts but stays in the
+    snapshot with the reason. A lookup that fails leaves the finding standing
+    and says so, rather than dropping a real absence on an API hiccup.
+    """
+    for verdict in verdicts:
+        if verdict["status"] not in ("idle", "usage_lull"):
+            continue
+        mlb_id = mlb_ids.get(verdict["player_name"])
+        if not mlb_id:
+            verdict["il_check"] = "no mlb_id in roster cache"
+            continue
+        try:
+            unavailable = lookup(mlb_id)
+        except Exception as exc:
+            logger.warning(
+                "IL lookup failed for %s: %s", verdict["player_name"], exc
+            )
+            verdict["il_check"] = "lookup failed"
+            continue
+        verdict["il_check"] = "checked"
+        if unavailable:
+            since = f" since {unavailable['since']}" if unavailable.get("since") else ""
+            verdict["il"] = unavailable
+            verdict["status"] = "il"
+            verdict["reason"] = (
+                f"{unavailable['description']}{since} — "
+                f"{verdict['reason'][0].lower()}{verdict['reason'][1:]}"
+            )
+
+
+# ---------------------------------------------------------------------------
 # Selection
 # ---------------------------------------------------------------------------
 
@@ -534,6 +746,7 @@ def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
         return evaluate(season_entry, None)
     verdicts.sort(key=_window_rank)
     winner = verdicts[0]
+    _apply_usage(winner, recent_windows)
     winner["alternates"] = [
         {
             "window": v["window"],
@@ -544,6 +757,46 @@ def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
         for v in verdicts[1:]
     ]
     return winner
+
+
+def _apply_usage(verdict: dict, recent_windows: dict) -> None:
+    """Attach the usage read and let it promote a quiet verdict, in place.
+
+    A rate lull already carries the call, so usage just enriches its detail.
+    But a thin or flat rate line hiding a 40%-plus cut in playing time is the
+    signal on its own — that's the case a sample-size gate would have thrown
+    away.
+    """
+    usage = usage_signal(
+        recent_windows.get("14d"), recent_windows.get("30d"), verdict["kind"]
+    )
+    if not usage:
+        return
+    verdict["usage"] = usage
+    if not usage["dropped"]:
+        return
+    if verdict["status"] in ("insufficient", "steady"):
+        # Keep whatever the rate read said — "the rate is fine, he's just not
+        # playing" is context a farm-director call wants, not noise. A
+        # sample-size message is internal plumbing though, so say what it means
+        # instead of pasting a threshold into Slack.
+        rate_note = verdict.get("detail") or verdict["reason"]
+        if "sample too small" in rate_note:
+            recent = verdict.get("recent") or {}
+            played = (
+                f"{recent['ip']} IP" if "ip" in recent
+                else f"{recent.get('pa', 0)} PA"
+            )
+            rate_note = (
+                f"Only {played} in the last 14 days — too thin to read a rate "
+                f"off, which is the point"
+            )
+        verdict["status"] = "usage_lull"
+        verdict["reason"] = usage["summary"]
+        verdict["detail"] = rate_note
+    elif verdict["status"] == "lull":
+        detail = verdict.get("detail") or ""
+        verdict["detail"] = f"{detail} · {usage['summary'].lower()}".strip(" ·")
 
 
 def _window_rank(verdict: dict) -> tuple:
@@ -573,7 +826,10 @@ def evaluate_all(season: list, recent_by_window: dict) -> list:
     return sorted(verdicts, key=_sort_key)
 
 
-_STATUS_ORDER = {"lull": 0, "idle": 1, "surge": 2, "steady": 3, "insufficient": 4}
+_STATUS_ORDER = {
+    "lull": 0, "usage_lull": 1, "idle": 2, "surge": 3, "steady": 4,
+    "il": 5, "insufficient": 6,
+}
 
 
 def _sort_key(verdict: dict) -> tuple:
@@ -609,7 +865,7 @@ def due_for_alert(verdict: dict, state: dict, today: str) -> bool:
     Cooldown is per status, so a guy who slumps, gets alerted, then breaks out
     two weeks later still generates the surge call.
     """
-    if verdict["status"] not in ("lull", "surge", "idle"):
+    if verdict["status"] not in ("lull", "usage_lull", "surge", "idle"):
         return False
     prior = state.get(verdict["player_name"]) or {}
     if prior.get("last_alert_status") != verdict["status"]:
@@ -650,14 +906,18 @@ def build_state(verdicts: list, state: dict, alerted_names: set, today: str) -> 
 
 _CALL_ANGLE = {
     "lull": "Worth a farm-director check-in — what are they seeing that the line doesn't show?",
+    "usage_lull": "Playing time is the tell — ask where he sits in the everyday plan before the rate follows.",
     "surge": "Good week to call — this is the stretch you want the front office looking at.",
-    "idle": "Confirm the reason before it becomes a surprise — injury, IL, or role change?",
+    "idle": "Not on the IL and not playing — worth asking why.",
 }
 
+# 📈 for trending-up: its arrow is green. A red triangle read as bad news on a
+# good-news line (BE, 2026-08-14).
 _SECTION = [
     ("lull", "🔻 *Lull — off his own season baseline*"),
-    ("idle", "😶 *No games in the last 14 days*"),
-    ("surge", "🔺 *Trending up — make the call while it's live*"),
+    ("usage_lull", "⏳ *Usage down — playing time cut, watch the rate next*"),
+    ("idle", "😶 *No games in the last 14 days (not IL)*"),
+    ("surge", "📈 *Trending up — make the call while it's live*"),
 ]
 
 
@@ -688,31 +948,53 @@ def build_slack_text(alerts: list, tracked: int) -> str:
     lines.append("")
     lines.append(
         f"_Baseline = season to date with the compared window removed · "
-        f"14- and 30-day form both checked · {tracked} MiLB clients tracked · "
-        f"one alert per player per {REALERT_COOLDOWN_DAYS} days._"
+        f"14- and 30-day form both checked · IL stints excluded · "
+        f"{tracked} MiLB clients tracked · one alert per player per "
+        f"{REALERT_COOLDOWN_DAYS} days._"
     )
     return "\n".join(lines)
 
 
 def post_slack(text: str) -> int:
-    webhook = os.environ.get("SLACK_WEBHOOK_URL", "")
-    if not webhook:
-        logger.warning("SLACK_WEBHOOK_URL not set — would have posted:")
+    """DM the findings to Brandon.
+
+    Deliberately NOT the #dugout-pulse webhook (BE, 2026-08-14): this is a DM
+    while the thresholds are being tuned, so a noisy morning costs one person's
+    attention instead of the whole channel's. Uses chat.postMessage with the
+    bot token — a webhook is bound to one channel and can't address a DM. Flip
+    the destination by pointing MILB_WATCH_DM_CHANNEL at a different
+    conversation; there is no fallback to the product channel, on purpose.
+    """
+    token = os.environ.get("SLACK_BOT_TOKEN", "")
+    channel = os.environ.get("MILB_WATCH_DM_CHANNEL", DEFAULT_DM_CHANNEL)
+    if not token:
+        logger.warning("SLACK_BOT_TOKEN not set — would have DM'd %s:", channel)
         print(text)
         return 0
     try:
         resp = requests.post(
-            webhook,
-            json={"text": text},
-            headers={"Content-Type": "application/json"},
+            "https://slack.com/api/chat.postMessage",
+            json={"channel": channel, "text": text},
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json; charset=utf-8",
+            },
             timeout=15,
         )
-        if resp.status_code != 200:
-            logger.error("Slack send failed: %s %s", resp.status_code, resp.text)
+        body = resp.json() if resp.content else {}
+        if resp.status_code != 200 or not body.get("ok"):
+            # Slack answers 200 with ok:false for auth/scope/channel errors, so
+            # the body is the thing that actually tells you what went wrong.
+            logger.error(
+                "Slack DM failed: HTTP %s, error=%s",
+                resp.status_code,
+                body.get("error", "unknown"),
+            )
             return 1
+        logger.info("DM'd %s", channel)
         return 0
     except Exception:
-        logger.exception("Slack send errored")
+        logger.exception("Slack DM errored")
         return 1
 
 
@@ -760,6 +1042,11 @@ def main(argv: list | None = None) -> int:
         logger.info("No MiLB clients in the season window — skipping")
         return 0
 
+    # Absence findings only: an IL stint explains itself, so drop those before
+    # anything reaches Slack.
+    apply_availability(verdicts, _mlb_id_index(_load_json(_ROSTER_CACHE_PATH, {})))
+    verdicts.sort(key=_sort_key)
+
     state = _load_json(_STATE_PATH, {})
     today = _today_et_str()
     alerts = [v for v in verdicts if due_for_alert(v, state, today)]
@@ -789,6 +1076,9 @@ def main(argv: list | None = None) -> int:
             "era_lull_rise": ERA_LULL_RISE,
             "era_surge_drop": ERA_SURGE_DROP,
             "idle_min_season_games": IDLE_MIN_SEASON_GAMES,
+            "usage_drop_pct": USAGE_DROP_PCT,
+            "usage_min_prior_pa": USAGE_MIN_PRIOR_PA,
+            "usage_min_prior_ip": USAGE_MIN_PRIOR_IP,
             "realert_cooldown_days": REALERT_COOLDOWN_DAYS,
         },
         "counts": counts,

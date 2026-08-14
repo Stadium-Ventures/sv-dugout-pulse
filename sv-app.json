@@ -9,7 +9,7 @@
   "owner": "Tom Trudeau",
   "builder": "Mike DeCicco",
   "maintainer": "Mike DeCicco",
-  "users": "All agents (dashboard + #dugout-pulse alerts + Monday/monthly recap emails); Kent for summer-ball placements + the daily MiLB watch",
+  "users": "All agents (dashboard + #dugout-pulse alerts + Monday/monthly recap emails); Kent for summer-ball placements; Brandon for the daily MiLB watch DM",
   "docs": "https://github.com/Stadium-Ventures/sv-dugout-pulse#readme",
   "stack": [
     "Python",
@@ -52,13 +52,14 @@
       "Master roster + recruits Google Sheets (published CSVs — ROSTER_URL / RECRUITS_URL secrets)",
       "MLB Stats API (pro), NCAA school-site scraper waterfall (D1Baseball → ESPN → NCAA.com → Sidearm → StatBroadcast → stats.ncaa.org)",
       "Baseball-Reference Register (summer-ball stats; next-day lag is normal)",
-      "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)"
+      "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)",
+      "MLB Stats API roster entries (person endpoint, rosterEntries hydration) — used by the MiLB watch to drop absence findings for players who are on the IL or rehabbing"
     ],
     "outputs": [
       "Static dashboard + player pages on GitHub Pages",
       "Live milestone/performance alerts + daily summer recap → #dugout-pulse (SLACK_WEBHOOK_URL)",
       "Summer placement-conflict review pings + quiet-streak alerts (client hasn't played in 8+ days) → #dugout-pulse (for Kent)",
-      "Daily MiLB watch → #dugout-pulse (SLACK_WEBHOOK_URL): for every client at an affiliated level (CPX/A/A+/AA/AAA), recent form (trailing 14d and 30d) graded against that player's own season line with the compared window removed — posts lull, trending-up, and no-games-in-14-days findings so front-office / farm-director calls get scheduled off data. Silent when nothing is actionable; one alert per player per 10 days. Full tracking snapshot (every MiLB client, alerting or not) in data/milb_watch.json.",
+      "Daily MiLB watch → DM to Brandon (SLACK_BOT_TOKEN + chat.postMessage, target in MILB_WATCH_DM_CHANNEL) — deliberately NOT #dugout-pulse while thresholds are tuned (BE, 2026-08-14). For every client at an affiliated level (CPX/A/A+/AA/AAA): recent form (trailing 14d and 30d) graded against that player's own season line with the compared window removed, plus a usage read (playing time cut 40%+ over the last 14 days vs the 16 before it). Posts lull, usage-down, no-games-and-not-IL, and trending-up findings so front-office / farm-director calls get scheduled off data. Silent when nothing is actionable; one alert per player per 10 days. Full tracking snapshot (every MiLB client, alerting or not) in data/milb_watch.json.",
       "Monday hitter recap + monthly recap emails via Resend (recipients hardcoded in scripts/monday_email.py / monthly_email.py)",
       "Health findings only → #sv-automation via SV_AUTOMATION_WEBHOOK_URL: pipeline failure alerts, daily freshness check, roster-regression alerts, LLM health-monitor digest (silent when healthy)",
       "GitHub issues labelled 'pulse-health' opened by the LLM health monitor, each with a paste-ready Claude Code fix prompt",
@@ -87,7 +88,7 @@
       "runner": "GitHub Actions (summer_rosters.yml)"
     },
     {
-      "what": "MiLB watch — form vs. season baseline → #dugout-pulse, silent when nothing is actionable (8:30 AM ET)",
+      "what": "MiLB watch — form + usage vs. season baseline → DM to Brandon, silent when nothing is actionable (8:30 AM ET)",
       "schedule": "30 12 * * * (UTC)",
       "runner": "GitHub Actions (milb_watch.yml)",
       "note": "Must run after the 11:00 UTC historical pass in pulse.yml — that pass rebuilds the window_*.json files this reads."

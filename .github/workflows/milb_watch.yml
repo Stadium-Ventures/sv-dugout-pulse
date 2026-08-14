@@ -1,9 +1,14 @@
 name: MiLB Watch
 
 # Daily read of every MiLB client's recent form against his own season
-# baseline, posting lull / trending-up / no-games-in-14-days to #dugout-pulse
-# so proactive front-office and farm-director calls get scheduled off data
-# instead of memory (Kent's ask, 2026-08-13).
+# baseline — lull / usage-down / no-games / trending-up — so proactive
+# front-office and farm-director calls get scheduled off data instead of memory
+# (Kent's ask, 2026-08-13).
+#
+# Destination is a DM to Brandon, NOT #dugout-pulse (BE, 2026-08-14): the
+# thresholds are still being tuned, so a noisy morning costs one person's
+# attention rather than the channel's. Needs SLACK_BOT_TOKEN (chat:write) —
+# a webhook is bound to one channel and can't address a DM.
 #
 # 12:30 UTC = 8:30 AM ET. Deliberately after the 11:00 UTC historical pass in
 # pulse.yml, which is what rebuilds window_season/14d/30d — running before it
@@ -38,9 +43,11 @@ jobs:
       - name: Install deps
         run: pip install --quiet -r requirements.txt
 
-      - name: MiLB watch (#dugout-pulse)
+      - name: MiLB watch (DM)
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          # Override to retarget; defaults to Brandon's DM in the script.
+          MILB_WATCH_DM_CHANNEL: ${{ vars.MILB_WATCH_DM_CHANNEL }}
         run: |
           set -eo pipefail
           if [ "${{ inputs.dry_run }}" = "true" ]; then
@@ -91,7 +98,8 @@ jobs:
           text = (
               "*Dugout Pulse* — 🛠️ Code change\n"
               "*What broke:* the daily MiLB watch didn't run, so nobody got "
-              "today's lull / trending-up list for our minor-league clients.\n"
+              "today's lull / usage / trending-up list for our minor-league "
+              "clients.\n"
               "*How we know:* the MiLB Watch workflow failed.\n"
               f"*What to do:* open the run and re-run it — {run}"
           )

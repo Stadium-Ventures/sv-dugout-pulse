@@ -263,10 +263,141 @@ def test_slack_text_groups_by_status_and_names_the_call():
          "detail": "19-for-49, 0 HR"},
     ]
     text = m.build_slack_text(alerts, tracked=33)
-    assert "🔻" in text and "🔺" in text
+    # Up arrow is green (📈), not the red triangle it started as.
+    assert "🔻" in text and "📈" in text
+    assert "🔺" not in text
     # Team shortens to the nickname, as the social-search URLs do.
     assert "(Yankees, AA)" in text and "(Athletics, AA)" in text
     assert "farm-director check-in" in text
     assert "33 MiLB clients tracked" in text
     # Lull section comes before the surge section.
     assert text.index("Slumping") < text.index("Rising")
+
+
+# ---------------------------------------------------------------------------
+# Usage — a lull can be a drop in playing time, small sample and all
+# ---------------------------------------------------------------------------
+
+def test_usage_signal_compares_last_14_days_to_the_16_before_it():
+    # 44 PA in the 30-day window, 12 of them in the last 14 days -> 32 PA over
+    # the prior 16 days. 0.86/day vs 2.0/day is a 57% cut.
+    recent_14 = _hitter(pa=12, ab=11, h=2, games=4)
+    recent_30 = _hitter(pa=44, ab=40, h=11, games=15)
+    u = m.usage_signal(recent_14, recent_30, "hitter")
+    assert u["prior"] == "32 PA"
+    assert u["recent"] == "12 PA"
+    assert u["prior_games"] == 11 and u["recent_games"] == 4
+    assert 55 <= u["drop_pct"] <= 60
+    assert u["dropped"] is True
+
+
+def test_usage_signal_ignores_steady_playing_time():
+    recent_14 = _hitter(pa=30, ab=27, h=8, games=11)
+    recent_30 = _hitter(pa=64, ab=58, h=17, games=24)
+    assert m.usage_signal(recent_14, recent_30, "hitter")["dropped"] is False
+
+
+def test_usage_signal_needs_a_prior_stretch_worth_comparing():
+    # 10 PA over the prior 16 days is under the floor — no read either way.
+    recent_14 = _hitter(pa=2, ab=2, h=0, games=1)
+    recent_30 = _hitter(pa=12, ab=11, h=3, games=5)
+    assert m.usage_signal(recent_14, recent_30, "hitter") is None
+
+
+def test_small_recent_sample_becomes_a_usage_lull_not_insufficient():
+    # The exact case a sample gate would have thrown away: an everyday guy down
+    # to 10 PA in two weeks. The rate is unreadable; the usage IS the finding.
+    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
+    recent_14 = _hitter(pa=10, ab=9, h=2, obp=".300", slg=".333", games=4)
+    recent_30 = _hitter(pa=55, ab=50, h=15, obp=".360", slg=".460", games=18)
+    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30})
+    assert v["status"] == "usage_lull"
+    assert "Playing time down" in v["reason"]
+    # The rate read it replaced is kept as context, not dropped — here the
+    # 30-day line, which is readable and unremarkable. "He's still hitting, he's
+    # just not playing" is exactly what the call needs.
+    assert v["detail"]
+    assert v["usage"]["dropped"] is True
+    assert v["alternates"][0]["status"] == "insufficient"
+
+
+def test_rate_lull_keeps_its_status_and_gains_the_usage_detail():
+    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
+    recent_14 = _hitter(pa=28, ab=26, h=3, obp=".180", slg=".192", games=9)
+    recent_30 = _hitter(pa=90, ab=82, h=20, obp=".300", slg=".350", games=28)
+    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30})
+    assert v["status"] == "lull"
+    assert "playing time down" in v["detail"].lower()
+
+
+def test_pitcher_usage_measured_in_innings():
+    recent_14 = _pitcher(ip="3", k=3, bb=1, era="3.00", games=3)
+    recent_30 = _pitcher(ip="18", k=20, bb=5, era="2.50", games=12)
+    u = m.usage_signal(recent_14, recent_30, "pitcher")
+    assert u["prior"] == "15 IP" and u["recent"] == "3 IP"
+    assert u["dropped"] is True
+
+
+# ---------------------------------------------------------------------------
+# IL exclusion
+# ---------------------------------------------------------------------------
+
+def test_il_players_drop_off_the_no_games_list():
+    verdicts = [
+        {"player_name": "Hurt Guy", "status": "idle",
+         "reason": "No games in the last 14 days (92 G on the season)"},
+        {"player_name": "Healthy Guy", "status": "idle",
+         "reason": "No games in the last 14 days (40 G on the season)"},
+    ]
+    il = {"code": "D7", "description": "Injured 7-Day", "since": "2026-06-22",
+          "team": "Albuquerque Isotopes"}
+    m.apply_availability(
+        verdicts, {"Hurt Guy": 1, "Healthy Guy": 2},
+        lookup=lambda mlb_id: il if mlb_id == 1 else None,
+    )
+    assert verdicts[0]["status"] == "il"
+    assert "Injured 7-Day since 2026-06-22" in verdicts[0]["reason"]
+    assert verdicts[1]["status"] == "idle"
+    # `il` is not an alerting status — it never reaches Slack.
+    assert not m.due_for_alert(verdicts[0], {}, "2026-08-14")
+    assert m.due_for_alert(verdicts[1], {}, "2026-08-14")
+
+
+def test_usage_lull_is_also_il_checked():
+    verdicts = [{"player_name": "Hurt Guy", "status": "usage_lull",
+                 "reason": "Playing time down 70% — 30 PA → 8 PA"}]
+    m.apply_availability(verdicts, {"Hurt Guy": 1},
+                         lookup=lambda _id: {"code": "D7",
+                                             "description": "Injured 7-Day",
+                                             "since": "2026-08-01"})
+    assert verdicts[0]["status"] == "il"
+
+
+def test_failed_il_lookup_keeps_the_finding_and_says_so():
+    # Dropping a real absence because an API call failed is worse than a noisy
+    # line, so the finding stands and the snapshot records that the check didn't
+    # run.
+    def boom(_mlb_id):
+        raise RuntimeError("MLB API 503")
+
+    verdicts = [{"player_name": "Unknown Guy", "status": "idle",
+                 "reason": "No games in the last 14 days (40 G on the season)"}]
+    m.apply_availability(verdicts, {"Unknown Guy": 1}, lookup=boom)
+    assert verdicts[0]["status"] == "idle"
+    assert verdicts[0]["il_check"] == "lookup failed"
+
+
+def test_missing_mlb_id_is_recorded_not_guessed():
+    verdicts = [{"player_name": "No ID", "status": "idle", "reason": "No games"}]
+    m.apply_availability(verdicts, {}, lookup=lambda _id: None)
+    assert verdicts[0]["status"] == "idle"
+    assert verdicts[0]["il_check"] == "no mlb_id in roster cache"
+
+
+def test_unavailable_codes_and_keywords_both_recognized():
+    assert "D7" in m._UNAVAILABLE_STATUS_CODES
+    assert "D60" in m._UNAVAILABLE_STATUS_CODES
+    # "Reassigned to Minors" is a roster move, not an absence — must NOT match.
+    assert not any(w in "reassigned to minors" for w in m._UNAVAILABLE_KEYWORDS)
+    assert "RM" not in m._UNAVAILABLE_STATUS_CODES
+    assert any(w in "injured 7-day" for w in m._UNAVAILABLE_KEYWORDS)

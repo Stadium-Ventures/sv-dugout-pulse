@@ -29,7 +29,7 @@ Real-time baseball player tracker for Stadium Ventures. Monitors MLB, MiLB, and 
 | `src/alerts.py` | Slack alert logic |
 | `src/config.py` | Settings, thresholds, column mappings |
 | `main.py` | Main script that orchestrates everything |
-| `scripts/milb_watch.py` | Daily MiLB form-vs-season-baseline watch (lull / trending-up / no-games alerts) |
+| `scripts/milb_watch.py` | Daily MiLB watch — form + usage vs. season baseline (lull / usage-down / no-games / trending-up), DM'd to Brandon |
 | `generate_test_data.py` | Creates fake data for UI testing |
 | `.github/workflows/pulse.yml` | Automated cron schedule |
 
@@ -57,19 +57,26 @@ which is what earns a front-office or farm-director call.
 For every client at an affiliated level (CPX/A/A+/AA/AAA) it grades the last 14
 **and** 30 days against that player's own season line with the compared window
 removed, using the same OPS/ERA thresholds as the dashboard's window grades
-(`src/window_grader.py`), and posts three kinds of finding to #dugout-pulse:
+(`src/window_grader.py`), and **DMs** four kinds of finding to Brandon (not
+#dugout-pulse — the thresholds are still being tuned):
 
 | Trigger | Meaning |
 |---------|---------|
 | 🔻 Lull | Form dropped ≥ .150 OPS (or ERA rose ≥ 1.50) off his own baseline *and* landed in Steady/Cold |
-| 🔺 Trending up | Form gained ≥ .150 OPS (or ERA dropped ≥ 1.50) *and* landed in Solid/Hot — call while it's live |
-| 😶 No games | Played this year, nothing in 14 days — injury, IL, or role change |
+| ⏳ Usage down | Playing time cut ≥ 40% — trailing 14 days vs the 16 before it, whichever fell further of appearances or PA/IP |
+| 😶 No games | Played this year, nothing in 14 days, **and not on the IL** |
+| 📈 Trending up | Form gained ≥ .150 OPS (or ERA dropped ≥ 1.50) *and* landed in Solid/Hot — call while it's live |
 
-Silent when nothing is actionable, one alert per player per 10 days. Sample
-floors (40 PA / 15 IP baseline, 25 PA / 6 IP over 14 days, 45 PA / 12 IP over
-30 days) keep small-sample noise out of a real phone call. Every tracked
-player — alerting or not — lands in `data/milb_watch.json` with both windows'
-reads. Preview without posting:
+A lull isn't only a rate collapse: losing playing time is a lull too, and it
+shows up first, so a thin recent sample gets read for usage rather than
+dismissed. Absence findings are checked against the MLB Stats API's roster
+entries and dropped when the player is on the IL or rehabbing — the org already
+told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
+15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).
+
+Silent when nothing is actionable, one alert per player per 10 days. Every
+tracked player — alerting or not — lands in `data/milb_watch.json` with both
+windows' reads. Preview without sending:
 
 ```bash
 python -m scripts.milb_watch --dry
