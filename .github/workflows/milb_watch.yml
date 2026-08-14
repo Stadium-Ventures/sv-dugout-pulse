@@ -1,0 +1,103 @@
+name: MiLB Watch
+
+# Daily read of every MiLB client's recent form against his own season
+# baseline, posting lull / trending-up / no-games-in-14-days to #dugout-pulse
+# so proactive front-office and farm-director calls get scheduled off data
+# instead of memory (Kent's ask, 2026-08-13).
+#
+# 12:30 UTC = 8:30 AM ET. Deliberately after the 11:00 UTC historical pass in
+# pulse.yml, which is what rebuilds window_season/14d/30d — running before it
+# would grade yesterday's windows. Also ahead of the 13:30 UTC summer recap so
+# the morning Slack reads pro-first.
+on:
+  schedule:
+    - cron: "30 12 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print the post and counts without posting or writing state."
+        type: boolean
+        default: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Windows are read from the repo, so check out main as of job start
+          # rather than the SHA pinned at run creation — a pulse bot commit
+          # between the two would otherwise leave us grading stale windows.
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install --quiet -r requirements.txt
+
+      - name: MiLB watch (#dugout-pulse)
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -eo pipefail
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            python -m scripts.milb_watch --dry
+          else
+            python -m scripts.milb_watch
+          fi
+
+      - name: Commit snapshot + alert state
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/milb_watch.json data/_milb_watch_state.json
+          if git diff --staged --quiet; then
+            echo "No MiLB watch changes to commit"
+            exit 0
+          fi
+          git commit -m "Update MiLB watch [bot]"
+          # Pulse bot commits land every 15 min — race the same way the other
+          # workflows do. Losing the push would drop the cooldown stamps and
+          # re-fire today's alerts tomorrow, so fail loudly if all retries lose.
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git merge -X ours origin/main --no-edit -m "Merge concurrent pulse data [bot]" || true
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push attempt $attempt failed (likely a concurrent push) — retrying"
+            sleep $((attempt * 3))
+          done
+          echo "::error::git push failed after 5 attempts"
+          exit 1
+
+      - name: Alert on failure
+        if: failure()
+        env:
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
+        run: |
+          python - <<'PY'
+          import os, json, urllib.request
+          url = os.environ.get("SV_AUTOMATION_WEBHOOK_URL", "")
+          if not url:
+              print("SV_AUTOMATION_WEBHOOK_URL not set — skipping failure post")
+              raise SystemExit(0)
+          run = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          text = (
+              "*Dugout Pulse* — 🛠️ Code change\n"
+              "*What broke:* the daily MiLB watch didn't run, so nobody got "
+              "today's lull / trending-up list for our minor-league clients.\n"
+              "*How we know:* the MiLB Watch workflow failed.\n"
+              f"*What to do:* open the run and re-run it — {run}"
+          )
+          req = urllib.request.Request(
+              url, data=json.dumps({"text": text}).encode(),
+              headers={"Content-Type": "application/json"})
+          urllib.request.urlopen(req, timeout=15).read()
+          print("Posted failure alert to #sv-automation")
+          PY

@@ -13,7 +13,8 @@ docs: `README.md`, `docs/health_monitor.md`, `docs/SECRETS.md`.
 ## Slack channels — scope rule (keep every new alert compliant)
 
 - **#dugout-pulse** (`SLACK_WEBHOOK_URL`) — feature output humans read on
-  purpose: milestone alerts, daily summer recap, placement-conflict pings.
+  purpose: milestone alerts, daily summer recap, placement-conflict pings,
+  the daily MiLB watch (lull / trending-up / no-games-in-14-days).
 - **#sv-automation** (`SV_AUTOMATION_WEBHOOK_URL`, channel ID `C0BE0ELP92Q`) —
   bugs, failures, and health findings ONLY. It's muted; a post there means
   "act on this." Never move feature output here, never leave ops noise on
@@ -40,6 +41,19 @@ docs: `README.md`, `docs/health_monitor.md`, `docs/SECRETS.md`.
 - `pulse.yml` "Alert on failure" step — per-run failure alert.
 - `scripts/summer_roster_regression_alert.py`, `summer_quiet_streak_alert.py`
   — rule-based summer alerts (run inside `summer_rosters.yml`).
+
+## Alerts that compare a player to himself
+
+`scripts/milb_watch.py` + `milb_watch.yml` ("MiLB Watch", 12:30 UTC) is the one
+alert here that grades **relative to a player's own season line**, not against a
+game or a fixed league threshold: baseline = season to date minus the compared
+window, recent = trailing 14d and 30d (the more actionable read wins), verdict =
+`src/window_grader.py` thresholds applied to both. Built for Kent's 2026-08-13
+ask in #justin-riemer — MiLB clients whose form has moved enough to justify a
+front-office or farm-director call. Preview any change with
+`python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
+It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
+`window_*.json` files it reads.
 
 Secrets (values + provenance): `docs/SECRETS.md`. Never commit a webhook URL
 or secret value.

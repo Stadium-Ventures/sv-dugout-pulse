@@ -29,6 +29,7 @@ Real-time baseball player tracker for Stadium Ventures. Monitors MLB, MiLB, and 
 | `src/alerts.py` | Slack alert logic |
 | `src/config.py` | Settings, thresholds, column mappings |
 | `main.py` | Main script that orchestrates everything |
+| `scripts/milb_watch.py` | Daily MiLB form-vs-season-baseline watch (lull / trending-up / no-games alerts) |
 | `generate_test_data.py` | Creates fake data for UI testing |
 | `.github/workflows/pulse.yml` | Automated cron schedule |
 
@@ -46,6 +47,33 @@ Alerts are sent to #dugout-pulse when:
 ### Adjusting Alert Rules
 
 Edit `src/alerts.py` to change thresholds or add new triggers. The `check_and_send_alerts()` function contains all the logic.
+
+### MiLB Watch (daily, 8:30 AM ET)
+
+The alerts above fire off a single game. `scripts/milb_watch.py` answers a
+different question — *is this guy playing differently than he has all year?* —
+which is what earns a front-office or farm-director call.
+
+For every client at an affiliated level (CPX/A/A+/AA/AAA) it grades the last 14
+**and** 30 days against that player's own season line with the compared window
+removed, using the same OPS/ERA thresholds as the dashboard's window grades
+(`src/window_grader.py`), and posts three kinds of finding to #dugout-pulse:
+
+| Trigger | Meaning |
+|---------|---------|
+| 🔻 Lull | Form dropped ≥ .150 OPS (or ERA rose ≥ 1.50) off his own baseline *and* landed in Steady/Cold |
+| 🔺 Trending up | Form gained ≥ .150 OPS (or ERA dropped ≥ 1.50) *and* landed in Solid/Hot — call while it's live |
+| 😶 No games | Played this year, nothing in 14 days — injury, IL, or role change |
+
+Silent when nothing is actionable, one alert per player per 10 days. Sample
+floors (40 PA / 15 IP baseline, 25 PA / 6 IP over 14 days, 45 PA / 12 IP over
+30 days) keep small-sample noise out of a real phone call. Every tracked
+player — alerting or not — lands in `data/milb_watch.json` with both windows'
+reads. Preview without posting:
+
+```bash
+python -m scripts.milb_watch --dry
+```
 
 ## Data Sources
 
