@@ -32,10 +32,14 @@ Four things are worth a call, and all four post:
 
   🔻 lull       — recent form materially below his own baseline AND landing in
                   Steady/Cold. The alert Kent asked for.
-  ⏳ usage lull — playing time cut by 40%+ (trailing 14 days vs the 16 before
-                  it). A lull is also a drop in usage, and it shows up before
-                  the rate does, so a thin recent sample is read as a signal
-                  rather than gated out as noise (BE, 2026-08-14).
+  ⏳ usage lull — playing time cut by 40%+, on either horizon: sustained
+                  (trailing 14 days vs the 16 before) or fresh (last 7 days vs
+                  the 7 before, hitters only). A lull is also a drop in usage,
+                  and it shows up before the rate does, so a thin recent sample
+                  is read as a signal rather than gated out as noise. The weekly
+                  read exists for BE's case (2026-08-14): an everyday player who
+                  goes a week without starting, no IL move — a bench role, which
+                  the 14-day read wouldn't surface for another week.
   😶 idle       — played this year, nothing in 14 days, and NOT on the IL.
   📈 surge      — recent form materially above baseline AND landing in
                   Solid/Hot. This is the Riemer case: the call you make to get a
@@ -125,6 +129,9 @@ _STATE_PATH = _REPO_ROOT / "data" / "_milb_watch_state.json"
 _SNAPSHOT_PATH = _REPO_ROOT / "data" / "milb_watch.json"
 # Name -> mlb_id, for the IL lookup. Refreshed by every pulse run.
 _ROSTER_CACHE_PATH = _REPO_ROOT / "data" / "roster_cache.json"
+# Used for the week-over-week usage read ONLY — never for grading a rate. Seven
+# days is 5-6 games, far too thin to say a player's form has moved.
+_WEEK_PATH = _REPO_ROOT / "data" / "window_7d.json"
 
 _ET = timezone(timedelta(hours=-4))
 
@@ -178,6 +185,25 @@ USAGE_MIN_PRIOR_IP = 5.0
 # Fewer than this many appearances in the prior 16 days and the games-played
 # read is too coarse to mean anything (2 G → 1 G is not a benching).
 USAGE_MIN_PRIOR_GAMES = 4
+
+# ── Week-over-week usage ──
+# The 14-vs-16-day read above only catches a SUSTAINED cut: a normal week sitting
+# next to a quiet one inside the same 14-day window dilutes it, so a fresh change
+# needs about a week to surface. On 2026-08-14 that bar required this week to be
+# ≤ ~1 game when the prior week was normal — i.e. only a total blackout landed.
+#
+# BE's case (2026-08-14) is exactly what fell through: "if he goes from starting
+# every day to being out for a week no injury… or bench role". So the last 7 days
+# also get compared to the 7 before them (window_14d minus window_7d), which
+# surfaces an everyday guy dropping to a bench role a week earlier.
+#
+# Hitters only, deliberately. A pitcher going 4 appearances → 1 is usually his
+# rotation turn or a piggyback week, not a role change, and the 14-day read still
+# covers him. Revisit if pitcher usage turns out to be worth its noise.
+WEEK_USAGE_DROP_PCT = 0.40
+# He has to have been playing near-daily for "he's not playing" to mean anything.
+WEEK_MIN_PRIOR_GAMES = 4
+WEEK_MIN_PRIOR_PA = 15
 
 # Statuses that surface. There is no cooldown and no once-per-N-days rule: this
 # is a rolling board, not an alert stream (BE, 2026-08-14 — "logic isn't surface
@@ -646,6 +672,52 @@ def usage_signal(recent_14: dict | None, recent_30: dict | None,
     }
 
 
+def usage_signal_week(recent_7: dict | None, recent_14: dict | None,
+                      kind: str) -> dict | None:
+    """Last 7 days vs the 7 before them, for hitters who were playing daily.
+
+    Same subtraction trick one window down: the 14-day line minus the 7-day line
+    is the prior week. Returns None when it can't be read — a pitcher, a missing
+    window, or a man who wasn't an everyday player to begin with.
+    """
+    if kind == "pitcher" or not recent_7 or not recent_14:
+        return None
+    stats_7 = recent_7.get("stats") or {}
+    stats_14 = recent_14.get("stats") or {}
+
+    games_7 = int(_num(recent_7.get("games_played")) or 0)
+    games_prior = int(_num(recent_14.get("games_played")) or 0) - games_7
+    pa_7 = int(_num(stats_7.get("pa")) or 0)
+    pa_prior = int(_num(stats_14.get("pa")) or 0) - pa_7
+
+    if games_prior < WEEK_MIN_PRIOR_GAMES or pa_prior < WEEK_MIN_PRIOR_PA:
+        return None
+    if games_7 < 0 or pa_7 < 0:
+        return None
+
+    # Both weeks are the same length, so raw counts compare directly.
+    games_drop = 1.0 - (games_7 / games_prior)
+    pa_drop = 1.0 - (pa_7 / pa_prior) if pa_prior else 0.0
+    driver, drop = max(
+        (("appearances", games_drop), ("volume", pa_drop)), key=lambda pair: pair[1]
+    )
+    return {
+        "scope": "week",
+        "driver": driver,
+        "prior_games": games_prior,
+        "recent_games": games_7,
+        "prior": f"{pa_prior} PA",
+        "recent": f"{pa_7} PA",
+        "drop_pct": round(100.0 * drop, 1),
+        "dropped": drop >= WEEK_USAGE_DROP_PCT,
+        "summary": (
+            f"Playing time down {100.0 * drop:.0f}% week over week — "
+            f"{games_prior} G ({pa_prior} PA) in the prior 7 days → "
+            f"{games_7} G ({pa_7} PA) in the last 7"
+        ),
+    }
+
+
 # ---------------------------------------------------------------------------
 # Injured list — an IL guy isn't a mystery, so he isn't a finding
 # ---------------------------------------------------------------------------
@@ -753,7 +825,8 @@ def milb_clients(season: list) -> list:
     ]
 
 
-def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
+def evaluate_windows(season_entry: dict, recent_windows: dict,
+                     week_entry: dict | None = None) -> dict:
     """Grade one client over every recent window; return the winning verdict.
 
     `recent_windows` maps window label -> that window's entry for this player.
@@ -769,7 +842,7 @@ def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
         return evaluate(season_entry, None)
     verdicts.sort(key=_window_rank)
     winner = verdicts[0]
-    _apply_usage(winner, recent_windows)
+    _apply_usage(winner, recent_windows, week_entry)
     winner["alternates"] = [
         {
             "window": v["window"],
@@ -782,19 +855,32 @@ def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
     return winner
 
 
-def _apply_usage(verdict: dict, recent_windows: dict) -> None:
+def _apply_usage(verdict: dict, recent_windows: dict, week_entry: dict | None = None) -> None:
     """Attach the usage read and let it promote a quiet verdict, in place.
 
     A rate lull already carries the call, so usage just enriches its detail.
     But a thin or flat rate line hiding a 40%-plus cut in playing time is the
     signal on its own — that's the case a sample-size gate would have thrown
     away.
+
+    Two horizons: the sustained cut (14 days vs the 16 before) and the fresh one
+    (last 7 days vs the 7 before). Whichever fell further leads; the other is
+    kept on the verdict so the snapshot shows both. The weekly read is what
+    catches an everyday player dropping to a bench role before two weeks of it
+    have accumulated.
     """
-    usage = usage_signal(
+    sustained = usage_signal(
         recent_windows.get("14d"), recent_windows.get("30d"), verdict["kind"]
     )
-    if not usage:
+    weekly = usage_signal_week(
+        week_entry, recent_windows.get("14d"), verdict["kind"]
+    )
+    if weekly:
+        verdict["usage_week"] = weekly
+    candidates = [u for u in (sustained, weekly) if u]
+    if not candidates:
         return
+    usage = max(candidates, key=lambda u: u["drop_pct"])
     verdict["usage"] = usage
     if not usage["dropped"]:
         return
@@ -826,11 +912,15 @@ def _window_rank(verdict: dict) -> tuple:
     return (_STATUS_ORDER.get(verdict["status"], 9), -magnitude)
 
 
-def evaluate_all(season: list, recent_by_window: dict) -> list:
+def evaluate_all(season: list, recent_by_window: dict, week: list | None = None) -> list:
     """One verdict per MiLB client, ordered most-actionable first.
 
     `recent_by_window` maps window label -> that window's list of entries.
+    `week` is the 7-day window, used only for the week-over-week usage read.
     """
+    week_index = {
+        p.get("player_name"): p for p in (week or []) if p.get("player_name")
+    }
     indexed = {
         window: {p.get("player_name"): p for p in entries if p.get("player_name")}
         for window, entries in recent_by_window.items()
@@ -840,7 +930,9 @@ def evaluate_all(season: list, recent_by_window: dict) -> list:
         name = entry.get("player_name")
         verdicts.append(
             evaluate_windows(
-                entry, {window: index.get(name) for window, index in indexed.items()}
+                entry,
+                {window: index.get(name) for window, index in indexed.items()},
+                week_index.get(name),
             )
         )
     return sorted(verdicts, key=_sort_key)
@@ -1081,7 +1173,10 @@ def main(argv: list | None = None) -> int:
         logger.info("Window files missing or unreadable — skipping")
         return 0
 
-    verdicts = evaluate_all(season, recent_by_window)
+    week = _load_json(_WEEK_PATH, None)
+    verdicts = evaluate_all(
+        season, recent_by_window, week if isinstance(week, list) else None
+    )
     if not verdicts:
         logger.info("No MiLB clients in the season window — skipping")
         return 0
@@ -1125,6 +1220,9 @@ def main(argv: list | None = None) -> int:
             "era_surge_drop": ERA_SURGE_DROP,
             "idle_min_season_games": IDLE_MIN_SEASON_GAMES,
             "usage_drop_pct": USAGE_DROP_PCT,
+            "week_usage_drop_pct": WEEK_USAGE_DROP_PCT,
+            "week_min_prior_games": WEEK_MIN_PRIOR_GAMES,
+            "week_min_prior_pa": WEEK_MIN_PRIOR_PA,
             "usage_min_prior_pa": USAGE_MIN_PRIOR_PA,
             "usage_min_prior_ip": USAGE_MIN_PRIOR_IP,
             "cadence": "rolling — shown while qualifying, dropped when not",

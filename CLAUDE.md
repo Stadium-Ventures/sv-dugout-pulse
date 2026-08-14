@@ -51,8 +51,9 @@ window, recent = trailing 14d and 30d (the more actionable read wins), verdict =
 `src/window_grader.py` thresholds applied to both. Built for Kent's 2026-08-13
 ask in #justin-riemer — MiLB clients whose form has moved enough to justify a
 front-office or farm-director call. It reads four things: a rate lull, a **usage
-lull** (playing time cut 40%+, trailing 14 days vs the 16 before it — a lull is
-also a drop in usage, so a thin sample is a signal not a gate), an absence, and
+lull** on either horizon — sustained (14 days vs the 16 before) or week over week
+(last 7 vs the 7 before, hitters only, for the everyday-guy-to-bench-role case) —
+since a lull is also a drop in usage, so a thin sample is a signal not a gate, an absence, and
 a surge. Absences are IL-checked against the MLB Stats API and dropped when the
 org already explained them. It is a **rolling board, not an alert stream** —
 every category shows every morning it qualifies and drops off the morning it

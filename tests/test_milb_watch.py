@@ -581,3 +581,97 @@ def test_locked_format_survives_an_empty_section():
     )
     # No stray blank line pile-up where sections were dropped.
     assert "\n\n\n" not in text
+
+
+# ---------------------------------------------------------------------------
+# Week-over-week usage — the bench-role tell
+# ---------------------------------------------------------------------------
+
+def test_week_usage_compares_last_7_days_to_the_7_before():
+    # 14d holds 8 G / 36 PA, of which the last 7 days are 3 G / 13 PA.
+    # Prior week = 5 G / 23 PA. Games -40%, PA -43% -> the PA read leads.
+    week = _hitter(pa=13, ab=12, h=4, games=3)
+    fortnight = _hitter(pa=36, ab=33, h=11, games=8)
+    u = m.usage_signal_week(week, fortnight, "hitter")
+    assert u["prior_games"] == 5 and u["recent_games"] == 3
+    assert u["prior"] == "23 PA" and u["recent"] == "13 PA"
+    assert u["driver"] == "volume"
+    assert 42 <= u["drop_pct"] <= 44
+    assert u["dropped"] is True
+
+
+def test_everyday_player_benched_for_a_week_fires():
+    # BE's case: starting daily, then a week without a start and no IL move.
+    week = _hitter(pa=0, ab=0, h=0, games=0)
+    fortnight = _hitter(pa=28, ab=25, h=8, games=6)
+    u = m.usage_signal_week(week, fortnight, "hitter")
+    assert u["drop_pct"] == 100.0
+    assert u["dropped"] is True
+
+
+def test_week_usage_ignores_a_man_who_was_not_playing_daily():
+    # 3 G / 12 PA in the prior week is a part-timer already — a quiet week says
+    # nothing about his role.
+    week = _hitter(pa=2, ab=2, h=0, games=1)
+    fortnight = _hitter(pa=14, ab=13, h=4, games=4)
+    assert m.usage_signal_week(week, fortnight, "hitter") is None
+
+
+def test_week_usage_skips_pitchers():
+    # 4 appearances -> 1 is usually a rotation turn, not a role change. The
+    # 14-day read still covers them.
+    week = _pitcher(ip="1", k=1, bb=0, era="0.00", games=1)
+    fortnight = _pitcher(ip="12", k=12, bb=3, era="3.00", games=5)
+    assert m.usage_signal_week(week, fortnight, "pitcher") is None
+
+
+def test_a_normal_week_is_not_a_usage_drop():
+    week = _hitter(pa=24, ab=22, h=7, games=6)
+    fortnight = _hitter(pa=50, ab=46, h=15, games=12)
+    assert m.usage_signal_week(week, fortnight, "hitter")["dropped"] is False
+
+
+def test_steady_hitter_losing_this_week_becomes_a_usage_lull():
+    # Rate is fine and the 14-day usage read is flat; only the weekly read sees
+    # it. This is the case that was invisible before.
+    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
+    week = _hitter(pa=13, ab=12, h=4, obp=".360", slg=".470", games=3)
+    recent_14 = _hitter(pa=36, ab=33, h=11, obp=".365", slg=".475", games=8)
+    recent_30 = _hitter(pa=74, ab=68, h=22, obp=".368", slg=".478", games=17)
+    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30}, week)
+    assert v["status"] == "usage_lull"
+    assert "week over week" in v["reason"]
+
+
+def test_the_larger_of_the_two_usage_horizons_leads():
+    # Both horizons fire; the bigger drop is the headline and the other is kept
+    # on the verdict for the snapshot.
+    #
+    # Note on why this fixture reads the way it does: with realistic game counts
+    # the weekly read is nearly always the louder one when both apply. Clearing
+    # 40% on the 14-vs-16 read needs the last fortnight at ~52% of the prior 16
+    # days, which — with a normal week sitting in the older half — forces the
+    # recent week to be close to empty. So "sustained fires but weekly doesn't"
+    # is essentially unreachable, and this asserts the max rule rather than
+    # pretending a specific horizon wins.
+    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
+    week = _hitter(pa=8, ab=7, h=2, games=2)
+    recent_14 = _hitter(pa=26, ab=24, h=7, games=6)
+    recent_30 = _hitter(pa=74, ab=68, h=21, games=17)
+    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30}, week)
+    assert v["status"] == "usage_lull"
+    assert v["usage_week"]["dropped"] is True
+    # The headline is whichever fell further.
+    assert v["usage"]["drop_pct"] == max(v["usage"]["drop_pct"],
+                                         v["usage_week"]["drop_pct"])
+    assert v["reason"] == v["usage"]["summary"]
+
+
+def test_week_usage_needs_the_7d_window():
+    # No 7-day entry (a fresh clone, or the file didn't rebuild): the sustained
+    # read still works and nothing crashes.
+    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
+    recent_14 = _hitter(pa=36, ab=33, h=11, games=8)
+    recent_30 = _hitter(pa=74, ab=68, h=22, games=17)
+    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30}, None)
+    assert "usage_week" not in v

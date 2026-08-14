@@ -62,13 +62,17 @@ removed, using the same OPS/ERA thresholds as the dashboard's window grades
 | Trigger | Meaning |
 |---------|---------|
 | 🔻 Lull | Form dropped ≥ .150 OPS (or ERA rose ≥ 1.50) off his own baseline *and* landed in Steady/Cold |
-| ⏳ Usage down | Playing time cut ≥ 40% — trailing 14 days vs the 16 before it, whichever fell further of appearances or PA/IP |
+| ⏳ Usage down | Playing time cut ≥ 40% on either horizon: sustained (14 days vs the 16 before) or week over week (last 7 vs the 7 before, hitters only). Whichever fell further of appearances or PA/IP leads |
 | 😶 No games | Played this year, nothing in 14 days, **and not on the IL** |
 | 📈 Trending up | Form gained ≥ .150 OPS (or ERA dropped ≥ 1.50) *and* landed in Solid/Hot — call while it's live |
 
 A lull isn't only a rate collapse: losing playing time is a lull too, and it
 shows up first, so a thin recent sample gets read for usage rather than
-dismissed. Absence findings are checked against the MLB Stats API's roster
+dismissed. The two usage horizons do different jobs — the 14-day read catches a
+sustained cut, the weekly read catches an everyday player who stops starting
+before two weeks of it have accumulated (a bench role, or a week out with no IL
+move). Pitchers use the 14-day read only: 4 appearances → 1 is usually a
+rotation turn. Absence findings are checked against the MLB Stats API's roster
 entries and dropped when the player is on the IL or rehabbing — the org already
 told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
 15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).
