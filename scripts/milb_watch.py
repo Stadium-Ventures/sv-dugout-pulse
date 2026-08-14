@@ -227,6 +227,12 @@ def _outs_to_ip_str(outs: int) -> str:
     return f"{whole}.{frac}" if frac else str(whole)
 
 
+def _fmt_delta3(value: float) -> str:
+    """Signed rate delta, baseball style: -.456 / +.165, no leading zero."""
+    sign = "+" if value >= 0 else "-"
+    return f"{sign}{_fmt3(abs(value))}"
+
+
 def _fmt3(value: float) -> str:
     """Format a rate the way the rest of the app does: .294, 1.024."""
     text = f"{value:.3f}"
@@ -461,7 +467,7 @@ def _evaluate_hitter(verdict: dict, baseline_line: dict, recent_line: dict) -> d
     verdict["recent"]["grade"] = recent_grade
     verdict["delta"] = {"metric": "ops", "value": delta}
 
-    moved = f"OPS {baseline['ops']} → {recent['ops']} ({delta:+.3f})"
+    moved = f"OPS {baseline['ops']} → {recent['ops']} ({_fmt_delta3(delta)})"
     if delta <= -OPS_LULL_DROP and recent_grade in _LULL_LANDING:
         verdict["status"] = "lull"
         verdict["reason"] = f"{moved} over {recent['pa']} PA in {span}"
@@ -787,10 +793,7 @@ def _apply_usage(verdict: dict, recent_windows: dict) -> None:
                 f"{recent['ip']} IP" if "ip" in recent
                 else f"{recent.get('pa', 0)} PA"
             )
-            rate_note = (
-                f"Only {played} in the last 14 days — too thin to read a rate "
-                f"off, which is the point"
-            )
+            rate_note = f"Only {played} in the last 14 days — too thin for a rate read"
         verdict["status"] = "usage_lull"
         verdict["reason"] = usage["summary"]
         verdict["detail"] = rate_note
@@ -904,20 +907,17 @@ def build_state(verdicts: list, state: dict, alerted_names: set, today: str) -> 
 # Slack
 # ---------------------------------------------------------------------------
 
-_CALL_ANGLE = {
-    "lull": "Worth a farm-director check-in — what are they seeing that the line doesn't show?",
-    "usage_lull": "Playing time is the tell — ask where he sits in the everyday plan before the rate follows.",
-    "surge": "Good week to call — this is the stretch you want the front office looking at.",
-    "idle": "Not on the IL and not playing — worth asking why.",
-}
-
+# Section headings state the rule that fired and nothing else. No call advice,
+# no "worth a check-in" subtext — the numbers are the message and the reader
+# decides what to do with them (BE, 2026-08-14).
+#
 # 📈 for trending-up: its arrow is green. A red triangle read as bad news on a
-# good-news line (BE, 2026-08-14).
+# good-news line.
 _SECTION = [
-    ("lull", "🔻 *Lull — off his own season baseline*"),
-    ("usage_lull", "⏳ *Usage down — playing time cut, watch the rate next*"),
-    ("idle", "😶 *No games in the last 14 days (not IL)*"),
-    ("surge", "📈 *Trending up — make the call while it's live*"),
+    ("lull", "🔻 *Lull* — form below season baseline"),
+    ("usage_lull", "⏳ *Usage down* — playing time cut 40%+"),
+    ("idle", "😶 *No games in 14 days* — not on the IL"),
+    ("surge", "📈 *Trending up* — form above season baseline"),
 ]
 
 
@@ -926,33 +926,60 @@ def _short_team(team: str) -> str:
     return team.split()[-1] if team else ""
 
 
-def build_slack_text(alerts: list, tracked: int) -> str:
-    """Compose the #dugout-pulse post. Assumes alerts is non-empty."""
-    lines = ["*MiLB watch — recent form vs. season baseline*"]
+def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None) -> str:
+    """Compose the DM. Assumes alerts is non-empty.
+
+    Layout notes, learned by reading a sent one back (2026-08-14):
+    - Slack strips leading whitespace, so indentation does nothing. `>` is the
+      only way to actually indent a continuation line, so each player's numbers
+      go in a blockquote under his name.
+    - No call advice anywhere. It repeated on every bullet, and the numbers
+      already say what they say (BE, 2026-08-14).
+    - A blank line between players is what makes a list of eight scannable.
+    - `*bold*` here is Slack mrkdwn (chat.postMessage), NOT standard markdown —
+      `**bold**` would render literally.
+    """
+    lines = [
+        "*MiLB watch* — recent form vs. season baseline",
+        f"_{tracked} MiLB clients tracked · {len(alerts)} findings_",
+    ]
     for status, heading in _SECTION:
         group = [a for a in alerts if a["status"] == status]
         if not group:
             continue
-        lines.append("")
-        lines.append(heading)
+        lines += ["", heading]
         for a in group:
             level = a.get("current_level") or "?"
-            lines.append(
-                f"• *{a['player_name']}* ({_short_team(a['team'])}, {level}) — "
-                f"{a['reason']}"
-            )
-            detail = a.get("detail")
-            if detail:
-                lines.append(f"    {detail}")
-            lines.append(f"    _{_CALL_ANGLE[status]}_")
-    lines.append("")
-    lines.append(
-        f"_Baseline = season to date with the compared window removed · "
-        f"14- and 30-day form both checked · IL stints excluded · "
-        f"{tracked} MiLB clients tracked · one alert per player per "
-        f"{REALERT_COOLDOWN_DAYS} days._"
-    )
+            lines += [
+                "",
+                f"*{a['player_name']}*  ·  {_short_team(a['team'])}  ·  {level}",
+                f"> {a['reason']}",
+            ]
+            if a.get("detail"):
+                lines.append(f"> {a['detail']}")
+    if suppressed:
+        lines += ["", f"_{_suppressed_line(suppressed)}_"]
+    lines += [
+        "",
+        "_Baseline = season to date minus the window being compared._",
+        f"_14- and 30-day form both checked · one alert per player per "
+        f"{REALERT_COOLDOWN_DAYS} days._",
+    ]
     return "\n".join(lines)
+
+
+def _suppressed_line(suppressed: list) -> str:
+    """One line naming the IL guys, so an empty no-games section isn't a mystery."""
+    parts = []
+    for verdict in suppressed:
+        il = verdict.get("il") or {}
+        since = il.get("since") or ""
+        stamp = f" since {since[5:].replace('-', '/')}" if len(since) >= 10 else ""
+        parts.append(
+            f"{verdict['player_name']} ({_short_team(verdict['team'])}, "
+            f"{verdict.get('current_level') or '?'}{stamp})"
+        )
+    return "Not shown — on the IL: " + ", ".join(parts) + "."
 
 
 def post_slack(text: str) -> int:
@@ -1051,6 +1078,9 @@ def main(argv: list | None = None) -> int:
     today = _today_et_str()
     alerts = [v for v in verdicts if due_for_alert(v, state, today)]
     alerted_names = {a["player_name"] for a in alerts}
+    # Named in a footnote: an empty no-games section otherwise looks like the
+    # check didn't run.
+    suppressed = [v for v in verdicts if v["status"] == "il"]
 
     counts: dict = {}
     for verdict in verdicts:
@@ -1090,9 +1120,9 @@ def main(argv: list | None = None) -> int:
     if args.dry:
         print(json.dumps(snapshot["counts"], indent=2))
         print(
-            build_slack_text(alerts, len(verdicts))
+            build_slack_text(alerts, len(verdicts), suppressed)
             if alerts
-            else "(nothing actionable — would post nothing)"
+            else "(nothing actionable — would send nothing)"
         )
         return 0
 
@@ -1104,7 +1134,7 @@ def main(argv: list | None = None) -> int:
     if not alerts:
         # Silent when healthy.
         return 0
-    return post_slack(build_slack_text(alerts, len(verdicts)))
+    return post_slack(build_slack_text(alerts, len(verdicts), suppressed))
 
 
 if __name__ == "__main__":

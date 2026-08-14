@@ -267,11 +267,58 @@ def test_slack_text_groups_by_status_and_names_the_call():
     assert "🔻" in text and "📈" in text
     assert "🔺" not in text
     # Team shortens to the nickname, as the social-search URLs do.
-    assert "(Yankees, AA)" in text and "(Athletics, AA)" in text
-    assert "farm-director check-in" in text
+    assert "*Slumping*  ·  Yankees  ·  AA" in text
+    assert "*Rising*  ·  Athletics  ·  AA" in text
     assert "33 MiLB clients tracked" in text
+    assert "*Lull* — form below season baseline" in text
     # Lull section comes before the surge section.
     assert text.index("Slumping") < text.index("Rising")
+
+
+def test_slack_text_indents_with_blockquotes_not_spaces():
+    # Slack strips leading whitespace, so `>` is the only indent that renders.
+    alerts = [{"player_name": "Guy", "team": "New York Yankees",
+               "current_level": "AA", "status": "lull",
+               "reason": "OPS .800 → .560", "detail": "3-for-21, 0 HR"}]
+    text = m.build_slack_text(alerts, tracked=33)
+    assert "> OPS .800 → .560" in text
+    assert "> 3-for-21, 0 HR" in text
+    assert "\n    " not in text
+    # Blank line between the name line and the section above it.
+    assert "\n\n*Guy*" in text
+
+
+def test_no_advisory_subtext_only_the_logic():
+    # Headings name the rule that fired; bodies are numbers. No "worth a call".
+    alerts = [
+        {"player_name": f"Guy {i}", "team": "New York Yankees",
+         "current_level": "AA", "status": "lull", "reason": "OPS .800 → .560"}
+        for i in range(4)
+    ]
+    text = m.build_slack_text(alerts, tracked=33).lower()
+    for editorial in ("worth a", "check-in", "make the call", "the tell",
+                      "front office looking"):
+        assert editorial not in text
+
+
+def test_suppressed_il_players_get_a_footnote():
+    # An empty no-games section otherwise looks like the check didn't run.
+    alerts = [{"player_name": "Guy", "team": "New York Yankees",
+               "current_level": "AA", "status": "lull", "reason": "OPS .800 → .560"}]
+    suppressed = [{"player_name": "Hurt Guy", "team": "Colorado Rockies",
+                   "current_level": "AAA", "status": "il",
+                   "il": {"description": "Injured 7-Day", "since": "2026-06-22"}}]
+    text = m.build_slack_text(alerts, tracked=33, suppressed=suppressed)
+    assert "Not shown — on the IL: Hurt Guy (Rockies, AAA since 06/22)." in text
+
+
+def test_ops_deltas_use_baseball_formatting():
+    season = _hitter(pa=200, ab=180, h=54, obp=".370", slg=".480")
+    recent = _hitter(pa=40, ab=36, h=4, obp=".200", slg=".194")
+    v = m.evaluate(season, recent, "14d")
+    # -.376, not -0.376.
+    assert "(-." in v["reason"]
+    assert "(-0." not in v["reason"]
 
 
 # ---------------------------------------------------------------------------
