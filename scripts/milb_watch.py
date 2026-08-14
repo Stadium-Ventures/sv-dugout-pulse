@@ -60,11 +60,16 @@ rounded SLG/OBP/ERA/WHIP strings and land within a rounding error of the true
 count. Immaterial at the .150-OPS / 1.50-ERA bars this fires on, but it's why
 `data/milb_watch.json` records the derived counts alongside the rates.
 
-DMs Brandon (`SLACK_BOT_TOKEN` + chat.postMessage, `MILB_WATCH_DM_CHANNEL`) —
-NOT #dugout-pulse, on purpose and per BE 2026-08-14, while the thresholds are
-still being tuned: a noisy morning costs one person's attention rather than the
-whole channel's. There is deliberately no fallback to the product channel.
-Silent when nothing is actionable.
+Posts to #dugout-pulse (`SLACK_WEBHOOK_URL`) daily at 8:30 AM ET — feature
+output an agent reads on purpose, not an ops finding, per the channel scope rule
+in CLAUDE.md. Silent when nothing is actionable.
+
+**The message format is locked** (BE, 2026-08-14). `build_slack_text` is pinned
+byte-for-byte by `test_locked_message_format` in `tests/test_milb_watch.py`:
+section order, the `>` blockquote body, the `*Name*  ·  Org  ·  Level` line, the
+blank lines, the footer wording. Changing any of it fails that test on purpose —
+if a change is actually wanted, update the expected block in the same commit and
+say why. Do not "tidy" this copy.
 
 State: `data/_milb_watch_state.json` (per-player cooldown, so a two-month slump
 doesn't re-post every morning).
@@ -174,12 +179,6 @@ _LULL_LANDING = {GRADE_QUIET, GRADE_COLD}
 _SURGE_LANDING = {GRADE_HOT, GRADE_SOLID}
 
 _PITCHER_POSITIONS = {"Pitcher", "RHP", "LHP", "P", "SP", "RP"}
-
-# Findings DM Brandon rather than posting to #dugout-pulse (BE, 2026-08-14) —
-# this is his IM conversation ID, not a secret. Override with
-# MILB_WATCH_DM_CHANNEL to send somewhere else.
-DEFAULT_DM_CHANNEL = "D09H0FY88FL"
-
 
 # ---------------------------------------------------------------------------
 # Parsing helpers — window JSON stores rates as strings, "--" when no data
@@ -929,6 +928,10 @@ def _short_team(team: str) -> str:
 def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None) -> str:
     """Compose the DM. Assumes alerts is non-empty.
 
+    LOCKED FORMAT — pinned byte-for-byte by `test_locked_message_format`. Do not
+    adjust spacing, separators, or wording without updating that test
+    deliberately; the layout below is the approved one (BE, 2026-08-14).
+
     Layout notes, learned by reading a sent one back (2026-08-14):
     - Slack strips leading whitespace, so indentation does nothing. `>` is the
       only way to actually indent a continuation line, so each player's numbers
@@ -983,45 +986,31 @@ def _suppressed_line(suppressed: list) -> str:
 
 
 def post_slack(text: str) -> int:
-    """DM the findings to Brandon.
+    """Post the findings to #dugout-pulse.
 
-    Deliberately NOT the #dugout-pulse webhook (BE, 2026-08-14): this is a DM
-    while the thresholds are being tuned, so a noisy morning costs one person's
-    attention instead of the whole channel's. Uses chat.postMessage with the
-    bot token — a webhook is bound to one channel and can't address a DM. Flip
-    the destination by pointing MILB_WATCH_DM_CHANNEL at a different
-    conversation; there is no fallback to the product channel, on purpose.
+    Went out as a DM for one review cycle while the format was being settled
+    (BE, 2026-08-14); now it's channel output like the rest of the product's
+    alerts, on the standard `SLACK_WEBHOOK_URL` webhook.
     """
-    token = os.environ.get("SLACK_BOT_TOKEN", "")
-    channel = os.environ.get("MILB_WATCH_DM_CHANNEL", DEFAULT_DM_CHANNEL)
-    if not token:
-        logger.warning("SLACK_BOT_TOKEN not set — would have DM'd %s:", channel)
+    webhook = os.environ.get("SLACK_WEBHOOK_URL", "")
+    if not webhook:
+        logger.warning("SLACK_WEBHOOK_URL not set — would have posted:")
         print(text)
         return 0
     try:
         resp = requests.post(
-            "https://slack.com/api/chat.postMessage",
-            json={"channel": channel, "text": text},
-            headers={
-                "Authorization": f"Bearer {token}",
-                "Content-Type": "application/json; charset=utf-8",
-            },
+            webhook,
+            json={"text": text},
+            headers={"Content-Type": "application/json; charset=utf-8"},
             timeout=15,
         )
-        body = resp.json() if resp.content else {}
-        if resp.status_code != 200 or not body.get("ok"):
-            # Slack answers 200 with ok:false for auth/scope/channel errors, so
-            # the body is the thing that actually tells you what went wrong.
-            logger.error(
-                "Slack DM failed: HTTP %s, error=%s",
-                resp.status_code,
-                body.get("error", "unknown"),
-            )
+        if resp.status_code != 200:
+            logger.error("Slack send failed: %s %s", resp.status_code, resp.text)
             return 1
-        logger.info("DM'd %s", channel)
+        logger.info("Posted to #dugout-pulse")
         return 0
     except Exception:
-        logger.exception("Slack DM errored")
+        logger.exception("Slack send errored")
         return 1
 
 

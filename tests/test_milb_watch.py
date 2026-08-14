@@ -448,3 +448,90 @@ def test_unavailable_codes_and_keywords_both_recognized():
     assert not any(w in "reassigned to minors" for w in m._UNAVAILABLE_KEYWORDS)
     assert "RM" not in m._UNAVAILABLE_STATUS_CODES
     assert any(w in "injured 7-day" for w in m._UNAVAILABLE_KEYWORDS)
+
+
+# ---------------------------------------------------------------------------
+# Locked format
+# ---------------------------------------------------------------------------
+
+# The approved #dugout-pulse layout, pinned byte-for-byte (BE, 2026-08-14:
+# "this exact format needs to be locked"). If you are here because this test
+# failed, the message format changed — that is what this test is for. Either
+# revert the change, or update this block deliberately and say why in the commit.
+# Do not "tidy" the copy to make the test pass.
+_LOCKED = """*MiLB watch* — recent form vs. season baseline
+_33 MiLB clients tracked · 4 findings_
+
+🔻 *Lull* — form below season baseline
+
+*Blake Rambusch*  ·  Mariners  ·  AA
+> OPS .723 → .374 (-.349) over 26 PA in the last 14 days
+> 3-for-21, 0 HR
+
+*Ryan DeSanto*  ·  Guardians  ·  A
+> ERA 3.19 → 5.62 (+2.43) over 8 IP in the last 14 days
+> 10 K / 7 BB, 5 ER · BB/9 up 4.5 → 7.9
+
+⏳ *Usage down* — playing time cut 40%+
+
+*Cade Doughty*  ·  Braves  ·  A+
+> Appearances down 51% — 22 PA in the prior 16 days (7 G) → 12 PA in the last 14 (3 G)
+> Only 12 PA in the last 14 days — too thin for a rate read
+
+📈 *Trending up* — form above season baseline
+
+*Justin Riemer*  ·  Athletics  ·  AA
+> OPS .764 → .929 (+.165) over 60 PA in the last 30 days
+> 19-for-49, 0 HR
+
+_Not shown — on the IL: Sterlin Thompson (Rockies, AAA since 06/22)._
+
+_Baseline = season to date minus the window being compared._
+_14- and 30-day form both checked · one alert per player per 10 days._"""
+
+
+def test_locked_message_format():
+    alerts = [
+        {"player_name": "Blake Rambusch", "team": "Seattle Mariners",
+         "current_level": "AA", "status": "lull",
+         "reason": "OPS .723 → .374 (-.349) over 26 PA in the last 14 days",
+         "detail": "3-for-21, 0 HR"},
+        {"player_name": "Ryan DeSanto", "team": "Cleveland Guardians",
+         "current_level": "A", "status": "lull",
+         "reason": "ERA 3.19 → 5.62 (+2.43) over 8 IP in the last 14 days",
+         "detail": "10 K / 7 BB, 5 ER · BB/9 up 4.5 → 7.9"},
+        {"player_name": "Cade Doughty", "team": "Atlanta Braves",
+         "current_level": "A+", "status": "usage_lull",
+         "reason": ("Appearances down 51% — 22 PA in the prior 16 days (7 G) → "
+                    "12 PA in the last 14 (3 G)"),
+         "detail": "Only 12 PA in the last 14 days — too thin for a rate read"},
+        {"player_name": "Justin Riemer", "team": "Athletics",
+         "current_level": "AA", "status": "surge",
+         "reason": "OPS .764 → .929 (+.165) over 60 PA in the last 30 days",
+         "detail": "19-for-49, 0 HR"},
+    ]
+    suppressed = [
+        {"player_name": "Sterlin Thompson", "team": "Colorado Rockies",
+         "current_level": "AAA", "status": "il",
+         "il": {"description": "Injured 7-Day", "since": "2026-06-22"}},
+    ]
+    assert m.build_slack_text(alerts, tracked=33, suppressed=suppressed) == _LOCKED
+
+
+def test_locked_format_survives_an_empty_section():
+    # No usage findings today: the section disappears entirely rather than
+    # printing an empty heading.
+    alerts = [
+        {"player_name": "Blake Rambusch", "team": "Seattle Mariners",
+         "current_level": "AA", "status": "lull",
+         "reason": "OPS .723 → .374 (-.349) over 26 PA in the last 14 days",
+         "detail": "3-for-21, 0 HR"},
+    ]
+    text = m.build_slack_text(alerts, tracked=33)
+    assert "Usage down" not in text
+    assert "Trending up" not in text
+    assert text.endswith(
+        "_14- and 30-day form both checked · one alert per player per 10 days._"
+    )
+    # No stray blank line pile-up where sections were dropped.
+    assert "\n\n\n" not in text

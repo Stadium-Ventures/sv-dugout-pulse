@@ -12,20 +12,14 @@ set with `gh secret set NAME -R Stadium-Ventures/sv-dugout-pulse`.
 | Name | What it's for | Where the value comes from |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | LLM health monitor | Anthropic Console → API Keys (https://console.anthropic.com/settings/keys) |
-| `SLACK_WEBHOOK_URL` | Posts to the Dugout Pulse channel | Slack app → Incoming Webhooks (https://api.slack.com/apps) |
+| `SLACK_WEBHOOK_URL` | Posts to the Dugout Pulse channel — live alerts, summer recap, daily MiLB watch | Slack app → Incoming Webhooks (https://api.slack.com/apps) |
 | `SV_AUTOMATION_WEBHOOK_URL` | Failure alerts → #sv-automation | Same Slack app page. Reference copy: Vercel sv-heartbeat env (https://vercel.com/stadium-ventures/sv-heartbeat/settings/environment-variables). |
-| `SLACK_BOT_TOKEN` | Slack Web API access — also the MiLB watch's DM send (`chat.postMessage` needs `chat:write`; a webhook can't address a DM) | Slack app → OAuth & Permissions |
+| `SLACK_BOT_TOKEN` | Slack Web API access | Slack app → OAuth & Permissions |
 | `RESEND_API_KEY` | Email sends | Resend dashboard → API Keys (https://resend.com/api-keys) |
 | `ROSTER_URL`, `RECRUITS_URL` | Published-CSV URLs of source Google Sheets (config) | Google Sheets → File → Share → Publish to web → CSV |
 | `HS_STATS_URL` | HS stats source sheet — **referenced in a workflow but NOT currently set on the repo** | Google Sheets published-CSV URL; set it if/when the HS workflow needs it |
 | `SB_PROXY_URL`, `SB_HTTP_PROXY`, `SB_HTTP_PROXY_2`, `SB_HTTP_PROXY_3` | Proxy endpoints for the StatBroadcast bypass | Provisioned by Tom at the proxy provider; ask Tom |
 | `GITHUB_TOKEN` | Built-in Actions token | Provided automatically by GitHub — nothing to set |
-
-## Not secrets, but configurable
-
-| Name | What it's for | Default |
-|---|---|---|
-| `MILB_WATCH_DM_CHANNEL` | Where the daily MiLB watch sends its findings. An Actions **variable**, not a secret — a conversation ID isn't sensitive. | Brandon's DM, hardcoded as `DEFAULT_DM_CHANNEL` in `scripts/milb_watch.py` |
 
 ## Conventions
 

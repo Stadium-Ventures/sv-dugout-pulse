@@ -29,7 +29,7 @@ Real-time baseball player tracker for Stadium Ventures. Monitors MLB, MiLB, and 
 | `src/alerts.py` | Slack alert logic |
 | `src/config.py` | Settings, thresholds, column mappings |
 | `main.py` | Main script that orchestrates everything |
-| `scripts/milb_watch.py` | Daily MiLB watch — form + usage vs. season baseline (lull / usage-down / no-games / trending-up), DM'd to Brandon |
+| `scripts/milb_watch.py` | Daily MiLB watch — form + usage vs. season baseline (lull / usage-down / no-games / trending-up) → #dugout-pulse, 8:30 AM ET |
 | `generate_test_data.py` | Creates fake data for UI testing |
 | `.github/workflows/pulse.yml` | Automated cron schedule |
 
@@ -57,8 +57,7 @@ which is what earns a front-office or farm-director call.
 For every client at an affiliated level (CPX/A/A+/AA/AAA) it grades the last 14
 **and** 30 days against that player's own season line with the compared window
 removed, using the same OPS/ERA thresholds as the dashboard's window grades
-(`src/window_grader.py`), and **DMs** four kinds of finding to Brandon (not
-#dugout-pulse — the thresholds are still being tuned):
+(`src/window_grader.py`), and posts four kinds of finding to #dugout-pulse:
 
 | Trigger | Meaning |
 |---------|---------|
@@ -76,7 +75,11 @@ told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
 
 Silent when nothing is actionable, one alert per player per 10 days. Every
 tracked player — alerting or not — lands in `data/milb_watch.json` with both
-windows' reads. Preview without sending:
+windows' reads.
+
+**The Slack layout is locked** and pinned byte-for-byte by
+`test_locked_message_format` in `tests/test_milb_watch.py`. If that test fails,
+the format changed — that's the point. Preview without sending:
 
 ```bash
 python -m scripts.milb_watch --dry

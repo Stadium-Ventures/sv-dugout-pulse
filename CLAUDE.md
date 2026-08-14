@@ -13,12 +13,8 @@ docs: `README.md`, `docs/health_monitor.md`, `docs/SECRETS.md`.
 ## Slack channels — scope rule (keep every new alert compliant)
 
 - **#dugout-pulse** (`SLACK_WEBHOOK_URL`) — feature output humans read on
-  purpose: milestone alerts, daily summer recap, placement-conflict pings.
-- **DM to Brandon** (`SLACK_BOT_TOKEN` + `MILB_WATCH_DM_CHANNEL`) — the daily
-  MiLB watch, deliberately NOT on #dugout-pulse while its thresholds are being
-  tuned (BE, 2026-08-14). A third destination is a real exception to the
-  two-channel rule above, so keep it to this one job; don't grow a habit of
-  DMing product output.
+  purpose: milestone alerts, daily summer recap, placement-conflict pings, the
+  daily MiLB watch (8:30 AM ET).
 - **#sv-automation** (`SV_AUTOMATION_WEBHOOK_URL`, channel ID `C0BE0ELP92Q`) —
   bugs, failures, and health findings ONLY. It's muted; a post there means
   "act on this." Never move feature output here, never leave ops noise on
@@ -62,6 +58,11 @@ org already explained them. Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads.
+
+**Its Slack format is locked** (BE, 2026-08-14) and pinned byte-for-byte by
+`test_locked_message_format`. That test failing means the message layout
+changed — revert, or update the expected block deliberately and say why. Don't
+reformat that copy in passing.
 
 Secrets (values + provenance): `docs/SECRETS.md`. Never commit a webhook URL
 or secret value.
