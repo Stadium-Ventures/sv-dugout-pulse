@@ -1,5 +1,5 @@
 """MiLB watch: baseline subtraction, lull/surge/idle gating, window choice,
-and the alert cooldown."""
+the rolling board, and the locked message format."""
 from scripts import milb_watch as m
 
 
@@ -216,37 +216,70 @@ def test_evaluate_all_orders_lulls_first():
 
 
 # ---------------------------------------------------------------------------
-# Cooldown
+# Rolling board — no cooldown, nothing suppressed for having been shown
 # ---------------------------------------------------------------------------
 
-def test_cooldown_suppresses_repeat_alerts_but_not_new_status():
-    lull = {"player_name": "Guy", "status": "lull"}
-    state = {"Guy": {"last_alert_date": "2026-08-10", "last_alert_status": "lull"}}
-    assert not m.due_for_alert(lull, state, "2026-08-14")
-    assert m.due_for_alert(lull, state, "2026-08-25")
-    # A different status is a different conversation — fires immediately.
-    assert m.due_for_alert({"player_name": "Guy", "status": "surge"}, state,
-                           "2026-08-14")
+def test_every_category_shows_while_it_qualifies():
+    for status in m.ACTIONABLE_STATUSES:
+        assert m.is_actionable({"player_name": "Guy", "status": status})
 
 
-def test_steady_and_insufficient_never_alert():
-    for status in ("steady", "insufficient"):
-        assert not m.due_for_alert({"player_name": "Guy", "status": status}, {},
-                                   "2026-08-14")
+def test_steady_insufficient_and_il_never_show():
+    for status in ("steady", "insufficient", "il"):
+        assert not m.is_actionable({"player_name": "Guy", "status": status})
 
 
-def test_build_state_stamps_only_players_that_alerted():
-    verdicts = [
-        {"player_name": "Fired", "status": "lull", "baseline": {"ops": ".800",
-                                                                "_ops": 0.8}},
-        {"player_name": "Quiet", "status": "steady", "baseline": {"ops": ".750",
-                                                                  "_ops": 0.75}},
-    ]
-    state = m.build_state(verdicts, {}, {"Fired"}, "2026-08-14")
-    assert state["Fired"]["last_alert_date"] == "2026-08-14"
-    assert state["Fired"]["last_alert_status"] == "lull"
-    assert state["Quiet"]["last_alert_date"] is None
-    assert state["Quiet"]["baseline_ops"] == ".750"
+def test_a_player_drops_off_when_he_stops_qualifying():
+    # Lull yesterday, grades steady today: off the board, and out of the state
+    # that carries forward. Nothing to expire — he just doesn't clear the bar.
+    yesterday = {"Guy": {"status": "lull", "since": "2026-08-10"}}
+    today = [{"player_name": "Guy", "status": "steady"}]
+    m.apply_streaks(today, yesterday, "2026-08-14")
+    assert not m.is_actionable(today[0])
+    on_board = [v for v in today if m.is_actionable(v)]
+    assert m.build_state(on_board, yesterday, "2026-08-14") == {}
+
+
+def test_a_standing_finding_shows_again_the_next_day():
+    state = {"Guy": {"status": "lull", "since": "2026-08-13"}}
+    verdicts = [{"player_name": "Guy", "status": "lull"}]
+    m.apply_streaks(verdicts, state, "2026-08-14")
+    assert m.is_actionable(verdicts[0])
+    assert verdicts[0]["new_today"] is False
+
+
+def test_streak_counts_days_a_finding_has_been_standing():
+    state = {"Guy": {"status": "lull", "since": "2026-08-10"}}
+    verdicts = [{"player_name": "Guy", "status": "lull"}]
+    m.apply_streaks(verdicts, state, "2026-08-14")
+    assert verdicts[0]["since"] == "2026-08-10"
+    assert verdicts[0]["days_standing"] == 5
+
+
+def test_status_flip_restarts_the_streak():
+    # Lull yesterday, trending up today: a new finding, not a continuing one.
+    state = {"Guy": {"status": "lull", "since": "2026-08-01"}}
+    verdicts = [{"player_name": "Guy", "status": "surge"}]
+    m.apply_streaks(verdicts, state, "2026-08-14")
+    assert verdicts[0]["since"] == "2026-08-14"
+    assert verdicts[0]["days_standing"] == 1
+    assert verdicts[0]["new_today"] is True
+
+
+def test_first_appearance_is_new_today():
+    verdicts = [{"player_name": "Guy", "status": "lull"}]
+    m.apply_streaks(verdicts, {}, "2026-08-14")
+    assert verdicts[0]["new_today"] is True
+    assert verdicts[0]["days_standing"] == 1
+
+
+def test_build_state_carries_the_board_forward():
+    verdicts = [{"player_name": "Standing", "status": "lull",
+                 "since": "2026-08-10", "baseline": {"ops": ".800", "_ops": 0.8}}]
+    state = m.build_state(verdicts, {}, "2026-08-14")
+    assert state["Standing"]["since"] == "2026-08-10"
+    assert state["Standing"]["last_seen_date"] == "2026-08-14"
+    assert state["Standing"]["baseline_ops"] == ".800"
 
 
 # ---------------------------------------------------------------------------
@@ -405,9 +438,9 @@ def test_il_players_drop_off_the_no_games_list():
     assert verdicts[0]["status"] == "il"
     assert "Injured 7-Day since 2026-06-22" in verdicts[0]["reason"]
     assert verdicts[1]["status"] == "idle"
-    # `il` is not an alerting status — it never reaches Slack.
-    assert not m.due_for_alert(verdicts[0], {}, "2026-08-14")
-    assert m.due_for_alert(verdicts[1], {}, "2026-08-14")
+    # `il` is not a board status — it never reaches Slack.
+    assert not m.is_actionable(verdicts[0])
+    assert m.is_actionable(verdicts[1])
 
 
 def test_usage_lull_is_also_il_checked():
@@ -459,6 +492,18 @@ def test_unavailable_codes_and_keywords_both_recognized():
 # failed, the message format changed — that is what this test is for. Either
 # revert the change, or update this block deliberately and say why in the commit.
 # Do not "tidy" the copy to make the test pass.
+#
+# Deliberate updates:
+#   2026-08-14 — footer cadence line, when the 10-day cooldown was removed and
+#                every category went to a rolling board (BE).
+#
+# Deliberate updates:
+#   2026-08-14 — footer cadence line, when the cooldown was removed and every
+#                category went to a rolling board (BE).
+#
+# Deliberate updates so far:
+#   2026-08-14 — footer cadence line, when trending-up stopped being subject to
+#                the cooldown and started showing every day (BE).
 _LOCKED = """*MiLB watch* — recent form vs. season baseline
 _33 MiLB clients tracked · 4 findings_
 
@@ -487,7 +532,7 @@ _33 MiLB clients tracked · 4 findings_
 _Not shown — on the IL: Sterlin Thompson (Rockies, AAA since 06/22)._
 
 _Baseline = season to date minus the window being compared._
-_14- and 30-day form both checked · one alert per player per 10 days._"""
+_14- and 30-day form both checked · rolling board — a player shows while he qualifies and drops off when he doesn't._"""
 
 
 def test_locked_message_format():
@@ -531,7 +576,8 @@ def test_locked_format_survives_an_empty_section():
     assert "Usage down" not in text
     assert "Trending up" not in text
     assert text.endswith(
-        "_14- and 30-day form both checked · one alert per player per 10 days._"
+        "_14- and 30-day form both checked · rolling board — a player shows "
+        "while he qualifies and drops off when he doesn't._"
     )
     # No stray blank line pile-up where sections were dropped.
     assert "\n\n\n" not in text

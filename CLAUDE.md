@@ -54,7 +54,10 @@ front-office or farm-director call. It reads four things: a rate lull, a **usage
 lull** (playing time cut 40%+, trailing 14 days vs the 16 before it — a lull is
 also a drop in usage, so a thin sample is a signal not a gate), an absence, and
 a surge. Absences are IL-checked against the MLB Stats API and dropped when the
-org already explained them. Preview any change with
+org already explained them. It is a **rolling board, not an alert stream** —
+every category shows every morning it qualifies and drops off the morning it
+doesn't; there is no cooldown and nothing is suppressed for having been posted
+before (BE, 2026-08-14). Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads.

@@ -73,9 +73,13 @@ entries and dropped when the player is on the IL or rehabbing — the org alread
 told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
 15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).
 
-Silent when nothing is actionable, one alert per player per 10 days. Every
-tracked player — alerting or not — lands in `data/milb_watch.json` with both
-windows' reads.
+This is a rolling board, not an alert stream: every category shows every
+morning it qualifies and drops off the morning it doesn't. Nothing is
+suppressed for having been posted before, and nothing needs expiring — the
+windows are trailing, so a stretch that stops being notable stops clearing the
+bar on its own. Silent when nothing qualifies. Every tracked player — on the
+board or not — lands in `data/milb_watch.json` with both windows' reads, plus
+how long each finding has been standing.
 
 **The Slack layout is locked** and pinned byte-for-byte by
 `test_locked_message_format` in `tests/test_milb_watch.py`. If that test fails,

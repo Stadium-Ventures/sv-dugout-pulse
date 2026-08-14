@@ -41,6 +41,14 @@ Four things are worth a call, and all four post:
                   Solid/Hot. This is the Riemer case: the call you make to get a
                   guy noticed, not the one you make to defend him.
 
+This is a ROLLING BOARD, not an alert stream (BE, 2026-08-14: "active monitor of
+the trends — when no longer trend worthy they drop… logic isn't surface once,
+it's surface on a rolling basis"). Every category behaves the same way: a player
+is on today's post if he qualifies today, and gone tomorrow if he doesn't.
+Nothing is suppressed for having been shown before, and nothing needs expiring —
+the windows are trailing, so a stretch that stops being notable stops clearing
+the bar on its own.
+
 Absence findings (idle, usage lull) are checked against the MLB Stats API's
 roster entries first and dropped when the player is on the IL, rehabbing, or
 otherwise unavailable — the org already told us why he isn't playing, so it
@@ -71,8 +79,10 @@ blank lines, the footer wording. Changing any of it fails that test on purpose �
 if a change is actually wanted, update the expected block in the same commit and
 say why. Do not "tidy" this copy.
 
-State: `data/_milb_watch_state.json` (per-player cooldown, so a two-month slump
-doesn't re-post every morning).
+State: `data/_milb_watch_state.json` — yesterday's board, so today's can say how
+long each finding has been standing (`since` / `days_standing` / `new_today` on
+every verdict). It cannot suppress anything; a player who drops off is simply
+absent from it.
 Snapshot: `data/milb_watch.json` — every tracked MiLB client with baseline vs.
 recent, whether or not he alerted. That file is the "tracking" half of the ask
 and the thing a surface can project later.
@@ -169,9 +179,17 @@ USAGE_MIN_PRIOR_IP = 5.0
 # read is too coarse to mean anything (2 G → 1 G is not a benching).
 USAGE_MIN_PRIOR_GAMES = 4
 
-# One alert per player per this many days, per the summer quiet-streak
-# precedent (CLAUDE.md / Tom, 2026-07-28).
-REALERT_COOLDOWN_DAYS = 10
+# Statuses that surface. There is no cooldown and no once-per-N-days rule: this
+# is a rolling board, not an alert stream (BE, 2026-08-14 — "logic isn't surface
+# once, it's surface on a rolling basis"). A player appears every morning he
+# qualifies and drops off the morning he stops. The windows are already trailing
+# and self-expiring, so "no longer trend worthy" needs no separate expiry — he
+# simply doesn't clear the bar, and he's gone.
+#
+# The tradeoff, chosen deliberately: a long slump shows for as long as it lasts.
+# That's the point of a monitor — a lull you were told about once on day one is
+# exactly the thing that gets forgotten by day four.
+ACTIONABLE_STATUSES = ("lull", "usage_lull", "idle", "surge")
 
 # Recent form has to LAND badly, not just move. A guy going 1.150 → .980 is
 # still one of the best hitters in his league; that is not a lull.
@@ -847,7 +865,7 @@ def _sort_key(verdict: dict) -> tuple:
 
 
 # ---------------------------------------------------------------------------
-# Cooldown state
+# Standing state — how long each finding has been up, not who's been silenced
 # ---------------------------------------------------------------------------
 
 def _today_et_str() -> str:
@@ -861,44 +879,54 @@ def _days_between(iso_a: str, iso_b: str) -> int:
         return 999
 
 
-def due_for_alert(verdict: dict, state: dict, today: str) -> bool:
-    """True when this player/status is actionable and off cooldown.
+def is_actionable(verdict: dict) -> bool:
+    """True when this verdict belongs on today's board.
 
-    Cooldown is per status, so a guy who slumps, gets alerted, then breaks out
-    two weeks later still generates the surge call.
+    That is the whole gate. Nothing is suppressed for having been shown
+    yesterday: qualifying today is what puts a player up, and failing to qualify
+    is what takes him down.
     """
-    if verdict["status"] not in ("lull", "usage_lull", "surge", "idle"):
-        return False
-    prior = state.get(verdict["player_name"]) or {}
-    if prior.get("last_alert_status") != verdict["status"]:
-        return True
-    last = prior.get("last_alert_date")
-    if not last:
-        return True
-    return _days_between(last, today) >= REALERT_COOLDOWN_DAYS
+    return verdict["status"] in ACTIONABLE_STATUSES
 
 
-def build_state(verdicts: list, state: dict, alerted_names: set, today: str) -> dict:
-    """Carry forward each player's last-alert stamp, updating those that fired."""
+def apply_streaks(verdicts: list, state: dict, today: str) -> None:
+    """Stamp each verdict with the date its current status started, in place.
+
+    Not a cooldown — nothing here can suppress a finding. It exists so the
+    snapshot can say how long a lull has been standing, and so a status flip
+    (lull → surge) reads as a new finding rather than a continuing one.
+    """
+    for verdict in verdicts:
+        prior = state.get(verdict["player_name"]) or {}
+        continuing = (
+            prior.get("status") == verdict["status"]
+            and bool(prior.get("since"))
+        )
+        since = prior["since"] if continuing else today
+        verdict["since"] = since
+        verdict["days_standing"] = _days_between(since, today) + 1
+        verdict["new_today"] = not continuing
+
+
+def build_state(verdicts: list, state: dict, today: str) -> dict:
+    """Today's board, carried forward so tomorrow can measure streaks.
+
+    Players who dropped off are simply absent from the new state — there is no
+    tail to expire, because there is nothing being suppressed.
+    """
     new_state: dict = {}
     for verdict in verdicts:
-        name = verdict["player_name"]
-        prior = state.get(name) or {}
         entry = {
             "status": verdict["status"],
+            "since": verdict.get("since", today),
             "last_seen_date": today,
-            "last_alert_date": prior.get("last_alert_date"),
-            "last_alert_status": prior.get("last_alert_status"),
         }
         baseline = verdict.get("baseline") or {}
         if "_ops" in baseline:
             entry["baseline_ops"] = baseline["ops"]
         if "_era" in baseline:
             entry["baseline_era"] = baseline["era"]
-        if name in alerted_names:
-            entry["last_alert_date"] = today
-            entry["last_alert_status"] = verdict["status"]
-        new_state[name] = entry
+        new_state[verdict["player_name"]] = entry
     return new_state
 
 
@@ -965,8 +993,8 @@ def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None)
     lines += [
         "",
         "_Baseline = season to date minus the window being compared._",
-        f"_14- and 30-day form both checked · one alert per player per "
-        f"{REALERT_COOLDOWN_DAYS} days._",
+        "_14- and 30-day form both checked · rolling board — a player shows "
+        "while he qualifies and drops off when he doesn't._",
     ]
     return "\n".join(lines)
 
@@ -1065,7 +1093,8 @@ def main(argv: list | None = None) -> int:
 
     state = _load_json(_STATE_PATH, {})
     today = _today_et_str()
-    alerts = [v for v in verdicts if due_for_alert(v, state, today)]
+    apply_streaks(verdicts, state, today)
+    alerts = [v for v in verdicts if is_actionable(v)]
     alerted_names = {a["player_name"] for a in alerts}
     # Named in a footnote: an empty no-games section otherwise looks like the
     # check didn't run.
@@ -1098,11 +1127,11 @@ def main(argv: list | None = None) -> int:
             "usage_drop_pct": USAGE_DROP_PCT,
             "usage_min_prior_pa": USAGE_MIN_PRIOR_PA,
             "usage_min_prior_ip": USAGE_MIN_PRIOR_IP,
-            "realert_cooldown_days": REALERT_COOLDOWN_DAYS,
+            "cadence": "rolling — shown while qualifying, dropped when not",
         },
         "counts": counts,
         "players": [
-            dict(v, alerted=v["player_name"] in alerted_names) for v in verdicts
+            dict(v, on_board=v["player_name"] in alerted_names) for v in verdicts
         ],
     }
 
@@ -1117,7 +1146,7 @@ def main(argv: list | None = None) -> int:
 
     _SNAPSHOT_PATH.write_text(json.dumps(snapshot, indent=2))
     _STATE_PATH.write_text(
-        json.dumps(build_state(verdicts, state, alerted_names, today), indent=2, sort_keys=True)
+        json.dumps(build_state(alerts, state, today), indent=2, sort_keys=True)
     )
 
     if not alerts:
