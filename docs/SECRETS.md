@@ -12,7 +12,7 @@ set with `gh secret set NAME -R Stadium-Ventures/sv-dugout-pulse`.
 | Name | What it's for | Where the value comes from |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | LLM health monitor | Anthropic Console → API Keys (https://console.anthropic.com/settings/keys) |
-| `SLACK_WEBHOOK_URL` | Posts to the Dugout Pulse channel | Slack app → Incoming Webhooks (https://api.slack.com/apps) |
+| `SLACK_WEBHOOK_URL` | Posts to the Dugout Pulse channel — live alerts, summer recap, daily MiLB watch | Slack app → Incoming Webhooks (https://api.slack.com/apps) |
 | `SV_AUTOMATION_WEBHOOK_URL` | Failure alerts → #sv-automation | Same Slack app page. Reference copy: Vercel sv-heartbeat env (https://vercel.com/stadium-ventures/sv-heartbeat/settings/environment-variables). |
 | `SLACK_BOT_TOKEN` | Slack Web API access | Slack app → OAuth & Permissions |
 | `RESEND_API_KEY` | Email sends | Resend dashboard → API Keys (https://resend.com/api-keys) |

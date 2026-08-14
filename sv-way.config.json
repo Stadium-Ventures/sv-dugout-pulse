@@ -21,6 +21,7 @@
   "hub_registration": "sv-app.json",
   "_open_questions": [
     "Read-duty gap: this repo names and serves SV client player facts (stats, placements, alerts) but resolves players against Google Sheets rosters, not against sv-registry canon — no resolution step against data/players/** exists in this repo today.",
+    "The MiLB watch (scripts/milb_watch.py, added 2026-08-14 for Kent's front-office/farm-director call ask) inherits that same read-duty gap: it matches players by name across window_*.json rather than by registry slug, and data/milb_watch.json is generated surface output homed here, not a registry projection. BE explicitly deferred the registry/app leg ('be-sv-repo is fine for now for this, we'll move to registry/app when it's done', 2026-08-14) — so this is a known, authorized deferral, not an oversight. Closing it means resolving each MiLB client against sv-registry canon and projecting the watch through the registry rather than serving it from here.",
     "data/summer_ball_placements.json is hand-edited directly (no governed writer/write door); whether it should route through a chokepoint or migrate its home-of-record to sv-registry is undecided.",
     "data/bbref_id_overrides.json appears to be hand-curated correction data (filename suggests manual overrides), but CLAUDE.md only names summer_ball_placements.json as hand-transcribed — confirm with Mike DeCicco whether it is also canon homed here."
   ]
