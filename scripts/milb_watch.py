@@ -32,10 +32,14 @@ Four things are worth a call, and all four post:
 
   🔻 lull       — recent form materially below his own baseline AND landing in
                   Steady/Cold. The alert Kent asked for.
-  ⏳ usage lull — playing time cut by 40%+ (trailing 14 days vs the 16 before
-                  it). A lull is also a drop in usage, and it shows up before
-                  the rate does, so a thin recent sample is read as a signal
-                  rather than gated out as noise (BE, 2026-08-14).
+  ⏳ usage lull — he's playing less, read two ways because "fewer plate
+                  appearances" mixes up three different causes. ROLE: plate
+                  appearances per game PLAYED vs his own season baseline —
+                  "when he plays, is he still starting?", the earliest tell,
+                  since a man dropped from the lineup still appears for days
+                  before his game count moves. SHARE: games played out of his
+                  team's games — "is he still in the lineup?", with the schedule
+                  divided out so an off-week isn't a benching. Hitters only.
   😶 idle       — played this year, nothing in 14 days, and NOT on the IL.
   📈 surge      — recent form materially above baseline AND landing in
                   Solid/Hot. This is the Riemer case: the call you make to get a
@@ -49,12 +53,15 @@ Nothing is suppressed for having been shown before, and nothing needs expiring �
 the windows are trailing, so a stretch that stops being notable stops clearing
 the bar on its own.
 
-Absence findings (idle, usage lull) are checked against the MLB Stats API's
-roster entries first and dropped when the player is on the IL, rehabbing, or
-otherwise unavailable — the org already told us why he isn't playing, so it
-isn't a call (BE, 2026-08-14). Status `il` keeps those in the snapshot with the
-reason instead of vanishing. A failed lookup leaves the finding standing and
-says the check didn't run.
+Candidates are resolved against their club before anything posts (one
+`rosterEntries` call answers both questions). On the IL, rehabbing or otherwise
+unavailable → the org already told us why he isn't playing, so it isn't a call:
+status `il`, kept in the snapshot with the reason, never posted. Changed orgs
+inside the window → the lineup-share denominator is invalid, because he wasn't
+on that club for most of its games, so the share read is dropped and says why.
+The role read survives an org change untouched — a starter is a starter
+anywhere. A failed lookup leaves the finding standing and records that the check
+didn't run.
 
 MiLB only: Pro clients whose `current_level` is CPX/A/A+/AA/AAA. MLB guys are
 out of scope (different conversation, different people to call).
@@ -157,27 +164,40 @@ ERA_SURGE_DROP = 1.50
 # Idle: has played this year but hasn't appeared in the 14-day window at all.
 IDLE_MIN_SEASON_GAMES = 10
 
-# ── Usage lull ──
-# A lull isn't only a rate collapse — losing playing time IS the lull, and it
-# shows up before the rate does (BE, 2026-08-14: "a lull can be a drop in usage
-# so a small sample is ok for the net here as a potential indicator"). So the
-# small-sample gates above no longer end the evaluation: a thin recent line gets
-# checked for usage instead of dismissed, because 8 PA in two weeks from an
-# everyday guy is the finding, not a reason to stay quiet.
+# ── Usage: two questions, not one blurred number ──
+# A lull is also a drop in usage, and usage moves before the rate does. But
+# "fewer plate appearances than before" silently adds up three different causes:
+# his team played fewer games, he was in the lineup fewer times, and he batted
+# fewer times per game. The first isn't news and the other two mean different
+# things, so they're read separately (BE, 2026-08-14).
 #
-# The comparison needs no dates. The 30-day window minus the 14-day window is
-# the 16 days before last fortnight, so trailing-14 vs prior-16 is a fair
-# like-for-like usage read straight out of the two files already loaded.
+#   ROLE  — plate appearances per game PLAYED vs his own season baseline.
+#           "When he plays, is he still starting?" A starter is ~4.3 PA/G, a
+#           bench bat ~1.5. This is the earliest tell: a man dropped from the
+#           lineup still appears (pinch-hit, late defense) for days before his
+#           games-played count moves at all. Immune to schedule and to org
+#           changes — a starter is a starter anywhere.
+#   SHARE — games he played ÷ his team's games over the same stretch, vs that
+#           same share earlier. "Is he still in the lineup?" Dividing by team
+#           games is what stops an off-week or a rainout reading as a benching.
+#
+# Both run on the timespans already loaded: ROLE on the 14- and 30-day windows
+# against the season baseline, SHARE on the trailing 14 days vs the 16 before
+# them (i.e. the 30-day window minus the 14-day one).
 _RECENT_DAYS = 14
 _PRIOR_DAYS = 16
-# 40% of a guy's playing time gone is a role change, not a couple of rest days.
-USAGE_DROP_PCT = 0.40
-# Don't read a drop off a prior stretch that was itself nearly empty.
-USAGE_MIN_PRIOR_PA = 20
-USAGE_MIN_PRIOR_IP = 5.0
-# Fewer than this many appearances in the prior 16 days and the games-played
-# read is too coarse to mean anything (2 G → 1 G is not a benching).
-USAGE_MIN_PRIOR_GAMES = 4
+
+# Hitters only. A pitcher's appearances are his rotation turn, and PA/G is
+# meaningless for him.
+ROLE_PA_PER_G_RATIO = 0.70      # fires at <= 70% of baseline PA/G (4.3 -> 3.0)
+ROLE_MIN_GAMES = 3              # 3 appearances is enough to see he isn't starting
+ROLE_MIN_BASELINE_GAMES = 15    # ...against a baseline long enough to be a role
+
+SHARE_DROP_POINTS = 0.25        # 85% -> 60% of team games is a real sit-down
+SHARE_MIN_TEAM_GAMES = 8        # a short window can't tell you anything
+# Skip the schedule lookup entirely unless his own game count actually fell —
+# no point asking the API about a man who played every day.
+SHARE_PRECHECK_RATIO = 0.85
 
 # Statuses that surface. There is no cooldown and no once-per-N-days rule: this
 # is a rolling board, not an alert stream (BE, 2026-08-14 — "logic isn't surface
@@ -569,81 +589,105 @@ def _pitcher_detail(baseline: dict, recent: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Usage — playing time, trailing 14 days vs the 16 days before that
+# Usage — role (PA per game) and share (of his team's games)
 # ---------------------------------------------------------------------------
 
-def usage_signal(recent_14: dict | None, recent_30: dict | None,
-                 kind: str) -> dict | None:
-    """Per-day playing time in the last 14 days vs the 16 days before it.
+def _pa_per_game(entry: dict | None) -> tuple[int, int] | None:
+    """(games, PA) for a hitter window entry, or None if unreadable."""
+    if not entry:
+        return None
+    games = int(_num(entry.get("games_played")) or 0)
+    pa = int(_num((entry.get("stats") or {}).get("pa")) or 0)
+    if games <= 0 or pa <= 0:
+        return None
+    return games, pa
 
-    Returns None when the comparison can't be made (a window missing, or a
-    prior stretch too thin to read a drop off). Otherwise a dict with both
-    rates, the drop as a fraction, and `dropped` set when it clears the bar.
+
+def role_signal(season_entry: dict, window_entry: dict | None,
+                window: str, kind: str) -> dict | None:
+    """PA per game played over the window vs his own season baseline.
+
+    Baseline is season-minus-window, the same convention the rate reads use, so
+    a long slide can't dilute its own comparison. Returns None when it can't be
+    read: a pitcher, a missing window, too few games either side.
+    """
+    if kind == "pitcher":
+        return None
+    season = _pa_per_game(season_entry)
+    recent = _pa_per_game(window_entry)
+    if not season or not recent:
+        return None
+    baseline_games = season[0] - recent[0]
+    baseline_pa = season[1] - recent[1]
+    if baseline_games < ROLE_MIN_BASELINE_GAMES or baseline_pa <= 0:
+        return None
+    if recent[0] < ROLE_MIN_GAMES:
+        return None
+
+    baseline_rate = baseline_pa / baseline_games
+    recent_rate = recent[1] / recent[0]
+    ratio = recent_rate / baseline_rate if baseline_rate else 1.0
+    span = f"the last {window.rstrip('d')} days"
+    return {
+        "read": "role",
+        "window": window,
+        "baseline_pa_per_g": round(baseline_rate, 2),
+        "recent_pa_per_g": round(recent_rate, 2),
+        "recent_games": recent[0],
+        "drop_pct": round(100.0 * (1 - ratio), 1),
+        "dropped": ratio <= ROLE_PA_PER_G_RATIO,
+        "summary": (
+            f"Batting {recent_rate:.1f} times per game over {span}, down from "
+            f"{baseline_rate:.1f} on the season — he's playing but not starting"
+        ),
+    }
+
+
+def share_signal(games_recent: int, team_recent: int,
+                 games_prior: int, team_prior: int) -> dict | None:
+    """Share of his team's games played, last 14 days vs the 16 before.
+
+    Dividing by team games is the whole point: it cancels off-days, rainouts and
+    the all-star break, which a raw game count reads as a benching.
+    """
+    if team_recent < SHARE_MIN_TEAM_GAMES or team_prior < SHARE_MIN_TEAM_GAMES:
+        return None
+    recent = games_recent / team_recent
+    prior = games_prior / team_prior
+    drop = prior - recent
+    return {
+        "read": "share",
+        "window": "14d",
+        "recent": f"{games_recent}/{team_recent}",
+        "prior": f"{games_prior}/{team_prior}",
+        "recent_pct": round(100.0 * recent),
+        "prior_pct": round(100.0 * prior),
+        "drop_points": round(100.0 * drop),
+        "dropped": drop >= SHARE_DROP_POINTS,
+        "summary": (
+            f"In the lineup for {games_recent} of his team's last {team_recent} "
+            f"games ({recent:.0%}), down from {games_prior} of {team_prior} "
+            f"({prior:.0%})"
+        ),
+    }
+
+
+def share_precheck(recent_14: dict | None, recent_30: dict | None) -> tuple | None:
+    """(games last 14, games prior 16) when a share lookup is worth the API call.
+
+    Returns None when his own game count held up — the schedule can only make a
+    steady count look worse, never better, so there is nothing to find.
     """
     if not recent_14 or not recent_30:
         return None
-    stats_14 = recent_14.get("stats") or {}
-    stats_30 = recent_30.get("stats") or {}
     games_14 = int(_num(recent_14.get("games_played")) or 0)
-    games_30 = int(_num(recent_30.get("games_played")) or 0)
-    games_prior = games_30 - games_14
-
-    if kind == "pitcher":
-        outs_14 = _ip_to_outs(stats_14.get("ip")) or 0
-        outs_30 = _ip_to_outs(stats_30.get("ip")) or 0
-        recent_volume = _outs_to_ip(outs_14)
-        prior_volume = _outs_to_ip(max(outs_30 - outs_14, 0))
-        unit, floor = "IP", USAGE_MIN_PRIOR_IP
-        recent_label = f"{_outs_to_ip_str(outs_14)} IP"
-        prior_label = f"{_outs_to_ip_str(max(outs_30 - outs_14, 0))} IP"
-    else:
-        pa_14 = _num(stats_14.get("pa")) or 0
-        pa_30 = _num(stats_30.get("pa")) or 0
-        recent_volume = float(pa_14)
-        prior_volume = float(max(pa_30 - pa_14, 0))
-        unit, floor = "PA", USAGE_MIN_PRIOR_PA
-        recent_label = f"{int(pa_14)} PA"
-        prior_label = f"{int(max(pa_30 - pa_14, 0))} PA"
-
-    if games_prior < 0 or prior_volume < floor:
+    games_prior = int(_num(recent_30.get("games_played")) or 0) - games_14
+    if games_prior <= 0:
         return None
-
-    def _drop(prior: float, recent: float) -> float:
-        prior_rate = prior / _PRIOR_DAYS
-        recent_rate = recent / _RECENT_DAYS
-        return 1.0 - (recent_rate / prior_rate) if prior_rate else 0.0
-
-    # Two ways to lose playing time, and they don't move together: dropped from
-    # the lineup (games), or still in it but hitting lower / pitching shorter
-    # (volume). Take whichever fell further — a guy at 7 G → 3 G is benched even
-    # when his PA-per-game held up, which is how Cade Doughty read on
-    # 2026-08-14 (37% on PA, 51% on games).
-    volume_drop = _drop(prior_volume, recent_volume)
-    games_drop = _drop(games_prior, games_14) if games_prior >= USAGE_MIN_PRIOR_GAMES else None
-    candidates = [("appearances", games_drop), ("volume", volume_drop)]
-    driver, drop = max(
-        ((name, value) for name, value in candidates if value is not None),
-        key=lambda pair: pair[1],
-    )
-
-    counts = (
-        f"{prior_label} in the prior 16 days ({max(games_prior, 0)} G) → "
-        f"{recent_label} in the last 14 ({games_14} G)"
-    )
-    lead = "Appearances down" if driver == "appearances" else "Playing time down"
-    return {
-        "unit": unit,
-        "prior": prior_label,
-        "recent": recent_label,
-        "prior_games": max(games_prior, 0),
-        "recent_games": games_14,
-        "driver": driver,
-        "drop_pct": round(100.0 * drop, 1),
-        "volume_drop_pct": round(100.0 * volume_drop, 1),
-        "games_drop_pct": round(100.0 * games_drop, 1) if games_drop is not None else None,
-        "dropped": drop >= USAGE_DROP_PCT,
-        "summary": f"{lead} {100.0 * drop:.0f}% — {counts}",
-    }
+    # Normalise for the different span lengths before deciding it held up.
+    if (games_14 / _RECENT_DAYS) / (games_prior / _PRIOR_DAYS) > SHARE_PRECHECK_RATIO:
+        return None
+    return games_14, games_prior
 
 
 # ---------------------------------------------------------------------------
@@ -670,16 +714,95 @@ def _mlb_id_index(roster_cache: dict | None) -> dict:
     }
 
 
-def lookup_unavailable(mlb_id) -> dict | None:
-    """Current IL/unavailable roster status for one player, or None if active.
+_TEAM_GAMES_CACHE: dict = {}
 
-    Hydrating `rosterEntries` off the person endpoint gives every roster stint
-    with a status code; the open-ended ones (no endDate, or isActive) are where
-    he stands today. Raises on network/API failure so the caller can distinguish
-    "active" from "couldn't check" — silently dropping a real absence because an
-    API call failed is the one outcome worse than a noisy line.
+
+def team_game_count(team_id, start: str, end: str) -> int:
+    """Completed games a club played between two dates, inclusive.
+
+    Cached per (team, span) for the life of the run — clients cluster onto the
+    same affiliates, so a 30-odd player board is a handful of real calls. The
+    MiLB sport IDs are tried in turn because a club's level isn't known here;
+    only one of them returns its schedule.
+    """
+    key = (team_id, start, end)
+    if key in _TEAM_GAMES_CACHE:
+        return _TEAM_GAMES_CACHE[key]
+    import statsapi  # lazily, as above
+
+    best = 0
+    for sport_id in (11, 12, 13, 14, 16):
+        try:
+            schedule = statsapi.get("schedule", {
+                "sportId": sport_id, "teamId": team_id,
+                "startDate": start, "endDate": end,
+            })
+        except Exception:
+            continue
+        played = sum(
+            1
+            for day in schedule.get("dates", [])
+            for game in day.get("games", [])
+            if (game.get("status") or {}).get("abstractGameState") == "Final"
+        )
+        best = max(best, played)
+    _TEAM_GAMES_CACHE[key] = best
+    return best
+
+
+def lookup_roster(mlb_id) -> dict:
+    """Where a player stands today: his current club, that stint's start, and
+    whether he's unavailable.
+
+    One `rosterEntries` hydration answers both questions this module asks of the
+    API, so the IL check and the org-change check cost a single call between
+    them. Raises on network/API failure so callers can tell "active" from
+    "couldn't check" — silently dropping a real finding because an API call
+    failed is the one outcome worse than a noisy line.
     """
     import statsapi  # imported lazily so unit tests don't need the dep
+
+    people = statsapi.get(
+        "person", {"personId": mlb_id, "hydrate": "rosterEntries"}
+    ).get("people") or []
+    snapshot = {"team_id": None, "team_name": None, "stint_start": None,
+                "unavailable": None}
+    if not people:
+        return snapshot
+    for entry in people[0].get("rosterEntries") or []:
+        if entry.get("endDate") and not entry.get("isActive"):
+            continue
+        status = entry.get("status") or {}
+        code = (status.get("code") or "").upper()
+        description = (status.get("description") or "").strip()
+        team = entry.get("team") or {}
+        unavailable = code in _UNAVAILABLE_STATUS_CODES or any(
+            word in description.lower() for word in _UNAVAILABLE_KEYWORDS
+        )
+        if unavailable and not snapshot["unavailable"]:
+            snapshot["unavailable"] = {
+                "code": code,
+                "description": description or code,
+                "since": entry.get("startDate"),
+                "team": team.get("name"),
+            }
+        # The playing stint is the open-ended entry that ISN'T an IL/rehab
+        # marker — that's the club whose schedule his lineup share is measured
+        # against, and the date he joined it.
+        if not unavailable and team.get("id") and not snapshot["team_id"]:
+            snapshot["team_id"] = team.get("id")
+            snapshot["team_name"] = team.get("name")
+            snapshot["stint_start"] = entry.get("startDate")
+    return snapshot
+
+
+def lookup_unavailable(mlb_id) -> dict | None:
+    """Back-compat shim: just the IL half of `lookup_roster`."""
+    return lookup_roster(mlb_id).get("unavailable")
+
+
+def _legacy_unavailable(mlb_id) -> dict | None:
+    import statsapi
 
     people = statsapi.get(
         "person", {"personId": mlb_id, "hydrate": "rosterEntries"}
@@ -704,32 +827,50 @@ def lookup_unavailable(mlb_id) -> dict | None:
     return None
 
 
-def apply_availability(verdicts: list, mlb_ids: dict, lookup=lookup_unavailable) -> None:
-    """Mark absence findings that are just an IL stint, in place.
+def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: str,
+                         lookup=lookup_roster, team_games=team_game_count) -> None:
+    """Resolve each candidate against his club: IL status and lineup share.
 
-    Only players whose finding IS an absence get looked up — the API call is
-    per-player and nothing else in the verdict depends on it. A finding that
-    turns out to be IL becomes status `il`, which never alerts but stays in the
-    snapshot with the reason. A lookup that fails leaves the finding standing
-    and says so, rather than dropping a real absence on an API hiccup.
+    Two things the stat lines can't tell you, both needing the same roster
+    lookup:
+
+    1. **He's on the IL.** The org already told us why he isn't playing, so it
+       isn't a call. Becomes status `il`, which stays in the snapshot with the
+       reason and never posts.
+    2. **He changed orgs inside the window.** Then "games his team played" is
+       the wrong denominator — he wasn't on that team for most of them. Cade
+       Doughty was released 2026-08-04 and signed with Atlanta on 08-10; against
+       Rome's last 11 games he read as a 27% benching while actually playing
+       nearly every day since signing (BE flagged it, 2026-08-14). The share
+       read is dropped in that case and says why. The role read (PA per game)
+       survives an org change untouched — a starter is a starter anywhere.
+
+    A lookup that fails leaves whatever the stat lines said and records that the
+    check didn't run.
     """
     for verdict in verdicts:
-        if verdict["status"] not in ("idle", "usage_lull"):
+        needs_il = verdict["status"] in ("idle", "usage_lull")
+        share_input = share_precheck(
+            windows.get("14d", {}).get(verdict["player_name"]),
+            windows.get("30d", {}).get(verdict["player_name"]),
+        ) if verdict["kind"] == "hitter" else None
+        if not needs_il and not share_input:
             continue
+
         mlb_id = mlb_ids.get(verdict["player_name"])
         if not mlb_id:
-            verdict["il_check"] = "no mlb_id in roster cache"
+            verdict["roster_check"] = "no mlb_id in roster cache"
             continue
         try:
-            unavailable = lookup(mlb_id)
+            snapshot = lookup(mlb_id)
         except Exception as exc:
-            logger.warning(
-                "IL lookup failed for %s: %s", verdict["player_name"], exc
-            )
-            verdict["il_check"] = "lookup failed"
+            logger.warning("Roster lookup failed for %s: %s", verdict["player_name"], exc)
+            verdict["roster_check"] = "lookup failed"
             continue
-        verdict["il_check"] = "checked"
-        if unavailable:
+        verdict["roster_check"] = "checked"
+
+        unavailable = snapshot.get("unavailable")
+        if needs_il and unavailable:
             since = f" since {unavailable['since']}" if unavailable.get("since") else ""
             verdict["il"] = unavailable
             verdict["status"] = "il"
@@ -737,6 +878,39 @@ def apply_availability(verdicts: list, mlb_ids: dict, lookup=lookup_unavailable)
                 f"{unavailable['description']}{since} — "
                 f"{verdict['reason'][0].lower()}{verdict['reason'][1:]}"
             )
+            continue
+        if not share_input or unavailable:
+            continue
+
+        stint_start = snapshot.get("stint_start")
+        if stint_start and _days_between(stint_start, today) < _RECENT_DAYS:
+            verdict["share_check"] = (
+                f"joined {snapshot.get('team_name') or 'a new club'} on "
+                f"{stint_start} — too new to read a lineup share"
+            )
+            continue
+        team_id = snapshot.get("team_id")
+        if not team_id:
+            verdict["share_check"] = "no current club on the roster entry"
+            continue
+
+        games_recent, games_prior = share_input
+        try:
+            team_recent = team_games(team_id, _shift(today, -13), today)
+            team_prior = team_games(team_id, _shift(today, -29), _shift(today, -14))
+        except Exception as exc:
+            logger.warning("Schedule lookup failed for %s: %s", verdict["player_name"], exc)
+            verdict["share_check"] = "schedule lookup failed"
+            continue
+
+        share = share_signal(games_recent, team_recent, games_prior, team_prior)
+        if not share:
+            verdict["share_check"] = "too few team games to compare"
+            continue
+        share["team"] = snapshot.get("team_name")
+        verdict["usage_share"] = share
+        if share["dropped"] and verdict["status"] in ("insufficient", "steady"):
+            _promote_to_usage_lull(verdict, share)
 
 
 # ---------------------------------------------------------------------------
@@ -769,7 +943,7 @@ def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
         return evaluate(season_entry, None)
     verdicts.sort(key=_window_rank)
     winner = verdicts[0]
-    _apply_usage(winner, recent_windows)
+    _apply_usage(winner, season_entry, recent_windows)
     winner["alternates"] = [
         {
             "window": v["window"],
@@ -782,41 +956,50 @@ def evaluate_windows(season_entry: dict, recent_windows: dict) -> dict:
     return winner
 
 
-def _apply_usage(verdict: dict, recent_windows: dict) -> None:
-    """Attach the usage read and let it promote a quiet verdict, in place.
+def _apply_usage(verdict: dict, season_entry: dict, recent_windows: dict) -> None:
+    """Attach the role read and let it promote a quiet verdict, in place.
 
-    A rate lull already carries the call, so usage just enriches its detail.
-    But a thin or flat rate line hiding a 40%-plus cut in playing time is the
-    signal on its own — that's the case a sample-size gate would have thrown
-    away.
+    Role is PA per game played against his own season baseline, computed on both
+    the 14- and 30-day windows; the bigger drop leads. It needs no API and no
+    team schedule, so it runs for every hitter. The lineup-share read is the
+    other half and lands later, in `apply_roster_context`, because it needs to
+    know which club he's on.
+
+    A rate lull already carries the call, so a role drop just enriches its
+    detail. But a flat or unreadable rate line hiding a man who has stopped
+    starting is the finding on its own.
     """
-    usage = usage_signal(
-        recent_windows.get("14d"), recent_windows.get("30d"), verdict["kind"]
-    )
-    if not usage:
+    reads = [
+        role_signal(season_entry, entry, window, verdict["kind"])
+        for window, entry in sorted(recent_windows.items())
+    ]
+    reads = [r for r in reads if r]
+    if not reads:
         return
-    verdict["usage"] = usage
-    if not usage["dropped"]:
+    role = max(reads, key=lambda r: r["drop_pct"])
+    verdict["usage_role"] = role
+    if not role["dropped"]:
         return
     if verdict["status"] in ("insufficient", "steady"):
-        # Keep whatever the rate read said — "the rate is fine, he's just not
-        # playing" is context a farm-director call wants, not noise. A
-        # sample-size message is internal plumbing though, so say what it means
-        # instead of pasting a threshold into Slack.
-        rate_note = verdict.get("detail") or verdict["reason"]
-        if "sample too small" in rate_note:
-            recent = verdict.get("recent") or {}
-            played = (
-                f"{recent['ip']} IP" if "ip" in recent
-                else f"{recent.get('pa', 0)} PA"
-            )
-            rate_note = f"Only {played} in the last 14 days — too thin for a rate read"
-        verdict["status"] = "usage_lull"
-        verdict["reason"] = usage["summary"]
-        verdict["detail"] = rate_note
+        _promote_to_usage_lull(verdict, role)
     elif verdict["status"] == "lull":
         detail = verdict.get("detail") or ""
-        verdict["detail"] = f"{detail} · {usage['summary'].lower()}".strip(" ·")
+        verdict["detail"] = f"{detail} · {role['summary'].lower()}".strip(" ·")
+
+
+def _promote_to_usage_lull(verdict: dict, usage: dict) -> None:
+    """Turn a quiet verdict into a usage finding, keeping the rate read as context."""
+    # "The rate is fine, he's just not playing" is what the call needs. A
+    # sample-size message is internal plumbing, so say what it means instead of
+    # pasting a threshold into Slack.
+    rate_note = verdict.get("detail") or verdict["reason"]
+    if "sample too small" in rate_note:
+        recent = verdict.get("recent") or {}
+        played = f"{recent['ip']} IP" if "ip" in recent else f"{recent.get('pa', 0)} PA"
+        rate_note = f"Only {played} in the last 14 days — too thin for a rate read"
+    verdict["status"] = "usage_lull"
+    verdict["reason"] = usage["summary"]
+    verdict["detail"] = rate_note
 
 
 def _window_rank(verdict: dict) -> tuple:
@@ -870,6 +1053,11 @@ def _sort_key(verdict: dict) -> tuple:
 
 def _today_et_str() -> str:
     return datetime.now(_ET).date().isoformat()
+
+
+def _shift(iso_day: str, days: int) -> str:
+    """ISO date shifted by N days — for schedule spans."""
+    return (date.fromisoformat(iso_day) + timedelta(days=days)).isoformat()
 
 
 def _days_between(iso_a: str, iso_b: str) -> int:
@@ -1086,9 +1274,19 @@ def main(argv: list | None = None) -> int:
         logger.info("No MiLB clients in the season window — skipping")
         return 0
 
-    # Absence findings only: an IL stint explains itself, so drop those before
-    # anything reaches Slack.
-    apply_availability(verdicts, _mlb_id_index(_load_json(_ROSTER_CACHE_PATH, {})))
+    # Resolve candidates against their club: IL stints drop out, lineup share
+    # comes in. Only players whose stat lines already look interesting get a
+    # lookup, so this is a handful of API calls, not one per client.
+    windows_by_name = {
+        window: {p.get("player_name"): p for p in entries if p.get("player_name")}
+        for window, entries in recent_by_window.items()
+    }
+    apply_roster_context(
+        verdicts,
+        _mlb_id_index(_load_json(_ROSTER_CACHE_PATH, {})),
+        windows_by_name,
+        _today_et_str(),
+    )
     verdicts.sort(key=_sort_key)
 
     state = _load_json(_STATE_PATH, {})
@@ -1124,9 +1322,10 @@ def main(argv: list | None = None) -> int:
             "era_lull_rise": ERA_LULL_RISE,
             "era_surge_drop": ERA_SURGE_DROP,
             "idle_min_season_games": IDLE_MIN_SEASON_GAMES,
-            "usage_drop_pct": USAGE_DROP_PCT,
-            "usage_min_prior_pa": USAGE_MIN_PRIOR_PA,
-            "usage_min_prior_ip": USAGE_MIN_PRIOR_IP,
+            "role_pa_per_g_ratio": ROLE_PA_PER_G_RATIO,
+            "role_min_games": ROLE_MIN_GAMES,
+            "share_drop_points": SHARE_DROP_POINTS,
+            "share_min_team_games": SHARE_MIN_TEAM_GAMES,
             "cadence": "rolling — shown while qualifying, dropped when not",
         },
         "counts": counts,
