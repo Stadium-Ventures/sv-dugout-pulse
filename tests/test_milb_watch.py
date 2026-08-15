@@ -355,123 +355,201 @@ def test_ops_deltas_use_baseball_formatting():
 
 
 # ---------------------------------------------------------------------------
-# Usage — a lull can be a drop in playing time, small sample and all
+# Usage read 1 — role: PA per game played vs his own baseline
 # ---------------------------------------------------------------------------
 
-def test_usage_signal_compares_last_14_days_to_the_16_before_it():
-    # 44 PA in the 30-day window, 12 of them in the last 14 days -> 32 PA over
-    # the prior 16 days. 0.86/day vs 2.0/day is a 57% cut.
-    recent_14 = _hitter(pa=12, ab=11, h=2, games=4)
-    recent_30 = _hitter(pa=44, ab=40, h=11, games=15)
-    u = m.usage_signal(recent_14, recent_30, "hitter")
-    assert u["prior"] == "32 PA"
-    assert u["recent"] == "12 PA"
-    assert u["prior_games"] == 11 and u["recent_games"] == 4
-    assert 55 <= u["drop_pct"] <= 60
-    assert u["dropped"] is True
+def test_role_read_catches_a_starter_who_stopped_starting():
+    # 4.3 PA/G on the season, 1.5 over the window: he's dressing, not starting.
+    season = _hitter(pa=400, ab=360, h=108, games=93)
+    window = _hitter(pa=9, ab=8, h=2, games=6)
+    r = m.role_signal(season, window, "14d", "hitter")
+    # Baseline is season minus the window: (400-9) PA over (93-6) G.
+    assert r["baseline_pa_per_g"] == 4.49
+    assert r["recent_pa_per_g"] == 1.5
+    assert r["dropped"] is True
+    assert "not starting" in r["summary"]
 
 
-def test_usage_signal_ignores_steady_playing_time():
-    recent_14 = _hitter(pa=30, ab=27, h=8, games=11)
-    recent_30 = _hitter(pa=64, ab=58, h=17, games=24)
-    assert m.usage_signal(recent_14, recent_30, "hitter")["dropped"] is False
+def test_role_read_is_flat_for_a_man_who_just_had_days_off():
+    # Munroe, 2026-08-14: fewer games, but a full starter's complement in each.
+    # Days off, not a bench role.
+    season = _hitter(pa=401, ab=360, h=108, games=93)
+    window = _hitter(pa=13, ab=12, h=4, games=3)
+    r = m.role_signal(season, window, "14d", "hitter")
+    assert r["dropped"] is False
 
 
-def test_usage_signal_needs_a_prior_stretch_worth_comparing():
-    # 10 PA over the prior 16 days is under the floor — no read either way.
-    recent_14 = _hitter(pa=2, ab=2, h=0, games=1)
-    recent_30 = _hitter(pa=12, ab=11, h=3, games=5)
-    assert m.usage_signal(recent_14, recent_30, "hitter") is None
+def test_role_read_needs_a_baseline_long_enough_to_be_a_role():
+    season = _hitter(pa=40, ab=36, h=10, games=10)
+    window = _hitter(pa=4, ab=4, h=1, games=4)
+    assert m.role_signal(season, window, "14d", "hitter") is None
 
 
-def test_small_recent_sample_becomes_a_usage_lull_not_insufficient():
-    # The exact case a sample gate would have thrown away: an everyday guy down
-    # to 10 PA in two weeks. The rate is unreadable; the usage IS the finding.
-    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
-    recent_14 = _hitter(pa=10, ab=9, h=2, obp=".300", slg=".333", games=4)
-    recent_30 = _hitter(pa=55, ab=50, h=15, obp=".360", slg=".460", games=18)
+def test_role_read_needs_a_few_games_to_judge():
+    season = _hitter(pa=400, ab=360, h=108, games=93)
+    window = _hitter(pa=1, ab=1, h=0, games=1)
+    assert m.role_signal(season, window, "14d", "hitter") is None
+
+
+def test_role_read_skips_pitchers():
+    season = _pitcher(ip="60", k=70, bb=20, era="3.00", games=12)
+    window = _pitcher(ip="3", k=3, bb=1, era="3.00", games=1)
+    assert m.role_signal(season, window, "14d", "pitcher") is None
+
+
+def test_role_drop_promotes_a_steady_verdict():
+    season = _hitter(pa=400, ab=360, h=108, obp=".370", slg=".480", games=93)
+    recent_14 = _hitter(pa=9, ab=8, h=2, obp=".360", slg=".470", games=6)
+    recent_30 = _hitter(pa=30, ab=27, h=8, obp=".365", slg=".475", games=14)
     v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30})
     assert v["status"] == "usage_lull"
-    assert "Playing time down" in v["reason"]
-    # The rate read it replaced is kept as context, not dropped — here the
-    # 30-day line, which is readable and unremarkable. "He's still hitting, he's
-    # just not playing" is exactly what the call needs.
-    assert v["detail"]
-    assert v["usage"]["dropped"] is True
-    assert v["alternates"][0]["status"] == "insufficient"
-
-
-def test_rate_lull_keeps_its_status_and_gains_the_usage_detail():
-    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
-    recent_14 = _hitter(pa=28, ab=26, h=3, obp=".180", slg=".192", games=9)
-    recent_30 = _hitter(pa=90, ab=82, h=20, obp=".300", slg=".350", games=28)
-    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30})
-    assert v["status"] == "lull"
-    assert "playing time down" in v["detail"].lower()
-
-
-def test_pitcher_usage_measured_in_innings():
-    recent_14 = _pitcher(ip="3", k=3, bb=1, era="3.00", games=3)
-    recent_30 = _pitcher(ip="18", k=20, bb=5, era="2.50", games=12)
-    u = m.usage_signal(recent_14, recent_30, "pitcher")
-    assert u["prior"] == "15 IP" and u["recent"] == "3 IP"
-    assert u["dropped"] is True
+    assert "per game" in v["reason"]
 
 
 # ---------------------------------------------------------------------------
-# IL exclusion
+# Usage read 2 — share: games played out of his team's games
 # ---------------------------------------------------------------------------
+
+def test_share_read_divides_the_schedule_out():
+    s = m.share_signal(3, 11, 10, 12)
+    assert s["prior_pct"] == 83 and s["recent_pct"] == 27
+    assert s["dropped"] is True
+    assert "In the lineup for 3 of his team's last 11 games" in s["summary"]
+
+
+def test_a_shorter_team_week_is_not_a_benching():
+    # Team played 12 then 10; he played 10 then 9. Nearly everything, both times.
+    assert m.share_signal(9, 10, 10, 12)["dropped"] is False
+
+
+def test_share_read_needs_enough_team_games():
+    assert m.share_signal(1, 4, 5, 6) is None
+
+
+def test_share_precheck_skips_the_api_when_he_played_throughout():
+    # 11 G in 14 days against 12 in the prior 16 — nothing for the schedule to
+    # explain, so no lookup.
+    recent_14 = _hitter(pa=48, ab=44, h=13, games=11)
+    recent_30 = _hitter(pa=100, ab=92, h=27, games=23)
+    assert m.share_precheck(recent_14, recent_30) is None
+
+
+def test_share_precheck_returns_counts_when_games_fell():
+    recent_14 = _hitter(pa=13, ab=12, h=4, games=3)
+    recent_30 = _hitter(pa=60, ab=55, h=16, games=14)
+    assert m.share_precheck(recent_14, recent_30) == (3, 11)
+
+
+# ---------------------------------------------------------------------------
+# Roster context — IL, org changes, and the lineup-share lookup
+# ---------------------------------------------------------------------------
+
+def _windows(name, games_14, games_30):
+    return {
+        "14d": {name: _hitter(name=name, pa=games_14 * 4, ab=games_14 * 4,
+                              h=games_14, games=games_14)},
+        "30d": {name: _hitter(name=name, pa=games_30 * 4, ab=games_30 * 4,
+                              h=games_30, games=games_30)},
+    }
+
+
+def _roster(team_id=1, team_name="Some Club", stint="2026-04-01", unavailable=None):
+    return {"team_id": team_id, "team_name": team_name, "stint_start": stint,
+            "unavailable": unavailable}
+
 
 def test_il_players_drop_off_the_no_games_list():
     verdicts = [
-        {"player_name": "Hurt Guy", "status": "idle",
+        {"player_name": "Hurt Guy", "status": "idle", "kind": "hitter",
          "reason": "No games in the last 14 days (92 G on the season)"},
-        {"player_name": "Healthy Guy", "status": "idle",
+        {"player_name": "Healthy Guy", "status": "idle", "kind": "hitter",
          "reason": "No games in the last 14 days (40 G on the season)"},
     ]
-    il = {"code": "D7", "description": "Injured 7-Day", "since": "2026-06-22",
-          "team": "Albuquerque Isotopes"}
-    m.apply_availability(
-        verdicts, {"Hurt Guy": 1, "Healthy Guy": 2},
-        lookup=lambda mlb_id: il if mlb_id == 1 else None,
+    il = {"code": "D7", "description": "Injured 7-Day", "since": "2026-06-22"}
+    m.apply_roster_context(
+        verdicts, {"Hurt Guy": 1, "Healthy Guy": 2}, {}, "2026-08-14",
+        lookup=lambda mlb_id: _roster(unavailable=il if mlb_id == 1 else None),
     )
     assert verdicts[0]["status"] == "il"
     assert "Injured 7-Day since 2026-06-22" in verdicts[0]["reason"]
     assert verdicts[1]["status"] == "idle"
-    # `il` is not a board status — it never reaches Slack.
     assert not m.is_actionable(verdicts[0])
-    assert m.is_actionable(verdicts[1])
 
 
-def test_usage_lull_is_also_il_checked():
-    verdicts = [{"player_name": "Hurt Guy", "status": "usage_lull",
-                 "reason": "Playing time down 70% — 30 PA → 8 PA"}]
-    m.apply_availability(verdicts, {"Hurt Guy": 1},
-                         lookup=lambda _id: {"code": "D7",
-                                             "description": "Injured 7-Day",
-                                             "since": "2026-08-01"})
-    assert verdicts[0]["status"] == "il"
+def test_an_org_change_inside_the_window_voids_the_share_read():
+    # Cade Doughty, 2026-08-14: released 08-04, signed with Atlanta 08-10. Rome
+    # played 11 games in the window; he was on the club for four of them, so
+    # "3 of 11" is the wrong denominator, not a benching (BE flagged it).
+    verdicts = [{"player_name": "Doughty", "status": "insufficient",
+                 "kind": "hitter", "reason": "Recent sample too small"}]
+    m.apply_roster_context(
+        verdicts, {"Doughty": 1}, _windows("Doughty", 3, 14), "2026-08-14",
+        lookup=lambda _id: _roster(team_name="Rome Emperors", stint="2026-08-10"),
+        team_games=lambda *a: 11,
+    )
+    assert verdicts[0]["status"] == "insufficient"
+    assert "usage_share" not in verdicts[0]
+    assert "joined Rome Emperors on 2026-08-10" in verdicts[0]["share_check"]
 
 
-def test_failed_il_lookup_keeps_the_finding_and_says_so():
-    # Dropping a real absence because an API call failed is worse than a noisy
-    # line, so the finding stands and the snapshot records that the check didn't
-    # run.
+def test_a_settled_player_gets_a_real_share_read():
+    verdicts = [{"player_name": "Sat Down", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740 (-.010) in the last 14 days"}]
+    m.apply_roster_context(
+        verdicts, {"Sat Down": 1}, _windows("Sat Down", 3, 14), "2026-08-14",
+        lookup=lambda _id: _roster(stint="2026-04-01"),
+        team_games=lambda _tid, start, end: 11 if end == "2026-08-14" else 12,
+    )
+    assert verdicts[0]["status"] == "usage_lull"
+    assert verdicts[0]["usage_share"]["dropped"] is True
+    assert "In the lineup for" in verdicts[0]["reason"]
+
+
+def test_no_share_lookup_when_his_games_held_up():
+    # Precheck short-circuits before any API call — the lookup would raise.
+    def boom(_mlb_id):
+        raise AssertionError("should not have been called")
+
+    verdicts = [{"player_name": "Everyday", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(verdicts, {"Everyday": 1},
+                           _windows("Everyday", 11, 23), "2026-08-14",
+                           lookup=boom)
+    assert verdicts[0]["status"] == "steady"
+
+
+def test_failed_lookup_keeps_the_finding_and_says_so():
     def boom(_mlb_id):
         raise RuntimeError("MLB API 503")
 
-    verdicts = [{"player_name": "Unknown Guy", "status": "idle",
+    verdicts = [{"player_name": "Unknown Guy", "status": "idle", "kind": "hitter",
                  "reason": "No games in the last 14 days (40 G on the season)"}]
-    m.apply_availability(verdicts, {"Unknown Guy": 1}, lookup=boom)
+    m.apply_roster_context(verdicts, {"Unknown Guy": 1}, {}, "2026-08-14",
+                           lookup=boom)
     assert verdicts[0]["status"] == "idle"
-    assert verdicts[0]["il_check"] == "lookup failed"
+    assert verdicts[0]["roster_check"] == "lookup failed"
+
+
+def test_failed_schedule_lookup_leaves_the_verdict_alone():
+    def boom(*_args):
+        raise RuntimeError("schedule 500")
+
+    verdicts = [{"player_name": "Sat Down", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(verdicts, {"Sat Down": 1},
+                           _windows("Sat Down", 3, 14), "2026-08-14",
+                           lookup=lambda _id: _roster(), team_games=boom)
+    assert verdicts[0]["status"] == "steady"
+    assert verdicts[0]["share_check"] == "schedule lookup failed"
 
 
 def test_missing_mlb_id_is_recorded_not_guessed():
-    verdicts = [{"player_name": "No ID", "status": "idle", "reason": "No games"}]
-    m.apply_availability(verdicts, {}, lookup=lambda _id: None)
+    verdicts = [{"player_name": "No ID", "status": "idle", "kind": "hitter",
+                 "reason": "No games"}]
+    m.apply_roster_context(verdicts, {}, {}, "2026-08-14",
+                           lookup=lambda _id: _roster())
     assert verdicts[0]["status"] == "idle"
-    assert verdicts[0]["il_check"] == "no mlb_id in roster cache"
+    assert verdicts[0]["roster_check"] == "no mlb_id in roster cache"
 
 
 def test_unavailable_codes_and_keywords_both_recognized():
@@ -581,97 +659,3 @@ def test_locked_format_survives_an_empty_section():
     )
     # No stray blank line pile-up where sections were dropped.
     assert "\n\n\n" not in text
-
-
-# ---------------------------------------------------------------------------
-# Week-over-week usage — the bench-role tell
-# ---------------------------------------------------------------------------
-
-def test_week_usage_compares_last_7_days_to_the_7_before():
-    # 14d holds 8 G / 36 PA, of which the last 7 days are 3 G / 13 PA.
-    # Prior week = 5 G / 23 PA. Games -40%, PA -43% -> the PA read leads.
-    week = _hitter(pa=13, ab=12, h=4, games=3)
-    fortnight = _hitter(pa=36, ab=33, h=11, games=8)
-    u = m.usage_signal_week(week, fortnight, "hitter")
-    assert u["prior_games"] == 5 and u["recent_games"] == 3
-    assert u["prior"] == "23 PA" and u["recent"] == "13 PA"
-    assert u["driver"] == "volume"
-    assert 42 <= u["drop_pct"] <= 44
-    assert u["dropped"] is True
-
-
-def test_everyday_player_benched_for_a_week_fires():
-    # BE's case: starting daily, then a week without a start and no IL move.
-    week = _hitter(pa=0, ab=0, h=0, games=0)
-    fortnight = _hitter(pa=28, ab=25, h=8, games=6)
-    u = m.usage_signal_week(week, fortnight, "hitter")
-    assert u["drop_pct"] == 100.0
-    assert u["dropped"] is True
-
-
-def test_week_usage_ignores_a_man_who_was_not_playing_daily():
-    # 3 G / 12 PA in the prior week is a part-timer already — a quiet week says
-    # nothing about his role.
-    week = _hitter(pa=2, ab=2, h=0, games=1)
-    fortnight = _hitter(pa=14, ab=13, h=4, games=4)
-    assert m.usage_signal_week(week, fortnight, "hitter") is None
-
-
-def test_week_usage_skips_pitchers():
-    # 4 appearances -> 1 is usually a rotation turn, not a role change. The
-    # 14-day read still covers them.
-    week = _pitcher(ip="1", k=1, bb=0, era="0.00", games=1)
-    fortnight = _pitcher(ip="12", k=12, bb=3, era="3.00", games=5)
-    assert m.usage_signal_week(week, fortnight, "pitcher") is None
-
-
-def test_a_normal_week_is_not_a_usage_drop():
-    week = _hitter(pa=24, ab=22, h=7, games=6)
-    fortnight = _hitter(pa=50, ab=46, h=15, games=12)
-    assert m.usage_signal_week(week, fortnight, "hitter")["dropped"] is False
-
-
-def test_steady_hitter_losing_this_week_becomes_a_usage_lull():
-    # Rate is fine and the 14-day usage read is flat; only the weekly read sees
-    # it. This is the case that was invisible before.
-    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
-    week = _hitter(pa=13, ab=12, h=4, obp=".360", slg=".470", games=3)
-    recent_14 = _hitter(pa=36, ab=33, h=11, obp=".365", slg=".475", games=8)
-    recent_30 = _hitter(pa=74, ab=68, h=22, obp=".368", slg=".478", games=17)
-    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30}, week)
-    assert v["status"] == "usage_lull"
-    assert "week over week" in v["reason"]
-
-
-def test_the_larger_of_the_two_usage_horizons_leads():
-    # Both horizons fire; the bigger drop is the headline and the other is kept
-    # on the verdict for the snapshot.
-    #
-    # Note on why this fixture reads the way it does: with realistic game counts
-    # the weekly read is nearly always the louder one when both apply. Clearing
-    # 40% on the 14-vs-16 read needs the last fortnight at ~52% of the prior 16
-    # days, which — with a normal week sitting in the older half — forces the
-    # recent week to be close to empty. So "sustained fires but weekly doesn't"
-    # is essentially unreachable, and this asserts the max rule rather than
-    # pretending a specific horizon wins.
-    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
-    week = _hitter(pa=8, ab=7, h=2, games=2)
-    recent_14 = _hitter(pa=26, ab=24, h=7, games=6)
-    recent_30 = _hitter(pa=74, ab=68, h=21, games=17)
-    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30}, week)
-    assert v["status"] == "usage_lull"
-    assert v["usage_week"]["dropped"] is True
-    # The headline is whichever fell further.
-    assert v["usage"]["drop_pct"] == max(v["usage"]["drop_pct"],
-                                         v["usage_week"]["drop_pct"])
-    assert v["reason"] == v["usage"]["summary"]
-
-
-def test_week_usage_needs_the_7d_window():
-    # No 7-day entry (a fresh clone, or the file didn't rebuild): the sustained
-    # read still works and nothing crashes.
-    season = _hitter(pa=300, ab=270, h=81, obp=".370", slg=".480", games=70)
-    recent_14 = _hitter(pa=36, ab=33, h=11, games=8)
-    recent_30 = _hitter(pa=74, ab=68, h=22, games=17)
-    v = m.evaluate_windows(season, {"14d": recent_14, "30d": recent_30}, None)
-    assert "usage_week" not in v
