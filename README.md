@@ -62,13 +62,19 @@ removed, using the same OPS/ERA thresholds as the dashboard's window grades
 | Trigger | Meaning |
 |---------|---------|
 | 🔻 Lull | Form dropped ≥ .150 OPS (or ERA rose ≥ 1.50) off his own baseline *and* landed in Steady/Cold |
-| ⏳ Usage down | Playing time cut ≥ 40% — trailing 14 days vs the 16 before it, whichever fell further of appearances or PA/IP |
+| ⏳ Usage down | Hitters only, two reads on the 14/30 spans: **role** — PA per game played ≤ 70% of his season baseline ("still playing, no longer starting"); **share** — games played out of his team's games, down ≥ 25 points ("no longer in the lineup") |
 | 😶 No games | Played this year, nothing in 14 days, **and not on the IL** |
 | 📈 Trending up | Form gained ≥ .150 OPS (or ERA dropped ≥ 1.50) *and* landed in Solid/Hot — call while it's live |
 
 A lull isn't only a rate collapse: losing playing time is a lull too, and it
 shows up first, so a thin recent sample gets read for usage rather than
-dismissed. Absence findings are checked against the MLB Stats API's roster
+dismissed. The two usage reads answer different questions on purpose: "fewer
+plate appearances than before" silently adds up three causes — the team played
+fewer games, he was in the lineup fewer times, and he batted fewer times per
+game. Role (PA per game played) is the earliest tell and is immune to both the
+schedule and an org change. Share divides the schedule out, and is voided when a
+player changed orgs inside the window — his new club's earlier games were never
+his to miss. Absence findings are checked against the MLB Stats API's roster
 entries and dropped when the player is on the IL or rehabbing — the org already
 told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
 15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).

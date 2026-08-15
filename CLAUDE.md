@@ -51,10 +51,16 @@ window, recent = trailing 14d and 30d (the more actionable read wins), verdict =
 `src/window_grader.py` thresholds applied to both. Built for Kent's 2026-08-13
 ask in #justin-riemer — MiLB clients whose form has moved enough to justify a
 front-office or farm-director call. It reads four things: a rate lull, a **usage
-lull** (playing time cut 40%+, trailing 14 days vs the 16 before it — a lull is
-also a drop in usage, so a thin sample is a signal not a gate), an absence, and
-a surge. Absences are IL-checked against the MLB Stats API and dropped when the
-org already explained them. It is a **rolling board, not an alert stream** —
+lull**, an absence, and a surge. A lull is also a drop in usage — so a thin
+sample is a signal, not a gate — and usage is read two ways, hitters only, on
+the same 14/30 spans: **role** (PA per game PLAYED vs his season baseline —
+"when he plays, is he still starting?", the earliest tell) and **share** (games
+played out of his team's games — "is he still in the lineup?", which divides the
+schedule out so an off-week isn't a benching). Candidates are resolved against
+the MLB Stats API roster before posting: IL stints drop out, and an **org change
+inside the window voids the share read** — a man signed four days ago hasn't
+missed his new club's earlier games (Doughty, 2026-08-14). Role survives an org
+change; share doesn't. It is a **rolling board, not an alert stream** —
 every category shows every morning it qualifies and drops off the morning it
 doesn't; there is no cooldown and nothing is suppressed for having been posted
 before (BE, 2026-08-14). Preview any change with
