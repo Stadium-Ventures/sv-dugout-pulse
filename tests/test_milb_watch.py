@@ -216,70 +216,116 @@ def test_evaluate_all_orders_lulls_first():
 
 
 # ---------------------------------------------------------------------------
-# Rolling board — no cooldown, nothing suppressed for having been shown
+# Cadence — flag once, then update after 7 days (hitters) / 14 (pitchers)
 # ---------------------------------------------------------------------------
 
-def test_every_category_shows_while_it_qualifies():
+def _v(name="Guy", status="lull", kind="hitter"):
+    return {"player_name": name, "status": status, "kind": kind}
+
+
+def test_every_category_can_reach_the_board():
     for status in m.ACTIONABLE_STATUSES:
-        assert m.is_actionable({"player_name": "Guy", "status": status})
+        assert m.is_actionable(_v(status=status))
 
 
 def test_steady_insufficient_and_il_never_show():
     for status in ("steady", "insufficient", "il"):
-        assert not m.is_actionable({"player_name": "Guy", "status": status})
+        assert not m.is_actionable(_v(status=status))
 
 
-def test_a_player_drops_off_when_he_stops_qualifying():
-    # Lull yesterday, grades steady today: off the board, and out of the state
-    # that carries forward. Nothing to expire — he just doesn't clear the bar.
-    yesterday = {"Guy": {"status": "lull", "since": "2026-08-10"}}
-    today = [{"player_name": "Guy", "status": "steady"}]
-    m.apply_streaks(today, yesterday, "2026-08-14")
-    assert not m.is_actionable(today[0])
-    on_board = [v for v in today if m.is_actionable(v)]
-    assert m.build_state(on_board, yesterday, "2026-08-14") == {}
-
-
-def test_a_standing_finding_shows_again_the_next_day():
-    state = {"Guy": {"status": "lull", "since": "2026-08-13"}}
-    verdicts = [{"player_name": "Guy", "status": "lull"}]
-    m.apply_streaks(verdicts, state, "2026-08-14")
-    assert m.is_actionable(verdicts[0])
-    assert verdicts[0]["new_today"] is False
-
-
-def test_streak_counts_days_a_finding_has_been_standing():
-    state = {"Guy": {"status": "lull", "since": "2026-08-10"}}
-    verdicts = [{"player_name": "Guy", "status": "lull"}]
-    m.apply_streaks(verdicts, state, "2026-08-14")
-    assert verdicts[0]["since"] == "2026-08-10"
-    assert verdicts[0]["days_standing"] == 5
-
-
-def test_status_flip_restarts_the_streak():
-    # Lull yesterday, trending up today: a new finding, not a continuing one.
-    state = {"Guy": {"status": "lull", "since": "2026-08-01"}}
-    verdicts = [{"player_name": "Guy", "status": "surge"}]
-    m.apply_streaks(verdicts, state, "2026-08-14")
-    assert verdicts[0]["since"] == "2026-08-14"
-    assert verdicts[0]["days_standing"] == 1
+def test_a_new_flag_posts_the_day_it_qualifies():
+    verdicts = [_v()]
+    m.apply_streaks(verdicts, {}, "2026-08-16")
     assert verdicts[0]["new_today"] is True
+    assert verdicts[0]["due_today"] is True
 
 
-def test_first_appearance_is_new_today():
-    verdicts = [{"player_name": "Guy", "status": "lull"}]
-    m.apply_streaks(verdicts, {}, "2026-08-14")
+def test_a_hitter_stays_quiet_for_a_week_then_updates():
+    state = {"Guy": {"status": "lull", "since": "2026-08-10",
+                     "last_posted_date": "2026-08-10",
+                     "last_posted_status": "lull"}}
+    for day, due in (("2026-08-11", False), ("2026-08-13", False),
+                     ("2026-08-16", False), ("2026-08-17", True)):
+        verdicts = [_v()]
+        m.apply_streaks(verdicts, state, day)
+        assert verdicts[0]["due_today"] is due, day
+
+
+def test_a_pitcher_waits_two_weeks():
+    state = {"Arm": {"status": "lull", "since": "2026-08-01",
+                     "last_posted_date": "2026-08-01",
+                     "last_posted_status": "lull"}}
+    for day, due in (("2026-08-08", False), ("2026-08-14", False),
+                     ("2026-08-15", True)):
+        verdicts = [_v(name="Arm", kind="pitcher")]
+        m.apply_streaks(verdicts, state, day)
+        assert verdicts[0]["due_today"] is due, day
+
+
+def test_a_status_flip_is_a_new_finding_and_posts_at_once():
+    # Slumping last week, trending up today: a different conversation.
+    state = {"Guy": {"status": "lull", "since": "2026-08-01",
+                     "last_posted_date": "2026-08-15",
+                     "last_posted_status": "lull"}}
+    verdicts = [_v(status="surge")]
+    m.apply_streaks(verdicts, state, "2026-08-16")
     assert verdicts[0]["new_today"] is True
-    assert verdicts[0]["days_standing"] == 1
+    assert verdicts[0]["due_today"] is True
+    assert verdicts[0]["since"] == "2026-08-16"
 
 
-def test_build_state_carries_the_board_forward():
-    verdicts = [{"player_name": "Standing", "status": "lull",
-                 "since": "2026-08-10", "baseline": {"ops": ".800", "_ops": 0.8}}]
-    state = m.build_state(verdicts, {}, "2026-08-14")
-    assert state["Standing"]["since"] == "2026-08-10"
-    assert state["Standing"]["last_seen_date"] == "2026-08-14"
-    assert state["Standing"]["baseline_ops"] == ".800"
+def test_dropping_off_for_a_day_does_not_reset_the_clock():
+    # He posted on the 15th, fell under the bar on the 16th, cleared it again on
+    # the 17th. That is not a fresh flag — it's the repetition Kent asked us to
+    # stop, so state is kept for everyone, not just the board.
+    state = {"Guy": {"status": "lull", "since": "2026-08-10",
+                     "last_posted_date": "2026-08-15",
+                     "last_posted_status": "lull"}}
+    off = [_v(status="steady")]
+    m.apply_streaks(off, state, "2026-08-16")
+    carried = m.build_state(off, state, set(), "2026-08-16")
+    assert carried["Guy"]["last_posted_date"] == "2026-08-15"
+
+    back = [_v()]
+    m.apply_streaks(back, carried, "2026-08-17")
+    assert back[0]["due_today"] is False
+
+
+def test_a_long_slump_still_gets_its_weekly_update():
+    # Keyed off the last post, not off when the finding started, so a month-long
+    # lull doesn't go silent forever.
+    state = {"Guy": {"status": "lull", "since": "2026-07-01",
+                     "last_posted_date": "2026-08-08",
+                     "last_posted_status": "lull"}}
+    verdicts = [_v()]
+    m.apply_streaks(verdicts, state, "2026-08-16")
+    assert verdicts[0]["days_standing"] > 30
+    assert verdicts[0]["due_today"] is True
+
+
+def test_never_posted_is_due_even_without_a_flip():
+    # Seen yesterday but suppressed for some other reason: he still owes a post.
+    state = {"Guy": {"status": "lull", "since": "2026-08-15",
+                     "last_posted_date": None}}
+    verdicts = [_v()]
+    m.apply_streaks(verdicts, state, "2026-08-16")
+    assert verdicts[0]["due_today"] is True
+
+
+def test_non_actionable_is_never_due():
+    verdicts = [_v(status="steady")]
+    m.apply_streaks(verdicts, {}, "2026-08-16")
+    assert verdicts[0]["due_today"] is False
+
+
+def test_build_state_stamps_only_players_that_posted():
+    verdicts = [_v(name="Posted"), _v(name="Held")]
+    m.apply_streaks(verdicts, {}, "2026-08-16")
+    state = m.build_state(verdicts, {}, {"Posted"}, "2026-08-16")
+    assert state["Posted"]["last_posted_date"] == "2026-08-16"
+    assert state["Held"]["last_posted_date"] is None
+    # Everyone is carried, board or not.
+    assert set(state) == {"Posted", "Held"}
 
 
 # ---------------------------------------------------------------------------
@@ -578,6 +624,9 @@ def test_unavailable_codes_and_keywords_both_recognized():
 # Deliberate updates:
 #   2026-08-14 — footer cadence line, when the cooldown was removed and every
 #                category went to a rolling board (BE).
+#   2026-08-16 — footer cadence line again, when the rolling board became
+#                flag-once-then-update-weekly (Kent: "space out the repetitive
+#                player updates"; hitters 7d, pitchers 14d).
 #
 # Deliberate updates so far:
 #   2026-08-14 — footer cadence line, when trending-up stopped being subject to
@@ -610,7 +659,7 @@ _33 MiLB clients tracked · 4 findings_
 _Not shown — on the IL: Sterlin Thompson (Rockies, AAA since 06/22)._
 
 _Baseline = season to date minus the window being compared._
-_14- and 30-day form both checked · rolling board — a player shows while he qualifies and drops off when he doesn't._"""
+_14- and 30-day form both checked · flagged once, then updated after 7d for hitters / 14d for pitchers._"""
 
 
 def test_locked_message_format():
@@ -654,8 +703,8 @@ def test_locked_format_survives_an_empty_section():
     assert "Usage down" not in text
     assert "Trending up" not in text
     assert text.endswith(
-        "_14- and 30-day form both checked · rolling board — a player shows "
-        "while he qualifies and drops off when he doesn't._"
+        "_14- and 30-day form both checked · flagged once, then updated after "
+        "7d for hitters / 14d for pitchers._"
     )
     # No stray blank line pile-up where sections were dropped.
     assert "\n\n\n" not in text

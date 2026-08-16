@@ -60,13 +60,19 @@ schedule out so an off-week isn't a benching). Candidates are resolved against
 the MLB Stats API roster before posting: IL stints drop out, and an **org change
 inside the window voids the share read** — a man signed four days ago hasn't
 missed his new club's earlier games (Doughty, 2026-08-14). Role survives an org
-change; share doesn't. It is a **rolling board, not an alert stream** —
-every category shows every morning it qualifies and drops off the morning it
-doesn't; there is no cooldown and nothing is suppressed for having been posted
-before (BE, 2026-08-14). Preview any change with
+change; share doesn't. Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads.
+
+**Cadence: flag once, then update on a delay.** A player posts the day he first
+qualifies, then waits out his re-report window — **7 days hitters, 14 pitchers**
+— even while he keeps qualifying, and the whole post is skipped when nobody is
+new and nobody is due. Kent asked for this after reading the first edition,
+which showed every qualifying player every morning: "space out the repetitive
+player updates" (2026-08-16). Dropping off the board does NOT reset the clock
+(state is kept for every tracked player, not just today's board), but a status
+flip (lull → trending up) is a new finding and posts at once.
 
 **Its Slack format is locked** (BE, 2026-08-14) and pinned byte-for-byte by
 `test_locked_message_format`. That test failing means the message layout
