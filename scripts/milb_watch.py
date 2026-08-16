@@ -45,13 +45,24 @@ Four things are worth a call, and all four post:
                   Solid/Hot. This is the Riemer case: the call you make to get a
                   guy noticed, not the one you make to defend him.
 
-This is a ROLLING BOARD, not an alert stream (BE, 2026-08-14: "active monitor of
-the trends — when no longer trend worthy they drop… logic isn't surface once,
-it's surface on a rolling basis"). Every category behaves the same way: a player
-is on today's post if he qualifies today, and gone tomorrow if he doesn't.
-Nothing is suppressed for having been shown before, and nothing needs expiring —
-the windows are trailing, so a stretch that stops being notable stops clearing
-the bar on its own.
+CADENCE — flag once, then update on a delay. A player posts the day he first
+qualifies; after that he waits out his re-report window (7 days for a hitter, 14
+for a pitcher) even while he keeps qualifying, and if nobody is new and nobody is
+due the whole post is skipped.
+
+This replaced a rolling board that showed every qualifying player every morning.
+That version ran for one day; Kent read it and asked to "space out the
+repetitive player updates" (2026-08-16), and BE settled the shape: "a one time
+flag for any guy at the time they qualify and otherwise quiet if nobody new
+meets a threshold… guys that pop on the report get an update 1 week after",
+with Kent adding "hitters 1 week and pitchers 2 weeks". Pitchers wait longer
+because their evidence arrives more slowly — seven days of "still struggling"
+is often the same two outings restated.
+
+Dropping off the board does NOT reset the clock: state is kept for every tracked
+player, so a man who dips under the bar for a day and clears it again tomorrow
+is not a fresh flag. A status flip (lull → trending up) IS a fresh flag and
+posts the same morning — different conversation, not a repeat.
 
 Candidates are resolved against their club before anything posts (one
 `rosterEntries` call answers both questions). On the IL, rehabbing or otherwise
@@ -86,10 +97,11 @@ blank lines, the footer wording. Changing any of it fails that test on purpose �
 if a change is actually wanted, update the expected block in the same commit and
 say why. Do not "tidy" this copy.
 
-State: `data/_milb_watch_state.json` — yesterday's board, so today's can say how
-long each finding has been standing (`since` / `days_standing` / `new_today` on
-every verdict). It cannot suppress anything; a player who drops off is simply
-absent from it.
+State: `data/_milb_watch_state.json` — every tracked player's current status,
+when it started (`since`) and when he was last actually posted
+(`last_posted_date`). The cadence is keyed off the last post, not off when the
+finding began, so a month-long slump still produces its weekly update instead of
+going silent forever.
 Snapshot: `data/milb_watch.json` — every tracked MiLB client with baseline vs.
 recent, whether or not he alerted. That file is the "tracking" half of the ask
 and the thing a surface can project later.
@@ -199,17 +211,26 @@ SHARE_MIN_TEAM_GAMES = 8        # a short window can't tell you anything
 # no point asking the API about a man who played every day.
 SHARE_PRECHECK_RATIO = 0.85
 
-# Statuses that surface. There is no cooldown and no once-per-N-days rule: this
-# is a rolling board, not an alert stream (BE, 2026-08-14 — "logic isn't surface
-# once, it's surface on a rolling basis"). A player appears every morning he
-# qualifies and drops off the morning he stops. The windows are already trailing
-# and self-expiring, so "no longer trend worthy" needs no separate expiry — he
-# simply doesn't clear the bar, and he's gone.
-#
-# The tradeoff, chosen deliberately: a long slump shows for as long as it lasts.
-# That's the point of a monitor — a lull you were told about once on day one is
-# exactly the thing that gets forgotten by day four.
+# Statuses that can reach the post.
 ACTIONABLE_STATUSES = ("lull", "usage_lull", "idle", "surge")
+
+# ── Cadence: flag once, then update on a delay ──
+# This ran for one day as a rolling board — everyone who qualified, every
+# morning. Kent read it and asked to "space out the repetitive player updates"
+# (#justin-riemer, 2026-08-16); BE: "prefer it's a one time flag for any guy at
+# the time they qualify and otherwise quiet if nobody new meets a threshold.
+# Maybe guys that pop on the report get an update 1 week after". Kent: "Hitters
+# 1 week and pitchers 2 weeks".
+#
+# So a player posts the day he first qualifies, then not again until his
+# re-report window is up — and if nobody is new and nobody is due, the whole
+# post is skipped. Pitchers wait twice as long because their evidence arrives
+# twice as slowly: a starter makes 2-3 appearances a week, so seven days of
+# "still struggling" is often the same two outings restated.
+#
+# A status flip (lull → trending up) is a new finding and posts immediately —
+# it's a different conversation, not a repeat.
+REREPORT_DAYS = {"hitter": 7, "pitcher": 14}
 
 # Recent form has to LAND badly, not just move. A guy going 1.150 → .980 is
 # still one of the best hitters in his league; that is not a lull.
@@ -1078,11 +1099,16 @@ def is_actionable(verdict: dict) -> bool:
 
 
 def apply_streaks(verdicts: list, state: dict, today: str) -> None:
-    """Stamp each verdict with the date its current status started, in place.
+    """Stamp each verdict with its streak and whether it's due to post, in place.
 
-    Not a cooldown — nothing here can suppress a finding. It exists so the
-    snapshot can say how long a lull has been standing, and so a status flip
-    (lull → surge) reads as a new finding rather than a continuing one.
+    `new_today` is a fresh qualification — either he wasn't on the board
+    yesterday, or he was on it for a different reason. Those post immediately.
+    Everything else waits out its re-report window: 7 days for a hitter, 14 for
+    a pitcher.
+
+    The cadence is keyed off `last_posted_date`, not off when the finding
+    started, so a man who has been slumping for a month still gets his weekly
+    update rather than going silent forever.
     """
     for verdict in verdicts:
         prior = state.get(verdict["player_name"]) or {}
@@ -1094,27 +1120,63 @@ def apply_streaks(verdicts: list, state: dict, today: str) -> None:
         verdict["since"] = since
         verdict["days_standing"] = _days_between(since, today) + 1
         verdict["new_today"] = not continuing
+        verdict["last_posted_date"] = prior.get("last_posted_date")
+        verdict["last_posted_status"] = prior.get("last_posted_status")
+        verdict["rereport_days"] = REREPORT_DAYS.get(verdict["kind"], 7)
+        verdict["due_today"] = is_due(verdict, today)
 
 
-def build_state(verdicts: list, state: dict, today: str) -> dict:
-    """Today's board, carried forward so tomorrow can measure streaks.
+def is_due(verdict: dict, today: str) -> bool:
+    """True when this finding belongs in today's post.
 
-    Players who dropped off are simply absent from the new state — there is no
-    tail to expire, because there is nothing being suppressed.
+    Due when it's actionable AND one of: never posted, posted last for a
+    different reason, or its re-report window has elapsed.
+
+    Note this keys off what he was last POSTED as, not off what he was
+    yesterday. Keying on yesterday meant a man who dipped under the bar for a
+    single day read as a fresh flag when he cleared it again the next morning,
+    and re-posted — precisely the repetition this cadence exists to stop.
+    """
+    if not is_actionable(verdict):
+        return False
+    last = verdict.get("last_posted_date")
+    if not last:
+        return True
+    if verdict.get("last_posted_status") != verdict["status"]:
+        return True
+    return _days_between(last, today) >= verdict.get("rereport_days", 7)
+
+
+def build_state(verdicts: list, state: dict, posted_names: set, today: str) -> dict:
+    """Carry every tracked player forward, with when he last actually posted.
+
+    Everyone is kept, not just today's board. A man who dips below the bar for a
+    day and clears it again tomorrow would otherwise read as a fresh flag and
+    re-post, which is exactly the repetition Kent asked us to stop. Holding his
+    `last_posted_date` means the cadence survives the gap.
     """
     new_state: dict = {}
     for verdict in verdicts:
+        name = verdict["player_name"]
+        prior = state.get(name) or {}
         entry = {
             "status": verdict["status"],
             "since": verdict.get("since", today),
             "last_seen_date": today,
+            "last_posted_date": (
+                today if name in posted_names else prior.get("last_posted_date")
+            ),
+            "last_posted_status": (
+                verdict["status"] if name in posted_names
+                else prior.get("last_posted_status")
+            ),
         }
         baseline = verdict.get("baseline") or {}
         if "_ops" in baseline:
             entry["baseline_ops"] = baseline["ops"]
         if "_era" in baseline:
             entry["baseline_era"] = baseline["era"]
-        new_state[verdict["player_name"]] = entry
+        new_state[name] = entry
     return new_state
 
 
@@ -1181,8 +1243,9 @@ def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None)
     lines += [
         "",
         "_Baseline = season to date minus the window being compared._",
-        "_14- and 30-day form both checked · rolling board — a player shows "
-        "while he qualifies and drops off when he doesn't._",
+        f"_14- and 30-day form both checked · flagged once, then updated after "
+        f"{REREPORT_DAYS['hitter']}d for hitters / {REREPORT_DAYS['pitcher']}d "
+        f"for pitchers._",
     ]
     return "\n".join(lines)
 
@@ -1292,7 +1355,10 @@ def main(argv: list | None = None) -> int:
     state = _load_json(_STATE_PATH, {})
     today = _today_et_str()
     apply_streaks(verdicts, state, today)
-    alerts = [v for v in verdicts if is_actionable(v)]
+    board = [v for v in verdicts if is_actionable(v)]
+    # Only the new flags and the ones whose re-report window is up. If that is
+    # empty the run stays silent, even when the board itself isn't.
+    alerts = [v for v in board if v["due_today"]]
     alerted_names = {a["player_name"] for a in alerts}
     # Named in a footnote: an empty no-games section otherwise looks like the
     # check didn't run.
@@ -1302,9 +1368,10 @@ def main(argv: list | None = None) -> int:
     for verdict in verdicts:
         counts[verdict["status"]] = counts.get(verdict["status"], 0) + 1
     logger.info(
-        "%d MiLB clients tracked (%s) — %d alerting",
+        "%d MiLB clients tracked (%s) — %d on the board, %d due to post",
         len(verdicts),
         ", ".join(f"{k}: {v}" for k, v in sorted(counts.items())),
+        len(board),
         len(alerts),
     )
 
@@ -1326,11 +1393,15 @@ def main(argv: list | None = None) -> int:
             "role_min_games": ROLE_MIN_GAMES,
             "share_drop_points": SHARE_DROP_POINTS,
             "share_min_team_games": SHARE_MIN_TEAM_GAMES,
-            "cadence": "rolling — shown while qualifying, dropped when not",
+            "cadence": (
+                "flag once when he qualifies, then update after "
+                f"{REREPORT_DAYS['hitter']}d (hitters) / "
+                f"{REREPORT_DAYS['pitcher']}d (pitchers)"
+            ),
         },
         "counts": counts,
         "players": [
-            dict(v, on_board=v["player_name"] in alerted_names) for v in verdicts
+            dict(v, posted_today=v["player_name"] in alerted_names) for v in verdicts
         ],
     }
 
@@ -1345,7 +1416,9 @@ def main(argv: list | None = None) -> int:
 
     _SNAPSHOT_PATH.write_text(json.dumps(snapshot, indent=2))
     _STATE_PATH.write_text(
-        json.dumps(build_state(alerts, state, today), indent=2, sort_keys=True)
+        json.dumps(
+            build_state(verdicts, state, alerted_names, today), indent=2, sort_keys=True
+        )
     )
 
     if not alerts:
