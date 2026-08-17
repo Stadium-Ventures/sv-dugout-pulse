@@ -764,3 +764,69 @@ def test_status_families():
     assert m.status_family("lull") == m.status_family("usage_lull") == "concern"
     assert m.status_family("idle") == "concern"
     assert m.status_family("surge") == "opportunity"
+
+
+# ---------------------------------------------------------------------------
+# Freshness guard + the stint span the share read needs
+# ---------------------------------------------------------------------------
+
+from datetime import datetime, timezone
+
+
+def _entry(stamp):
+    return {"player_name": "Guy", "last_updated": stamp}
+
+
+def test_fresh_windows_pass():
+    now = datetime(2026, 8, 18, 12, 30, tzinfo=timezone.utc)
+    stale, age = m.windows_are_stale([_entry("2026-08-18T11:39:13.801124Z")], now)
+    assert stale is False
+    assert age < 1
+
+
+def test_yesterdays_windows_are_stale():
+    # The historical pass didn't land: posting would restate yesterday's board
+    # as if it were today's.
+    now = datetime(2026, 8, 18, 12, 30, tzinfo=timezone.utc)
+    stale, age = m.windows_are_stale([_entry("2026-08-17T11:39:13.801124Z")], now)
+    assert stale is True
+    assert 24 < age < 26
+
+
+def test_undateable_windows_count_as_stale():
+    now = datetime(2026, 8, 18, 12, 30, tzinfo=timezone.utc)
+    assert m.windows_are_stale([{"player_name": "Guy"}], now) == (True, None)
+    assert m.windows_are_stale([], now) == (True, None)
+
+
+def test_newest_timestamp_wins_across_entries():
+    now = datetime(2026, 8, 18, 12, 30, tzinfo=timezone.utc)
+    entries = [_entry("2026-08-01T11:00:00Z"), _entry("2026-08-18T11:00:00Z")]
+    stale, age = m.windows_are_stale(entries, now)
+    assert stale is False
+
+
+def test_share_read_needs_a_stint_older_than_the_whole_comparison():
+    # The prior stretch starts at today-30, so a man promoted three weeks ago
+    # would have his old club's games measured against his new club's schedule.
+    verdicts = [{"player_name": "Promoted", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(
+        verdicts, {"Promoted": 1}, _windows("Promoted", 3, 14), "2026-08-18",
+        lookup=lambda _id: _roster(team_name="Somerset Patriots", stint="2026-07-28"),
+        team_games=lambda *a: 12,
+    )
+    assert "usage_share" not in verdicts[0]
+    assert "joined Somerset Patriots on 2026-07-28" in verdicts[0]["share_check"]
+    assert "30 days" in verdicts[0]["share_check"]
+
+
+def test_a_settled_stint_still_gets_its_share_read():
+    verdicts = [{"player_name": "Settled", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(
+        verdicts, {"Settled": 1}, _windows("Settled", 3, 14), "2026-08-18",
+        lookup=lambda _id: _roster(stint="2026-04-01"),
+        team_games=lambda _tid, start, end: 11 if end == "2026-08-18" else 12,
+    )
+    assert verdicts[0]["usage_share"]["dropped"] is True

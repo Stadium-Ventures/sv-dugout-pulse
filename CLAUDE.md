@@ -54,7 +54,7 @@ needed at next year's season open or close, it follows `data/summer_game_log.jso
 
 ## Alerts that compare a player to himself
 
-`scripts/milb_watch.py` + `milb_watch.yml` ("MiLB Watch", 12:30 UTC) is the one
+`scripts/milb_watch.py` + `milb_watch.yml` ("MiLB Watch", 11:50 UTC) is the one
 alert here that grades **relative to a player's own season line**, not against a
 game or a fixed league threshold: baseline = season to date minus the compared
 window, recent = trailing 14d and 30d (the more actionable read wins), verdict =
@@ -73,7 +73,10 @@ missed his new club's earlier games (Doughty, 2026-08-14). Role survives an org
 change; share doesn't. Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
-`window_*.json` files it reads.
+`window_*.json` files it reads — 11:50 UTC is chosen so GitHub's habitual ~40
+minute cron lag lands the post near 8:30 AM ET. Because that pass can be late
+too, the script checks how old the windows are and skips the post (with a note
+to #sv-automation) rather than grading yesterday's numbers as today's.
 
 **Cadence: flag once, then update on a delay.** A player posts the day he first
 qualifies, then waits out his re-report window — **7 days hitters, 14 pitchers**
