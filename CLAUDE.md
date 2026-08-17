@@ -42,6 +42,16 @@ docs: `README.md`, `docs/health_monitor.md`, `docs/SECRETS.md`.
 - `scripts/summer_roster_regression_alert.py`, `summer_quiet_streak_alert.py`
   — rule-based summer alerts (run inside `summer_rosters.yml`).
 
+## Summer alerts go quiet with the season
+
+`scripts/_summer_season.py`'s `season_is_active()` gates both the daily recap
+(`summer_daily_slack.py`) and the quiet-streak alert (`summer_quiet_streak_alert.py`):
+off once no tracked placement has logged a real (played) game in 8+ days,
+back on the first time one does. Kent, 2026-08-17: the daily recap kept
+posting "no client summer activity" for a week-plus after every reachable
+league had actually finished. This replaces a manual off-switch — no action
+needed at next year's season open or close, it follows `data/summer_game_log.json`.
+
 ## Alerts that compare a player to himself
 
 `scripts/milb_watch.py` + `milb_watch.yml` ("MiLB Watch", 12:30 UTC) is the one

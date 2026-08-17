@@ -23,6 +23,8 @@ from pathlib import Path
 
 import requests
 
+from scripts._summer_season import SEASON_IDLE_THRESHOLD_DAYS, season_is_active
+
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -389,6 +391,13 @@ def build_message() -> str:
 
 
 def main() -> int:
+    if not season_is_active():
+        logger.info(
+            "No real summer games logged in %d+ days — season looks over, "
+            "skipping daily recap (resumes automatically once games do)",
+            SEASON_IDLE_THRESHOLD_DAYS,
+        )
+        return 0
     if not _SLACK_WEBHOOK_URL:
         logger.warning("SLACK_WEBHOOK_URL not set — printing message instead:")
         print(build_message())

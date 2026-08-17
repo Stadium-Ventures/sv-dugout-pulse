@@ -33,6 +33,8 @@ from pathlib import Path
 
 import requests
 
+from scripts._summer_season import SEASON_IDLE_THRESHOLD_DAYS, season_is_active
+
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -78,6 +80,13 @@ def _days_between(iso_a: str, iso_b: str) -> int:
 
 
 def main() -> int:
+    if not season_is_active():
+        logger.info(
+            "No real summer games logged in %d+ days — season looks over, "
+            "skipping quiet-streak check (resumes automatically once games do)",
+            SEASON_IDLE_THRESHOLD_DAYS,
+        )
+        return 0
     if not _SEASON_PATH.exists():
         logger.info("window_season.json missing — skipping")
         return 0
