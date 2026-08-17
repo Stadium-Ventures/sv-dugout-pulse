@@ -1254,7 +1254,8 @@ def _short_team(team: str) -> str:
     return team.split()[-1] if team else ""
 
 
-def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None) -> str:
+def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None,
+                     stale_as_of: str | None = None) -> str:
     """Compose the DM. Assumes alerts is non-empty.
 
     LOCKED FORMAT — pinned byte-for-byte by `test_locked_message_format`. Do not
@@ -1275,6 +1276,11 @@ def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None)
         "*MiLB watch* — recent form vs. season baseline",
         f"_{tracked} MiLB clients tracked · {len(alerts)} findings_",
     ]
+    if stale_as_of:
+        # Delivered anyway, but never dressed up as today's numbers.
+        lines.append(
+            f"⚠️ _Stats as of {stale_as_of} — this morning's refresh hasn't landed._"
+        )
     for status, heading in _SECTION:
         group = [a for a in alerts if a["status"] == status]
         if not group:
@@ -1350,8 +1356,9 @@ def post_slack(text: str) -> int:
 
 # The historical pass at 11:00 UTC is what rebuilds the windows. It runs on the
 # same shared-runner scheduler as this job and can be just as late, so a run
-# scheduled close behind it could read yesterday's files and post yesterday's
-# board as if it were today's. A silently stale board is worse than a late one.
+# scheduled close behind it can read yesterday's files. The report still goes out
+# — every day, non-negotiable (BE, 2026-08-18) — but it says which day its
+# numbers come from rather than passing them off as this morning's.
 MAX_WINDOW_AGE_HOURS = 12
 
 
@@ -1383,7 +1390,11 @@ def windows_are_stale(entries: list, now: datetime) -> tuple[bool, float | None]
 
 
 def _report_stale_windows(age_hours: float | None) -> None:
-    """Tell #sv-automation the windows didn't refresh, per the message contract."""
+    """Tell #sv-automation the windows didn't refresh, per the message contract.
+
+    The post still goes out either way; this is the note that says why the
+    numbers in it are older than they should be.
+    """
     try:
         from scripts._automation_notify import post_automation
     except Exception:
@@ -1392,11 +1403,12 @@ def _report_stale_windows(age_hours: float | None) -> None:
     age = f"{age_hours:.0f} hours old" if age_hours is not None else "undateable"
     post_automation(
         "🛠️ Code change\n"
-        "*What broke:* the MiLB watch skipped this morning's post — the stats it "
-        "grades were not refreshed, so the numbers would have been yesterday's.\n"
+        "*What broke:* this morning's MiLB watch went out on older stats — the "
+        "overnight refresh had not landed, so the post is stamped with the date "
+        "the numbers actually come from.\n"
         f"*How we know:* the rolling-window files are {age}.\n"
         "*What to do:* check the 6 AM ET historical pass in the main pulse "
-        "workflow; once it lands, re-run MiLB Watch."
+        "workflow; once it lands, re-run MiLB Watch for today's real numbers."
     )
 
 
@@ -1435,15 +1447,22 @@ def main(argv: list | None = None) -> int:
         logger.info("Window files missing or unreadable — skipping")
         return 0
 
+    # The report goes out every day — that is not negotiable (BE, 2026-08-18).
+    # So stale windows never suppress it; they get stamped on the post so nobody
+    # mistakes yesterday's numbers for this morning's, and #sv-automation is told
+    # the refresh didn't land.
     stale, age_hours = windows_are_stale(
         recent_by_window[_IDLE_WINDOW], datetime.now(timezone.utc)
     )
+    stale_as_of = None
     if stale:
-        # Skip loudly, not silently: nobody can tell a quiet morning from a
-        # broken one, so this is the one case that posts to #sv-automation.
-        logger.warning("Windows are stale (%s hours) — skipping the post", age_hours)
+        newest = newest_window_timestamp(recent_by_window[_IDLE_WINDOW])
+        stale_as_of = newest.date().isoformat() if newest else "an unknown date"
+        logger.warning(
+            "Windows are stale (%s hours) — posting anyway, stamped as of %s",
+            age_hours, stale_as_of,
+        )
         _report_stale_windows(age_hours)
-        return 0
 
     verdicts = evaluate_all(season, recent_by_window)
     if not verdicts:
@@ -1521,7 +1540,7 @@ def main(argv: list | None = None) -> int:
     if args.dry:
         print(json.dumps(snapshot["counts"], indent=2))
         print(
-            build_slack_text(alerts, len(verdicts), suppressed)
+            build_slack_text(alerts, len(verdicts), suppressed, stale_as_of)
             if alerts
             else "(nothing actionable — would send nothing)"
         )
@@ -1537,7 +1556,9 @@ def main(argv: list | None = None) -> int:
     if not alerts:
         # Silent when healthy.
         return 0
-    return post_slack(build_slack_text(alerts, len(verdicts), suppressed))
+    return post_slack(
+        build_slack_text(alerts, len(verdicts), suppressed, stale_as_of)
+    )
 
 
 if __name__ == "__main__":
