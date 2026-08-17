@@ -736,3 +736,31 @@ def test_share_spans_match_the_engine_window_starts():
         team_games=lambda _tid, start, end: seen.append((start, end)) or 12,
     )
     assert seen == [("2026-08-03", "2026-08-17"), ("2026-07-18", "2026-08-02")]
+
+
+def test_a_move_within_the_concern_family_is_not_a_new_flag():
+    # Munroe, 2026-08-17: posted as a usage lull off a broken denominator; once
+    # that was fixed he read as a rate lull. Same conversation, so he must not
+    # re-post the next morning.
+    state = {"Guy": {"status": "usage_lull", "since": "2026-08-17",
+                     "last_posted_date": "2026-08-17",
+                     "last_posted_status": "usage_lull"}}
+    verdicts = [_v(status="lull")]
+    m.apply_streaks(verdicts, state, "2026-08-18")
+    assert verdicts[0]["due_today"] is False
+    assert verdicts[0]["new_today"] is False
+
+
+def test_concern_to_opportunity_still_posts_at_once():
+    state = {"Guy": {"status": "lull", "since": "2026-08-10",
+                     "last_posted_date": "2026-08-17",
+                     "last_posted_status": "lull"}}
+    verdicts = [_v(status="surge")]
+    m.apply_streaks(verdicts, state, "2026-08-18")
+    assert verdicts[0]["due_today"] is True
+
+
+def test_status_families():
+    assert m.status_family("lull") == m.status_family("usage_lull") == "concern"
+    assert m.status_family("idle") == "concern"
+    assert m.status_family("surge") == "opportunity"
