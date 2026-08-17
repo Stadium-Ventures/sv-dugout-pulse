@@ -196,6 +196,11 @@ IDLE_MIN_SEASON_GAMES = 10
 # Both run on the timespans already loaded: ROLE on the 14- and 30-day windows
 # against the season baseline, SHARE on the trailing 14 days vs the 16 before
 # them (i.e. the 30-day window minus the 14-day one).
+# Span lengths, mirroring src/historical_stats.py: its 14d window starts at
+# today-14 and its 30d at today-30, so the prior stretch is the 16 days from
+# today-30 to today-15. Any drift between these and the engine's starts makes
+# the share read compare a player against the wrong slice of his club's
+# schedule.
 _RECENT_DAYS = 14
 _PRIOR_DAYS = 16
 
@@ -673,6 +678,12 @@ def share_signal(games_recent: int, team_recent: int,
     """
     if team_recent < SHARE_MIN_TEAM_GAMES or team_prior < SHARE_MIN_TEAM_GAMES:
         return None
+    # A player cannot appear in more games than his club played. If he did, the
+    # denominator belongs to the wrong club or the wrong days — a mid-window
+    # level move, a doubleheader counted once, a schedule gap. Refuse rather
+    # than publish a share over 100%, which is how this surfaced.
+    if games_recent > team_recent or games_prior > team_prior:
+        return None
     recent = games_recent / team_recent
     prior = games_prior / team_prior
     drop = prior - recent
@@ -917,8 +928,18 @@ def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: st
 
         games_recent, games_prior = share_input
         try:
-            team_recent = team_games(team_id, _shift(today, -13), today)
-            team_prior = team_games(team_id, _shift(today, -29), _shift(today, -14))
+            # These spans MUST match src/historical_stats.py's window starts, or
+            # the player's game count and the club's cover different days. It
+            # builds 14d as today-14..today (15 days inclusive) and 30d as
+            # today-30..today, so the prior stretch is today-30..today-15. Using
+            # today-13/today-29 here put his 14 games against a 13-game
+            # denominator and posted "down from 14 of 13 (108%)" to
+            # #dugout-pulse on 2026-08-17.
+            team_recent = team_games(team_id, _shift(today, -_RECENT_DAYS), today)
+            team_prior = team_games(
+                team_id, _shift(today, -(_RECENT_DAYS + _PRIOR_DAYS)),
+                _shift(today, -(_RECENT_DAYS + 1)),
+            )
         except Exception as exc:
             logger.warning("Schedule lookup failed for %s: %s", verdict["player_name"], exc)
             verdict["share_check"] = "schedule lookup failed"
