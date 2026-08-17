@@ -708,3 +708,31 @@ def test_locked_format_survives_an_empty_section():
     )
     # No stray blank line pile-up where sections were dropped.
     assert "\n\n\n" not in text
+
+
+def test_share_read_refuses_an_impossible_denominator():
+    # A player cannot appear in more games than his club played. When he does,
+    # the denominator is wrong — a mid-window level move, a doubleheader counted
+    # once, a schedule gap. On 2026-08-17 this shipped "down from 14 of 13
+    # (108%)" to #dugout-pulse before the guard existed.
+    assert m.share_signal(8, 12, 14, 13) is None
+    assert m.share_signal(13, 12, 10, 12) is None
+    # The same shapes with a coherent denominator still read fine.
+    assert m.share_signal(8, 12, 13, 13)["dropped"] is True
+
+
+def test_share_spans_match_the_engine_window_starts():
+    # src/historical_stats.py builds 14d from today-14 and 30d from today-30, so
+    # the prior stretch is today-30..today-15. Drift here compares a player
+    # against the wrong slice of his club's schedule.
+    assert m._RECENT_DAYS == 14
+    assert m._PRIOR_DAYS == 16
+    seen = []
+    verdicts = [{"player_name": "Guy", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(
+        verdicts, {"Guy": 1}, _windows("Guy", 3, 14), "2026-08-17",
+        lookup=lambda _id: _roster(stint="2026-04-01"),
+        team_games=lambda _tid, start, end: seen.append((start, end)) or 12,
+    )
+    assert seen == [("2026-08-03", "2026-08-17"), ("2026-07-18", "2026-08-02")]
