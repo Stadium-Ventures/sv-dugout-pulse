@@ -237,6 +237,28 @@ ACTIONABLE_STATUSES = ("lull", "usage_lull", "idle", "surge")
 # it's a different conversation, not a repeat.
 REREPORT_DAYS = {"hitter": 7, "pitcher": 14}
 
+# For cadence purposes a finding's FAMILY is what counts, not its exact status.
+# All three concerns say the same thing to a reader — "this guy is down" — so
+# sliding from a rate lull to a usage lull to an absence is the same
+# conversation continuing, not a new flag. Only crossing between concern and
+# opportunity is a genuinely new thing to say.
+#
+# Without this, our own threshold work re-fires players: the 2026-08-17 post
+# flagged Jake Munroe as a usage lull off a broken denominator, and once that
+# was fixed he read as a rate lull — which would have re-posted him the very
+# next morning, one day after Kent saw him, for no reason on the field.
+STATUS_FAMILY = {
+    "lull": "concern",
+    "usage_lull": "concern",
+    "idle": "concern",
+    "surge": "opportunity",
+}
+
+
+def status_family(status: str) -> str:
+    """'concern' / 'opportunity', or the status itself if it isn't a finding."""
+    return STATUS_FAMILY.get(status, status)
+
 # Recent form has to LAND badly, not just move. A guy going 1.150 → .980 is
 # still one of the best hitters in his league; that is not a lull.
 _LULL_LANDING = {GRADE_QUIET, GRADE_COLD}
@@ -1134,7 +1156,7 @@ def apply_streaks(verdicts: list, state: dict, today: str) -> None:
     for verdict in verdicts:
         prior = state.get(verdict["player_name"]) or {}
         continuing = (
-            prior.get("status") == verdict["status"]
+            status_family(prior.get("status") or "") == status_family(verdict["status"])
             and bool(prior.get("since"))
         )
         since = prior["since"] if continuing else today
@@ -1163,7 +1185,9 @@ def is_due(verdict: dict, today: str) -> bool:
     last = verdict.get("last_posted_date")
     if not last:
         return True
-    if verdict.get("last_posted_status") != verdict["status"]:
+    if status_family(verdict.get("last_posted_status") or "") != status_family(
+        verdict["status"]
+    ):
         return True
     return _days_between(last, today) >= verdict.get("rereport_days", 7)
 
