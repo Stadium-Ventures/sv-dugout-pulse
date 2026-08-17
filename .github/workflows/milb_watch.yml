@@ -9,13 +9,20 @@ name: MiLB Watch
 # pinned byte-for-byte by test_locked_message_format — don't adjust the copy
 # without updating that test on purpose.
 #
-# 12:30 UTC = 8:30 AM ET. Deliberately after the 11:00 UTC historical pass in
-# pulse.yml, which is what rebuilds window_season/14d/30d — running before it
-# would grade yesterday's windows. Also ahead of the 13:30 UTC summer recap so
-# the morning Slack reads pro-first.
+# Scheduled 11:50 UTC to LAND at about 8:30 AM ET. GitHub's cron is best-effort
+# on shared runners and has run this job ~40 minutes late every day since it went
+# live (13:09 on 08-15, 13:11 on 08-16, 13:22 on 08-17 against a 12:30 slot), so
+# the nominal time has to sit ahead of the time you want the post.
+#
+# It still has to follow the 11:00 UTC historical pass in pulse.yml, which is
+# what rebuilds window_season/14d/30d. That pass can be late too, so the script
+# checks how old the windows are and skips the post — with a note to
+# #sv-automation — rather than grading yesterday's numbers as if they were
+# today's. Also stays ahead of the 13:30 UTC summer recap so the morning Slack
+# reads pro-first.
 on:
   schedule:
-    - cron: "30 12 * * *"
+    - cron: "50 11 * * *"
   workflow_dispatch:
     inputs:
       dry_run:

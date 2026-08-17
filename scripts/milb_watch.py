@@ -936,11 +936,17 @@ def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: st
         if not share_input or unavailable:
             continue
 
+        # The share read reaches back across BOTH spans — the prior stretch
+        # starts at today-30 — so his club must have been his club for all of
+        # it. A 14-day guard passed a man promoted three weeks ago and then
+        # measured his old club's games against his new club's schedule.
         stint_start = snapshot.get("stint_start")
-        if stint_start and _days_between(stint_start, today) < _RECENT_DAYS:
+        comparison_days = _RECENT_DAYS + _PRIOR_DAYS
+        if stint_start and _days_between(stint_start, today) < comparison_days:
             verdict["share_check"] = (
                 f"joined {snapshot.get('team_name') or 'a new club'} on "
-                f"{stint_start} — too new to read a lineup share"
+                f"{stint_start} — too new to read a lineup share against "
+                f"{comparison_days} days of that club's schedule"
             )
             continue
         team_id = snapshot.get("team_id")
@@ -1342,6 +1348,58 @@ def post_slack(text: str) -> int:
 # Entry point
 # ---------------------------------------------------------------------------
 
+# The historical pass at 11:00 UTC is what rebuilds the windows. It runs on the
+# same shared-runner scheduler as this job and can be just as late, so a run
+# scheduled close behind it could read yesterday's files and post yesterday's
+# board as if it were today's. A silently stale board is worse than a late one.
+MAX_WINDOW_AGE_HOURS = 12
+
+
+def newest_window_timestamp(entries: list) -> datetime | None:
+    """Most recent `last_updated` across a window file's entries."""
+    newest = None
+    for entry in entries or []:
+        raw = entry.get("last_updated")
+        if not raw:
+            continue
+        try:
+            stamp = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if stamp.tzinfo is None:
+            stamp = stamp.replace(tzinfo=timezone.utc)
+        if newest is None or stamp > newest:
+            newest = stamp
+    return newest
+
+
+def windows_are_stale(entries: list, now: datetime) -> tuple[bool, float | None]:
+    """(stale?, age in hours). Unreadable timestamps count as stale."""
+    newest = newest_window_timestamp(entries)
+    if newest is None:
+        return True, None
+    age = (now - newest).total_seconds() / 3600.0
+    return age > MAX_WINDOW_AGE_HOURS, round(age, 1)
+
+
+def _report_stale_windows(age_hours: float | None) -> None:
+    """Tell #sv-automation the windows didn't refresh, per the message contract."""
+    try:
+        from scripts._automation_notify import post_automation
+    except Exception:
+        logger.warning("Could not import post_automation for the stale-window notice")
+        return
+    age = f"{age_hours:.0f} hours old" if age_hours is not None else "undateable"
+    post_automation(
+        "🛠️ Code change\n"
+        "*What broke:* the MiLB watch skipped this morning's post — the stats it "
+        "grades were not refreshed, so the numbers would have been yesterday's.\n"
+        f"*How we know:* the rolling-window files are {age}.\n"
+        "*What to do:* check the 6 AM ET historical pass in the main pulse "
+        "workflow; once it lands, re-run MiLB Watch."
+    )
+
+
 def _load_json(path: Path, default):
     if not path.exists():
         return default
@@ -1375,6 +1433,16 @@ def main(argv: list | None = None) -> int:
         # failed run). Not this script's problem to report — the freshness
         # check in cron_health_alert.py owns that.
         logger.info("Window files missing or unreadable — skipping")
+        return 0
+
+    stale, age_hours = windows_are_stale(
+        recent_by_window[_IDLE_WINDOW], datetime.now(timezone.utc)
+    )
+    if stale:
+        # Skip loudly, not silently: nobody can tell a quiet morning from a
+        # broken one, so this is the one case that posts to #sv-automation.
+        logger.warning("Windows are stale (%s hours) — skipping the post", age_hours)
+        _report_stale_windows(age_hours)
         return 0
 
     verdicts = evaluate_all(season, recent_by_window)
