@@ -1,19 +1,17 @@
 {
-  "fetch_failures": 0,
-  "generated_at_utc": "2026-08-18T13:35:14.798083+00:00",
+  "fetch_failures": 2,
+  "generated_at_utc": "2026-08-18T16:28:23.557588+00:00",
   "players": {
     "Bennett Edwards": {
       "bbref_id": "edward003ben",
-      "fetched_at_utc": "2026-08-18T13:34:39.344056+00:00",
-      "summary": "",
-      "year": 2026
+      "error": "fetch failed"
     },
     "Brady St. Pierre": {
       "bb": 9,
       "bbref_id": "stpier000bra",
       "earned_runs": 2,
       "era": "1.02",
-      "fetched_at_utc": "2026-08-18T13:34:42.584753+00:00",
+      "fetched_at_utc": "2026-08-18T16:27:25.885556+00:00",
       "games": 6,
       "h_allowed": 8,
       "ip": "17.2",
@@ -35,19 +33,40 @@
       "games": 2,
       "h_allowed": 3,
       "ip": "2.2",
+      "is_stale": true,
       "kind": "pitcher",
       "league": "Cape Cod",
       "league_code": "CCBL",
       "so": 2,
+      "stale_reason": "BBRef fetch failed; showing last-known-good",
       "summary": "2.2 IP, 1 ER, 2 K, 1 BB \u00b7 ERA 3.38, WHIP 1.500 (2 G)",
       "summer_team": "Wareham",
       "whip": "1.500",
       "year": 2026
     },
     "Brooks Wright": {
-      "bbref_id": "wright001bro",
-      "fetched_at_utc": "2026-08-18T13:34:48.883683+00:00",
-      "summary": "",
+      "ab": 53,
+      "avg": ".302",
+      "bb": 11,
+      "bbref_id": "wright000bro",
+      "doubles": 3,
+      "fetched_at_utc": "2026-08-18T16:27:57.032285+00:00",
+      "games": 16,
+      "h": 16,
+      "hr": 1,
+      "kind": "hitter",
+      "league": "NWDS",
+      "league_code": "NWDS",
+      "obp": ".431",
+      "pa": 65,
+      "rbi": 6,
+      "runs": 14,
+      "sb": 7,
+      "slg": ".415",
+      "so": 15,
+      "summary": "16-for-53, 1 HR, 6 RBI \u00b7 .302/.431/.415 (16 G, 65 PA)",
+      "summer_team": "Willmar",
+      "triples": 0,
       "year": 2026
     },
     "Caleb Daniel": {
@@ -56,7 +75,7 @@
       "bb": 7,
       "bbref_id": "daniel002cal",
       "doubles": 2,
-      "fetched_at_utc": "2026-08-18T13:34:52.266002+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:00.650062+00:00",
       "games": 20,
       "h": 13,
       "hr": 2,
@@ -77,25 +96,25 @@
     },
     "Drew Bellis": {
       "bbref_id": "bellis000dre",
-      "fetched_at_utc": "2026-08-18T13:34:55.502611+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:03.956287+00:00",
       "summary": "",
       "year": 2026
     },
     "Evan Taylor": {
       "bbref_id": "taylor002eva",
-      "fetched_at_utc": "2026-08-18T13:34:58.683653+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:07.294693+00:00",
       "summary": "",
       "year": 2026
     },
     "Henry Zatkowski": {
       "bbref_id": "zatkow000hen",
-      "fetched_at_utc": "2026-08-18T13:35:01.867432+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:10.649538+00:00",
       "summary": "",
       "year": 2026
     },
     "Luke Fithian": {
       "bbref_id": "fithia000luk",
-      "fetched_at_utc": "2026-08-18T13:35:05.055797+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:13.986007+00:00",
       "summary": "",
       "year": 2026
     },
@@ -105,7 +124,7 @@
       "bb": 25,
       "bbref_id": "harry-000sam",
       "doubles": 6,
-      "fetched_at_utc": "2026-08-18T13:35:08.292213+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:17.137537+00:00",
       "games": 38,
       "h": 65,
       "hr": 8,
@@ -129,7 +148,7 @@
       "bbref_id": "webb--000tru",
       "earned_runs": 5,
       "era": "2.55",
-      "fetched_at_utc": "2026-08-18T13:35:11.539285+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:20.481196+00:00",
       "games": 10,
       "h_allowed": 7,
       "ip": "17.2",
@@ -144,7 +163,7 @@
     },
     "Will Rhine": {
       "bbref_id": "rhine-000wil",
-      "fetched_at_utc": "2026-08-18T13:35:14.797978+00:00",
+      "fetched_at_utc": "2026-08-18T16:28:23.557504+00:00",
       "summary": "",
       "year": 2026
     }
