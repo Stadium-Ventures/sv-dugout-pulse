@@ -75,8 +75,10 @@ change; share doesn't. Preview any change with
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads — 11:50 UTC is chosen so GitHub's habitual ~40
 minute cron lag lands the post near 8:30 AM ET. Because that pass can be late
-too, the script checks how old the windows are and skips the post (with a note
-to #sv-automation) rather than grading yesterday's numbers as today's.
+too, and because the report goes out **every day, non-negotiable** (BE,
+2026-08-18), a stale refresh never suppresses the post — the script stamps it
+with the date its numbers actually come from and tells #sv-automation, rather
+than grading yesterday's numbers as today's or going dark.
 
 **Cadence: flag once, then update on a delay.** A player posts the day he first
 qualifies, then waits out his re-report window — **7 days hitters, 14 pitchers**
@@ -85,7 +87,12 @@ new and nobody is due. Kent asked for this after reading the first edition,
 which showed every qualifying player every morning: "space out the repetitive
 player updates" (2026-08-16). Dropping off the board does NOT reset the clock
 (state is kept for every tracked player, not just today's board), but a status
-flip (lull → trending up) is a new finding and posts at once.
+flip (lull → trending up) is a new finding and posts at once. That "update 1
+week after" is owed even if he's resolved by then — a hitter flagged and back to
+normal a week later still gets a ✅ *Back to normal* line rather than silently
+vanishing (BE, 2026-08-18, catching the gap live on Kellon Lindsey and Jake
+Munroe). Fires once, on the player's own clock; re-qualifying afterward reads as
+a brand-new flag.
 
 **Its Slack format is locked** (BE, 2026-08-14) and pinned byte-for-byte by
 `test_locked_message_format`. That test failing means the message layout
