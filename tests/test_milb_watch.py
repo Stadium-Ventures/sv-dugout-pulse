@@ -329,6 +329,100 @@ def test_build_state_stamps_only_players_that_posted():
 
 
 # ---------------------------------------------------------------------------
+# Closeouts — "an update 1 week after" fires even if he's back to normal
+# ---------------------------------------------------------------------------
+#
+# BE, 2026-08-18, looking at real players: Kellon Lindsey and Jake Munroe had
+# both cleared their bars before their re-report windows closed. `is_due` alone
+# gates on `is_actionable`, so a resolved player would never post again —
+# exactly the gap these cover.
+
+def test_resolution_owed_once_the_window_elapses():
+    prior = {"last_posted_status": "lull", "last_posted_date": "2026-08-10"}
+    steady = _v(status="steady")  # hitter: 7-day window
+    assert m.resolution_due(steady, prior, "2026-08-16") is False
+    assert m.resolution_due(steady, prior, "2026-08-17") is True
+
+
+def test_resolution_respects_the_pitcher_window():
+    prior = {"last_posted_status": "lull", "last_posted_date": "2026-08-01"}
+    steady = _v(status="steady", kind="pitcher")
+    assert m.resolution_due(steady, prior, "2026-08-14") is False
+    assert m.resolution_due(steady, prior, "2026-08-15") is True
+
+
+def test_resolution_never_owed_if_still_actionable():
+    # Still a lull: that's a continuing-concern update via is_due, not a
+    # closeout — resolution_due must not also fire for the same player.
+    prior = {"last_posted_status": "lull", "last_posted_date": "2026-08-10"}
+    assert m.resolution_due(_v(status="lull"), prior, "2026-08-20") is False
+
+
+def test_resolution_never_owed_for_the_il():
+    # IL absences have their own explanation and their own footnote line — not
+    # a "back to normal" closeout.
+    prior = {"last_posted_status": "idle", "last_posted_date": "2026-08-01"}
+    assert m.resolution_due(_v(status="il"), prior, "2026-08-20") is False
+
+
+def test_resolution_never_owed_without_a_real_prior_flag():
+    # Never posted, or the prior post was itself a closeout ("steady") — either
+    # way there is nothing to close.
+    never_posted = {"last_posted_status": None, "last_posted_date": None}
+    assert m.resolution_due(_v(status="steady"), never_posted, "2026-08-20") is False
+    already_closed = {"last_posted_status": "steady", "last_posted_date": "2026-08-10"}
+    assert m.resolution_due(_v(status="steady"), already_closed, "2026-08-20") is False
+
+
+def test_apply_resolutions_marks_the_verdict_and_leaves_actionable_ones_alone():
+    state = {
+        "Resolved": {"last_posted_status": "lull", "last_posted_date": "2026-08-10"},
+        "Still Down": {"last_posted_status": "lull", "last_posted_date": "2026-08-10"},
+    }
+    verdicts = [_v(name="Resolved", status="steady"), _v(name="Still Down", status="lull")]
+    m.apply_streaks(verdicts, state, "2026-08-17")
+    m.apply_resolutions(verdicts, state, "2026-08-17")
+    resolved, still_down = verdicts
+    assert resolved["due_today"] is True
+    assert resolved["resolution"] == {"from_status": "lull", "from_date": "2026-08-10"}
+    # The real grade is left alone — no fifth status invented.
+    assert resolved["status"] == "steady"
+    # Already due for a normal reason; apply_resolutions must not overwrite that.
+    assert still_down["due_today"] is True
+    assert "resolution" not in still_down
+
+
+def test_a_closed_out_player_reads_as_brand_new_if_he_relapses():
+    # After the closeout, last_posted_status becomes his real grade ("steady"),
+    # which isn't in any ACTIONABLE family — so re-qualifying afterward is a
+    # fresh flag, not a continuation, and can't loop back into another closeout.
+    closed_out = {"status": "steady", "last_posted_status": "steady",
+                 "last_posted_date": "2026-08-17"}
+    relapse = _v(status="lull")
+    m.apply_streaks([relapse], {"Guy": closed_out}, "2026-08-20")
+    assert relapse["new_today"] is True
+    assert relapse["due_today"] is True
+    assert m.resolution_due(_v(status="steady"), closed_out, "2026-08-31") is False
+
+
+def test_end_to_end_kellon_lindsey_gets_his_closeout():
+    # The real case: flagged lull 08-15, resolved by the time his window (7d,
+    # hitter) closes on 08-22.
+    state = {"Kellon Lindsey": {"last_posted_status": "lull",
+                                "last_posted_date": "2026-08-15"}}
+    verdicts = [_v(name="Kellon Lindsey", status="steady")]
+    m.apply_streaks(verdicts, state, "2026-08-22")
+    m.apply_resolutions(verdicts, state, "2026-08-22")
+    assert verdicts[0]["due_today"] is True
+    assert verdicts[0]["resolution"]["from_date"] == "2026-08-15"
+    # One day earlier, it isn't owed yet.
+    early = [_v(name="Kellon Lindsey", status="steady")]
+    m.apply_streaks(early, state, "2026-08-21")
+    m.apply_resolutions(early, state, "2026-08-21")
+    assert early[0]["due_today"] is False
+
+
+# ---------------------------------------------------------------------------
 # Slack copy
 # ---------------------------------------------------------------------------
 
@@ -631,8 +725,13 @@ def test_unavailable_codes_and_keywords_both_recognized():
 # Deliberate updates so far:
 #   2026-08-14 — footer cadence line, when trending-up stopped being subject to
 #                the cooldown and started showing every day (BE).
+#   2026-08-18 — added the ✅ Back to normal closeout section. "An update 1
+#                week after" wasn't conditional on still qualifying, and the
+#                code as it stood silently dropped anyone who resolved before
+#                his window closed (BE, real case: Kellon Lindsey). New section
+#                only; every other line is byte-identical.
 _LOCKED = """*MiLB watch* — recent form vs. season baseline
-_33 MiLB clients tracked · 4 findings_
+_33 MiLB clients tracked · 5 findings_
 
 🔻 *Lull* — form below season baseline
 
@@ -655,6 +754,12 @@ _33 MiLB clients tracked · 4 findings_
 *Justin Riemer*  ·  Athletics  ·  AA
 > OPS .764 → .929 (+.165) over 60 PA in the last 30 days
 > 19-for-49, 0 HR
+
+✅ *Back to normal* — re-report window closed out
+
+*Kellon Lindsey*  ·  Dodgers  ·  A
+> Flagged a lull 08/15 — now: OPS 1.011 → 1.020 (+.009) in the last 14 days
+> 9-for-31, 0 HR
 
 _Not shown — on the IL: Sterlin Thompson (Rockies, AAA since 06/22)._
 
@@ -681,6 +786,11 @@ def test_locked_message_format():
          "current_level": "AA", "status": "surge",
          "reason": "OPS .764 → .929 (+.165) over 60 PA in the last 30 days",
          "detail": "19-for-49, 0 HR"},
+        {"player_name": "Kellon Lindsey", "team": "Los Angeles Dodgers",
+         "current_level": "A", "status": "steady",
+         "reason": "OPS 1.011 → 1.020 (+.009) in the last 14 days",
+         "detail": "9-for-31, 0 HR",
+         "resolution": {"from_status": "lull", "from_date": "2026-08-15"}},
     ]
     suppressed = [
         {"player_name": "Sterlin Thompson", "team": "Colorado Rockies",
@@ -688,6 +798,32 @@ def test_locked_message_format():
          "il": {"description": "Injured 7-Day", "since": "2026-06-22"}},
     ]
     assert m.build_slack_text(alerts, tracked=33, suppressed=suppressed) == _LOCKED
+
+
+def test_closeout_section_omitted_when_nobody_resolved():
+    alerts = [
+        {"player_name": "Blake Rambusch", "team": "Seattle Mariners",
+         "current_level": "AA", "status": "lull",
+         "reason": "OPS .723 → .374 (-.349) over 26 PA in the last 14 days",
+         "detail": "3-for-21, 0 HR"},
+    ]
+    assert "Back to normal" not in m.build_slack_text(alerts, tracked=33)
+
+
+def test_closeout_only_message_still_renders():
+    # A morning where nobody is a live concern or opportunity, but someone's
+    # closeout is due, still produces a real post — not "nothing to send".
+    alerts = [
+        {"player_name": "Kellon Lindsey", "team": "Los Angeles Dodgers",
+         "current_level": "A", "status": "steady",
+         "reason": "OPS 1.011 → 1.020 (+.009) in the last 14 days",
+         "detail": "9-for-31, 0 HR",
+         "resolution": {"from_status": "lull", "from_date": "2026-08-15"}},
+    ]
+    text = m.build_slack_text(alerts, tracked=33)
+    assert "✅ *Back to normal*" in text
+    assert "Flagged a lull 08/15 — now:" in text
+    assert "🔻" not in text and "📈" not in text
 
 
 def test_locked_format_survives_an_empty_section():

@@ -83,9 +83,11 @@ told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
 until his re-report window is up — **7 days for hitters, 14 for pitchers**. If
 nobody is new and nobody is due, the post is skipped entirely. Dropping below
 the bar for a day doesn't reset the clock; a status flip (lull → trending up) is
-a new finding and posts at once. Every tracked player — posted or not — lands in
-`data/milb_watch.json` with both windows' reads, how long the finding has been
-standing, and when he last posted.
+a new finding and posts at once. That update is owed even if he's resolved by
+then — a ✅ **Back to normal** line closes him out once, rather than letting a
+player who quietly returned to normal vanish with no follow-up. Every tracked
+player — posted or not — lands in `data/milb_watch.json` with both windows'
+reads, how long the finding has been standing, and when he last posted.
 
 **The Slack layout is locked** and pinned byte-for-byte by
 `test_locked_message_format` in `tests/test_milb_watch.py`. If that test fails,

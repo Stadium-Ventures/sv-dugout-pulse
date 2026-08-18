@@ -64,6 +64,16 @@ player, so a man who dips under the bar for a day and clears it again tomorrow
 is not a fresh flag. A status flip (lull → trending up) IS a fresh flag and
 posts the same morning — different conversation, not a repeat.
 
+"An update 1 week after" is not conditional on still qualifying. A flagged
+hitter who's back to normal by day 7 still gets that update — a ✅ *Back to
+normal* line saying he was flagged, when, and what he reads like now — rather
+than silently vanishing. Found as a live gap on 2026-08-18 (BE): Kellon Lindsey
+and Jake Munroe had both cleared their bars days before their windows closed,
+and the code as it stood would never have surfaced either one again. Fires once
+per flag, on the player's own clock (`resolution_due`); a closeout is excluded
+from ever re-closing itself, and re-qualifying afterward reads as a brand-new
+flag, not a continuation.
+
 Candidates are resolved against their club before anything posts (one
 `rosterEntries` call answers both questions). On the IL, rehabbing or otherwise
 unavailable → the org already told us why he isn't playing, so it isn't a call:
@@ -1198,6 +1208,60 @@ def is_due(verdict: dict, today: str) -> bool:
     return _days_between(last, today) >= verdict.get("rereport_days", 7)
 
 
+def resolution_due(verdict: dict, prior: dict, today: str) -> bool:
+    """True when a previously-flagged player owes his one-time closeout.
+
+    "Guys that pop on the report get an update 1 week after" (BE, 2026-08-16)
+    was never conditional on still qualifying — a hitter who was flagged and
+    then quietly returned to normal still gets his update at the 7/14-day mark,
+    saying so. Without this, `is_due` alone drops him the moment he's no longer
+    actionable and he never gets that update — a silent gap BE caught on
+    2026-08-18 looking at Kellon Lindsey and Jake Munroe, both of whom had
+    already cleared their bars days before their windows were up.
+
+    Fires once: on the player's OWN re-report clock (from `last_posted_date`),
+    not on a fixed calendar date, using the same hitter/pitcher day counts as
+    every other update. Excludes IL — that has its own explanation and its own
+    line in the message, not a "back to normal" close-out.
+    """
+    if is_actionable(verdict) or verdict["status"] == "il":
+        return False
+    last_status = prior.get("last_posted_status")
+    # last_status not being a real flag (never posted, or already the target of
+    # a prior close-out, which will have overwritten this with a status like
+    # "steady" that is not itself actionable) means there is nothing to close.
+    if not last_status or last_status not in ACTIONABLE_STATUSES:
+        return False
+    last_date = prior.get("last_posted_date")
+    if not last_date:
+        return False
+    days = REREPORT_DAYS.get(verdict["kind"], 7)
+    return _days_between(last_date, today) >= days
+
+
+def apply_resolutions(verdicts: list, state: dict, today: str) -> None:
+    """Mark the one-time closeout for anyone whose flag window has elapsed, in place.
+
+    Runs after `apply_streaks`, which already decided `due_today` for players
+    still qualifying. This only ever turns a False into a True — it never
+    touches an already-actionable finding — and it never touches `status`,
+    so a closeout renders from the player's real current grade (e.g. "steady")
+    rather than inventing a fifth category that the rest of the module has to
+    know about.
+    """
+    for verdict in verdicts:
+        if verdict.get("due_today"):
+            continue
+        prior = state.get(verdict["player_name"]) or {}
+        if not resolution_due(verdict, prior, today):
+            continue
+        verdict["due_today"] = True
+        verdict["resolution"] = {
+            "from_status": prior.get("last_posted_status"),
+            "from_date": prior.get("last_posted_date"),
+        }
+
+
 def build_state(verdicts: list, state: dict, posted_names: set, today: str) -> dict:
     """Carry every tracked player forward, with when he last actually posted.
 
@@ -1248,6 +1312,15 @@ _SECTION = [
     ("surge", "📈 *Trending up* — form above season baseline"),
 ]
 
+# Wording for a closeout's "flagged as ___" clause. Deliberately not reusing
+# the section headings above — those name a rule, this names a past event.
+_RESOLUTION_LABELS = {
+    "lull": "a lull",
+    "usage_lull": "a usage lull",
+    "idle": "no games",
+    "surge": "trending up",
+}
+
 
 def _short_team(team: str) -> str:
     """'New York Yankees' → 'Yankees'. Matches the social-URL convention."""
@@ -1295,6 +1368,32 @@ def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None,
             ]
             if a.get("detail"):
                 lines.append(f"> {a['detail']}")
+
+    # Closeouts: previously flagged, now off the board, and his re-report
+    # window is the reason he's here rather than a live concern or opportunity
+    # (BE, 2026-08-18 — "since they are hitters and were flagged they need to
+    # get their update one week after they were shown", regardless of whether
+    # he's still down). `a["status"]` above is his real current grade
+    # (steady/insufficient), which is why this is a second pass keyed off
+    # `resolution` rather than a fifth entry in _SECTION.
+    resolved = [a for a in alerts if a.get("resolution")]
+    if resolved:
+        lines += ["", "✅ *Back to normal* — re-report window closed out"]
+        for a in resolved:
+            level = a.get("current_level") or "?"
+            res = a["resolution"]
+            label = _RESOLUTION_LABELS.get(
+                res.get("from_status"), res.get("from_status") or "flagged"
+            )
+            when = (res.get("from_date") or "")[5:].replace("-", "/")
+            lines += [
+                "",
+                f"*{a['player_name']}*  ·  {_short_team(a['team'])}  ·  {level}",
+                f"> Flagged {label} {when} — now: {a['reason']}",
+            ]
+            if a.get("detail"):
+                lines.append(f"> {a['detail']}")
+
     if suppressed:
         lines += ["", f"_{_suppressed_line(suppressed)}_"]
     lines += [
@@ -1488,10 +1587,15 @@ def main(argv: list | None = None) -> int:
     today = _today_et_str()
     apply_streaks(verdicts, state, today)
     board = [v for v in verdicts if is_actionable(v)]
-    # Only the new flags and the ones whose re-report window is up. If that is
-    # empty the run stays silent, even when the board itself isn't.
-    alerts = [v for v in board if v["due_today"]]
+    # Closeouts for anyone whose flag window elapsed after he'd already gone
+    # quiet — a resolved lull is not on the board, but he still owes his update.
+    apply_resolutions(verdicts, state, today)
+    # New/continuing flags AND resolved closeouts — everyone due for a reason,
+    # whether or not he's currently on the board. If that is empty the run
+    # stays silent, even when the board itself isn't.
+    alerts = [v for v in verdicts if v["due_today"]]
     alerted_names = {a["player_name"] for a in alerts}
+    resolved = [v for v in alerts if v.get("resolution")]
     # Named in a footnote: an empty no-games section otherwise looks like the
     # check didn't run.
     suppressed = [v for v in verdicts if v["status"] == "il"]
@@ -1500,11 +1604,13 @@ def main(argv: list | None = None) -> int:
     for verdict in verdicts:
         counts[verdict["status"]] = counts.get(verdict["status"], 0) + 1
     logger.info(
-        "%d MiLB clients tracked (%s) — %d on the board, %d due to post",
+        "%d MiLB clients tracked (%s) — %d on the board, %d due to post "
+        "(%d closeouts)",
         len(verdicts),
         ", ".join(f"{k}: {v}" for k, v in sorted(counts.items())),
         len(board),
         len(alerts),
+        len(resolved),
     )
 
     snapshot = {
