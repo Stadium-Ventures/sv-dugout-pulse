@@ -20,6 +20,7 @@ set with `gh secret set NAME -R Stadium-Ventures/sv-dugout-pulse`.
 | `HS_STATS_URL` | HS stats source sheet — **referenced in a workflow but NOT currently set on the repo** | Google Sheets published-CSV URL; set it if/when the HS workflow needs it |
 | `SB_PROXY_URL`, `SB_HTTP_PROXY`, `SB_HTTP_PROXY_2`, `SB_HTTP_PROXY_3` | Proxy endpoints for the StatBroadcast bypass | Provisioned by Tom at the proxy provider; ask Tom |
 | `GITHUB_TOKEN` | Built-in Actions token | Provided automatically by GitHub — nothing to set |
+| `SV_REGISTRY_DISPATCH_TOKEN` | Fires a `repository_dispatch` to Stadium-Ventures/sv-registry on any detected roster move, so its `dugout-pulse-watch.yml` tripwire reconciles within ~1 min instead of waiting on its hourly cron | Fine-grained PAT scoped to Stadium-Ventures/sv-registry only, Contents: read+write (per `_pma-handoff-dugout-pulse-push-2026-07-29.md` in that repo) |
 
 ## Conventions
 
