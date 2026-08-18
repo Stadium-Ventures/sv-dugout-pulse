@@ -174,6 +174,29 @@ def gather_ci_runs(limit: int = 25) -> list:
     return out[:limit]
 
 
+def gather_recent_commits(limit: int = 20) -> list:
+    """Recent commit messages, so a Slack-agreed change that already landed
+    isn't re-flagged as 'still needs to be built' (issue #27, 2026-08-16:
+    the MiLB-watch cadence change was committed hours before the monitor
+    filed an issue asking for it)."""
+    resp = _gh("GET", f"/commits?per_page={limit}")
+    if not resp or resp.status_code != 200:
+        return []
+    out = []
+    for c in resp.json():
+        commit = c.get("commit") or {}
+        message = (commit.get("message") or "").split("\n")[0]
+        # The 15-minute bot data commits carry no signal — skip them.
+        if message.startswith("Update pulse data"):
+            continue
+        out.append({
+            "sha": (c.get("sha") or "")[:9],
+            "date": (commit.get("author") or {}).get("date"),
+            "message": message,
+        })
+    return out
+
+
 def gather_open_issues() -> list:
     resp = _gh("GET", f"/issues?labels={_ISSUE_LABEL}&state=open&per_page=50")
     if not resp or resp.status_code != 200:
@@ -191,11 +214,15 @@ milestone alerts to Slack.
 
 You are given: the current run-level health envelope, a trend of recent runs, \
 the last 24h of the #dugout-pulse Slack channel (including any non-bot \
-colleague comments), recent GitHub Actions run results, and the titles of \
-GitHub issues already open for known problems.
+colleague comments), recent GitHub Actions run results, recent commits to the \
+repo, and the titles of GitHub issues already open for known problems.
 
 Your job: decide what — if anything — is a REAL, NOVEL, ACTIONABLE problem a \
 human should rework, versus normal operation. Be conservative. Do NOT raise:
+- a change colleagues agreed on in Slack that recent_commits shows has ALREADY \
+been implemented — compare the ask against the commit messages before claiming \
+something "still needs to be built" (2026-08-16: issue #27 was raised for a \
+cadence change committed hours earlier the same day)
 - expected mid-week low game volume (Tue/Wed/Mon are light pre-postseason)
 - a single transient GitHub runner failure ("not acquired by Runner") that a \
 later run recovered from
@@ -320,6 +347,7 @@ def main() -> int:
         "health": gather_health(),
         "slack_dugout_pulse_24h": gather_slack(),
         "recent_ci_runs": gather_ci_runs(),
+        "recent_commits": gather_recent_commits(),
         "open_health_issues": open_issues,
     }
 
