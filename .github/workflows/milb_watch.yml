@@ -15,11 +15,12 @@ name: MiLB Watch
 # the nominal time has to sit ahead of the time you want the post.
 #
 # It still has to follow the 11:00 UTC historical pass in pulse.yml, which is
-# what rebuilds window_season/14d/30d. That pass can be late too, so the script
-# checks how old the windows are and skips the post — with a note to
-# #sv-automation — rather than grading yesterday's numbers as if they were
-# today's. Also stays ahead of the 13:30 UTC summer recap so the morning Slack
-# reads pro-first.
+# what rebuilds window_season/14d/30d. That pass can be late too, and because
+# the report goes out every day, non-negotiable (BE, 2026-08-18), a stale
+# refresh never suppresses the post — the script stamps it with the date its
+# numbers actually come from and tells #sv-automation, rather than grading
+# yesterday's numbers as today's or going dark. Also stays ahead of the
+# 13:30 UTC summer recap so the morning Slack reads pro-first.
 on:
   schedule:
     - cron: "50 11 * * *"
