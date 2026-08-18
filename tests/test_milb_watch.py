@@ -830,3 +830,22 @@ def test_a_settled_stint_still_gets_its_share_read():
         team_games=lambda _tid, start, end: 11 if end == "2026-08-18" else 12,
     )
     assert verdicts[0]["usage_share"]["dropped"] is True
+
+
+def test_stale_windows_stamp_the_post_and_never_suppress_it():
+    # The report goes out every day — non negotiable. Stale data is labelled,
+    # not withheld.
+    alerts = [{"player_name": "Guy", "team": "New York Yankees",
+               "current_level": "AA", "status": "lull",
+               "reason": "OPS .800 → .560", "detail": "3-for-21, 0 HR"}]
+    text = m.build_slack_text(alerts, tracked=33, stale_as_of="2026-08-17")
+    assert "⚠️ _Stats as of 2026-08-17 — this morning's refresh hasn't landed._" in text
+    assert "*Guy*" in text
+    # The stamp sits under the header, above the first section.
+    assert text.index("Stats as of") < text.index("*Guy*")
+
+
+def test_a_fresh_post_carries_no_stamp():
+    alerts = [{"player_name": "Guy", "team": "New York Yankees",
+               "current_level": "AA", "status": "lull", "reason": "OPS .800 → .560"}]
+    assert "Stats as of" not in m.build_slack_text(alerts, tracked=33)
