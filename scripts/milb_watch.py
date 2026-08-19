@@ -977,6 +977,16 @@ def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: st
        nearly every day since signing (BE flagged it, 2026-08-14). The share
        read is dropped in that case and says why. The role read (PA per game)
        survives an org change untouched — a starter is a starter anywhere.
+    3. **He's recently off the IL, but the share read doesn't know it.** The
+       idle exclusion above only covers zero games; a player a few games back
+       from a stint still reads as a usage crash, because his own team-games
+       share for the stretch he was hurt is genuinely near zero — Thompson two
+       games back from his 07-31/08-18 stint read "2 of 12 (17%), down from 8
+       of 14 (57%)", his rehab ramp-up mislabeled as a benching (BE,
+       2026-08-19). Voided the same way, across the SAME 30-day span (recent 14
+       + prior 16) the share read itself compares. The role read is untouched
+       here too — it only measures games he actually played, so it has no
+       zero-games artifact to distort.
 
     A lookup that fails leaves whatever the stat lines said and records that the
     check didn't run.
@@ -1058,6 +1068,33 @@ def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: st
         team_id = snapshot.get("team_id")
         if not team_id:
             verdict["share_check"] = "no current club on the roster entry"
+            continue
+
+        # A recently-closed IL stint breaks the share read the same way the
+        # idle read breaks: his own absence, not the club's, explains the low
+        # game count. It shows up here as a usage crash rather than a bare
+        # zero — Sterlin Thompson two games back from a 07-31 to 08-18 stint
+        # read "in the lineup for 2 of 12 (17%), down from 8 of 14 (57%)",
+        # which is his rehab ramp-up, not a benching (BE, 2026-08-19, same root
+        # cause as the idle case above but a different-shaped symptom). Voided
+        # across the SAME span the share read itself compares — recent 14 plus
+        # prior 16 — since an activation anywhere in that stretch taints one
+        # side of the comparison or the other.
+        try:
+            recent_stint = il_history(team_id, mlb_id, today)
+        except Exception as exc:
+            logger.warning(
+                "IL-history lookup failed for %s: %s", verdict["player_name"], exc
+            )
+            verdict["share_check"] = "IL-history lookup failed"
+            continue
+        activated = (recent_stint or {}).get("activated")
+        if activated and _days_between(activated, today) <= comparison_days:
+            verdict["share_check"] = (
+                f"activated from the injured list {activated} — his usage over "
+                f"the last {comparison_days} days is explained by that absence, "
+                f"not a benching"
+            )
             continue
 
         games_recent, games_prior = share_input

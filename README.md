@@ -82,7 +82,10 @@ told us why he isn't playing. A player just activated off the IL gets the same
 exclusion even though his roster status already reads "Active" again: the
 transactions endpoint, not the roster snapshot, is what still knows he was out,
 which is the only way to tell a real no-games absence from an injury that just
-ended. Rate verdicts still respect sample floors (40 PA /
+ended. The same closed-out stint also voids the usage-share read, not just
+idle — a few games back from injury reads as a usage crash otherwise, since his
+own team-games share for the hurt stretch is genuinely near zero, which is a
+rehab ramp-up, not a benching. Rate verdicts still respect sample floors (40 PA /
 15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).
 
 **Cadence:** a player is flagged the day he first qualifies, then not again

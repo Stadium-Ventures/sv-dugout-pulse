@@ -76,7 +76,10 @@ transactions endpoint (`lookup_recent_il`), not `rosterEntries`, is what still
 knows he was out, and without it an idle read for "no games in 14 days" has no
 way to tell a real absence from a stint that just closed (Sterlin Thompson,
 placed 07-31, activated 08-18 — his whole window was the injury, BE,
-2026-08-19). Preview any change with
+2026-08-19). The same closed-out stint voids the SHARE half of usage too, not
+just idle — a few games back from injury reads as a usage crash otherwise,
+since his own team-games share for the hurt stretch is genuinely near zero,
+which is his rehab ramp-up, not a benching. Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads — 11:50 UTC is chosen so GitHub's habitual ~40

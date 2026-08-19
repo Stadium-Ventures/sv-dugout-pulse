@@ -639,6 +639,7 @@ def test_a_settled_player_gets_a_real_share_read():
         verdicts, {"Sat Down": 1}, _windows("Sat Down", 3, 14), "2026-08-14",
         lookup=lambda _id: _roster(stint="2026-04-01"),
         team_games=lambda _tid, start, end: 11 if end == "2026-08-14" else 12,
+        il_history=lambda *a: None,
     )
     assert verdicts[0]["status"] == "usage_lull"
     assert verdicts[0]["usage_share"]["dropped"] is True
@@ -678,7 +679,8 @@ def test_failed_schedule_lookup_leaves_the_verdict_alone():
                  "reason": "OPS .750 → .740"}]
     m.apply_roster_context(verdicts, {"Sat Down": 1},
                            _windows("Sat Down", 3, 14), "2026-08-14",
-                           lookup=lambda _id: _roster(), team_games=boom)
+                           lookup=lambda _id: _roster(), team_games=boom,
+                           il_history=lambda *a: None)
     assert verdicts[0]["status"] == "steady"
     assert verdicts[0]["share_check"] == "schedule lookup failed"
 
@@ -973,6 +975,7 @@ def test_share_spans_match_the_engine_window_starts():
         verdicts, {"Guy": 1}, _windows("Guy", 3, 14), "2026-08-17",
         lookup=lambda _id: _roster(stint="2026-04-01"),
         team_games=lambda _tid, start, end: seen.append((start, end)) or 12,
+        il_history=lambda *a: None,
     )
     assert seen == [("2026-08-03", "2026-08-17"), ("2026-07-18", "2026-08-02")]
 
@@ -1067,8 +1070,59 @@ def test_a_settled_stint_still_gets_its_share_read():
         verdicts, {"Settled": 1}, _windows("Settled", 3, 14), "2026-08-18",
         lookup=lambda _id: _roster(stint="2026-04-01"),
         team_games=lambda _tid, start, end: 11 if end == "2026-08-18" else 12,
+        il_history=lambda *a: None,
     )
     assert verdicts[0]["usage_share"]["dropped"] is True
+
+
+def test_a_recent_il_activation_voids_the_share_read_not_just_idle():
+    # Sterlin Thompson, 2026-08-19: two games back from a 07-31 to 08-18 IL
+    # stint. He's not idle anymore (he's played), but his own recent absence
+    # still explains a share crash — "2 of 12 (17%), down from 8 of 14 (57%)"
+    # — that has nothing to do with a benching (BE, same root cause as the idle
+    # case, a different-shaped symptom).
+    verdicts = [{"player_name": "Thompson", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(
+        verdicts, {"Thompson": 1}, _windows("Thompson", 2, 9), "2026-08-19",
+        lookup=lambda _id: _roster(stint="2026-04-01"),
+        team_games=lambda *a: 12,
+        il_history=lambda *a: {"placed": "2026-07-31", "activated": "2026-08-18"},
+    )
+    assert "usage_share" not in verdicts[0]
+    assert verdicts[0]["status"] == "steady"
+    assert "activated from the injured list 2026-08-18" in verdicts[0]["share_check"]
+    assert "not a benching" in verdicts[0]["share_check"]
+
+
+def test_an_old_activation_does_not_void_a_real_share_read():
+    # Activated well outside the 30-day comparison span — nothing left to
+    # explain, so a genuine usage drop must still surface.
+    verdicts = [{"player_name": "Settled", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(
+        verdicts, {"Settled": 1}, _windows("Settled", 3, 14), "2026-08-18",
+        lookup=lambda _id: _roster(stint="2026-04-01"),
+        team_games=lambda _tid, start, end: 11 if end == "2026-08-18" else 12,
+        il_history=lambda *a: {"placed": "2026-05-01", "activated": "2026-05-08"},
+    )
+    assert verdicts[0]["usage_share"]["dropped"] is True
+
+
+def test_il_history_lookup_failure_leaves_the_share_finding_alone():
+    def boom(*_args):
+        raise RuntimeError("transactions 500")
+
+    verdicts = [{"player_name": "Settled", "status": "steady", "kind": "hitter",
+                 "reason": "OPS .750 → .740"}]
+    m.apply_roster_context(
+        verdicts, {"Settled": 1}, _windows("Settled", 3, 14), "2026-08-18",
+        lookup=lambda _id: _roster(stint="2026-04-01"),
+        team_games=lambda _tid, start, end: 11 if end == "2026-08-18" else 12,
+        il_history=boom,
+    )
+    assert "usage_share" not in verdicts[0]
+    assert verdicts[0]["share_check"] == "IL-history lookup failed"
 
 
 def test_stale_windows_stamp_the_post_and_never_suppress_it():
