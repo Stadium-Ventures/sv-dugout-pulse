@@ -891,16 +891,85 @@ def _legacy_unavailable(mlb_id) -> dict | None:
     return None
 
 
+# How far back to check for a closed-out IL stint. Longer than the 30-day
+# comparison span plus slack — an idle check only ever needs the trailing 14
+# days explained, but a stint can start before the window we're looking at.
+_IL_TRANSACTION_LOOKBACK_DAYS = 35
+
+
+def _mmddyyyy(iso_day: str) -> str:
+    """The transactions endpoint wants MM/DD/YYYY — every other endpoint in
+    this module wants YYYY-MM-DD. Mixing them up doesn't error, it just
+    silently returns zero rows."""
+    year, month, day = iso_day.split("-")
+    return f"{month}/{day}/{year}"
+
+
+def lookup_recent_il(team_id, mlb_id: int, today: str,
+                     lookback_days: int = _IL_TRANSACTION_LOOKBACK_DAYS) -> dict | None:
+    """The player's most recent injured-list stint that has since closed.
+
+    `rosterEntries` (what `lookup_roster` uses) only exposes his CURRENT status.
+    Once he's reactivated, the open-ended assignment just flips back to
+    "Active" with no trace of the IL dates — fine for "is he on the IL right
+    now", blind to "he JUST got off the IL". That gap produced a real false
+    idle: Sterlin Thompson was placed on Albuquerque's 7-day IL on 2026-07-31
+    and activated 2026-08-18, so his trailing-14-day window was genuinely empty
+    for a reason that had nothing to do with a benching or a form issue — the
+    current-status check alone had no way to see that (BE, 2026-08-19).
+
+    The transactions endpoint carries the discrete events instead. Returns
+    {"placed": date, "activated": date-or-None} for the most recent stint
+    touching the lookback window, or None if there isn't one. A stint whose
+    placement predates the lookback is invisible here — acceptable, since a
+    still-open stint is already caught by `lookup_roster`'s current-status
+    check, and real IL stints don't run longer than this lookback.
+    """
+    import statsapi  # lazily, as elsewhere in this module
+
+    start = _shift(today, -lookback_days)
+    transactions = statsapi.get("transactions", {
+        "teamId": team_id,
+        "startDate": _mmddyyyy(start),
+        "endDate": _mmddyyyy(today),
+    }).get("transactions") or []
+
+    placed = None
+    activated = None
+    for txn in sorted(transactions, key=lambda t: t.get("date") or ""):
+        if (txn.get("person") or {}).get("id") != mlb_id:
+            continue
+        description = (txn.get("description") or "").lower()
+        if "injured list" not in description:
+            continue
+        if "activated" in description:
+            activated = txn.get("date")
+        elif "placed" in description:
+            # A fresh placement starts a new stint — any earlier activation
+            # belonged to a prior one and no longer applies.
+            placed = txn.get("date")
+            activated = None
+    if placed is None:
+        return None
+    return {"placed": placed, "activated": activated}
+
+
 def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: str,
-                         lookup=lookup_roster, team_games=team_game_count) -> None:
+                         lookup=lookup_roster, team_games=team_game_count,
+                         il_history=lookup_recent_il) -> None:
     """Resolve each candidate against his club: IL status and lineup share.
 
     Two things the stat lines can't tell you, both needing the same roster
     lookup:
 
-    1. **He's on the IL.** The org already told us why he isn't playing, so it
-       isn't a call. Becomes status `il`, which stays in the snapshot with the
-       reason and never posts.
+    1. **He's on the IL** — or he JUST came off it. Either way the org already
+       told us why he isn't playing, so it isn't a call. Becomes status `il`,
+       which stays in the snapshot with the reason and never posts. The second
+       half needs the transactions history (`lookup_recent_il`), because a
+       closed-out stint leaves no trace on his current roster status — Sterlin
+       Thompson read as a bare, unexplained "idle" the day he was activated,
+       even though his 14-day window was empty because he'd been hurt for
+       nearly all of it (BE, 2026-08-19).
     2. **He changed orgs inside the window.** Then "games his team played" is
        the wrong denominator — he wasn't on that team for most of them. Cade
        Doughty was released 2026-08-04 and signed with Atlanta on 08-10; against
@@ -943,6 +1012,33 @@ def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: st
                 f"{verdict['reason'][0].lower()}{verdict['reason'][1:]}"
             )
             continue
+        if needs_il and verdict["status"] == "idle" and not unavailable:
+            team_id = snapshot.get("team_id")
+            recent_stint = None
+            if team_id:
+                try:
+                    recent_stint = il_history(team_id, mlb_id, today)
+                except Exception as exc:
+                    logger.warning(
+                        "IL-history lookup failed for %s: %s",
+                        verdict["player_name"], exc,
+                    )
+                    verdict["roster_check"] = "IL-history lookup failed"
+            activated = (recent_stint or {}).get("activated")
+            # Only voids the idle read when the activation itself falls inside
+            # the trailing window being judged — an activation from weeks ago
+            # explains nothing about why he still hasn't played since.
+            if activated and _days_between(activated, today) <= _RECENT_DAYS:
+                verdict["il"] = {
+                    "code": "ACT",
+                    "description": "Activated from the injured list",
+                    "since": activated,
+                    "team": snapshot.get("team_name"),
+                }
+                verdict["status"] = "il"
+                verdict["reason"] = f"Activated from the injured list {activated} — no games since"
+                continue
+
         if not share_input or unavailable:
             continue
 

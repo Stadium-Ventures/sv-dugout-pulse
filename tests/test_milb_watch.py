@@ -692,6 +692,109 @@ def test_missing_mlb_id_is_recorded_not_guessed():
     assert verdicts[0]["roster_check"] == "no mlb_id in roster cache"
 
 
+def test_a_player_just_off_the_il_reads_as_il_not_a_bare_idle():
+    # The real case: Sterlin Thompson, 2026-08-19. Placed 07-31, activated
+    # 08-18 — his trailing 14-day window is empty because he was hurt for
+    # nearly all of it, not because of a benching or a form issue. His CURRENT
+    # roster status is "Active" (unavailable=None), so only the transactions
+    # history catches this.
+    verdicts = [{"player_name": "Sterlin Thompson", "status": "idle",
+                 "kind": "hitter", "reason": "No games in the last 14 days (92 G)"}]
+    m.apply_roster_context(
+        verdicts, {"Sterlin Thompson": 694514}, {}, "2026-08-19",
+        lookup=lambda _id: _roster(team_id=342, team_name="Albuquerque Isotopes"),
+        il_history=lambda team_id, mlb_id, today: {"placed": "2026-07-31",
+                                                    "activated": "2026-08-18"},
+    )
+    assert verdicts[0]["status"] == "il"
+    assert verdicts[0]["il"]["since"] == "2026-08-18"
+    assert "Activated from the injured list 2026-08-18" in verdicts[0]["reason"]
+    # Never posts, same as any other IL exclusion.
+    assert not m.is_actionable(verdicts[0])
+
+
+def test_an_old_activation_does_not_explain_a_fresh_idle():
+    # He came off the IL three weeks ago and STILL hasn't played — that is a
+    # real question worth asking, not something the old stint explains away.
+    verdicts = [{"player_name": "Guy", "status": "idle", "kind": "hitter",
+                 "reason": "No games in the last 14 days (50 G)"}]
+    m.apply_roster_context(
+        verdicts, {"Guy": 1}, {}, "2026-08-19",
+        lookup=lambda _id: _roster(),
+        il_history=lambda *a: {"placed": "2026-07-01", "activated": "2026-07-20"},
+    )
+    assert verdicts[0]["status"] == "idle"
+
+
+def test_still_on_the_il_is_caught_by_the_ordinary_check_not_this_one():
+    # An ONGOING stint is already handled by the current-status branch — the
+    # transactions history is only consulted when the current snapshot shows
+    # him active. Confirms the two paths don't double up or fight.
+    called = []
+    verdicts = [{"player_name": "Hurt Guy", "status": "idle", "kind": "hitter",
+                 "reason": "No games in the last 14 days (50 G)"}]
+    m.apply_roster_context(
+        verdicts, {"Hurt Guy": 1}, {}, "2026-08-19",
+        lookup=lambda _id: _roster(unavailable={"code": "D7",
+                                                "description": "Injured 7-Day",
+                                                "since": "2026-08-10"}),
+        il_history=lambda *a: called.append(a) or None,
+    )
+    assert verdicts[0]["status"] == "il"
+    assert verdicts[0]["il"]["since"] == "2026-08-10"
+    assert called == []  # never even consulted
+
+
+def test_no_recent_il_stint_leaves_the_idle_finding_alone():
+    verdicts = [{"player_name": "Guy", "status": "idle", "kind": "hitter",
+                 "reason": "No games in the last 14 days (50 G)"}]
+    m.apply_roster_context(
+        verdicts, {"Guy": 1}, {}, "2026-08-19",
+        lookup=lambda _id: _roster(), il_history=lambda *a: None,
+    )
+    assert verdicts[0]["status"] == "idle"
+
+
+def test_a_still_open_stint_from_the_history_lookup_does_not_void_idle():
+    # activated=None means the transactions history itself shows no closeout —
+    # nothing to explain the absence with, so this must not fire.
+    verdicts = [{"player_name": "Guy", "status": "idle", "kind": "hitter",
+                 "reason": "No games in the last 14 days (50 G)"}]
+    m.apply_roster_context(
+        verdicts, {"Guy": 1}, {}, "2026-08-19",
+        lookup=lambda _id: _roster(),
+        il_history=lambda *a: {"placed": "2026-08-10", "activated": None},
+    )
+    assert verdicts[0]["status"] == "idle"
+
+
+def test_il_history_lookup_failure_leaves_the_idle_finding_standing():
+    def boom(*_args):
+        raise RuntimeError("transactions 500")
+
+    verdicts = [{"player_name": "Guy", "status": "idle", "kind": "hitter",
+                 "reason": "No games in the last 14 days (50 G)"}]
+    m.apply_roster_context(verdicts, {"Guy": 1}, {}, "2026-08-19",
+                           lookup=lambda _id: _roster(), il_history=boom)
+    assert verdicts[0]["status"] == "idle"
+    assert verdicts[0]["roster_check"] == "IL-history lookup failed"
+
+
+def test_il_history_only_consulted_for_idle_not_usage_lull():
+    # A usage lull already has sample floors guarding it — this check is
+    # narrowly scoped to the one finding (idle) that has none.
+    called = []
+    verdicts = [{"player_name": "Guy", "status": "usage_lull", "kind": "hitter",
+                 "reason": "Playing time down", "recent": {"pa": 5},
+                 "detail": "some detail"}]
+    m.apply_roster_context(
+        verdicts, {"Guy": 1}, {}, "2026-08-19",
+        lookup=lambda _id: _roster(),
+        il_history=lambda *a: called.append(a) or None,
+    )
+    assert called == []
+
+
 def test_unavailable_codes_and_keywords_both_recognized():
     assert "D7" in m._UNAVAILABLE_STATUS_CODES
     assert "D60" in m._UNAVAILABLE_STATUS_CODES
