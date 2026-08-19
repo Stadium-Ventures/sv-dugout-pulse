@@ -70,7 +70,13 @@ schedule out so an off-week isn't a benching). Candidates are resolved against
 the MLB Stats API roster before posting: IL stints drop out, and an **org change
 inside the window voids the share read** — a man signed four days ago hasn't
 missed his new club's earlier games (Doughty, 2026-08-14). Role survives an org
-change; share doesn't. Preview any change with
+change; share doesn't. A player just ACTIVATED off the IL gets the same
+exclusion even though his current roster status now reads "Active" — the
+transactions endpoint (`lookup_recent_il`), not `rosterEntries`, is what still
+knows he was out, and without it an idle read for "no games in 14 days" has no
+way to tell a real absence from a stint that just closed (Sterlin Thompson,
+placed 07-31, activated 08-18 — his whole window was the injury, BE,
+2026-08-19). Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads — 11:50 UTC is chosen so GitHub's habitual ~40

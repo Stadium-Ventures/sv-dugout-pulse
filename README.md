@@ -74,9 +74,15 @@ fewer games, he was in the lineup fewer times, and he batted fewer times per
 game. Role (PA per game played) is the earliest tell and is immune to both the
 schedule and an org change. Share divides the schedule out, and is voided when a
 player changed orgs inside the window — his new club's earlier games were never
-his to miss. Absence findings are checked against the MLB Stats API's roster
+his to miss.
+
+Absence findings are checked against the MLB Stats API's roster
 entries and dropped when the player is on the IL or rehabbing — the org already
-told us why he isn't playing. Rate verdicts still respect sample floors (40 PA /
+told us why he isn't playing. A player just activated off the IL gets the same
+exclusion even though his roster status already reads "Active" again: the
+transactions endpoint, not the roster snapshot, is what still knows he was out,
+which is the only way to tell a real no-games absence from an injury that just
+ended. Rate verdicts still respect sample floors (40 PA /
 15 IP baseline; 25 PA / 6 IP over 14 days; 45 PA / 12 IP over 30 days).
 
 **Cadence:** a player is flagged the day he first qualifies, then not again
