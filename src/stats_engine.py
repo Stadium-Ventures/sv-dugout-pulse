@@ -2566,8 +2566,9 @@ class NCAAOrgScraper(BaseSchoolScraper):
     # Served-date markers, tried in order. stats.ncaa.org silently re-serves
     # the most recent date WITH games (HTTP 200) when the requested game_date
     # has none (off-season, travel days). Without a served-date check the
-    # 06-24 CWS final re-emitted nightly as a run-day final all July (Lee
-    # Sowers, "Oklahoma 13, North Carolina 2 | Final" stamped to the run day).
+    # 06-24 CWS final re-emitted nightly as a run-day final all July
+    # ("Oklahoma 13, North Carolina 2 | Final" stamped to the run day for
+    # one UNC client).
     # Several markers are tried so a template change degrades to "unverified"
     # (handled by the waterfall corroboration guard) instead of breaking.
     _SERVED_DATE_RES = (

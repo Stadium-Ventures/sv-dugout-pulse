@@ -127,6 +127,7 @@ def filter_roster(rows: list[dict]) -> list[dict]:
     filtered = []
     excluded_id = 0
     excluded_coach = 0
+    excluded_retired = 0
     for raw in rows:
         level = raw.get("Level", "").strip()
         if level not in INCLUDED_LEVELS:
@@ -135,16 +136,26 @@ def filter_roster(rows: list[dict]) -> list[dict]:
             excluded_coach += 1
             continue
         player = normalize_player(raw)
+        # Sheet-side retirement switch: Status=Retired (any level) or
+        # Org=Retired suppresses the player without a code change.
+        # EXCLUDED_MLB_IDS stays as belt-and-braces for Pro players.
+        status = (player.get("status") or "").strip().lower()
+        org = (raw.get("Org") or "").strip().lower()
+        if status == "retired" or org == "retired":
+            excluded_retired += 1
+            logger.info("Excluding %s — marked Retired on the sheet", player.get("player_name"))
+            continue
         if player.get("mlb_id") in EXCLUDED_MLB_IDS:
             excluded_id += 1
             continue
         filtered.append(player)
 
     logger.info(
-        "Filtered roster: %d players (kept Pro/NCAA/HS, excluded %d by MLB ID, %d coaches)",
+        "Filtered roster: %d players (kept Pro/NCAA/HS, excluded %d by MLB ID, %d coaches, %d retired)",
         len(filtered),
         excluded_id,
         excluded_coach,
+        excluded_retired,
     )
     return filtered
 
@@ -233,6 +244,26 @@ def pro_player_names() -> set[str]:
         for p in players
         if p.get("level") == "Pro"
         and (name := (p.get("player_name") or "").strip().lower())
+    }
+
+
+def all_roster_names() -> set[str]:
+    """Lowercased names of every player on the roster + recruits sheets.
+
+    Reads the on-disk cache regardless of age — used by non-destructive
+    gates (e.g. summer placement filtering). Returns an empty set when no
+    cache exists; callers must fail OPEN on an empty set (filter nothing)
+    rather than treating "no roster" as "nobody is on the roster".
+    """
+    try:
+        with open(ROSTER_CACHE_PATH) as f:
+            players = json.load(f).get("players", [])
+    except Exception:
+        return set()
+    return {
+        name
+        for p in players
+        if (name := (p.get("player_name") or "").strip().lower())
     }
 
 
@@ -346,6 +377,18 @@ def _enrich_pro_team_from_api(players: list[dict]) -> None:
     )
 
 
+# True only when the most recent get_all_players() returned a FRESH,
+# plausibility-checked sheet fetch (not the stale-cache fallback). Destructive
+# roster-hygiene steps (pruning append-only stores) must check this — pruning
+# off a stale cache could delete a just-added player's history.
+_roster_fetch_fresh = False
+
+
+def roster_is_fresh() -> bool:
+    """Did the last get_all_players() come from a successful fresh fetch?"""
+    return _roster_fetch_fresh
+
+
 def get_all_players() -> list[dict]:
     """
     Fetch both clients and recruits, combined.
@@ -355,6 +398,8 @@ def get_all_players() -> list[dict]:
     after sheet load — the sheet is the source of identity (name + mlb_id),
     but the API is the source of truth for current org and current affiliate.
     """
+    global _roster_fetch_fresh
+    _roster_fetch_fresh = False
     try:
         clients = get_active_roster()
         recruits = get_recruits()
@@ -369,6 +414,7 @@ def get_all_players() -> list[dict]:
             )
         _enrich_pro_team_from_api(players)
         _save_roster_cache(players)
+        _roster_fetch_fresh = True
         return players
     except Exception:
         logger.exception("Roster fetch failed or implausible — trying cached roster")

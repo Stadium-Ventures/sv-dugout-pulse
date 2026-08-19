@@ -38,6 +38,11 @@ def test_load_placements_drops_pro_players(tmp_path, monkeypatch):
     ]}))
     monkeypatch.setattr(summer_pulse, "_PLACEMENTS_PATH", placements)
     monkeypatch.setattr(summer_pulse, "pro_player_names", lambda: {"signed guy"})
+    # Both names are on the roster — this test exercises the Pro gate, not
+    # the roster-spelling gate (see test_roster_hygiene.py for that).
+    monkeypatch.setattr(
+        summer_pulse, "all_roster_names", lambda: {"signed guy", "college guy"}
+    )
 
     names = {p["player_name"] for p in summer_pulse._load_placements()}
     assert names == {"College Guy"}

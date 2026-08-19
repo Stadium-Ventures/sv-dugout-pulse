@@ -143,7 +143,7 @@ def test_waterfall_drops_unverified_final_when_espn_empty(monkeypatch):
     monkeypatch.setattr(f._espn, "_get_scoreboard", lambda ds: {"events": []})
     f._default_chain = [f._ncaa_org]
 
-    result = f._waterfall_fetch({"player_name": "Lee Sowers", "team": "North Carolina"})
+    result = f._waterfall_fetch({"player_name": "Test Phantom", "team": "North Carolina"})
     assert result is None
 
 

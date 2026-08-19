@@ -752,6 +752,31 @@ def _save_team_state(state: dict) -> None:
         logger.exception("Failed to write team-state file")
 
 
+def prune_team_state(valid_mlb_ids: set[int]) -> None:
+    """Drop team-level tracking state for MLB IDs no longer on the roster.
+
+    data/_last_team_levels.json is append-only otherwise, so removed clients'
+    names would sit in this public file forever. Callers must pass IDs from a
+    successful FRESH roster fetch only (roster_manager.roster_is_fresh) —
+    pruning off a stale cache could drop a just-added player's baseline.
+    """
+    if not valid_mlb_ids:
+        return
+    state = _load_team_state()
+    if not state:
+        return
+    stale = [k for k in state if not (k.isdigit() and int(k) in valid_mlb_ids)]
+    if not stale:
+        return
+    for k in stale:
+        logger.info(
+            "Team-level state: pruning off-roster entry %s (%s)",
+            k, (state[k] or {}).get("name", "?"),
+        )
+        del state[k]
+    _save_team_state(state)
+
+
 def _check_promotion(player, stats, name, team):
     """Detect when a Pro client moves to a higher level (lower sportId).
 

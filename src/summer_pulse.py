@@ -23,7 +23,7 @@ from typing import Optional
 
 import requests
 
-from .roster_manager import pro_player_names
+from .roster_manager import all_roster_names, pro_player_names, roster_is_fresh
 
 logger = logging.getLogger(__name__)
 
@@ -189,11 +189,24 @@ def _load_placements() -> list[dict]:
         with open(_PLACEMENTS_PATH) as f:
             data = json.load(f)
         pro_names = pro_player_names()
+        # Placements are hand-transcribed — spellings drift from the master
+        # roster ("Bryson Tweedy" vs "Brisen Tweedy"), which silently defeats
+        # the Pro gate below AND publishes off-roster names. Any placement
+        # name that doesn't match a current roster name is skipped loudly.
+        # Empty set = no roster cache — fail open (filter nothing).
+        roster_names = all_roster_names()
         out = []
         for p in data.get("placements", []):
             name = (p.get("player_name") or "").strip()
             # Reject all-caps placeholder rows that don't look like real names.
             if not name or name.isupper() and len(name) > 5:
+                continue
+            if roster_names and name.lower() not in roster_names:
+                logger.warning(
+                    "summer_pulse: placement name %r doesn't match any master-roster "
+                    "name — skipping (fix the spelling in summer_ball_placements.json)",
+                    name,
+                )
                 continue
             # Drafted/signed players flip to Pro on the master sheet; their
             # summer placement is over even if Kent's sheet still lists it.
@@ -1094,7 +1107,27 @@ def _append_to_game_log(entries: list[dict]) -> None:
         # source corrections.
         log.setdefault(yest_key, bucket_yest)
 
-    if log:
+    # Prune-on-write: drop entries for names no longer on the roster sheets
+    # so removed clients can't linger in this public file. Runs only when the
+    # roster came from a fresh fetch this run — never off the stale cache.
+    pruned = 0
+    if roster_is_fresh():
+        roster_names = all_roster_names()
+        if roster_names:
+            for day in list(log):
+                kept = [
+                    r for r in log[day]
+                    if (r.get("player_name") or "").strip().lower() in roster_names
+                ]
+                pruned += len(log[day]) - len(kept)
+                if kept:
+                    log[day] = kept
+                else:
+                    del log[day]
+            if pruned:
+                logger.info("summer_pulse: game-log pruned %d off-roster entries", pruned)
+
+    if log or pruned:
         _atomic_json_dump(log, path, indent=2, sort_keys=True)
         logger.info(
             "summer_pulse: game-log -> %s entries today, %s entries yesterday",

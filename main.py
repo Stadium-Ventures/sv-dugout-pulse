@@ -37,7 +37,7 @@ from src.config import (
 )
 from src.historical_stats import MLBHistoricalFetcher, WindowStatsAggregator, write_window_json
 from src.performance_analyzer import PerformanceAnalyzer
-from src.roster_manager import get_all_players
+from src.roster_manager import get_all_players, roster_is_fresh
 from src.stats_engine import StatsFetcher
 
 logger = logging.getLogger("pulse")
@@ -290,10 +290,24 @@ def _append_to_ncaa_game_log(player: dict, stats: dict):
     logger.debug("NCAA game log: queued %s on %s (gm %s, %s)", key, game_date, game_number, status)
 
 
-def _flush_ncaa_game_log():
-    """Flush all pending NCAA game log entries in a single read+write cycle."""
-    if not _ncaa_log_pending:
-        return
+def _roster_names_for_prune(all_players: list[dict]) -> set[str] | None:
+    """Lowercased roster names for prune-on-write — or None when the roster
+    came from the stale-cache fallback (pruning must never run off it)."""
+    if not roster_is_fresh():
+        return None
+    return {p["player_name"].strip().lower() for p in all_players if p.get("player_name")}
+
+
+def _flush_ncaa_game_log(roster_names: set[str] | None = None):
+    """Flush all pending NCAA game log entries in a single read+write cycle.
+
+    roster_names: lowercased current-roster names. When provided, log keys
+    ("Name|Team") whose name is no longer on the roster are pruned so removed
+    clients don't linger in this public file. Callers must pass it ONLY off a
+    successful fresh roster fetch (roster_manager.roster_is_fresh) — never off
+    the stale-cache path.
+    """
+    pruned = 0
 
     # Load existing log once
     log = {}
@@ -304,6 +318,20 @@ def _flush_ncaa_game_log():
         except Exception:
             logger.error("NCAA game log corrupted during flush — starting fresh for this batch")
             log = {}
+
+    if roster_names:
+        for key in list(log):
+            name = key.split("|", 1)[0].strip().lower()
+            if name not in roster_names:
+                del log[key]
+                pruned += 1
+        if pruned:
+            logger.info("NCAA game log: pruned %d off-roster player key(s)", pruned)
+
+    if not _ncaa_log_pending:
+        if pruned:
+            _atomic_json_write(NCAA_GAME_LOG_PATH, log, indent=2, ensure_ascii=False)
+        return
 
     # Pre-build seen sets for ALL keys at once (avoids re-reading during iteration).
     # Uses date|opponent composite key so both games of a doubleheader are logged.
@@ -380,9 +408,10 @@ def _flush_ncaa_game_log():
                             updated += 1
                     break
 
-    if added > 0 or updated > 0:
+    if added > 0 or updated > 0 or pruned > 0:
         _atomic_json_write(NCAA_GAME_LOG_PATH, log, indent=2, ensure_ascii=False)
-        logger.info("NCAA game log: flushed %d new, %d updated (%d queued)", added, updated, len(_ncaa_log_pending))
+        logger.info("NCAA game log: flushed %d new, %d updated, %d pruned (%d queued)",
+                    added, updated, pruned, len(_ncaa_log_pending))
     else:
         logger.debug("NCAA game log: no new entries to flush (%d queued, all dupes)", len(_ncaa_log_pending))
 
@@ -993,38 +1022,37 @@ def run_live():
         logger.error("No players found — aborting")
         sys.exit(1)
 
-    # HS sheet refresh: download sheet and discover HS players not yet in roster
+    # HS sheet refresh. The sheet is a STATS source only — never a roster
+    # source: names on it that don't match the master roster (post
+    # HS_NAME_ALIASES) are skipped and logged, not synthesized into players
+    # (roster hygiene, 2026-08-19). Prune runs only off a fresh roster fetch.
     try:
         from src.hs_stats import HSSheetParser, HSGameLog
         hs_parser = HSSheetParser()
         hs_parsed = hs_parser.parse_all()
         if hs_parsed:
             hs_log = HSGameLog()
-            hs_log.update_from_sheet(hs_parsed)
-            # Add HS players from sheet that aren't already in the roster
-            roster_names = {p["player_name"] for p in all_players}
-            sheet_names = hs_parser.get_all_player_names()
-            new_hs = sheet_names - roster_names
-            for name in sorted(new_hs):
-                pos = hs_parser.get_position_for_player(name)
-                all_players.append({
-                    "player_name": name,
-                    "team": "HS",
-                    "level": "HS",
-                    "position": pos,
-                    "mlb_id": None,
-                    "roster_priority": 99,
-                    "draft_class": "",
-                    "is_client": False,
-                })
-            if new_hs:
-                logger.info("Discovered %d HS players from sheet: %s", len(new_hs), sorted(new_hs))
+            roster_names_lower = {p["player_name"].strip().lower() for p in all_players}
+            hs_log.update_from_sheet(
+                hs_parsed,
+                roster_names=roster_names_lower,
+                prune=roster_is_fresh(),
+            )
     except Exception:
         logger.exception("HS sheet refresh failed in run_live — continuing without HS data")
 
     clients = [p for p in all_players if p.get("is_client")]
     recruits = [p for p in all_players if not p.get("is_client")]
     logger.info("Loaded %d clients + %d recruits", len(clients), len(recruits))
+
+    # Prune promotion-tracking state for players removed from the roster —
+    # fresh roster fetches only (never the stale-cache fallback).
+    if roster_is_fresh():
+        try:
+            from src.alerts import prune_team_state
+            prune_team_state({p["mlb_id"] for p in all_players if p.get("mlb_id")})
+        except Exception:
+            logger.exception("Team-state prune failed — non-fatal")
 
     today_str = _today_et().isoformat()
     locked_finals = _load_locked_finals(today_str)
@@ -1177,7 +1205,7 @@ def run_live():
 
     _rebuild_season_for_level_movers(all_players)
 
-    _flush_ncaa_game_log()
+    _flush_ncaa_game_log(roster_names=_roster_names_for_prune(all_players))
 
     # Deduplicate pulse entries.  Concurrent fetches + stats lock can
     # produce duplicate entries for the same player+game_number.  Keep the
@@ -1261,7 +1289,7 @@ def run_live():
             logger.exception("summer_pulse: post-supplement yesterday-merge failed")
 
     _fetch_yesterday_pass(all_players, fetcher, analyzer)
-    _flush_ncaa_game_log()
+    _flush_ncaa_game_log(roster_names=_roster_names_for_prune(all_players))
 
     # Quick NCAA L7 refresh — game log was just updated, so re-aggregate
     # the NCAA portion of L7 window stats to include today's Final games.
@@ -1554,8 +1582,17 @@ def _update_player_health_history(pulse: list[dict]) -> None:
         et_now = datetime.now(ZoneInfo("America/New_York"))
         today_et = et_now.strftime("%Y-%m-%d")
 
+        # Roster-only rows: never snapshot a name that isn't on the current
+        # roster sheets (this file is public). Empty set = no cache — fail
+        # open rather than writing an empty snapshot.
+        from src.roster_manager import all_roster_names
+        roster_names = all_roster_names()
+
         snapshot_players = []
         for p in pulse:
+            name = (p.get("player_name") or "").strip()
+            if roster_names and name.lower() not in roster_names:
+                continue
             game_status = (p.get("game_status") or "").strip()
             # Only count players who had a game today. "N/A" or empty = no game.
             if game_status in ("", "N/A"):
@@ -1861,14 +1898,20 @@ def run_backfill():
         sys.exit(1)
 
     # HS sheet refresh — keeps the HS game log in step with the sheet so the
-    # L7 recompute below sees fresh manual entries.
+    # L7 recompute below sees fresh manual entries. Roster-gated: off-roster
+    # sheet names are skipped, and stale keys prune off a fresh roster fetch.
     try:
         from src.hs_stats import HSSheetParser, HSGameLog
         hs_parser = HSSheetParser()
         hs_parsed = hs_parser.parse_all()
         if hs_parsed:
             hs_log = HSGameLog()
-            hs_log.update_from_sheet(hs_parsed)
+            roster_names_lower = {p["player_name"].strip().lower() for p in all_players}
+            hs_log.update_from_sheet(
+                hs_parsed,
+                roster_names=roster_names_lower,
+                prune=roster_is_fresh(),
+            )
     except Exception:
         logger.exception("HS sheet refresh failed in run_backfill — continuing")
 
@@ -1883,7 +1926,7 @@ def run_backfill():
     fetcher = StatsFetcher()
     analyzer = PerformanceAnalyzer()
     _fetch_yesterday_pass(all_players, fetcher, analyzer)
-    _flush_ncaa_game_log()
+    _flush_ncaa_game_log(roster_names=_roster_names_for_prune(all_players))
     _refresh_ncaa_l7(all_players)
 
     post_state = _read_yesterday_capture_state()
@@ -1906,32 +1949,21 @@ def run_historical():
         logger.error("No players found — aborting")
         sys.exit(1)
 
-    # HS sheet refresh before aggregation
+    # HS sheet refresh before aggregation. Stats source only — off-roster
+    # sheet names are skipped and logged, never synthesized into players
+    # (roster hygiene, 2026-08-19).
     try:
         from src.hs_stats import HSSheetParser, HSGameLog
         hs_parser = HSSheetParser()
         hs_parsed = hs_parser.parse_all()
         if hs_parsed:
             hs_log = HSGameLog()
-            hs_log.update_from_sheet(hs_parsed)
-            # Discover HS players from sheet not in roster
-            roster_names = {p["player_name"] for p in all_players}
-            sheet_names = hs_parser.get_all_player_names()
-            new_hs = sheet_names - roster_names
-            for name in sorted(new_hs):
-                pos = hs_parser.get_position_for_player(name)
-                all_players.append({
-                    "player_name": name,
-                    "team": "HS",
-                    "level": "HS",
-                    "position": pos,
-                    "mlb_id": None,
-                    "roster_priority": 99,
-                    "draft_class": "",
-                    "is_client": False,
-                })
-            if new_hs:
-                logger.info("Discovered %d HS players from sheet: %s", len(new_hs), sorted(new_hs))
+            roster_names_lower = {p["player_name"].strip().lower() for p in all_players}
+            hs_log.update_from_sheet(
+                hs_parsed,
+                roster_names=roster_names_lower,
+                prune=roster_is_fresh(),
+            )
     except Exception:
         logger.exception("HS sheet refresh failed in run_historical — continuing without HS data")
 

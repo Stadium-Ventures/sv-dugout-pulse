@@ -165,6 +165,20 @@ def _master_sheet_pro_names() -> set[str]:
     }
 
 
+def _master_sheet_all_names() -> set[str]:
+    """Lowercased names of everyone in the master-sheet roster cache (all
+    levels, clients + recruits). Empty set = no cache; callers fail open."""
+    try:
+        cache = json.loads((_REPO_ROOT / "data" / "roster_cache.json").read_text())
+    except Exception:
+        return set()
+    return {
+        name
+        for p in cache.get("players", [])
+        if (name := (p.get("player_name") or "").strip().lower())
+    }
+
+
 def main():
     if not _PLACEMENTS_PATH.exists():
         logger.error("Missing %s", _PLACEMENTS_PATH)
@@ -175,6 +189,26 @@ def main():
         if p.get("player_name")
         and not (str(p["player_name"]).isupper() and len(p["player_name"]) > 5)
     ]
+    # Placement names are hand-transcribed and drift from the master roster
+    # ("Bryson Tweedy" vs "Brisen Tweedy") — a drifted name silently defeats
+    # the Pro gate below. Skip loudly anything that doesn't match a current
+    # roster name; fail open when the cache is missing (empty set).
+    roster_names = _master_sheet_all_names()
+    if roster_names:
+        drifted = [
+            p["player_name"] for p in placements
+            if p["player_name"].strip().lower() not in roster_names
+        ]
+        for name in drifted:
+            logger.warning(
+                "Placement name %r doesn't match any master-roster name — "
+                "skipping (fix the spelling in summer_ball_placements.json)",
+                name,
+            )
+        placements = [
+            p for p in placements
+            if p["player_name"].strip().lower() in roster_names
+        ]
     # Drafted/signed players (Level=Pro on the master sheet) no longer need
     # summer-league ID resolution — their pro pipeline keys off MLB_ID.
     pro_names = _master_sheet_pro_names()

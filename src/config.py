@@ -35,6 +35,9 @@ COLUMN_MAP = {
     "X Handle": "x_handle",
     "Affiliate": "affiliate",
     "Tier": "roster_priority",  # 1-4 internal priority — NOT performance grade
+    # Sheet-side suppression switch: Status (or Org) = "Retired" removes a
+    # player from the dashboard with no code change — see filter_roster().
+    "Status": "status",
     "State (High School)": "state",
     "State": "state",  # Recruits sheet uses "State" instead of "State (High School)"
     "IG Handle": "ig_handle",
@@ -140,6 +143,10 @@ HS_NAME_ALIASES = {
     "Braedon Makay": "Braedon Mackay",
     "Hunter Wiecksowki": "Hunter Wieckowski",
     "Ax Westmoreland": "Axton Westmoreland",
+    "Ty Howard": "Tyler Howard",
+    "Lucas Lawerence": "Lucas Lawrence",
+    "Kyle Rogossienski": "Kyle Rogosienski",
+    "Alex Smith": "Alexander Smith",
 }
 
 # ---------------------------------------------------------------------------

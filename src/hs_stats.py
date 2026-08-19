@@ -353,14 +353,43 @@ class HSGameLog:
             raise
         logger.info("Saved HS game log (%d players)", len(self._log))
 
-    def update_from_sheet(self, parsed_data: list[dict]):
-        """Merge parsed sheet data into the game log, deduplicating by player+date."""
+    def update_from_sheet(
+        self,
+        parsed_data: list[dict],
+        roster_names: set[str] | None = None,
+        prune: bool = False,
+    ):
+        """Merge parsed sheet data into the game log, deduplicating by player+date.
+
+        roster_names: lowercased master-roster names (post HS_NAME_ALIASES).
+        When provided, sheet names that don't match the roster are SKIPPED and
+        logged — the HS sheet must never introduce players the master roster
+        doesn't know (roster hygiene, 2026-08-19). A skipped name means either
+        a new misspelling (add it to HS_NAME_ALIASES) or a genuinely new
+        player (add them to the master roster sheet).
+
+        prune: additionally drop existing log keys not on the roster. Callers
+        must pass prune=True ONLY off a successful fresh roster fetch (see
+        roster_manager.roster_is_fresh) — never off the stale-cache path.
+        """
         added = 0
+        skipped: set[str] = set()
+
+        def _on_roster(name: str) -> bool:
+            if roster_names is None:
+                return True
+            if name.strip().lower() in roster_names:
+                return True
+            skipped.add(name)
+            return False
+
         for game in parsed_data:
             game_date = game["date"].isoformat()  # YYYY-MM-DD
 
             for h in game["hitters"]:
                 key = h["player"]
+                if not _on_roster(key):
+                    continue
                 entry = {
                     "date": game_date,
                     "opponent": h.get("game_result", ""),
@@ -382,6 +411,8 @@ class HSGameLog:
 
             for p in game["pitchers"]:
                 key = p["player"]
+                if not _on_roster(key):
+                    continue
                 # Convert IP to baseball notation string
                 ip_val = p["ip"]
                 ip_str = str(ip_val)
@@ -408,7 +439,23 @@ class HSGameLog:
                 if self._add_if_new(key, entry):
                     added += 1
 
-        if added > 0:
+        if skipped:
+            logger.warning(
+                "HS game log: %d sheet name(s) not on the master roster — skipped "
+                "(new misspelling? add to HS_NAME_ALIASES; new player? add to the roster sheet): %s",
+                len(skipped), sorted(skipped),
+            )
+
+        pruned = 0
+        if prune and roster_names:
+            for key in list(self._log):
+                if key.strip().lower() not in roster_names:
+                    del self._log[key]
+                    pruned += 1
+            if pruned:
+                logger.info("HS game log: pruned %d off-roster player key(s)", pruned)
+
+        if added > 0 or pruned > 0:
             self.save()
         logger.info("HS game log: merged %d new entries", added)
 
@@ -601,7 +648,13 @@ class HSStatsFetcher:
             return
         try:
             parsed = self._parser.parse_all()
-            self._game_log.update_from_sheet(parsed)
+            # Gate new entries on the roster cache (skip-only, no prune —
+            # pruning is reserved for callers holding a fresh roster fetch).
+            # Empty set (no cache) fails open: filter nothing.
+            from .roster_manager import all_roster_names
+            self._game_log.update_from_sheet(
+                parsed, roster_names=all_roster_names() or None
+            )
             self._initialized = True
         except Exception:
             logger.exception("Failed to initialize HS stats — will return empty stats")
