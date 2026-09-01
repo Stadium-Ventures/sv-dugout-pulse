@@ -170,7 +170,7 @@ function renderWindows(byWindow, pitcher) {
     let splitRows = '';
     if (splits) {
       splitRows = `<div style="margin-top:0.6rem;border-top:1px dashed var(--border);padding-top:0.4rem;">
-        <div class="stat-label" style="margin-bottom:0.2rem;">Season by level</div>
+        <div class="stat-label" style="margin-bottom:0.2rem;">By level</div>
         ${splits.map(sp => `<div class="lvl-row"><span class="lvl-tag">${esc(sp.level)}</span>
           <span class="lvl-line">${esc(levelLine(sp.stats || {}, pitcher))}</span>
           ${sp.level === e.current_level ? '<span class="lvl-g" style="color:#4ade80;font-weight:700;" title="Current level">now</span>' : ''}

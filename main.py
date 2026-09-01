@@ -1263,13 +1263,29 @@ def run_live():
     # by the summer_rosters workflow) and emits a card per matched player
     # with today's/yesterday's MLB-Stats-API summer-league game state.
     # Failures are non-fatal — the rest of the pulse should still ship.
+    #
+    # Summer ball ends in early-to-mid August. Past that, these cards read
+    # "No game today" and "Awaiting arrival" for clubs that have stopped
+    # playing, so we stop emitting them once the season goes quiet (same
+    # data-driven switch as the summer Slack alerts and the recap email) and
+    # start again by itself when next summer's games land in the log. Every
+    # summer client is also carried at his school's level, so nothing
+    # disappears from the dashboard; per-player summer pages keep working off
+    # the placement + game-log files.
     summer_entries: list = []
     try:
+        from scripts._summer_season import SEASON_IDLE_THRESHOLD_DAYS, season_is_active
         from src.summer_pulse import build_summer_pulse_entries
-        summer_entries = build_summer_pulse_entries()
-        if summer_entries:
-            logger.info("Appended %d summer-ball entries to pulse", len(summer_entries))
-            today_pulse.extend(summer_entries)
+        if not season_is_active():
+            logger.info(
+                "Summer season looks over (no real game logged in %d+ days) — "
+                "skipping summer cards", SEASON_IDLE_THRESHOLD_DAYS,
+            )
+        else:
+            summer_entries = build_summer_pulse_entries()
+            if summer_entries:
+                logger.info("Appended %d summer-ball entries to pulse", len(summer_entries))
+                today_pulse.extend(summer_entries)
     except Exception:
         logger.exception("summer_pulse: build failed, continuing without summer cards")
 
@@ -1729,10 +1745,19 @@ def write_output(pulse: list[dict]):
     pulse = sorted(pulse, key=_stable_sort_key)
     generated_at = datetime.now(timezone.utc).isoformat()
     health = _summarize_run_health(pulse)
+    # The front end hides the Summer Ball banner and level filter when this is
+    # false — otherwise both point at cards that are no longer emitted.
+    try:
+        from scripts._summer_season import season_is_active
+        summer_active = season_is_active()
+    except Exception:
+        logger.exception("write_output: summer season check failed, assuming active")
+        summer_active = True
     envelope = {
         "generated_at": generated_at,
         "players": pulse,
         "health": health,
+        "summer_season_active": summer_active,
     }
     _atomic_json_write(OUTPUT_PATH, envelope, indent=2, ensure_ascii=False)
     _append_health_history(generated_at, health)

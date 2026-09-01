@@ -143,14 +143,16 @@ class MLBHistoricalFetcher:
 
     def fetch_window(
         self, player_name: str, team: str, position: str, start_date: date, end_date: date,
-        mlb_id: Optional[int] = None, multi_level: bool = False,
+        mlb_id: Optional[int] = None,
     ) -> tuple[Optional[dict], list, list]:
         """
         Fetch aggregated stats for a player over the given date range.
         Returns (stats_dict, game_entries_list, level_splits) — stats_dict is
         None if player not found or no games in range. Every affiliated level
-        is always swept; multi_level (Season view) controls only whether
-        per-level breakdowns are returned in level_splits (highest → lowest).
+        is always swept, and level_splits always carries the per-level
+        breakdown (highest → lowest) with the affiliate name for each level,
+        even for a single-level span: a window's stats are meaningless without
+        knowing which affiliate and level they came from.
         """
         player_id = self._resolve_player_id(player_name, mlb_id)
         if player_id is None:
@@ -160,7 +162,7 @@ class MLBHistoricalFetcher:
         try:
             # Get player's game log for the date range
             game_log = self._fetch_game_log(
-                player_id, start_date, end_date, position, all_levels=multi_level
+                player_id, start_date, end_date, position
             )
             if not game_log:
                 logger.debug("No games found for %s in range", player_name)
@@ -169,23 +171,28 @@ class MLBHistoricalFetcher:
             # Build per-game entries for drill-down
             game_entries = self._build_game_entries(game_log, position)
             combined = self._aggregate(game_log, position)
-            level_splits = self._aggregate_by_level(game_log, position) if multi_level else []
+            level_splits = self._aggregate_by_level(game_log, position, min_levels=1)
             return combined, game_entries, level_splits
 
         except Exception:
             logger.exception("Error fetching window stats for %s", player_name)
             return None, [], []
 
-    def _aggregate_by_level(self, games: list[dict], position: str) -> list[dict]:
+    def _aggregate_by_level(self, games: list[dict], position: str,
+                            min_levels: int = 2) -> list[dict]:
         """Group game splits by affiliated level and aggregate each separately.
 
         Rate stats (AVG/OBP/OPS/ERA/…) are NOT comparable across levels, so we
-        keep them split rather than blending. Returns [] for single-level spans.
+        keep them split rather than blending. Each split also carries
+        team_name — the affiliate he actually played for at that level, which
+        the parent-org name in the roster can't tell you. Returns [] when the
+        span covers fewer than min_levels levels (default 2, i.e. only genuine
+        multi-level spans; pass 1 to always get the breakdown).
         """
         by_sid: dict[int, list] = {}
         for g in games:
             by_sid.setdefault(g.get("_sport_id", 1), []).append(g)
-        if len(by_sid) < 2:
+        if len(by_sid) < min_levels:
             return []
         out = []
         for sid, gs in by_sid.items():
@@ -195,11 +202,29 @@ class MLBHistoricalFetcher:
             out.append({
                 "sport_id": sid,
                 "level": self._SPORT_LEVEL.get(sid, "?"),
+                "team_name": self._affiliate_name(gs),
                 "stats": st,
                 "games_played": st.get("games_played", len(gs)),
             })
         out.sort(key=lambda x: self._SPORT_RANK.get(x["sport_id"], 9))
         return out
+
+    @staticmethod
+    def _affiliate_name(games: list[dict]) -> str:
+        """The affiliate a set of same-level game splits was played for.
+
+        Almost always one club; a mid-level trade (AA -> AA) yields two, so we
+        list them most-games-first rather than silently picking one.
+        """
+        counts: dict[str, int] = {}
+        for g in games:
+            name = g.get("_team_name") or ""
+            if name:
+                counts[name] = counts.get(name, 0) + 1
+        if not counts:
+            return ""
+        ordered = sorted(counts, key=lambda n: (-counts[n], n))
+        return " / ".join(ordered[:2])
 
     def _build_game_entries(self, games: list[dict], position: str) -> list[dict]:
         """Build per-game drill-down entries from MLB API splits."""
@@ -371,6 +396,9 @@ class MLBHistoricalFetcher:
                         for sp in splits:
                             sp["_sport_id"] = sid
                             sp["_level"] = self._SPORT_LEVEL.get(sid, "")
+                            # The affiliate he played this game for — the roster
+                            # only knows the parent org.
+                            sp["_team_name"] = (sp.get("team") or {}).get("name", "")
                             # Tag the stat group: a pitching split's stat dict
                             # carries OPPONENT hitting counters under the same
                             # keys (hits/atBats/homeRuns/...), so aggregators
@@ -1118,7 +1146,6 @@ class WindowStatsAggregator:
         if level == "Pro":
             stats, game_log_entries, raw_level_splits = self.mlb_fetcher.fetch_window(
                 name, team, position, start_date, end_date, mlb_id=mlb_id,
-                multi_level=(window == "season"),
             )
             current_level = self.mlb_fetcher.current_level(name, mlb_id)
         elif level == "NCAA" and window == "season":
@@ -1174,12 +1201,16 @@ class WindowStatsAggregator:
         if window == "7d" and game_log_entries:
             result["game_log"] = game_log_entries
 
-        # Per-level breakdown when a player logged games at >1 affiliated level
-        # this season. Rates stay split by level (never blended).
-        if len(raw_level_splits) > 1:
+        # Per-level breakdown of the window, with the affiliate played for at
+        # each level. Rates stay split by level (never blended), and the
+        # single-level case is included too so every window can say where the
+        # stats came from. Consumers that only care about multi-level spans
+        # check len(level_splits) > 1.
+        if raw_level_splits:
             result["level_splits"] = [
                 {
                     "level": ls["level"],
+                    "team_name": ls.get("team_name", ""),
                     "games_played": ls["games_played"],
                     "stats": self._format_stats(ls["stats"], window, position),
                     "window_grade": self._calculate_grade(ls["stats"], window, position),

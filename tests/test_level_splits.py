@@ -3,7 +3,7 @@ combine, rate stats never blend across levels (each level aggregates alone)."""
 from src.historical_stats import MLBHistoricalFetcher
 
 
-def _hitter_game(hits, ab, sport_id):
+def _hitter_game(hits, ab, sport_id, team_name=""):
     f = MLBHistoricalFetcher
     return {
         "stat": {
@@ -14,6 +14,7 @@ def _hitter_game(hits, ab, sport_id):
         },
         "_sport_id": sport_id,
         "_level": f._SPORT_LEVEL[sport_id],
+        "_team_name": team_name,
         "date": "2026-06-01",
     }
 
@@ -85,3 +86,44 @@ def test_current_level_only_reports_verified_lookups():
     assert f.current_level("Cached Guy", mlb_id=123) is None   # unverified
     f._sport_verified.add(123)
     assert f.current_level("Cached Guy", mlb_id=123) == "AAA"
+
+
+def test_split_carries_the_affiliate_played_for():
+    # The roster only knows the parent org, so the affiliate has to come from
+    # the game log or the email can't say where the stats happened.
+    f = MLBHistoricalFetcher()
+    games = [
+        _hitter_game(1, 4, 1, "Colorado Rockies"),
+        _hitter_game(2, 4, 11, "Albuquerque Isotopes"),
+        _hitter_game(1, 4, 11, "Albuquerque Isotopes"),
+    ]
+    splits = f._aggregate_by_level(games, "Hitter")
+    assert [(s["level"], s["team_name"]) for s in splits] == [
+        ("MLB", "Colorado Rockies"), ("AAA", "Albuquerque Isotopes")]
+
+
+def test_single_level_breakdown_available_on_request():
+    # min_levels=1 is what every window uses now: even a one-level month needs
+    # to say which affiliate and level it was.
+    f = MLBHistoricalFetcher()
+    games = [_hitter_game(2, 4, 11, "Iowa Cubs"), _hitter_game(1, 4, 11, "Iowa Cubs")]
+    splits = f._aggregate_by_level(games, "Hitter", min_levels=1)
+    assert [(s["level"], s["team_name"], s["games_played"]) for s in splits] == [
+        ("AAA", "Iowa Cubs", 2)]
+
+
+def test_mid_level_trade_lists_both_clubs():
+    f = MLBHistoricalFetcher()
+    games = [
+        _hitter_game(1, 4, 12, "Midland RockHounds"),
+        _hitter_game(1, 4, 12, "Midland RockHounds"),
+        _hitter_game(1, 4, 12, "Somerset Patriots"),
+    ]
+    splits = f._aggregate_by_level(games, "Hitter", min_levels=1)
+    assert splits[0]["team_name"] == "Midland RockHounds / Somerset Patriots"
+
+
+def test_missing_team_name_is_blank_not_a_crash():
+    f = MLBHistoricalFetcher()
+    splits = f._aggregate_by_level([_hitter_game(1, 4, 13)], "Hitter", min_levels=1)
+    assert splits[0]["team_name"] == ""

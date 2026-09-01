@@ -628,7 +628,7 @@ function levelBreakdownHtml(splits, isPitcher, currentLevel) {
     + (sp.level === currentLevel ? '<span class="lvl-now" title="Current level">now</span>' : '')
     + `<span class="lvl-g">${sp.games_played} G</span></div>`
   ).join('');
-  return `<div class="level-breakdown"><div class="level-breakdown-head">Season by level</div>${rows}</div>`;
+  return `<div class="level-breakdown"><div class="level-breakdown-head">By level</div>${rows}</div>`;
 }
 
 function renderWindowCard(p) {
@@ -1776,9 +1776,19 @@ async function loadSummerBanner() {
       fetch('data/summer_ball_placements.json?t=' + Date.now()),
       fetch('data/current_pulse.json?t=' + Date.now())
     ]);
+    pulse = cRes.ok ? await cRes.json() : {};
+    // Summer ball ends in early August. Once the pipeline reports the season
+    // over there are no summer cards left in the pulse, so the banner and the
+    // level filter would both point at nothing. Both return on their own when
+    // next summer's games start. Absent flag = older pulse, so keep showing.
+    if (pulse && pulse.summer_season_active === false) {
+      const summerFilterBtn = document.querySelector('.filter-btn-summer');
+      if (summerFilterBtn) summerFilterBtn.hidden = true;
+      el.hidden = true;
+      return;
+    }
     if (!pRes.ok) return;
     placements = await pRes.json();
-    pulse = cRes.ok ? await cRes.json() : {};
   } catch (e) { return; }
   // Pull BBRef cache freshness in parallel — used for per-card hints +
   // the top-of-banner refresh pill.

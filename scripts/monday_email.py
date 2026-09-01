@@ -20,6 +20,8 @@ from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
 
+from scripts._summer_season import last_real_game_day, season_is_active
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WINDOW_7D = REPO_ROOT / "data" / "window_7d.json"
 WINDOW_SEASON = REPO_ROOT / "data" / "window_season.json"
@@ -137,6 +139,76 @@ def _ops_plus(stats: dict) -> int | None:
     return round(100.0 * (obp / LG_OBP_2026 + slg / LG_SLG_2026 - 1.0))
 
 
+# Minimum sample before a row earns a tier circle, and before a player can be
+# a standout. A 3-PA cameo the week after a promotion is not a grade.
+MIN_TIER_PA = 5
+MIN_TIER_IP = 2.0
+
+
+def _sample(rec: dict, is_pitcher: bool) -> float:
+    return _ip(rec) if is_pitcher else float(_pa(rec))
+
+
+def _enough_sample(rec: dict, is_pitcher: bool) -> bool:
+    return _sample(rec, is_pitcher) >= (MIN_TIER_IP if is_pitcher else MIN_TIER_PA)
+
+
+def _headline_split(w: dict, is_pitcher: bool) -> dict | None:
+    """The level split that carries the window: most PA (hitters) / IP
+    (pitchers), ties going to the higher level since splits arrive highest
+    first. Returns None for entries written before per-level splits existed.
+
+    Every tier, sort and standout reads from this one split rather than the
+    combined line, so no rate stat is ever blended across levels.
+    """
+    splits = (w or {}).get("level_splits") or []
+    if not splits:
+        return None
+    return max(splits, key=lambda sp: _sample({"stats": sp.get("stats", {})}, is_pitcher))
+
+
+def _view(w: dict, is_pitcher: bool) -> dict:
+    """Entry-shaped view of a window: the headline level split when we know it,
+    carrying the affiliate + level the stats were actually earned at."""
+    sp = _headline_split(w, is_pitcher)
+    if sp is None:
+        return w
+    return {
+        **w,
+        "stats": sp.get("stats", {}),
+        "games_played": sp.get("games_played"),
+        "split_level": sp.get("level", ""),
+        "split_team": sp.get("team_name", ""),
+    }
+
+
+def _team_cell(org: str, affiliate: str = "", level: str = "") -> str:
+    """Team column: who he played for, and at what level.
+
+    The roster only carries the parent org, so an MiLB line used to read
+    "Colorado Rockies" with no hint whether those were AAA or MLB at-bats.
+    """
+    org = org or ""
+    affiliate = affiliate or ""
+    if affiliate and affiliate != org:
+        second = f"{level} · {org}" if level else org
+        return f'<span class="aff">{affiliate}</span><span class="org">{second}</span>'
+    if level:
+        return f'<span class="aff">{org}</span><span class="org">{level}</span>'
+    return org
+
+
+def _where_parts(v: dict, level: str) -> tuple[str, str]:
+    """(level, place) for the standout parenthetical — e.g.
+    ("AAA", "Albuquerque Isotopes, Colorado Rockies"). Parent org is only
+    appended when the affiliate differs from it."""
+    org = v.get("team") or ""
+    affiliate = v.get("split_team") or ""
+    lvl = v.get("split_level") or level
+    place = f"{affiliate}, {org}" if affiliate and affiliate != org else (affiliate or org)
+    return lvl, place
+
+
 def _grade_rank(p: dict, is_pitcher: bool = False) -> int:
     """Tier rank for sorting (best tier first). Defaults to hitter scale."""
     return TIER_RANK.get(_tier_for_record(p, is_pitcher), len(TIER_ORDER))
@@ -186,6 +258,8 @@ CSS = """
   th.l, td.l { text-align: left; }
   td.player { font-weight: 700; color: #0d1117; font-size: 14.5px; }
   td.team { color: #57606a; font-size: 12.5px; }
+  td.team .aff { display: block; color: #424a53; }
+  td.team .org { display: block; color: #8b949e; font-size: 11px; margin-top: 1px; }
   tr:last-child td { border-bottom: none; }
   tr:nth-child(even) td { background: #fbfcfd; }
   td.grade-cell { text-align: center; width: 30px; padding: 9px 6px; }
@@ -255,6 +329,11 @@ def _tier_for_record(rec: dict, is_pitcher: bool) -> str:
     grade = rec.get("window_grade")
     if grade == INSUFFICIENT_GRADE:
         return TIER_DNP
+    # A 1-game cameo is not a grade. Below the floor there's no tier at all, so
+    # the row shows no circle and the glance counts it under DNP (no grade)
+    # rather than putting a red dot on 0.2 IP.
+    if not _enough_sample(rec, is_pitcher):
+        return TIER_DNP
     stats = rec.get("stats") or {}
     if is_pitcher:
         era = _parse_rate(stats.get("era"))
@@ -304,21 +383,34 @@ def _hitter_row_cells(tier_html: str, name_html: str, team_html: str,
     return f'<tr{tr_attr}>' + "".join(cells) + "</tr>"
 
 
-# Multi-level season: one row per level (rates never blend across levels). The
-# player's name + grade sit on the top-level row; lower levels are dim sub-rows.
+# One row per level the window actually covered (rates never blend across
+# levels). Each row names the affiliate he played for; a multi-level span keeps
+# the player's name on the top-level row and labels lower levels as dim
+# sub-rows. Every row that clears the sample floor carries its own tier circle,
+# so a circle always describes the line it sits on.
 def _level_rows(w: dict, is_pitcher: bool, row_fn) -> str:
+    splits = w["level_splits"]
+    single = len(splits) == 1
+    org = w.get("team") or ""
     rows = []
-    for i, sp in enumerate(w["level_splits"]):
+    for i, sp in enumerate(splits):
         s = sp.get("stats", {})
-        if i == 0:
-            tier_html = _grade_circle(_tier_for_record({"stats": s}, is_pitcher))
+        tier = _tier_for_record({"stats": s}, is_pitcher)
+        tier_html = "" if tier == TIER_DNP else _grade_circle(tier)
+        affiliate = sp.get("team_name") or ""
+        if single:
+            # No sub-rows to label, so the level rides in the team cell.
+            name_html = w["player_name"]
+            team_html = _team_cell(org, affiliate, sp.get("level"))
+        elif i == 0:
             name_html = (f'{w["player_name"]} '
                          f'<span style="color:#8b949e;font-size:11px;font-weight:600;">{sp["level"]}</span>')
-            team_html = w["team"]
+            team_html = _team_cell(org, affiliate)
         else:
-            tier_html = ""
+            # Level labels the sub-row and the org is already on the row above,
+            # so only the affiliate is new information here.
             name_html = f'<span style="padding-left:16px;color:#6e7781;">{sp["level"]}</span>'
-            team_html = ""
+            team_html = affiliate
         rows.append(row_fn(tier_html, name_html, team_html, s, sp.get("games_played"), sub=(i > 0)))
     return "\n".join(rows)
 
@@ -327,11 +419,13 @@ def _hitter_row(rec: dict, level: str, window_key: str) -> str:
     w = rec["week"] if window_key == "week" else rec["season"]
     if not w:
         return ""
-    if window_key == "season" and w.get("level_splits"):
+    # Both blocks split by level: a month's slash line means nothing until you
+    # know which affiliate and level it came from.
+    if w.get("level_splits"):
         return _level_rows(w, False,
                            lambda t, n, tm, s, gp, sub: _hitter_row_cells(t, n, tm, s, gp, level, sub))
     tier = _tier_for_record(w, is_pitcher=False)
-    return _hitter_row_cells(_grade_circle(tier), w["player_name"], w["team"],
+    return _hitter_row_cells(_grade_circle(tier), w["player_name"], _team_cell(w["team"]),
                              w.get("stats", {}), w.get("games_played"), level)
 
 
@@ -360,11 +454,11 @@ def _pitcher_row(rec: dict, window_key: str) -> str:
     w = rec["week"] if window_key == "week" else rec["season"]
     if not w:
         return ""
-    if window_key == "season" and w.get("level_splits"):
+    if w.get("level_splits"):
         return _level_rows(w, True,
                            lambda t, n, tm, s, gp, sub: _pitcher_row_cells(t, n, tm, s, gp, sub=sub))
     tier = _tier_for_record(w, is_pitcher=True)
-    return _pitcher_row_cells(_grade_circle(tier), w["player_name"], w["team"],
+    return _pitcher_row_cells(_grade_circle(tier), w["player_name"], _team_cell(w["team"]),
                               w.get("stats", {}), w.get("games_played"))
 
 
@@ -464,10 +558,16 @@ def _split_played_vs_insufficient(records: list[dict], is_pitcher_side: bool) ->
         else:
             played.append(rec)
 
-    if is_pitcher_side:
-        played.sort(key=lambda r: (_grade_rank(r["week"], is_pitcher=True), -_ip(r["week"]), r["week"]["player_name"]))
-    else:
-        played.sort(key=lambda r: (_grade_rank(r["week"], is_pitcher=False), -_ops_value(r["week"]), r["week"]["player_name"]))
+    # Sort on the headline level split, not the combined line — otherwise a
+    # blended AAA+MLB rate decides the order of rows that never show it.
+    views = {id(rec): _view(rec["week"], is_pitcher_side) for rec in played}
+
+    def _key(rec):
+        v = views[id(rec)]
+        tiebreak = -_ip(v) if is_pitcher_side else -_ops_value(v)
+        return (_grade_rank(v, is_pitcher=is_pitcher_side), tiebreak, rec["week"]["player_name"])
+
+    played.sort(key=_key)
 
     dnp_names = sorted(r["week"]["player_name"] for r in dnp)
     return played, dnp_names
@@ -522,24 +622,28 @@ def _standouts(sections: dict, max_n: int = 6) -> list[dict]:
     for level in LEVEL_ORDER:
         sec = sections[level]
         for h in sec["hitters"]:
-            w = h["week"]
-            if _tier_for_record(w, is_pitcher=False) not in (TIER_ELITE, TIER_HOT) or _pa(w) < 5:
+            v = _view(h["week"], is_pitcher=False)
+            # _tier_for_record already refuses to grade a sub-floor sample, so
+            # a cameo can't reach the standouts list.
+            if _tier_for_record(v, is_pitcher=False) not in (TIER_ELITE, TIER_HOT):
                 continue
+            lvl, place = _where_parts(v, level)
             hitters_out.append({
-                "kind": "hitter", "level": level,
-                "player": w["player_name"], "team": w["team"],
-                "score": _hitter_score(w),
-                "line": _hitter_line(w, level),
+                "kind": "hitter", "level": lvl, "place": place,
+                "player": v["player_name"],
+                "score": _hitter_score(v),
+                "line": _hitter_line(v, level),
             })
         for p in sec["pitchers"]:
-            w = p["week"]
-            if _tier_for_record(w, is_pitcher=True) not in (TIER_ELITE, TIER_HOT) or _ip(w) < 2:
+            v = _view(p["week"], is_pitcher=True)
+            if _tier_for_record(v, is_pitcher=True) not in (TIER_ELITE, TIER_HOT):
                 continue
+            lvl, place = _where_parts(v, level)
             pitchers_out.append({
-                "kind": "pitcher", "level": level,
-                "player": w["player_name"], "team": w["team"],
-                "score": _pitcher_score(w),
-                "line": _pitcher_line(w),
+                "kind": "pitcher", "level": lvl, "place": place,
+                "player": v["player_name"],
+                "score": _pitcher_score(v),
+                "line": _pitcher_line(v),
             })
     hitters_out.sort(key=lambda x: -x["score"])
     pitchers_out.sort(key=lambda x: -x["score"])
@@ -561,10 +665,12 @@ def _glance(sections: dict) -> list[dict]:
         total = len(sec["hitters"]) + len(sec["pitchers"])
         if total == 0:
             continue
+        # Tier from the headline level split so the tally can't disagree with
+        # the circles in the tables below.
         for r in sec["hitters"]:
-            counts[_tier_for_record(r["week"], is_pitcher=False)] += 1
+            counts[_tier_for_record(_view(r["week"], False), is_pitcher=False)] += 1
         for r in sec["pitchers"]:
-            counts[_tier_for_record(r["week"], is_pitcher=True)] += 1
+            counts[_tier_for_record(_view(r["week"], True), is_pitcher=True)] += 1
         out.append({"level": level, "total": total, **counts})
     return out
 
@@ -581,7 +687,7 @@ def _render_topline(sections: dict, standouts_label: str, glance_label: str) -> 
             kind_label = "Hitter" if s["kind"] == "hitter" else "Pitcher"
             items.append(
                 f'<li><strong>{s["player"]}</strong> '
-                f'<span style="color:#57606a;">({s["team"]}, {s["level"]} {kind_label})</span> '
+                f'<span style="color:#57606a;">({s["level"]} {kind_label} · {s["place"]})</span> '
                 f'<span style="color:#1f2328;">— {s["line"]}</span></li>'
             )
         parts.append(
@@ -680,6 +786,32 @@ def _master_sheet_pro_names() -> set[str]:
     }
 
 
+# How long after the last summer game we still say the season wrapped. Long
+# enough that the section's disappearance reads as "season over" rather than
+# "pipeline broken", short enough that it doesn't linger into the fall.
+SUMMER_WRAP_NOTE_DAYS = 30
+
+
+def _summer_wrap_note(today: date | None = None) -> str:
+    """One dim line for the few weeks after summer ball ends, then nothing."""
+    last_day = last_real_game_day()
+    if not last_day:
+        return ""
+    try:
+        last = date.fromisoformat(last_day)
+    except ValueError:
+        return ""
+    today = today or date.today()
+    if (today - last).days > SUMMER_WRAP_NOTE_DAYS:
+        return ""
+    return (
+        '<div class="dnp" style="margin:0 2px 18px;">'
+        f'<strong>Summer ball:</strong> season wrapped {last.strftime("%b %-d")}. '
+        'Placement tracking picks back up on its own when next summer\'s games start.'
+        '</div>'
+    )
+
+
 def _render_summer_placements_section() -> str:
     """Render the per-player summer-ball placement list for the email.
 
@@ -690,8 +822,18 @@ def _render_summer_placements_section() -> str:
     populate as games run" since their season may not have started or
     we don't have a live-stats path yet.
 
-    Returns "" when no placements file exists (defensive).
+    Returns "" when no placements file exists (defensive), and once the summer
+    season itself is over.
     """
+    # Summer ball ends in early-to-mid August, but this section used to run on
+    # sheet state alone, so every email after that kept listing "Active
+    # placements" for clubs that had stopped playing and "Pending arrival" for
+    # spots that would never fill. Gate it on the same data-driven switch the
+    # summer Slack alerts use (Kent, 2026-08-17: "summer ball season over can
+    # we end these alerts?"): off once nothing has played in 8+ days, back on
+    # by itself the first time next summer's games land in the log.
+    if not season_is_active():
+        return _summer_wrap_note()
     placements_path = REPO_ROOT / "data" / "summer_ball_placements.json"
     if not placements_path.exists():
         return ""
@@ -944,6 +1086,19 @@ def render_html(payload: dict) -> str:
          f'Hitters graded on OPS; pitchers on ERA. Elite/Hot are above-MLB-average; '
          f'Cool/Cold flag underperformance. Same scale applied to {recent_label} and {season_label}.'),
     ]
+    pro_sec = payload["sections"].get("Pro", {})
+    if pro_sec.get("hitters") or pro_sec.get("pitchers"):
+        legend_items.append(
+            "<strong>Where the stats came from.</strong> Pro rows are split by "
+            "level, one line per level a client played at in the window, "
+            "because rate stats don't blend across levels. The Team column "
+            "shows the affiliate he played for, with the level and parent org "
+            f"under it. Each line is graded on its own; the at-a-glance tally "
+            f"uses the level where he took most of his plate appearances "
+            f"(innings for pitchers). A line under {MIN_TIER_PA} PA or "
+            f"{MIN_TIER_IP:g} IP is too small to grade, so it gets no circle "
+            f"and counts as DNP in the tally."
+        )
     if payload["sections"].get("Pro", {}).get("hitters"):
         legend_items.append(
             "<strong>OPS+ for Pro hitters</strong> is a wRC+ proxy "
