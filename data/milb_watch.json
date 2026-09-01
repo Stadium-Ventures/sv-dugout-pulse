@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-31T18:11:04.356998+00:00",
+  "generated_at": "2026-09-01T15:34:15.358373+00:00",
   "baseline_window": "season minus the recent window",
   "recent_windows": [
     "14d",
@@ -29,8 +29,8 @@
   },
   "counts": {
     "lull": 4,
-    "surge": 2,
-    "steady": 6,
+    "surge": 3,
+    "steady": 5,
     "il": 1,
     "insufficient": 19
   },
@@ -43,40 +43,40 @@
       "kind": "pitcher",
       "window": "30d",
       "season_games": 17,
-      "recent_games": 5,
+      "recent_games": 4,
       "status": "lull",
-      "reason": "ERA 3.19 \u2192 6.00 (+2.81) over 21 IP in the last 30 days",
+      "reason": "ERA 3.28 \u2192 6.35 (+3.07) over 17 IP in the last 30 days",
       "baseline": {
-        "ip": "53.2",
-        "k": 61,
-        "bb": 27,
-        "er": 19,
-        "era": "3.19",
-        "k_per_9": "10.2",
-        "bb_per_9": "4.5",
-        "_era": 3.19,
-        "_bb_per_9": 4.5,
-        "whip": "1.12",
+        "ip": "57.2",
+        "k": 67,
+        "bb": 31,
+        "er": 21,
+        "era": "3.28",
+        "k_per_9": "10.5",
+        "bb_per_9": "4.8",
+        "_era": 3.28,
+        "_bb_per_9": 4.8,
+        "whip": "1.16",
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "ip": "21",
-        "k": 23,
-        "bb": 14,
-        "er": 14,
-        "era": "6.00",
-        "k_per_9": "9.9",
-        "bb_per_9": "6.0",
-        "_era": 6.0,
-        "_bb_per_9": 6.0,
-        "whip": "1.48",
+        "ip": "17",
+        "k": 17,
+        "bb": 10,
+        "er": 12,
+        "era": "6.35",
+        "k_per_9": "9.0",
+        "bb_per_9": "5.3",
+        "_era": 6.35,
+        "_bb_per_9": 5.3,
+        "whip": "1.41",
         "grade": "\ud83e\udd76 Cold"
       },
       "delta": {
         "metric": "era",
-        "value": 2.81
+        "value": 3.07
       },
-      "detail": "23 K / 14 BB, 14 ER \u00b7 BB/9 up 4.5 \u2192 6.0",
+      "detail": "17 K / 10 BB, 12 ER",
       "alternates": [
         {
           "window": "14d",
@@ -89,13 +89,13 @@
         }
       ],
       "since": "2026-08-15",
-      "days_standing": 17,
+      "days_standing": 18,
       "new_today": false,
-      "last_posted_date": "2026-08-17",
+      "last_posted_date": "2026-08-31",
       "last_posted_status": "lull",
       "rereport_days": 14,
-      "due_today": true,
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "Michael Dattalo",
@@ -150,21 +150,21 @@
       "usage_role": {
         "read": "role",
         "window": "30d",
-        "baseline_pa_per_g": 4.26,
-        "recent_pa_per_g": 3.7,
-        "recent_games": 20,
-        "drop_pct": 13.2,
+        "baseline_pa_per_g": 4.27,
+        "recent_pa_per_g": 3.63,
+        "recent_games": 19,
+        "drop_pct": 15.0,
         "dropped": false,
-        "summary": "Batting 3.7 times per game over the last 30 days, down from 4.3 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 3.6 times per game over the last 30 days, down from 4.3 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "30d",
           "status": "lull",
-          "reason": "OPS .800 \u2192 .577 (-.223) over 74 PA in the last 30 days",
+          "reason": "OPS .800 \u2192 .560 (-.240) over 69 PA in the last 30 days",
           "delta": {
             "metric": "ops",
-            "value": -0.223
+            "value": -0.24
           }
         }
       ],
@@ -173,22 +173,22 @@
         "read": "share",
         "window": "14d",
         "recent": "7/12",
-        "prior": "13/16",
+        "prior": "12/14",
         "recent_pct": 58,
-        "prior_pct": 81,
-        "drop_points": 23,
-        "dropped": false,
-        "summary": "In the lineup for 7 of his team's last 12 games (58%), down from 13 of 16 (81%)",
+        "prior_pct": 86,
+        "drop_points": 27,
+        "dropped": true,
+        "summary": "In the lineup for 7 of his team's last 12 games (58%), down from 12 of 14 (86%)",
         "team": "Peoria Chiefs"
       },
       "since": "2026-08-21",
-      "days_standing": 11,
+      "days_standing": 12,
       "new_today": false,
       "last_posted_date": "2026-08-25",
       "last_posted_status": "lull",
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
+      "due_today": true,
+      "posted_today": true
     },
     {
       "player_name": "Carter Johnson",
@@ -262,13 +262,13 @@
         }
       ],
       "since": "2026-08-15",
-      "days_standing": 17,
+      "days_standing": 18,
       "new_today": false,
-      "last_posted_date": "2026-08-24",
+      "last_posted_date": "2026-08-31",
       "last_posted_status": "lull",
       "rereport_days": 7,
-      "due_today": true,
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "Cade Doughty",
@@ -334,16 +334,16 @@
         {
           "window": "30d",
           "status": "steady",
-          "reason": "OPS .718 \u2192 .638 (-.080) in the last 30 days",
+          "reason": "OPS .717 \u2192 .636 (-.081) in the last 30 days",
           "delta": {
             "metric": "ops",
-            "value": -0.08
+            "value": -0.081
           }
         }
       ],
       "since": "2026-08-31",
-      "days_standing": 1,
-      "new_today": true,
+      "days_standing": 2,
+      "new_today": false,
       "last_posted_date": "2026-08-27",
       "last_posted_status": "lull",
       "rereport_days": 7,
@@ -422,13 +422,93 @@
         }
       ],
       "since": "2026-08-26",
-      "days_standing": 6,
+      "days_standing": 7,
       "new_today": false,
       "last_posted_date": "2026-08-28",
       "last_posted_status": "surge",
       "rereport_days": 7,
       "due_today": false,
       "posted_today": false
+    },
+    {
+      "player_name": "Dax Kilby",
+      "team": "New York Yankees",
+      "current_level": "A",
+      "roster_priority": 1,
+      "kind": "hitter",
+      "window": "30d",
+      "season_games": 31,
+      "recent_games": 20,
+      "status": "surge",
+      "reason": "OPS .688 \u2192 .879 (+.191) over 103 PA in the last 30 days",
+      "baseline": {
+        "pa": 42,
+        "ab": 37,
+        "h": 8,
+        "hr": 1,
+        "bb": 5,
+        "k": 12,
+        "avg": ".216",
+        "obp": ".310",
+        "slg": ".378",
+        "ops": ".688",
+        "k_pct": "28.6%",
+        "bb_pct": "11.9%",
+        "_ops": 0.688,
+        "_k_pct": 28.6,
+        "grade": "\ud83d\ude10 Steady"
+      },
+      "recent": {
+        "pa": 103,
+        "ab": 75,
+        "h": 20,
+        "hr": 2,
+        "bb": 28,
+        "k": 19,
+        "avg": ".267",
+        "obp": ".466",
+        "slg": ".413",
+        "ops": ".879",
+        "k_pct": "18.4%",
+        "bb_pct": "27.2%",
+        "_ops": 0.879,
+        "_k_pct": 18.4,
+        "grade": "\u2705 Solid"
+      },
+      "delta": {
+        "metric": "ops",
+        "value": 0.191
+      },
+      "detail": "20-for-75, 2 HR \u00b7 K% down 28.6% \u2192 18.4%",
+      "usage_role": {
+        "read": "role",
+        "window": "14d",
+        "baseline_pa_per_g": 4.45,
+        "recent_pa_per_g": 5.22,
+        "recent_games": 9,
+        "drop_pct": -17.2,
+        "dropped": false,
+        "summary": "Batting 5.2 times per game over the last 14 days, down from 4.5 on the season \u2014 he's playing but not starting"
+      },
+      "alternates": [
+        {
+          "window": "14d",
+          "status": "steady",
+          "reason": "OPS .790 \u2192 .892 (+.102) in the last 14 days",
+          "delta": {
+            "metric": "ops",
+            "value": 0.102
+          }
+        }
+      ],
+      "since": "2026-09-01",
+      "days_standing": 1,
+      "new_today": true,
+      "last_posted_date": "2026-08-31",
+      "last_posted_status": "steady",
+      "rereport_days": 7,
+      "due_today": true,
+      "posted_today": true
     },
     {
       "player_name": "Justin Riemer",
@@ -438,48 +518,48 @@
       "kind": "hitter",
       "window": "30d",
       "season_games": 72,
-      "recent_games": 13,
+      "recent_games": 12,
       "status": "surge",
-      "reason": "OPS .782 \u2192 .983 (+.201) over 56 PA in the last 30 days",
+      "reason": "OPS .779 \u2192 1.007 (+.228) over 52 PA in the last 30 days",
       "baseline": {
-        "pa": 235,
-        "ab": 176,
+        "pa": 239,
+        "ab": 178,
         "h": 46,
         "hr": 3,
-        "bb": 48,
+        "bb": 49,
         "k": 41,
-        "avg": ".261",
-        "obp": ".430",
-        "slg": ".352",
-        "ops": ".782",
-        "k_pct": "17.4%",
-        "bb_pct": "20.4%",
-        "_ops": 0.782,
-        "_k_pct": 17.4,
+        "avg": ".258",
+        "obp": ".431",
+        "slg": ".348",
+        "ops": ".779",
+        "k_pct": "17.2%",
+        "bb_pct": "20.5%",
+        "_ops": 0.779,
+        "_k_pct": 17.2,
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "pa": 56,
-        "ab": 43,
+        "pa": 52,
+        "ab": 41,
         "h": 16,
         "hr": 1,
-        "bb": 11,
+        "bb": 10,
         "k": 7,
-        "avg": ".372",
-        "obp": ".518",
-        "slg": ".465",
-        "ops": ".983",
-        "k_pct": "12.5%",
-        "bb_pct": "19.6%",
-        "_ops": 0.983,
-        "_k_pct": 12.5,
-        "grade": "\u2705 Solid"
+        "avg": ".390",
+        "obp": ".519",
+        "slg": ".488",
+        "ops": "1.007",
+        "k_pct": "13.5%",
+        "bb_pct": "19.2%",
+        "_ops": 1.007,
+        "_k_pct": 13.5,
+        "grade": "\ud83d\udd25 Hot"
       },
       "delta": {
         "metric": "ops",
-        "value": 0.201
+        "value": 0.228
       },
-      "detail": "16-for-43, 1 HR",
+      "detail": "16-for-41, 1 HR",
       "usage_role": {
         "read": "role",
         "window": "14d",
@@ -501,13 +581,13 @@
       "roster_check": "checked",
       "share_check": "joined Las Vegas Aviators on 2026-08-18 \u2014 too new to read a lineup share against 30 days of that club's schedule",
       "since": "2026-08-30",
-      "days_standing": 2,
+      "days_standing": 3,
       "new_today": false,
-      "last_posted_date": "2026-08-24",
+      "last_posted_date": "2026-08-31",
       "last_posted_status": "surge",
       "rereport_days": 7,
-      "due_today": true,
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "Jack Cebert",
@@ -560,17 +640,13 @@
         }
       ],
       "since": "2026-08-24",
-      "days_standing": 8,
+      "days_standing": 9,
       "new_today": false,
-      "last_posted_date": "2026-08-17",
-      "last_posted_status": "surge",
+      "last_posted_date": "2026-08-31",
+      "last_posted_status": "steady",
       "rereport_days": 14,
-      "due_today": true,
-      "resolution": {
-        "from_status": "surge",
-        "from_date": "2026-08-17"
-      },
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "David Hagaman",
@@ -578,65 +654,61 @@
       "current_level": "AA",
       "roster_priority": 1,
       "kind": "pitcher",
-      "window": "30d",
+      "window": "14d",
       "season_games": 20,
-      "recent_games": 6,
+      "recent_games": 3,
       "status": "steady",
-      "reason": "ERA 3.18 \u2192 2.30 (-0.88) in the last 30 days",
+      "reason": "ERA 2.82 \u2192 3.38 (+0.56) in the last 14 days",
       "baseline": {
-        "ip": "65",
-        "k": 76,
-        "bb": 32,
-        "er": 23,
-        "era": "3.18",
-        "k_per_9": "10.5",
-        "bb_per_9": "4.4",
-        "_era": 3.18,
-        "_bb_per_9": 4.4,
-        "whip": "1.34",
+        "ip": "83",
+        "k": 103,
+        "bb": 37,
+        "er": 26,
+        "era": "2.82",
+        "k_per_9": "11.2",
+        "bb_per_9": "4.0",
+        "_era": 2.82,
+        "_bb_per_9": 4.0,
+        "whip": "1.28",
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "ip": "31.1",
-        "k": 48,
-        "bb": 11,
-        "er": 8,
-        "era": "2.30",
-        "k_per_9": "13.8",
-        "bb_per_9": "3.2",
-        "_era": 2.3,
-        "_bb_per_9": 3.2,
-        "whip": "1.18",
+        "ip": "13.1",
+        "k": 21,
+        "bb": 6,
+        "er": 5,
+        "era": "3.38",
+        "k_per_9": "14.2",
+        "bb_per_9": "4.0",
+        "_era": 3.38,
+        "_bb_per_9": 4.0,
+        "whip": "1.35",
         "grade": "\u2705 Solid"
       },
       "delta": {
         "metric": "era",
-        "value": -0.88
+        "value": 0.56
       },
-      "detail": "48 K / 11 BB, 8 ER",
+      "detail": "21 K / 6 BB, 5 ER",
       "alternates": [
         {
-          "window": "14d",
+          "window": "30d",
           "status": "steady",
-          "reason": "ERA 2.82 \u2192 3.38 (+0.56) in the last 14 days",
+          "reason": "ERA 3.03 \u2192 2.52 (-0.51) in the last 30 days",
           "delta": {
             "metric": "era",
-            "value": 0.56
+            "value": -0.51
           }
         }
       ],
       "since": "2026-08-19",
-      "days_standing": 13,
+      "days_standing": 14,
       "new_today": false,
-      "last_posted_date": "2026-08-17",
-      "last_posted_status": "surge",
+      "last_posted_date": "2026-08-31",
+      "last_posted_status": "steady",
       "rereport_days": 14,
-      "due_today": true,
-      "resolution": {
-        "from_status": "surge",
-        "from_date": "2026-08-17"
-      },
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "Kellon Lindsey",
@@ -646,57 +718,57 @@
       "kind": "hitter",
       "window": "30d",
       "season_games": 61,
-      "recent_games": 24,
+      "recent_games": 23,
       "status": "steady",
-      "reason": "OPS 1.021 \u2192 .802 (-.219) in the last 30 days",
+      "reason": "OPS 1.011 \u2192 .809 (-.202) in the last 30 days",
       "baseline": {
-        "pa": 173,
-        "ab": 136,
-        "h": 46,
+        "pa": 178,
+        "ab": 140,
+        "h": 47,
         "hr": 6,
-        "bb": 31,
+        "bb": 32,
         "k": 49,
-        "avg": ".338",
-        "obp": ".462",
-        "slg": ".559",
-        "ops": "1.021",
-        "k_pct": "28.3%",
-        "bb_pct": "17.9%",
-        "_ops": 1.021,
-        "_k_pct": 28.3,
+        "avg": ".336",
+        "obp": ".461",
+        "slg": ".550",
+        "ops": "1.011",
+        "k_pct": "27.5%",
+        "bb_pct": "18.0%",
+        "_ops": 1.011,
+        "_k_pct": 27.5,
         "grade": "\ud83d\udd25 Hot"
       },
       "recent": {
-        "pa": 114,
-        "ab": 90,
-        "h": 20,
+        "pa": 109,
+        "ab": 86,
+        "h": 19,
         "hr": 5,
-        "bb": 20,
+        "bb": 19,
         "k": 28,
-        "avg": ".222",
-        "obp": ".368",
-        "slg": ".433",
-        "ops": ".802",
-        "k_pct": "24.6%",
-        "bb_pct": "17.5%",
-        "_ops": 0.802,
-        "_k_pct": 24.6,
+        "avg": ".221",
+        "obp": ".367",
+        "slg": ".442",
+        "ops": ".809",
+        "k_pct": "25.7%",
+        "bb_pct": "17.4%",
+        "_ops": 0.809,
+        "_k_pct": 25.7,
         "grade": "\u2705 Solid"
       },
       "delta": {
         "metric": "ops",
-        "value": -0.219
+        "value": -0.202
       },
-      "detail": "20-for-90, 5 HR",
+      "detail": "19-for-86, 5 HR",
       "usage_role": {
         "read": "role",
         "window": "30d",
         "baseline_pa_per_g": 4.68,
-        "recent_pa_per_g": 4.75,
-        "recent_games": 24,
-        "drop_pct": -1.6,
+        "recent_pa_per_g": 4.74,
+        "recent_games": 23,
+        "drop_pct": -1.2,
         "dropped": false,
-        "summary": "Batting 4.8 times per game over the last 30 days, down from 4.7 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.7 times per game over the last 30 days, down from 4.7 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
@@ -710,94 +782,13 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": "2026-08-22",
       "last_posted_status": "steady",
       "rereport_days": 7,
       "due_today": false,
       "posted_today": false
-    },
-    {
-      "player_name": "Dax Kilby",
-      "team": "New York Yankees",
-      "current_level": "A",
-      "roster_priority": 1,
-      "kind": "hitter",
-      "window": "14d",
-      "season_games": 31,
-      "recent_games": 9,
-      "status": "steady",
-      "reason": "OPS .790 \u2192 .892 (+.102) in the last 14 days",
-      "baseline": {
-        "pa": 98,
-        "ab": 79,
-        "h": 20,
-        "hr": 2,
-        "bb": 19,
-        "k": 24,
-        "avg": ".253",
-        "obp": ".398",
-        "slg": ".392",
-        "ops": ".790",
-        "k_pct": "24.5%",
-        "bb_pct": "19.4%",
-        "_ops": 0.79,
-        "_k_pct": 24.5,
-        "grade": "\u2705 Solid"
-      },
-      "recent": {
-        "pa": 47,
-        "ab": 33,
-        "h": 8,
-        "hr": 1,
-        "bb": 14,
-        "k": 7,
-        "avg": ".242",
-        "obp": ".468",
-        "slg": ".424",
-        "ops": ".892",
-        "k_pct": "14.9%",
-        "bb_pct": "29.8%",
-        "_ops": 0.892,
-        "_k_pct": 14.9,
-        "grade": "\u2705 Solid"
-      },
-      "delta": {
-        "metric": "ops",
-        "value": 0.102
-      },
-      "detail": "8-for-33, 1 HR \u00b7 K% down 24.5% \u2192 14.9%",
-      "usage_role": {
-        "read": "role",
-        "window": "14d",
-        "baseline_pa_per_g": 4.45,
-        "recent_pa_per_g": 5.22,
-        "recent_games": 9,
-        "drop_pct": -17.2,
-        "dropped": false,
-        "summary": "Batting 5.2 times per game over the last 14 days, down from 4.5 on the season \u2014 he's playing but not starting"
-      },
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "Baseline sample too small (38 PA before the last 30 days, need 40)",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-31",
-      "days_standing": 1,
-      "new_today": true,
-      "last_posted_date": "2026-08-24",
-      "last_posted_status": "surge",
-      "rereport_days": 7,
-      "due_today": true,
-      "resolution": {
-        "from_status": "surge",
-        "from_date": "2026-08-24"
-      },
-      "posted_today": true
     },
     {
       "player_name": "Jake Munroe",
@@ -853,25 +844,25 @@
         "read": "role",
         "window": "30d",
         "baseline_pa_per_g": 4.3,
-        "recent_pa_per_g": 4.55,
-        "recent_games": 22,
-        "drop_pct": -5.7,
+        "recent_pa_per_g": 4.57,
+        "recent_games": 21,
+        "drop_pct": -6.3,
         "dropped": false,
-        "summary": "Batting 4.5 times per game over the last 30 days, down from 4.3 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.6 times per game over the last 30 days, down from 4.3 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "30d",
           "status": "steady",
-          "reason": "OPS .894 \u2192 .867 (-.027) in the last 30 days",
+          "reason": "OPS .898 \u2192 .848 (-.050) in the last 30 days",
           "delta": {
             "metric": "ops",
-            "value": -0.027
+            "value": -0.05
           }
         }
       ],
       "since": "2026-08-25",
-      "days_standing": 7,
+      "days_standing": 8,
       "new_today": false,
       "last_posted_date": "2026-08-27",
       "last_posted_status": "steady",
@@ -938,7 +929,7 @@
         }
       ],
       "since": "2026-08-30",
-      "days_standing": 2,
+      "days_standing": 3,
       "new_today": false,
       "last_posted_date": "2026-08-29",
       "last_posted_status": "surge",
@@ -976,42 +967,11 @@
         "team": "Cedar Rapids Kernels"
       },
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
       "rereport_days": 14,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Myles Bailey",
-      "team": "Chicago Cubs",
-      "current_level": "CPX",
-      "roster_priority": 1,
-      "kind": "hitter",
-      "window": "14d",
-      "season_games": 0,
-      "recent_games": 0,
-      "status": "insufficient",
-      "reason": "Not enough games on the season to judge an absence",
-      "baseline": null,
-      "recent": null,
-      "delta": null,
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "No games in the last 30 days",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-17",
-      "days_standing": 15,
-      "new_today": false,
-      "last_posted_date": null,
-      "last_posted_status": null,
-      "rereport_days": 7,
       "due_today": false,
       "posted_today": false
     },
@@ -1060,7 +1020,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1069,8 +1029,8 @@
       "posted_today": false
     },
     {
-      "player_name": "Bo Lowrance",
-      "team": "Los Angeles Dodgers",
+      "player_name": "Myles Bailey",
+      "team": "Chicago Cubs",
       "current_level": "CPX",
       "roster_priority": 1,
       "kind": "hitter",
@@ -1091,7 +1051,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1152,7 +1112,38 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
+      "new_today": false,
+      "last_posted_date": null,
+      "last_posted_status": null,
+      "rereport_days": 7,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Bo Lowrance",
+      "team": "Los Angeles Dodgers",
+      "current_level": "CPX",
+      "roster_priority": 1,
+      "kind": "hitter",
+      "window": "14d",
+      "season_games": 0,
+      "recent_games": 0,
+      "status": "insufficient",
+      "reason": "Not enough games on the season to judge an absence",
+      "baseline": null,
+      "recent": null,
+      "delta": null,
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "No games in the last 30 days",
+          "delta": null
+        }
+      ],
+      "since": "2026-08-17",
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1183,7 +1174,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1236,7 +1227,7 @@
         }
       ],
       "since": "2026-08-20",
-      "days_standing": 12,
+      "days_standing": 13,
       "new_today": false,
       "last_posted_date": "2026-08-19",
       "last_posted_status": "lull",
@@ -1289,7 +1280,7 @@
         }
       ],
       "since": "2026-08-28",
-      "days_standing": 4,
+      "days_standing": 5,
       "new_today": false,
       "last_posted_date": "2026-08-27",
       "last_posted_status": "idle",
@@ -1350,7 +1341,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1411,7 +1402,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1472,7 +1463,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1503,7 +1494,38 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
+      "new_today": false,
+      "last_posted_date": null,
+      "last_posted_status": null,
+      "rereport_days": 14,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Ethan Lay",
+      "team": "Minnesota Twins",
+      "current_level": "CPX",
+      "roster_priority": 3,
+      "kind": "pitcher",
+      "window": "14d",
+      "season_games": 0,
+      "recent_games": 0,
+      "status": "insufficient",
+      "reason": "Not enough games on the season to judge an absence",
+      "baseline": null,
+      "recent": null,
+      "delta": null,
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "No games in the last 30 days",
+          "delta": null
+        }
+      ],
+      "since": "2026-08-17",
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1534,42 +1556,11 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Ethan Lay",
-      "team": "Minnesota Twins",
-      "current_level": "CPX",
-      "roster_priority": 3,
-      "kind": "pitcher",
-      "window": "14d",
-      "season_games": 0,
-      "recent_games": 0,
-      "status": "insufficient",
-      "reason": "Not enough games on the season to judge an absence",
-      "baseline": null,
-      "recent": null,
-      "delta": null,
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "No games in the last 30 days",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-17",
-      "days_standing": 15,
-      "new_today": false,
-      "last_posted_date": null,
-      "last_posted_status": null,
-      "rereport_days": 14,
       "due_today": false,
       "posted_today": false
     },
@@ -1618,7 +1609,7 @@
         }
       ],
       "since": "2026-08-29",
-      "days_standing": 3,
+      "days_standing": 4,
       "new_today": false,
       "last_posted_date": "2026-08-22",
       "last_posted_status": "surge",
@@ -1671,7 +1662,7 @@
         }
       ],
       "since": "2026-08-30",
-      "days_standing": 2,
+      "days_standing": 3,
       "new_today": false,
       "last_posted_date": "2026-08-29",
       "last_posted_status": "surge",
@@ -1723,7 +1714,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1784,7 +1775,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1815,7 +1806,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1876,7 +1867,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
