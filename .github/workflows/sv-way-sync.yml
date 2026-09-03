@@ -1,0 +1,108 @@
+name: SV Way sync
+
+# Two jobs, two different safety levels, both weekly and free (no LLM/API
+# cost — plain GitHub Actions + a public HTTP GET).
+#
+# 1. sync-doctrine-block: the "🧭 The SV Way — North Star doctrine" block every
+#    CLAUDE.md carries is required (by THE-SV-WAY.md's own words) to be
+#    verbatim, byte-identical everywhere. That's a zero-judgment text-match
+#    requirement, so this job fetches the canonical block from the public
+#    doctrine mirror and auto-commits a fix if this repo's copy drifted.
+#    Silent when already in sync; commits directly (no PR needed — there is
+#    nothing to review, the target text is externally fixed) when not.
+#
+# 2. check-config-staleness: sv-way.config.json's role/roles_why/open_questions
+#    are a hand-authored judgment call, not a verbatim string — a script
+#    can't safely rewrite it (that risks inventing facts). This job only
+#    DETECTS that it's probably stale and posts to #sv-automation so a human
+#    or a Claude session knows to redo the reading pass. Never rewrites.
+
+on:
+  schedule:
+    - cron: "0 13 * * 1" # Monday 13:00 UTC
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Send a clearly-labeled test post instead of running the real checks"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync-doctrine-block:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync the SV Way doctrine block
+        id: sync
+        run: |
+          if [ ! -f scripts/compliance/sync-sv-way-block.cjs ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "sync-sv-way-block.cjs not present in this repo yet — nothing to run."
+            exit 0
+          fi
+          node scripts/compliance/sync-sv-way-block.cjs
+          if git diff --quiet -- CLAUDE.md; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit if changed
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          git config user.name "sv-way-sync[bot]"
+          git config user.email "actions@github.com"
+          git add CLAUDE.md
+          git commit -m "Sync SV Way doctrine block to canon (automated, verbatim text only)"
+          git push
+
+  check-config-staleness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history — the check diffs commits since the config's own date stamp
+
+      - name: Run staleness check
+        id: check
+        run: |
+          if [ ! -f scripts/compliance/sv-way-config-staleness.cjs ]; then
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+            echo "sv-way-config-staleness.cjs not present in this repo yet — nothing to run."
+            exit 0
+          fi
+          set +e
+          OUTPUT=$(node scripts/compliance/sv-way-config-staleness.cjs)
+          CODE=$?
+          set -e
+          echo "$OUTPUT"
+          echo "output<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$OUTPUT" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          if [ "$CODE" -ne 0 ]; then echo "stale=true" >> "$GITHUB_OUTPUT"; else echo "stale=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Post to #sv-automation
+        if: steps.check.outputs.stale == 'true' || github.event.inputs.test == 'true'
+        env:
+          WEBHOOK: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          BODY: ${{ steps.check.outputs.output }}
+          IS_TEST: ${{ github.event.inputs.test }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "No SV_AUTOMATION_WEBHOOK_URL secret set — cannot post, but the check result is above in the log."
+            exit 0
+          fi
+          NAME=$(echo "$REPO" | cut -d/ -f2)
+          if [ "$IS_TEST" = "true" ]; then
+            TEXT="🛠️ ${NAME} (${NAME}) — TEST post: sv-way.config.json staleness check\n\nWhat broke: nothing — this is a manual test post.\nHow we know: workflow_dispatch was run with test=true.\nWhat to do: nothing; this confirms the webhook wiring works."
+          else
+            TEXT="🛠️ ${NAME} (${NAME}) — sv-way.config.json may be stale\n\nWhat broke: this repo's sv-way.config.json declares roles/facts that may no longer match the repo's current state.\nHow we know:\n${BODY}\nWhat to do: have a Claude Code session (or the repo owner) re-read the repo and refresh sv-way.config.json — same method as the original hand-authoring pass. This check only detects drift; it never rewrites the file. (The doctrine pointer block in CLAUDE.md is a separate, fully-automated sync — see the sync-doctrine-block job in this same workflow.)"
+          fi
+          curl -sS -X POST -H 'Content-type: application/json' \
+            --data "$(node -e 'console.log(JSON.stringify({text: process.argv[1]}))' "$(printf '%b' "$TEXT")")" \
+            "$WEBHOOK"
