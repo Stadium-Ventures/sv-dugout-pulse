@@ -761,10 +761,13 @@ def share_precheck(recent_14: dict | None, recent_30: dict | None) -> tuple | No
 # MLB Stats API roster-entry status codes that mean "not available to play".
 # An absence with one of these attached explains itself; Kent doesn't need a
 # nudge to call about a guy the org already told us is hurt (BE, 2026-08-14).
-_UNAVAILABLE_STATUS_CODES = {"D7", "D10", "D15", "D60", "DL", "RA", "RM7"}
+# DEV = Development List (Aaron Watson, Daytona, 2026-08-25): the org parked
+# him off the active roster on purpose, so a 14-day absence is the org's
+# decision, not a mystery for Kent to chase (Kent, #dugout-pulse 2026-09-02).
+_UNAVAILABLE_STATUS_CODES = {"D7", "D10", "D15", "D60", "DL", "RA", "RM7", "DEV"}
 _UNAVAILABLE_KEYWORDS = (
     "injured", "rehab", "suspend", "restricted", "bereavement", "paternity",
-    "leave",
+    "leave", "development list", "inactive",
 )
 
 

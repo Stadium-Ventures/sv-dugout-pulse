@@ -804,6 +804,30 @@ def test_unavailable_codes_and_keywords_both_recognized():
     assert not any(w in "reassigned to minors" for w in m._UNAVAILABLE_KEYWORDS)
     assert "RM" not in m._UNAVAILABLE_STATUS_CODES
     assert any(w in "injured 7-day" for w in m._UNAVAILABLE_KEYWORDS)
+    # Development List (Aaron Watson, 2026-08-25): the org parked him on
+    # purpose, so a 14-day absence explains itself (Kent, 2026-09-02).
+    assert "DEV" in m._UNAVAILABLE_STATUS_CODES
+    assert any(w in "development list" for w in m._UNAVAILABLE_KEYWORDS)
+
+
+def test_development_list_reads_as_unavailable():
+    """A `DEV` roster entry resolves to unavailable, like an IL stint."""
+    people = {"people": [{"rosterEntries": [
+        {"status": {"code": "DEV", "description": "Development List"},
+         "team": {"id": 450, "name": "Daytona Tortugas"},
+         "startDate": "2026-07-29", "endDate": None, "isActive": True},
+    ]}]}
+    import types, sys
+    fake = types.SimpleNamespace(get=lambda *a, **k: people)
+    sys.modules["statsapi"] = fake
+    try:
+        snap = m.lookup_roster(826209)
+    finally:
+        del sys.modules["statsapi"]
+    assert snap["unavailable"] == {
+        "code": "DEV", "description": "Development List",
+        "since": "2026-07-29", "team": "Daytona Tortugas",
+    }
 
 
 # ---------------------------------------------------------------------------
