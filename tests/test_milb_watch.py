@@ -262,16 +262,42 @@ def test_a_pitcher_waits_two_weeks():
         assert verdicts[0]["due_today"] is due, day
 
 
-def test_a_status_flip_is_a_new_finding_and_posts_at_once():
-    # Slumping last week, trending up today: a different conversation.
+def test_a_status_flip_is_a_new_finding_but_still_waits_out_the_window():
+    # Slumping last week, trending up today: a different conversation, and it is
+    # worded as a fresh flag — but BE, 2026-09-05: "once a player is surfaced by
+    # the report, he does not appear again for 1 week as a hitter, 2 weeks as a
+    # pitcher." The window is a floor on the PLAYER.
     state = {"Guy": {"status": "lull", "since": "2026-08-01",
                      "last_posted_date": "2026-08-15",
                      "last_posted_status": "lull"}}
     verdicts = [_v(status="surge")]
     m.apply_streaks(verdicts, state, "2026-08-16")
     assert verdicts[0]["new_today"] is True
-    assert verdicts[0]["due_today"] is True
+    assert verdicts[0]["due_today"] is False
     assert verdicts[0]["since"] == "2026-08-16"
+
+    # Held, not lost: once the window is up he posts as what he is that day.
+    later = [_v(status="surge")]
+    m.apply_streaks(later, state, "2026-08-22")
+    assert later[0]["due_today"] is True
+
+
+def test_a_reflag_the_morning_after_a_closeout_is_held():
+    # The regression BE caught on 2026-09-05. Dax Kilby posted 08-24 as a surge,
+    # took his back-to-normal closeout on 08-31 (which stamps last_posted_status
+    # "steady"), then re-qualified as a surge on 09-01. The old family check read
+    # steady -> surge as a brand-new finding and posted him one morning after his
+    # last appearance, restarting his clock from the 1st on the way through.
+    state = {"Dax Kilby": {"status": "steady", "since": "2026-08-31",
+                           "last_posted_date": "2026-08-31",
+                           "last_posted_status": "steady"}}
+    verdicts = [_v(name="Dax Kilby", status="surge")]
+    m.apply_streaks(verdicts, state, "2026-09-01")
+    assert verdicts[0]["due_today"] is False
+    # ...and he is due again a week after the closeout, not a week after 09-01.
+    due = [_v(name="Dax Kilby", status="surge")]
+    m.apply_streaks(due, state, "2026-09-07")
+    assert due[0]["due_today"] is True
 
 
 def test_dropping_off_for_a_day_does_not_reset_the_clock():
@@ -401,7 +427,12 @@ def test_a_closed_out_player_reads_as_brand_new_if_he_relapses():
     relapse = _v(status="lull")
     m.apply_streaks([relapse], {"Guy": closed_out}, "2026-08-20")
     assert relapse["new_today"] is True
-    assert relapse["due_today"] is True
+    # Reads as fresh, but the closeout was itself an appearance, so his window
+    # runs from it (BE, 2026-09-05) — three days later is inside it.
+    assert relapse["due_today"] is False
+    later = _v(status="lull")
+    m.apply_streaks([later], {"Guy": closed_out}, "2026-08-24")
+    assert later["due_today"] is True
     assert m.resolution_due(_v(status="steady"), closed_out, "2026-08-31") is False
 
 
@@ -1017,12 +1048,17 @@ def test_a_move_within_the_concern_family_is_not_a_new_flag():
     assert verdicts[0]["new_today"] is False
 
 
-def test_concern_to_opportunity_still_posts_at_once():
+def test_concern_to_opportunity_waits_out_the_window():
+    # Crossing families is a genuinely new thing to say, and it is worded that
+    # way — but it does not buy a way past the re-report window (BE 2026-09-05).
     state = {"Guy": {"status": "lull", "since": "2026-08-10",
                      "last_posted_date": "2026-08-17",
                      "last_posted_status": "lull"}}
     verdicts = [_v(status="surge")]
     m.apply_streaks(verdicts, state, "2026-08-18")
+    assert verdicts[0]["new_today"] is True
+    assert verdicts[0]["due_today"] is False
+    m.apply_streaks(verdicts, state, "2026-08-24")
     assert verdicts[0]["due_today"] is True
 
 
