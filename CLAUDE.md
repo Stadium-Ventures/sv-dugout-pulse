@@ -95,13 +95,20 @@ qualifies, then waits out his re-report window — **7 days hitters, 14 pitchers
 new and nobody is due. Kent asked for this after reading the first edition,
 which showed every qualifying player every morning: "space out the repetitive
 player updates" (2026-08-16). Dropping off the board does NOT reset the clock
-(state is kept for every tracked player, not just today's board), but a status
-flip (lull → trending up) is a new finding and posts at once. That "update 1
+(state is kept for every tracked player, not just today's board). A status flip
+(lull → trending up) is a new finding and is WORDED as one, but it waits out
+the window like everything else: the window is a floor on the PLAYER (BE,
+2026-09-05: "once a player is surfaced by the report, he does not appear again
+for 1 week as a hitter, 2 weeks as a pitcher for a status check"). It used to
+post at once, which put Dax Kilby in the channel on 08-31 for his closeout and
+again on 09-01 as a surge — a closeout always changes the status family, so
+every closeout armed a same-week re-post. A flip inside the window is held,
+not lost. That "update 1
 week after" is owed even if he's resolved by then — a hitter flagged and back to
 normal a week later still gets a ✅ *Back to normal* line rather than silently
 vanishing (BE, 2026-08-18, catching the gap live on Kellon Lindsey and Jake
 Munroe). Fires once, on the player's own clock; re-qualifying afterward reads as
-a brand-new flag.
+a brand-new flag — and still waits out the window from that closeout.
 
 **Its Slack format is locked** (BE, 2026-08-14) and pinned byte-for-byte by
 `test_locked_message_format`. That test failing means the message layout

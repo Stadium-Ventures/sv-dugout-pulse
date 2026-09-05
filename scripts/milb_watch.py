@@ -47,8 +47,10 @@ Four things are worth a call, and all four post:
 
 CADENCE — flag once, then update on a delay. A player posts the day he first
 qualifies; after that he waits out his re-report window (7 days for a hitter, 14
-for a pitcher) even while he keeps qualifying, and if nobody is new and nobody is
-due the whole post is skipped.
+for a pitcher) even while he keeps qualifying — and even if what he qualifies for
+changes — and if nobody is new and nobody is due the whole post is skipped. The
+window is a floor on the PLAYER: once he has been surfaced, nothing about him
+goes out again until it elapses (BE, 2026-09-05).
 
 This replaced a rolling board that showed every qualifying player every morning.
 That version ran for one day; Kent read it and asked to "space out the
@@ -243,8 +245,12 @@ ACTIONABLE_STATUSES = ("lull", "usage_lull", "idle", "surge")
 # twice as slowly: a starter makes 2-3 appearances a week, so seven days of
 # "still struggling" is often the same two outings restated.
 #
-# A status flip (lull → trending up) is a new finding and posts immediately —
-# it's a different conversation, not a repeat.
+# A status flip (lull → trending up) is a different conversation, and it is
+# WORDED as a fresh flag — but it waits out the window like everything else.
+# BE, 2026-09-05: "once a player is surfaced by the report, he does not appear
+# again for 1 week as a hitter, 2 weeks as a pitcher for a status check." The
+# window is a floor on the player, not on the finding. Letting a flip skip it
+# put Dax Kilby in the post on 08-31 (closeout) and again on 09-01 (surge).
 REREPORT_DAYS = {"hitter": 7, "pitcher": 14}
 
 # For cadence purposes a finding's FAMILY is what counts, not its exact status.
@@ -1299,7 +1305,8 @@ def apply_streaks(verdicts: list, state: dict, today: str) -> None:
     `new_today` is a fresh qualification — either he wasn't on the board
     yesterday, or he was on it for a different reason. Those post immediately.
     Everything else waits out its re-report window: 7 days for a hitter, 14 for
-    a pitcher.
+    a pitcher. `new_today` drives how a due post is WORDED; it no longer decides
+    whether one goes out (see is_due — BE, 2026-09-05).
 
     The cadence is keyed off `last_posted_date`, not off when the finding
     started, so a man who has been slumping for a month still gets his weekly
@@ -1324,22 +1331,33 @@ def apply_streaks(verdicts: list, state: dict, today: str) -> None:
 def is_due(verdict: dict, today: str) -> bool:
     """True when this finding belongs in today's post.
 
-    Due when it's actionable AND one of: never posted, posted last for a
-    different reason, or its re-report window has elapsed.
+    Due when it's actionable AND either he has never been posted, or his
+    re-report window has elapsed since the last time he appeared — 7 days for a
+    hitter, 14 for a pitcher.
+
+    The window is a FLOOR ON THE PLAYER, not on the finding (BE, 2026-09-05:
+    "once a player is surfaced by the report, he does not appear again for 1
+    week as a hitter, 2 weeks as a pitcher for a status check"). A change of
+    status no longer buys a way past it. It used to: any post whose family
+    differed from the last posted one was treated as a brand-new finding and
+    went out at once, which put Dax Kilby in #dugout-pulse on 2026-08-31 (his
+    ✅ back-to-normal closeout, stamping last_posted_status "steady") and again
+    on 2026-09-01, one morning later, when he re-qualified as a surge — the
+    exact repetition this cadence exists to stop, and it restarted his clock
+    from the 1st on the way through.
+
+    A flip inside the window is not lost, only held: `since` / `new_today` /
+    `days_standing` still track it, so when the window elapses he posts as
+    whatever he is on that day, described as a fresh qualification.
 
     Note this keys off what he was last POSTED as, not off what he was
     yesterday. Keying on yesterday meant a man who dipped under the bar for a
-    single day read as a fresh flag when he cleared it again the next morning,
-    and re-posted — precisely the repetition this cadence exists to stop.
+    single day read as a fresh flag when he cleared it again the next morning.
     """
     if not is_actionable(verdict):
         return False
     last = verdict.get("last_posted_date")
     if not last:
-        return True
-    if status_family(verdict.get("last_posted_status") or "") != status_family(
-        verdict["status"]
-    ):
         return True
     return _days_between(last, today) >= verdict.get("rereport_days", 7)
 
