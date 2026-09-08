@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T16:40:30.597848+00:00",
+  "generated_at": "2026-09-08T15:22:42.116376+00:00",
   "baseline_window": "season minus the recent window",
   "recent_windows": [
     "14d",
@@ -89,8 +89,8 @@
         }
       ],
       "since": "2026-09-07",
-      "days_standing": 1,
-      "new_today": true,
+      "days_standing": 2,
+      "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "steady",
       "rereport_days": 14,
@@ -105,40 +105,40 @@
       "kind": "pitcher",
       "window": "30d",
       "season_games": 19,
-      "recent_games": 6,
+      "recent_games": 5,
       "status": "lull",
-      "reason": "ERA 3.28 \u2192 6.48 (+3.20) over 25 IP in the last 30 days",
+      "reason": "ERA 3.50 \u2192 6.43 (+2.93) over 21 IP in the last 30 days",
       "baseline": {
-        "ip": "57.2",
-        "k": 67,
-        "bb": 31,
-        "er": 21,
-        "era": "3.28",
-        "k_per_9": "10.5",
-        "bb_per_9": "4.8",
-        "_era": 3.28,
-        "_bb_per_9": 4.8,
-        "whip": "1.16",
+        "ip": "61.2",
+        "k": 71,
+        "bb": 34,
+        "er": 24,
+        "era": "3.50",
+        "k_per_9": "10.4",
+        "bb_per_9": "5.0",
+        "_era": 3.5,
+        "_bb_per_9": 5.0,
+        "whip": "1.20",
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "ip": "25",
-        "k": 26,
-        "bb": 15,
-        "er": 18,
-        "era": "6.48",
+        "ip": "21",
+        "k": 22,
+        "bb": 12,
+        "er": 15,
+        "era": "6.43",
         "k_per_9": "9.4",
-        "bb_per_9": "5.4",
-        "_era": 6.48,
-        "_bb_per_9": 5.4,
-        "whip": "1.52",
+        "bb_per_9": "5.1",
+        "_era": 6.43,
+        "_bb_per_9": 5.1,
+        "whip": "1.48",
         "grade": "\ud83e\udd76 Cold"
       },
       "delta": {
         "metric": "era",
-        "value": 3.2
+        "value": 2.93
       },
-      "detail": "26 K / 15 BB, 18 ER",
+      "detail": "22 K / 12 BB, 15 ER",
       "alternates": [
         {
           "window": "14d",
@@ -151,7 +151,7 @@
         }
       ],
       "since": "2026-08-15",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "lull",
@@ -212,21 +212,21 @@
       "usage_role": {
         "read": "role",
         "window": "30d",
-        "baseline_pa_per_g": 4.24,
-        "recent_pa_per_g": 3.56,
-        "recent_games": 18,
-        "drop_pct": 16.1,
+        "baseline_pa_per_g": 4.19,
+        "recent_pa_per_g": 3.71,
+        "recent_games": 17,
+        "drop_pct": 11.6,
         "dropped": false,
-        "summary": "Batting 3.6 times per game over the last 30 days, down from 4.2 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 3.7 times per game over the last 30 days, down from 4.2 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "30d",
           "status": "lull",
-          "reason": "OPS .787 \u2192 .535 (-.252) over 64 PA in the last 30 days",
+          "reason": "OPS .789 \u2192 .524 (-.265) over 63 PA in the last 30 days",
           "delta": {
             "metric": "ops",
-            "value": -0.252
+            "value": -0.265
           }
         }
       ],
@@ -235,22 +235,22 @@
         "read": "share",
         "window": "14d",
         "recent": "7/12",
-        "prior": "11/15",
+        "prior": "10/14",
         "recent_pct": 58,
-        "prior_pct": 73,
-        "drop_points": 15,
+        "prior_pct": 71,
+        "drop_points": 13,
         "dropped": false,
-        "summary": "In the lineup for 7 of his team's last 12 games (58%), down from 11 of 15 (73%)",
+        "summary": "In the lineup for 7 of his team's last 12 games (58%), down from 10 of 14 (71%)",
         "team": "Peoria Chiefs"
       },
       "since": "2026-08-21",
-      "days_standing": 18,
+      "days_standing": 19,
       "new_today": false,
       "last_posted_date": "2026-09-01",
       "last_posted_status": "lull",
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
+      "due_today": true,
+      "posted_today": true
     },
     {
       "player_name": "Carter Johnson",
@@ -324,13 +324,13 @@
         }
       ],
       "since": "2026-08-15",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
-      "last_posted_date": "2026-08-31",
+      "last_posted_date": "2026-09-07",
       "last_posted_status": "lull",
       "rereport_days": 7,
-      "due_today": true,
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "Sterlin Thompson",
@@ -404,7 +404,7 @@
         }
       ],
       "since": "2026-08-26",
-      "days_standing": 13,
+      "days_standing": 14,
       "new_today": false,
       "last_posted_date": "2026-09-04",
       "last_posted_status": "surge",
@@ -476,13 +476,13 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Baseline sample too small (23 PA before the last 30 days, need 40)",
+          "reason": "Baseline sample too small (26 PA before the last 30 days, need 40)",
           "delta": null
         }
       ],
       "since": "2026-09-07",
-      "days_standing": 1,
-      "new_today": true,
+      "days_standing": 2,
+      "new_today": false,
       "last_posted_date": "2026-09-05",
       "last_posted_status": "surge",
       "rereport_days": 7,
@@ -497,48 +497,48 @@
       "kind": "hitter",
       "window": "30d",
       "season_games": 36,
-      "recent_games": 22,
+      "recent_games": 21,
       "status": "surge",
-      "reason": "OPS .693 \u2192 .904 (+.211) over 109 PA in the last 30 days",
+      "reason": "OPS .700 \u2192 .909 (+.209) over 104 PA in the last 30 days",
       "baseline": {
-        "pa": 55,
-        "ab": 46,
+        "pa": 60,
+        "ab": 48,
         "h": 10,
         "hr": 1,
-        "bb": 9,
-        "k": 14,
-        "avg": ".217",
-        "obp": ".345",
-        "slg": ".348",
-        "ops": ".693",
-        "k_pct": "25.5%",
-        "bb_pct": "16.4%",
-        "_ops": 0.693,
-        "_k_pct": 25.5,
+        "bb": 12,
+        "k": 15,
+        "avg": ".208",
+        "obp": ".367",
+        "slg": ".333",
+        "ops": ".700",
+        "k_pct": "25.0%",
+        "bb_pct": "20.0%",
+        "_ops": 0.7,
+        "_k_pct": 25.0,
         "grade": "\ud83d\ude10 Steady"
       },
       "recent": {
-        "pa": 109,
-        "ab": 78,
+        "pa": 104,
+        "ab": 76,
         "h": 20,
         "hr": 3,
-        "bb": 31,
-        "k": 21,
-        "avg": ".256",
-        "obp": ".468",
-        "slg": ".436",
-        "ops": ".904",
-        "k_pct": "19.3%",
-        "bb_pct": "28.4%",
-        "_ops": 0.904,
-        "_k_pct": 19.3,
+        "bb": 28,
+        "k": 20,
+        "avg": ".263",
+        "obp": ".462",
+        "slg": ".447",
+        "ops": ".909",
+        "k_pct": "19.2%",
+        "bb_pct": "26.9%",
+        "_ops": 0.909,
+        "_k_pct": 19.2,
         "grade": "\u2705 Solid"
       },
       "delta": {
         "metric": "ops",
-        "value": 0.211
+        "value": 0.209
       },
-      "detail": "20-for-78, 3 HR \u00b7 K% down 25.5% \u2192 19.3%",
+      "detail": "20-for-76, 3 HR \u00b7 K% down 25.0% \u2192 19.2%",
       "usage_role": {
         "read": "role",
         "window": "14d",
@@ -561,13 +561,13 @@
         }
       ],
       "since": "2026-09-01",
-      "days_standing": 7,
+      "days_standing": 8,
       "new_today": false,
       "last_posted_date": "2026-09-01",
       "last_posted_status": "surge",
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
+      "due_today": true,
+      "posted_today": true
     },
     {
       "player_name": "Jack Cebert",
@@ -623,7 +623,7 @@
         }
       ],
       "since": "2026-08-24",
-      "days_standing": 15,
+      "days_standing": 16,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "steady",
@@ -639,57 +639,57 @@
       "kind": "hitter",
       "window": "30d",
       "season_games": 66,
-      "recent_games": 24,
+      "recent_games": 23,
       "status": "steady",
-      "reason": "OPS .942 \u2192 .982 (+.040) in the last 30 days",
+      "reason": "OPS .937 \u2192 .992 (+.055) in the last 30 days",
       "baseline": {
-        "pa": 198,
-        "ab": 158,
+        "pa": 199,
+        "ab": 159,
         "h": 48,
         "hr": 7,
         "bb": 33,
         "k": 57,
-        "avg": ".304",
-        "obp": ".429",
-        "slg": ".513",
-        "ops": ".942",
-        "k_pct": "28.8%",
-        "bb_pct": "16.7%",
-        "_ops": 0.942,
-        "_k_pct": 28.8,
+        "avg": ".302",
+        "obp": ".427",
+        "slg": ".509",
+        "ops": ".937",
+        "k_pct": "28.6%",
+        "bb_pct": "16.6%",
+        "_ops": 0.937,
+        "_k_pct": 28.6,
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "pa": 114,
-        "ab": 87,
+        "pa": 113,
+        "ab": 86,
         "h": 24,
         "hr": 6,
         "bb": 23,
         "k": 27,
-        "avg": ".276",
-        "obp": ".430",
-        "slg": ".552",
-        "ops": ".982",
-        "k_pct": "23.7%",
-        "bb_pct": "20.2%",
-        "_ops": 0.982,
-        "_k_pct": 23.7,
+        "avg": ".279",
+        "obp": ".434",
+        "slg": ".558",
+        "ops": ".992",
+        "k_pct": "23.9%",
+        "bb_pct": "20.4%",
+        "_ops": 0.992,
+        "_k_pct": 23.9,
         "grade": "\u2705 Solid"
       },
       "delta": {
         "metric": "ops",
-        "value": 0.04
+        "value": 0.055
       },
-      "detail": "24-for-87, 6 HR \u00b7 K% down 28.8% \u2192 23.7%",
+      "detail": "24-for-86, 6 HR",
       "usage_role": {
         "read": "role",
         "window": "30d",
-        "baseline_pa_per_g": 4.71,
-        "recent_pa_per_g": 4.75,
-        "recent_games": 24,
-        "drop_pct": -0.8,
+        "baseline_pa_per_g": 4.63,
+        "recent_pa_per_g": 4.91,
+        "recent_games": 23,
+        "drop_pct": -6.2,
         "dropped": false,
-        "summary": "Batting 4.8 times per game over the last 30 days, down from 4.7 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.9 times per game over the last 30 days, down from 4.6 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
@@ -703,8 +703,8 @@
         }
       ],
       "since": "2026-09-07",
-      "days_standing": 1,
-      "new_today": true,
+      "days_standing": 2,
+      "new_today": false,
       "last_posted_date": "2026-09-04",
       "last_posted_status": "surge",
       "rereport_days": 7,
@@ -783,7 +783,7 @@
         }
       ],
       "since": "2026-09-05",
-      "days_standing": 3,
+      "days_standing": 4,
       "new_today": false,
       "last_posted_date": "2026-09-03",
       "last_posted_status": "lull",
@@ -850,7 +850,7 @@
         }
       ],
       "since": "2026-09-03",
-      "days_standing": 5,
+      "days_standing": 6,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -930,7 +930,7 @@
         }
       ],
       "since": "2026-09-06",
-      "days_standing": 2,
+      "days_standing": 3,
       "new_today": false,
       "last_posted_date": "2026-09-03",
       "last_posted_status": "lull",
@@ -992,13 +992,13 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Baseline sample too small (8 PA before the last 30 days, need 40)",
+          "reason": "Baseline sample too small (13 PA before the last 30 days, need 40)",
           "delta": null
         }
       ],
       "since": "2026-09-07",
-      "days_standing": 1,
-      "new_today": true,
+      "days_standing": 2,
+      "new_today": false,
       "last_posted_date": "2026-09-04",
       "last_posted_status": "lull",
       "rereport_days": 7,
@@ -1035,7 +1035,7 @@
         "team": "Daytona Tortugas"
       },
       "since": "2026-09-03",
-      "days_standing": 5,
+      "days_standing": 6,
       "new_today": false,
       "last_posted_date": "2026-09-02",
       "last_posted_status": "idle",
@@ -1061,9 +1061,9 @@
         "read": "role",
         "window": "30d",
         "baseline_pa_per_g": 3.98,
-        "recent_pa_per_g": 4.4,
-        "recent_games": 10,
-        "drop_pct": -10.4,
+        "recent_pa_per_g": 4.44,
+        "recent_games": 9,
+        "drop_pct": -11.6,
         "dropped": false,
         "summary": "Batting 4.4 times per game over the last 30 days, down from 4.0 on the season \u2014 he's playing but not starting"
       },
@@ -1071,7 +1071,7 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (44 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (40 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -1083,8 +1083,8 @@
         "team": "Las Vegas Aviators"
       },
       "since": "2026-09-07",
-      "days_standing": 1,
-      "new_today": true,
+      "days_standing": 2,
+      "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "surge",
       "rereport_days": 7,
@@ -1121,7 +1121,60 @@
         "team": "Cedar Rapids Kernels"
       },
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
+      "new_today": false,
+      "last_posted_date": null,
+      "last_posted_status": null,
+      "rereport_days": 14,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Cam Flukey",
+      "team": "Detroit Tigers",
+      "current_level": "A",
+      "roster_priority": 1,
+      "kind": "pitcher",
+      "window": "14d",
+      "season_games": 4,
+      "recent_games": 2,
+      "status": "insufficient",
+      "reason": "Baseline sample too small (3.1 IP before the last 14 days, need 15)",
+      "baseline": {
+        "ip": "3.1",
+        "k": 4,
+        "bb": 3,
+        "er": 0,
+        "era": "0.00",
+        "k_per_9": "10.8",
+        "bb_per_9": "8.1",
+        "_era": 0.0,
+        "_bb_per_9": 8.1,
+        "whip": "1.20"
+      },
+      "recent": {
+        "ip": "7",
+        "k": 10,
+        "bb": 4,
+        "er": 0,
+        "era": "0.00",
+        "k_per_9": "12.9",
+        "bb_per_9": "5.1",
+        "_era": 0.0,
+        "_bb_per_9": 5.1,
+        "whip": "1.00"
+      },
+      "delta": null,
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "Baseline sample too small (0 IP before the last 30 days, need 15)",
+          "delta": null
+        }
+      ],
+      "since": "2026-08-17",
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1152,7 +1205,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1213,7 +1266,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1244,64 +1297,11 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Cam Flukey",
-      "team": "Detroit Tigers",
-      "current_level": "A",
-      "roster_priority": 1,
-      "kind": "pitcher",
-      "window": "14d",
-      "season_games": 4,
-      "recent_games": 2,
-      "status": "insufficient",
-      "reason": "Baseline sample too small (3.1 IP before the last 14 days, need 15)",
-      "baseline": {
-        "ip": "3.1",
-        "k": 4,
-        "bb": 3,
-        "er": 0,
-        "era": "0.00",
-        "k_per_9": "10.8",
-        "bb_per_9": "8.1",
-        "_era": 0.0,
-        "_bb_per_9": 8.1,
-        "whip": "1.20"
-      },
-      "recent": {
-        "ip": "7",
-        "k": 10,
-        "bb": 4,
-        "er": 0,
-        "era": "0.00",
-        "k_per_9": "12.9",
-        "bb_per_9": "5.1",
-        "_era": 0.0,
-        "_bb_per_9": 5.1,
-        "whip": "1.00"
-      },
-      "delta": null,
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "Baseline sample too small (0 IP before the last 30 days, need 15)",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-17",
-      "days_standing": 22,
-      "new_today": false,
-      "last_posted_date": null,
-      "last_posted_status": null,
-      "rereport_days": 14,
       "due_today": false,
       "posted_today": false
     },
@@ -1328,7 +1328,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1381,7 +1381,7 @@
         }
       ],
       "since": "2026-08-28",
-      "days_standing": 11,
+      "days_standing": 12,
       "new_today": false,
       "last_posted_date": "2026-08-27",
       "last_posted_status": "idle",
@@ -1442,7 +1442,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1503,7 +1503,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1534,7 +1534,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1565,7 +1565,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1596,7 +1596,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1649,7 +1649,7 @@
         }
       ],
       "since": "2026-08-29",
-      "days_standing": 10,
+      "days_standing": 11,
       "new_today": false,
       "last_posted_date": "2026-09-05",
       "last_posted_status": "insufficient",
@@ -1702,7 +1702,7 @@
         }
       ],
       "since": "2026-08-30",
-      "days_standing": 9,
+      "days_standing": 10,
       "new_today": false,
       "last_posted_date": "2026-08-29",
       "last_posted_status": "surge",
@@ -1755,7 +1755,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1816,7 +1816,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1847,7 +1847,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 22,
+      "days_standing": 23,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
