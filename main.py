@@ -45,6 +45,16 @@ logger = logging.getLogger("pulse")
 _ET = ZoneInfo("US/Eastern")
 _DAY_FLIP_HOUR = 4  # Day flips at 4 AM ET
 
+# Once-per-game-day Pro rolling-window refresh (7/14/30D) from the live
+# path. The scheduled 6 AM ET historical pass is GitHub-cron best-effort and
+# has landed 2-3 hours late (9:37 AM ET on 2026-09-05, 9:53 on 09-06), so
+# Kent saw a 7D card at 7:35 AM missing the prior night's Final. The
+# cron-job.org 15-min dispatch is reliable 24/7, so the first live run after
+# the 4 AM ET day flip rebuilds the Pro windows and stamps this marker.
+PRO_WINDOW_REFRESH_MARKER_PATH = os.path.join(
+    os.path.dirname(OUTPUT_PATH), "pro_window_refresh.json"
+)
+
 # Pending NCAA game log entries — batched and flushed at end of run
 _ncaa_log_pending: list[tuple] = []  # [(key, game_date, opponent, entry_stats), ...]
 _ncaa_log_lock = threading.Lock()
@@ -1326,6 +1336,117 @@ def run_live():
             _write_summer_window_entries(placements, {})
         except Exception:
             logger.exception("summer_pulse: post-l7 window-merge failed")
+
+    # Pro rolling windows: rebuild once per ET game day from the live path so
+    # last night's Finals are in the 7/14/30D looks by ~4:15 AM ET regardless
+    # of how late GitHub's 6 AM historical cron actually fires.
+    _refresh_pro_windows_once_daily(all_players)
+
+
+
+def _pro_window_refresh_due(marker: dict | None, today: date) -> bool:
+    """True when no Pro window refresh has completed for this ET game day."""
+    if not marker:
+        return True
+    return str(marker.get("et_date", "")) != today.isoformat()
+
+
+def _merge_pro_window(existing: list, pro_entries: list) -> list:
+    """Replace the Pro entries of a window file, keep everything else as-is.
+
+    NCAA/HS entries come from the local game logs (refreshed by
+    _refresh_ncaa_l7) and Summer entries are merged by summer_pulse — neither
+    is ours to touch here.
+    """
+    kept = [e for e in existing if e.get("level") != "Pro"]
+    return kept + pro_entries
+
+
+def _refresh_pro_windows(all_players: list[dict], today: date | None = None) -> int:
+    """Rebuild the Pro 7/14/30D entries from the MLB Stats API and merge them
+    into the window files. Returns the number of Pro players rebuilt.
+
+    Finals are in the MLB API within minutes of the last out, so this is what
+    makes "last night's game" show up in the rolling looks. Cost: one game-log
+    sweep per Pro player (cached across the three windows).
+    """
+    today = today or _today_et()
+    pro_players = [p for p in all_players if p.get("level") == "Pro"]
+    if not pro_players:
+        return 0
+
+    aggregator = WindowStatsAggregator()
+    windows = {
+        "7d": (WINDOW_7D_PATH, today - timedelta(days=7)),
+        "14d": (WINDOW_14D_PATH, today - timedelta(days=14)),
+        "30d": (WINDOW_30D_PATH, today - timedelta(days=30)),
+    }
+    built: dict[str, list] = {w: [] for w in windows}
+
+    def _one(player):
+        return {
+            w: aggregator._build_window_entry(player, w, start, today)
+            for w, (_, start) in windows.items()
+        }
+
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        futures = {executor.submit(_one, p): p for p in pro_players}
+        for future in as_completed(futures):
+            try:
+                for w, entry in future.result().items():
+                    if entry:
+                        built[w].append(entry)
+            except Exception:
+                logger.exception(
+                    "Pro window refresh failed for %s",
+                    futures[future].get("player_name", "?"),
+                )
+
+    for w, (path, _) in windows.items():
+        existing = []
+        if os.path.exists(path):
+            with open(path) as f:
+                raw = json.load(f)
+                existing = raw.get("players", raw) if isinstance(raw, dict) else raw
+        _write_window_guarded(
+            _merge_pro_window(existing, built[w]), path, f"{w.upper()} (Pro refresh)"
+        )
+    return len(pro_players)
+
+
+def _refresh_pro_windows_once_daily(all_players: list[dict]) -> bool:
+    """First live run of each ET game day: rebuild Pro rolling windows.
+
+    Idempotent via PRO_WINDOW_REFRESH_MARKER_PATH (committed with the other
+    data files). A failed refresh leaves the marker alone so the next live run
+    retries. Returns True when a refresh ran and completed.
+    """
+    today = _today_et()
+    marker = None
+    if os.path.exists(PRO_WINDOW_REFRESH_MARKER_PATH):
+        try:
+            with open(PRO_WINDOW_REFRESH_MARKER_PATH) as f:
+                marker = json.load(f)
+        except Exception:
+            marker = None
+    if not _pro_window_refresh_due(marker, today):
+        return False
+    try:
+        n = _refresh_pro_windows(all_players, today)
+    except Exception:
+        logger.exception("Morning Pro window refresh failed — window files unchanged, will retry next run")
+        return False
+    _atomic_json_write(
+        PRO_WINDOW_REFRESH_MARKER_PATH,
+        {
+            "et_date": today.isoformat(),
+            "completed_at": datetime.now(timezone.utc).isoformat(),
+            "pro_players": n,
+        },
+        indent=2,
+    )
+    logger.info("Morning Pro window refresh complete for %s: %d Pro players", today, n)
+    return True
 
 
 def _rebuild_season_for_level_movers(all_players: list[dict]):
