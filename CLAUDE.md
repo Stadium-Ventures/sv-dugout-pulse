@@ -5,6 +5,33 @@ GitHub Pages site every 15 min during game hours and alert on notable
 performances. Orchestrator: `main.py`; scraper waterfall: `src/stats_engine.py`;
 docs: `README.md`, `docs/health_monitor.md`, `docs/SECRETS.md`.
 
+## 🧭 The SV Way — North Star doctrine (read this first, every session)
+
+THE-SV-WAY.md in Stadium-Ventures/sv-registry (served live at
+https://sv-internal-hub.vercel.app/sv-way.md) is the North Star every Stadium
+Ventures tool and every chat working on one routes through — read it at
+session start, before anything else. Non-negotiables even before you read it:
+every player fact resolves to the player's file in sv-registry and every
+surface is a projection of it; nothing unvalidated projects (flag it, file a
+candidate, never overwrite a stable field); one write door (write-registry
+chokepoint / governed writers); one write-home per dataset; firm work is
+first-class but becomes a player fact only when it actualizes through that one
+door; systems doing work about a player resolve them against canon first (read
+duty); automation is silent when healthy and posts actionable-only to
+#sv-automation; collaborative tools live in Stadium-Ventures org repos; locked
+client-facing artifacts (Report Packets) are never moved or regenerated. This
+tool's hub registration + #sv-automation hookup are canonical requirements of
+being "promoted." When your work decides something reusable, capture it
+(status slice → SOP → canon) before you finish.
+
+**This tool's role in it:** Dugout Pulse reads player identity/roster facts
+(never writes them) and produces its own dataset — live stat pulls, milestone
+detection, MiLB usage/rate windows. It has zero player-fact write-home; its
+`data/**` outputs are this repo's own domain, not a registry projection. Its
+`scripts/_automation_notify.py` is the local implementation of the SV Way's
+#sv-automation message contract (see below) — the one door every alert here
+must go through.
+
 - Bot commits (`Update pulse data [bot]`) land every 15 minutes — always
   `git pull` before pushing; never force-push main.
 - `data/**` is machine-written (except `data/summer_ball_placements.json`,
