@@ -85,24 +85,42 @@ jobs:
           echo "EOF" >> "$GITHUB_OUTPUT"
           if [ "$CODE" -ne 0 ]; then echo "stale=true" >> "$GITHUB_OUTPUT"; else echo "stale=false" >> "$GITHUB_OUTPUT"; fi
 
-      - name: Post to #sv-automation
+      # D130 follow-up (2026-09-08): sv-way-config-staleness fires once PER SIBLING
+      # REPO about the same class of finding — BE ruled "one digest per detector
+      # per day, findings grouped." This repo keeps its own house notify module
+      # (scripts/_automation_notify.py) as the ONE door for #sv-automation posts
+      # per its own CLAUDE.md rule, so — unlike sv-registry/sv-travel-hub, which
+      # have no notify module of their own — the fix here is a CLAIM step only:
+      # gate against the same durable ledger sv-registry's poster uses (so any
+      # repo firing this detector on the same day contends for the same row),
+      # then send through this repo's own module exactly as before.
+      - name: Claim the shared #sv-automation digest slot
+        id: claim
         if: steps.check.outputs.stale == 'true' || github.event.inputs.test == 'true'
         env:
-          WEBHOOK: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
-          REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.SV_REGISTRY_PAT }}
+        run: |
+          NAME=$(echo "${{ github.repository }}" | cut -d/ -f2)
+          RESULT=$(python3 scripts/sv_automation_claim.py sv-way-config-staleness --finding "${NAME}: sv-way.config.json may be stale")
+          echo "$RESULT"
+          POST=$(echo "$RESULT" | python3 -c "import json,sys; print('true' if json.load(sys.stdin)['post'] else 'false')")
+          echo "post=$POST" >> "$GITHUB_OUTPUT"
+
+      - name: Post to #sv-automation
+        if: (steps.check.outputs.stale == 'true' || github.event.inputs.test == 'true') && steps.claim.outputs.post == 'true'
+        env:
+          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           BODY: ${{ steps.check.outputs.output }}
           IS_TEST: ${{ github.event.inputs.test }}
         run: |
-          if [ -z "$WEBHOOK" ]; then
+          if [ -z "$SV_AUTOMATION_WEBHOOK_URL" ]; then
             echo "No SV_AUTOMATION_WEBHOOK_URL secret set — cannot post, but the check result is above in the log."
             exit 0
           fi
-          NAME=$(echo "$REPO" | cut -d/ -f2)
           if [ "$IS_TEST" = "true" ]; then
-            TEXT="🛠️ ${NAME} (${NAME}) — TEST post: sv-way.config.json staleness check\n\nWhat broke: nothing — this is a manual test post.\nHow we know: workflow_dispatch was run with test=true.\nWhat to do: nothing; this confirms the webhook wiring works."
+            TEXT="TEST post: sv-way.config.json staleness check\n\nWhat broke: nothing — this is a manual test post.\nHow we know: workflow_dispatch was run with test=true.\nWhat to do: nothing; this confirms the webhook wiring works."
           else
-            TEXT="🛠️ ${NAME} (${NAME}) — sv-way.config.json may be stale\n\nWhat broke: this repo's sv-way.config.json declares roles/facts that may no longer match the repo's current state.\nHow we know:\n${BODY}\nWhat to do: have a Claude Code session (or the repo owner) re-read the repo and refresh sv-way.config.json — same method as the original hand-authoring pass. This check only detects drift; it never rewrites the file. (The doctrine pointer block in CLAUDE.md is a separate, fully-automated sync — see the sync-doctrine-block job in this same workflow.)"
+            TEXT="sv-way.config.json may be stale\n\nWhat broke: this repo's sv-way.config.json declares roles/facts that may no longer match the repo's current state.\nHow we know:\n${BODY}\nWhat to do: have a Claude Code session (or the repo owner) re-read the repo and refresh sv-way.config.json — same method as the original hand-authoring pass. This check only detects drift; it never rewrites the file. (The doctrine pointer block in CLAUDE.md is a separate, fully-automated sync — see the sync-doctrine-block job in this same workflow.)"
           fi
-          curl -sS -X POST -H 'Content-type: application/json' \
-            --data "$(node -e 'console.log(JSON.stringify({text: process.argv[1]}))' "$(printf '%b' "$TEXT")")" \
-            "$WEBHOOK"
+          export TEXT="$(printf '%b' "$TEXT")"
+          python3 -c "import sys, os; sys.path.insert(0, 'scripts'); from _automation_notify import post_automation; post_automation(os.environ['TEXT'])"
