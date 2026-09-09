@@ -106,7 +106,15 @@ placed 07-31, activated 08-18 — his whole window was the injury, BE,
 2026-08-19). The same closed-out stint voids the SHARE half of usage too, not
 just idle — a few games back from injury reads as a usage crash otherwise,
 since his own team-games share for the hurt stretch is genuinely near zero,
-which is his rehab ramp-up, not a benching. Preview any change with
+which is his rehab ramp-up, not a benching. **Season over** (BE, 2026-09-09:
+"shutter it for any players whose seasons have ended (A & A+ minus playoffs) —
+and as players' seasons end"): a player whose club has played recently but has
+nothing left on its schedule over the next 14 days, playoffs included, gets
+status `season_over` — no findings, no closeout, named once in a footnote — and
+comes back the first time his club has a game scheduled. Read from the MLB
+Stats API schedule (`club_season_state`), never a calendar, so playoff clubs
+stay live and AA/AAA fall out on their own dates; sticky through the winter
+when the schedule is empty both ways. Preview any change with
 `python -m scripts.milb_watch --dry`; unit tests in `tests/test_milb_watch.py`.
 It must run **after** the 11:00 UTC historical pass, which is what rebuilds the
 `window_*.json` files it reads — 11:50 UTC is chosen so GitHub's habitual ~40

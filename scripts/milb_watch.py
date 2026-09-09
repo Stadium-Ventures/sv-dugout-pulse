@@ -89,6 +89,16 @@ didn't run.
 MiLB only: Pro clients whose `current_level` is CPX/A/A+/AA/AAA. MLB guys are
 out of scope (different conversation, different people to call).
 
+SEASON OVER — a player whose club has finished playing is off the watch (BE,
+2026-09-09: "shutter it for any players whose seasons have ended (A & A+ minus
+playoffs) — and as players' seasons end"). Read from the club's schedule, not a
+calendar: played recently, nothing left to play through the next two weeks,
+playoffs included → status `season_over`. He costs no further lookups, posts no
+finding, owes no closeout, and is named once in the footnote of the next post
+that goes out. A playoff club's players stay live until it's eliminated; AA and
+AAA fall out on their own dates; the state is sticky through the winter, and
+the first scheduled game next spring turns everyone back on.
+
 Windows come from the historical pass (`data/window_season.json`,
 `data/window_14d.json`, `data/window_30d.json`), so this only needs to run after
 that lands — once a day is plenty. Baselines come from subtracting the recent
@@ -156,6 +166,9 @@ _STATE_PATH = _REPO_ROOT / "data" / "_milb_watch_state.json"
 _SNAPSHOT_PATH = _REPO_ROOT / "data" / "milb_watch.json"
 # Name -> mlb_id, for the IL lookup. Refreshed by every pulse run.
 _ROSTER_CACHE_PATH = _REPO_ROOT / "data" / "roster_cache.json"
+# mlb_id -> {team_id, sport_id, team_name}, refreshed by every pulse run. The
+# fallback for the season-over check when the live roster lookup fails.
+_TEAM_LEVELS_PATH = _REPO_ROOT / "data" / "_last_team_levels.json"
 
 _ET = timezone(timedelta(hours=-4))
 
@@ -187,6 +200,32 @@ ERA_SURGE_DROP = 1.50
 
 # Idle: has played this year but hasn't appeared in the 14-day window at all.
 IDLE_MIN_SEASON_GAMES = 10
+
+# ── Season over: the club has stopped playing ──
+# Single-A and High-A wrap in the first week of September, Double-A a week
+# later, Triple-A a week after that, and a club's playoff run stretches its own
+# season past all of those dates. From that point on every read this module
+# makes is wrong in the same direction: an empty 14-day window is "no games",
+# a thinning one is a "usage lull", a 30-day line that still has games in it
+# posts a form read on a season that has closed, and the week-later closeout
+# says "back to normal" about a man who's gone home. BE, 2026-09-09: shutter
+# the watch for players whose seasons have ended — A and A+ now, minus the
+# playoff clubs — and keep shuttering as the others finish.
+#
+# Read from the club's schedule, not a calendar: a club is done when the MLB
+# Stats API shows it has PLAYED games recently but has NOTHING left to play —
+# regular season or postseason — over the next SEASON_LOOKAHEAD_DAYS. A club
+# still in its playoffs has games on the board and stays live; the day it's
+# eliminated it drops off like everyone else. Nothing here knows what level a
+# club is, so AA and AAA fall out on their own dates, and next spring the
+# first scheduled game turns everyone back on with no toggle to remember.
+#
+# The verdict is STICKY through the offseason: once the schedule stops
+# returning anything at all (no recent games either — winter), the check can't
+# tell "done" from "wrong team id", so it carries the prior state forward
+# rather than un-shuttering a man into an idle read in November.
+SEASON_LOOKAHEAD_DAYS = 14
+SEASON_LOOKBACK_DAYS = 60
 
 # ── Usage: two questions, not one blurred number ──
 # A lull is also a drop in usage, and usage moves before the rate does. But
@@ -1135,6 +1174,152 @@ def apply_roster_context(verdicts: list, mlb_ids: dict, windows: dict, today: st
             _promote_to_usage_lull(verdict, share)
 
 
+_CLUB_SEASON_CACHE: dict = {}
+
+
+def club_season_state(team_id, today: str, sport_id=None) -> dict:
+    """Is this club still playing? -> {"state": active|over|unknown, ...}
+
+    Reads the club's schedule from SEASON_LOOKBACK_DAYS back to
+    SEASON_LOOKAHEAD_DAYS ahead, every game type — regular season and playoffs
+    alike, so a club in its postseason reads as live until it's eliminated.
+
+      active  — a game today or later that hasn't gone final. Still playing.
+      over    — it has played recently, and there is nothing left to play.
+      unknown — the schedule came back empty both ways. Either the offseason
+                or the wrong team/sport id; the caller can't tell which, so
+                this never shutters anyone on its own.
+
+    `last_game` is the most recent final, for the post. Cached per club for the
+    run — clients cluster onto the same affiliates. A known sport id (from the
+    team-levels cache) is tried first; the rest of the MiLB ids follow because
+    only the right one returns a schedule.
+    """
+    key = (team_id, today)
+    if key in _CLUB_SEASON_CACHE:
+        return _CLUB_SEASON_CACHE[key]
+    import statsapi  # lazily, as elsewhere in this module
+
+    sport_ids = [sport_id] if sport_id else []
+    sport_ids += [sid for sid in (11, 12, 13, 14, 16) if sid != sport_id]
+    start = _shift(today, -SEASON_LOOKBACK_DAYS)
+    end = _shift(today, SEASON_LOOKAHEAD_DAYS)
+    result = {"state": "unknown", "last_game": None, "next_game": None}
+    for sid in sport_ids:
+        try:
+            schedule = statsapi.get("schedule", {
+                "sportId": sid, "teamId": team_id,
+                "startDate": start, "endDate": end,
+            })
+        except Exception:
+            continue
+        games = [
+            (day.get("date") or "", (game.get("status") or {}).get("abstractGameState") or "")
+            for day in schedule.get("dates", [])
+            for game in day.get("games", [])
+        ]
+        if not games:
+            continue
+        finals = [d for d, state in games if state == "Final"]
+        pending = [d for d, state in games if state != "Final" and d >= today]
+        result = {
+            "state": "active" if pending else "over",
+            "last_game": max(finals) if finals else None,
+            "next_game": min(pending) if pending else None,
+        }
+        break
+    _CLUB_SEASON_CACHE[key] = result
+    return result
+
+
+def _team_levels_index(team_levels: dict | None) -> dict:
+    """mlb_id -> {team_id, sport_id, team_name} from data/_last_team_levels.json."""
+    index = {}
+    for key, info in (team_levels or {}).items():
+        try:
+            mlb_id = int(key)
+        except (TypeError, ValueError):
+            continue
+        if isinstance(info, dict) and info.get("team_id"):
+            index[mlb_id] = info
+    return index
+
+
+def apply_season_end(verdicts: list, mlb_ids: dict, team_levels: dict | None,
+                     state: dict, today: str, lookup=lookup_roster,
+                     club_state=club_season_state) -> None:
+    """Shutter anyone whose club has finished its season, in place.
+
+    Runs BEFORE the roster context pass, so a shuttered player costs no IL or
+    schedule lookups — and before the cadence pass, so he owes no closeout.
+    His verdict becomes status `season_over` with the club and its last game
+    recorded; it stays in the snapshot and in state, never posts a finding, and
+    is named once in the post's footnote.
+
+    The club is his CURRENT one from the live roster entry (a playoff call-up
+    from a finished A club to a live AA one is still playing), falling back to
+    the team-levels cache from the last pulse run when the lookup fails. An
+    `unknown` schedule read — nothing returned either way — carries forward
+    whatever state already said, so the offseason keeps him shuttered and a
+    bad id never shutters him in the first place.
+    """
+    for verdict in verdicts:
+        name = verdict["player_name"]
+        prior = state.get(name) or {}
+        mlb_id = mlb_ids.get(name)
+        cached = _team_levels_index(team_levels).get(mlb_id) if mlb_id else None
+        team_id = team_name = sport_id = None
+        if mlb_id:
+            try:
+                snapshot = lookup(mlb_id)
+                team_id = snapshot.get("team_id")
+                team_name = snapshot.get("team_name")
+            except Exception as exc:
+                logger.warning("Roster lookup failed for %s: %s", name, exc)
+        if not team_id and cached:
+            team_id = cached.get("team_id")
+            team_name = cached.get("team_name")
+        if cached and cached.get("team_id") == team_id:
+            sport_id = cached.get("sport_id")
+
+        read = {"state": "unknown"}
+        if team_id:
+            try:
+                read = club_state(team_id, today, sport_id)
+            except Exception as exc:
+                logger.warning("Schedule lookup failed for %s: %s", name, exc)
+        else:
+            verdict["season_check"] = "no club to check a schedule for"
+
+        if read.get("state") == "active":
+            verdict["season_check"] = "club still playing"
+            continue
+        if read.get("state") == "over":
+            info = {
+                "team_id": team_id,
+                "team": team_name,
+                "last_game": read.get("last_game"),
+                "since": (prior.get("season_over") or {}).get("since") or today,
+            }
+        elif prior.get("status") == "season_over" and prior.get("season_over"):
+            # Winter: the schedule is empty both ways. Keep him shuttered.
+            info = dict(prior["season_over"])
+            verdict["season_check"] = "no schedule either way — carrying the prior season-over forward"
+        else:
+            verdict.setdefault("season_check", "schedule unreadable — left as graded")
+            continue
+        last = info.get("last_game")
+        stamp = f" — last game {last}" if last else ""
+        verdict["season_over"] = info
+        verdict["status"] = "season_over"
+        verdict["reason"] = f"Season over for {info.get('team') or 'his club'}{stamp}"
+        verdict["detail"] = ""
+        # Noted in the post once: the first post that actually goes out.
+        verdict["season_over_noted"] = bool(
+            prior.get("season_over_noted") and prior.get("status") == "season_over"
+        )
+
+
 # ---------------------------------------------------------------------------
 # Selection
 # ---------------------------------------------------------------------------
@@ -1253,7 +1438,7 @@ def evaluate_all(season: list, recent_by_window: dict) -> list:
 
 _STATUS_ORDER = {
     "lull": 0, "usage_lull": 1, "idle": 2, "surge": 3, "steady": 4,
-    "il": 5, "insufficient": 6,
+    "il": 5, "insufficient": 6, "season_over": 7,
 }
 
 
@@ -1376,9 +1561,10 @@ def resolution_due(verdict: dict, prior: dict, today: str) -> bool:
     Fires once: on the player's OWN re-report clock (from `last_posted_date`),
     not on a fixed calendar date, using the same hitter/pitcher day counts as
     every other update. Excludes IL — that has its own explanation and its own
-    line in the message, not a "back to normal" close-out.
+    line in the message, not a "back to normal" close-out — and a closed
+    season, which owes nobody a "back to normal" line about a man who's gone home.
     """
-    if is_actionable(verdict) or verdict["status"] == "il":
+    if is_actionable(verdict) or verdict["status"] in ("il", "season_over"):
         return False
     last_status = prior.get("last_posted_status")
     # last_status not being a real flag (never posted, or already the target of
@@ -1445,6 +1631,15 @@ def build_state(verdicts: list, state: dict, posted_names: set, today: str) -> d
             entry["baseline_ops"] = baseline["ops"]
         if "_era" in baseline:
             entry["baseline_era"] = baseline["era"]
+        if verdict["status"] == "season_over":
+            # Sticky through the winter (see apply_season_end) and noted in the
+            # post exactly once — the first post that actually goes out after
+            # he's shuttered, so a quiet morning doesn't swallow the notice.
+            entry["season_over"] = dict(verdict.get("season_over") or {})
+            entry["season_over_noted"] = bool(
+                (prior.get("season_over_noted") and prior.get("status") == "season_over")
+                or verdict.get("season_over_noted_today")
+            )
         new_state[name] = entry
     return new_state
 
@@ -1482,7 +1677,8 @@ def _short_team(team: str) -> str:
 
 
 def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None,
-                     stale_as_of: str | None = None) -> str:
+                     stale_as_of: str | None = None,
+                     season_over: list | None = None) -> str:
     """Compose the DM. Assumes alerts is non-empty.
 
     LOCKED FORMAT — pinned byte-for-byte by `test_locked_message_format`. Do not
@@ -1550,6 +1746,11 @@ def build_slack_text(alerts: list, tracked: int, suppressed: list | None = None,
 
     if suppressed:
         lines += ["", f"_{_suppressed_line(suppressed)}_"]
+    if season_over:
+        # Newly shuttered players, named once (BE, 2026-09-09). Added after the
+        # 2026-08-14 lock as its own optional line; every other line is
+        # byte-identical and the locked test never passes this argument.
+        lines += ["", f"_{_season_over_line(season_over)}_"]
     lines += [
         "",
         "_Baseline = season to date minus the window being compared._",
@@ -1572,6 +1773,23 @@ def _suppressed_line(suppressed: list) -> str:
             f"{verdict.get('current_level') or '?'}{stamp})"
         )
     return "Not shown — on the IL: " + ", ".join(parts) + "."
+
+
+def _season_over_line(season_over: list) -> str:
+    """One line naming who just dropped off the watch because his club is done."""
+    parts = []
+    for verdict in season_over:
+        info = verdict.get("season_over") or {}
+        last = info.get("last_game") or ""
+        stamp = f", last game {last[5:].replace('-', '/')}" if len(last) >= 10 else ""
+        parts.append(
+            f"{verdict['player_name']} ({_short_team(verdict['team'])}, "
+            f"{verdict.get('current_level') or '?'}{stamp})"
+        )
+    return (
+        "🏁 Season over — off the watch until his club plays again: "
+        + ", ".join(parts) + "."
+    )
 
 
 def post_slack(text: str) -> int:
@@ -1722,6 +1940,17 @@ def main(argv: list | None = None) -> int:
         logger.info("No MiLB clients in the season window — skipping")
         return 0
 
+    state = _load_json(_STATE_PATH, {})
+    today = _today_et_str()
+    mlb_ids = _mlb_id_index(_load_json(_ROSTER_CACHE_PATH, {}))
+
+    # Season over? A club with nothing left on its schedule takes its players
+    # off the watch before any of the reads below can misfire on them.
+    apply_season_end(
+        verdicts, mlb_ids, _load_json(_TEAM_LEVELS_PATH, {}), state, today
+    )
+    live = [v for v in verdicts if v["status"] != "season_over"]
+
     # Resolve candidates against their club: IL stints drop out, lineup share
     # comes in. Only players whose stat lines already look interesting get a
     # lookup, so this is a handful of API calls, not one per client.
@@ -1729,16 +1958,9 @@ def main(argv: list | None = None) -> int:
         window: {p.get("player_name"): p for p in entries if p.get("player_name")}
         for window, entries in recent_by_window.items()
     }
-    apply_roster_context(
-        verdicts,
-        _mlb_id_index(_load_json(_ROSTER_CACHE_PATH, {})),
-        windows_by_name,
-        _today_et_str(),
-    )
+    apply_roster_context(live, mlb_ids, windows_by_name, today)
     verdicts.sort(key=_sort_key)
 
-    state = _load_json(_STATE_PATH, {})
-    today = _today_et_str()
     apply_streaks(verdicts, state, today)
     board = [v for v in verdicts if is_actionable(v)]
     # Closeouts for anyone whose flag window elapsed after he'd already gone
@@ -1753,14 +1975,20 @@ def main(argv: list | None = None) -> int:
     # Named in a footnote: an empty no-games section otherwise looks like the
     # check didn't run.
     suppressed = [v for v in verdicts if v["status"] == "il"]
+    # Named once, in the first post that goes out after the club's last game.
+    newly_over = [
+        v for v in verdicts
+        if v["status"] == "season_over" and not v.get("season_over_noted")
+    ]
 
     counts: dict = {}
     for verdict in verdicts:
         counts[verdict["status"]] = counts.get(verdict["status"], 0) + 1
     logger.info(
-        "%d MiLB clients tracked (%s) — %d on the board, %d due to post "
-        "(%d closeouts)",
-        len(verdicts),
+        "%d MiLB clients tracked, %d shuttered for the season (%s) — %d on the "
+        "board, %d due to post (%d closeouts)",
+        len(live),
+        len(verdicts) - len(live),
         ", ".join(f"{k}: {v}" for k, v in sorted(counts.items())),
         len(board),
         len(alerts),
@@ -1781,6 +2009,11 @@ def main(argv: list | None = None) -> int:
             "era_lull_rise": ERA_LULL_RISE,
             "era_surge_drop": ERA_SURGE_DROP,
             "idle_min_season_games": IDLE_MIN_SEASON_GAMES,
+            "season_over": (
+                f"club has played in the last {SEASON_LOOKBACK_DAYS}d and has "
+                f"nothing scheduled through the next {SEASON_LOOKAHEAD_DAYS}d, "
+                "playoffs included"
+            ),
             "role_pa_per_g_ratio": ROLE_PA_PER_G_RATIO,
             "role_min_games": ROLE_MIN_GAMES,
             "share_drop_points": SHARE_DROP_POINTS,
@@ -1800,12 +2033,16 @@ def main(argv: list | None = None) -> int:
     if args.dry:
         print(json.dumps(snapshot["counts"], indent=2))
         print(
-            build_slack_text(alerts, len(verdicts), suppressed, stale_as_of)
+            build_slack_text(alerts, len(live), suppressed, stale_as_of, newly_over)
             if alerts
             else "(nothing actionable — would send nothing)"
         )
         return 0
 
+    if alerts:
+        # The footnote goes out with this post, so stamp it as noted.
+        for v in newly_over:
+            v["season_over_noted_today"] = True
     _SNAPSHOT_PATH.write_text(json.dumps(snapshot, indent=2))
     _STATE_PATH.write_text(
         json.dumps(
@@ -1817,7 +2054,7 @@ def main(argv: list | None = None) -> int:
         # Silent when healthy.
         return 0
     return post_slack(
-        build_slack_text(alerts, len(verdicts), suppressed, stale_as_of)
+        build_slack_text(alerts, len(live), suppressed, stale_as_of, newly_over)
     )
 
 

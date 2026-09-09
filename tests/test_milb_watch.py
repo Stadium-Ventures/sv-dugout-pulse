@@ -1202,3 +1202,212 @@ def test_a_fresh_post_carries_no_stamp():
     alerts = [{"player_name": "Guy", "team": "New York Yankees",
                "current_level": "AA", "status": "lull", "reason": "OPS .800 → .560"}]
     assert "Stats as of" not in m.build_slack_text(alerts, tracked=33)
+
+
+# ---------------------------------------------------------------------------
+# Season over — the club has stopped playing (BE, 2026-09-09)
+# ---------------------------------------------------------------------------
+
+def _schedule(*games):
+    """Fake statsapi.get for the schedule endpoint. games = (date, state)."""
+    payload = {"dates": [
+        {"date": d, "games": [{"status": {"abstractGameState": st}}]}
+        for d, st in games
+    ]}
+    import types
+    return types.SimpleNamespace(get=lambda *a, **k: payload)
+
+
+def _with_statsapi(fake, fn):
+    import sys
+    sys.modules["statsapi"] = fake
+    try:
+        return fn()
+    finally:
+        del sys.modules["statsapi"]
+
+
+def test_club_with_nothing_left_to_play_is_over():
+    m._CLUB_SEASON_CACHE.clear()
+    # Brooklyn's real September: finals through 09/06, nothing after.
+    read = _with_statsapi(
+        _schedule(("2026-09-05", "Final"), ("2026-09-06", "Final")),
+        lambda: m.club_season_state(453, "2026-09-09"),
+    )
+    assert read["state"] == "over"
+    assert read["last_game"] == "2026-09-06"
+
+
+def test_club_in_the_playoffs_is_still_active():
+    m._CLUB_SEASON_CACHE.clear()
+    # Tampa's real September: regular season done 09/06, playoff games pending.
+    read = _with_statsapi(
+        _schedule(("2026-09-06", "Final"), ("2026-09-08", "Final"),
+                  ("2026-09-10", "Preview"), ("2026-09-11", "Preview")),
+        lambda: m.club_season_state(587, "2026-09-09"),
+    )
+    assert read["state"] == "active"
+    assert read["next_game"] == "2026-09-10"
+
+
+def test_a_game_today_keeps_the_club_active():
+    m._CLUB_SEASON_CACHE.clear()
+    read = _with_statsapi(
+        _schedule(("2026-09-08", "Final"), ("2026-09-09", "Preview")),
+        lambda: m.club_season_state(1, "2026-09-09"),
+    )
+    assert read["state"] == "active"
+
+
+def test_empty_schedule_is_unknown_not_over():
+    m._CLUB_SEASON_CACHE.clear()
+    read = _with_statsapi(_schedule(), lambda: m.club_season_state(1, "2026-09-09"))
+    assert read["state"] == "unknown"
+
+
+def _season_verdict(name="Guy", status="idle", kind="hitter", level="A"):
+    return {"player_name": name, "team": "New York Mets", "current_level": level,
+            "status": status, "kind": kind, "reason": "No games in the last 14 days"}
+
+
+def test_finished_club_shutters_its_players():
+    verdicts = [_season_verdict("Done Guy"), _season_verdict("Live Guy", level="AAA")]
+    clubs = {453: {"state": "over", "last_game": "2026-09-06"},
+             342: {"state": "active", "next_game": "2026-09-09"}}
+    m.apply_season_end(
+        verdicts, {"Done Guy": 1, "Live Guy": 2}, {}, {}, "2026-09-09",
+        lookup=lambda mlb_id: _roster(team_id=453 if mlb_id == 1 else 342,
+                                      team_name="Brooklyn Cyclones" if mlb_id == 1 else "Albuquerque Isotopes"),
+        club_state=lambda team_id, today, sport_id=None: clubs[team_id],
+    )
+    done, live = verdicts
+    assert done["status"] == "season_over"
+    assert done["reason"] == "Season over for Brooklyn Cyclones — last game 2026-09-06"
+    assert done["season_over"]["since"] == "2026-09-09"
+    assert not m.is_actionable(done)
+    assert not m.resolution_due(done, {"last_posted_status": "lull",
+                                       "last_posted_date": "2026-08-20"}, "2026-09-09")
+    assert live["status"] == "idle"
+    assert live["season_check"] == "club still playing"
+
+
+def test_playoff_call_up_is_judged_on_his_current_club():
+    # Cached team-levels still say the finished A club; the live roster says a
+    # AA club with games left. The live club wins.
+    verdicts = [_season_verdict("Called Up")]
+    clubs = {453: {"state": "over", "last_game": "2026-09-06"},
+             999: {"state": "active", "next_game": "2026-09-10"}}
+    m.apply_season_end(
+        verdicts, {"Called Up": 7},
+        {"7": {"team_id": 453, "sport_id": 13, "team_name": "Brooklyn Cyclones"}},
+        {}, "2026-09-09",
+        lookup=lambda mlb_id: _roster(team_id=999, team_name="Binghamton Rumble Ponies"),
+        club_state=lambda team_id, today, sport_id=None: clubs[team_id],
+    )
+    assert verdicts[0]["status"] == "idle"
+
+
+def test_failed_roster_lookup_falls_back_to_the_team_levels_cache():
+    verdicts = [_season_verdict("Cached Guy")]
+    seen = {}
+
+    def club_state(team_id, today, sport_id=None):
+        seen["args"] = (team_id, sport_id)
+        return {"state": "over", "last_game": "2026-09-06"}
+
+    def boom(mlb_id):
+        raise RuntimeError("api down")
+
+    m.apply_season_end(
+        verdicts, {"Cached Guy": 7},
+        {"7": {"team_id": 453, "sport_id": 13, "team_name": "Brooklyn Cyclones"}},
+        {}, "2026-09-09", lookup=boom, club_state=club_state,
+    )
+    assert seen["args"] == (453, 13)
+    assert verdicts[0]["status"] == "season_over"
+    assert verdicts[0]["season_over"]["team"] == "Brooklyn Cyclones"
+
+
+def test_unknown_schedule_never_shutters_a_fresh_player():
+    verdicts = [_season_verdict("Mystery Guy")]
+    m.apply_season_end(
+        verdicts, {"Mystery Guy": 1}, {}, {}, "2026-09-09",
+        lookup=lambda mlb_id: _roster(team_id=1),
+        club_state=lambda *a, **k: {"state": "unknown"},
+    )
+    assert verdicts[0]["status"] == "idle"
+    assert "unreadable" in verdicts[0]["season_check"]
+
+
+def test_unknown_schedule_keeps_a_shuttered_player_shuttered_through_winter():
+    prior = {"Winter Guy": {"status": "season_over", "season_over_noted": True,
+                            "season_over": {"team": "Brooklyn Cyclones",
+                                            "last_game": "2026-09-06",
+                                            "since": "2026-09-09"}}}
+    verdicts = [_season_verdict("Winter Guy")]
+    m.apply_season_end(
+        verdicts, {"Winter Guy": 1}, {}, prior, "2026-11-20",
+        lookup=lambda mlb_id: _roster(team_id=1),
+        club_state=lambda *a, **k: {"state": "unknown"},
+    )
+    assert verdicts[0]["status"] == "season_over"
+    assert verdicts[0]["season_over"]["since"] == "2026-09-09"
+    assert verdicts[0]["season_over_noted"] is True
+
+
+def test_a_scheduled_game_turns_a_shuttered_player_back_on():
+    prior = {"Spring Guy": {"status": "season_over",
+                            "season_over": {"team": "X", "since": "2026-09-09"}}}
+    verdicts = [_season_verdict("Spring Guy", status="steady")]
+    m.apply_season_end(
+        verdicts, {"Spring Guy": 1}, {}, prior, "2027-04-01",
+        lookup=lambda mlb_id: _roster(team_id=1),
+        club_state=lambda *a, **k: {"state": "active", "next_game": "2027-04-04"},
+    )
+    assert verdicts[0]["status"] == "steady"
+
+
+def test_no_mlb_id_or_club_leaves_the_verdict_alone():
+    verdicts = [_season_verdict("Nobody")]
+    m.apply_season_end(verdicts, {}, {}, {}, "2026-09-09",
+                       lookup=lambda mlb_id: _roster(team_id=None),
+                       club_state=lambda *a, **k: {"state": "over"})
+    assert verdicts[0]["status"] == "idle"
+    assert verdicts[0]["season_check"] == "no club to check a schedule for"
+
+
+def test_season_over_footnote_names_the_newly_shuttered_once():
+    alerts = [
+        {"player_name": "Blake Rambusch", "team": "Seattle Mariners",
+         "current_level": "AA", "status": "lull",
+         "reason": "OPS .723 → .374 (-.349) over 26 PA in the last 14 days",
+         "detail": "3-for-21, 0 HR"},
+    ]
+    over = [{"player_name": "Aiden Robbins", "team": "New York Mets",
+             "current_level": "A+", "status": "season_over",
+             "season_over": {"last_game": "2026-09-06"}}]
+    text = m.build_slack_text(alerts, tracked=20, season_over=over)
+    assert ("_🏁 Season over — off the watch until his club plays again: "
+            "Aiden Robbins (Mets, A+, last game 09/06)._") in text
+    # Absent the argument the layout is byte-identical to the locked one.
+    assert "Season over" not in m.build_slack_text(alerts, tracked=20)
+
+
+def test_build_state_marks_the_footnote_as_noted_only_once_posted():
+    v = _season_verdict("Done Guy")
+    v["status"] = "season_over"
+    v["season_over"] = {"team": "Brooklyn Cyclones", "last_game": "2026-09-06",
+                        "since": "2026-09-09"}
+    v["since"] = "2026-09-09"
+    # A quiet morning: nothing posted, so the notice is still owed.
+    state = m.build_state([v], {}, set(), "2026-09-09")
+    assert state["Done Guy"]["status"] == "season_over"
+    assert state["Done Guy"]["season_over_noted"] is False
+    # A post went out with the footnote.
+    v["season_over_noted_today"] = True
+    state = m.build_state([v], state, set(), "2026-09-10")
+    assert state["Done Guy"]["season_over_noted"] is True
+    # Carried forward on later quiet days.
+    del v["season_over_noted_today"]
+    state = m.build_state([v], state, set(), "2026-09-11")
+    assert state["Done Guy"]["season_over_noted"] is True

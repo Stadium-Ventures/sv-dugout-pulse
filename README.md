@@ -76,6 +76,17 @@ schedule and an org change. Share divides the schedule out, and is voided when a
 player changed orgs inside the window — his new club's earlier games were never
 his to miss.
 
+**Season over (2026-09-09):** a player whose club has finished playing is off
+the watch. The gate is the club's schedule, not a calendar — it has played
+recently and has nothing left to play over the next two weeks, playoffs
+included. So Single-A and High-A players drop out the week after their leagues
+close, *except* those on playoff clubs, who stay live until elimination; Double-
+and Triple-A fall out on their own dates; Complex-league players went in late
+July. A shuttered player posts no findings and owes no closeout, is named once
+in the footnote of the next post that goes out, and comes back the first time
+his club has a game scheduled. The verdict is sticky through the offseason,
+when the schedule returns nothing either way.
+
 Absence findings are checked against the MLB Stats API's roster
 entries and dropped when the player is on the IL or rehabbing — the org already
 told us why he isn't playing. A player just activated off the IL gets the same
