@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T15:20:43.005518+00:00",
+  "generated_at": "2026-09-10T15:13:31.415938+00:00",
   "baseline_window": "season minus the recent window",
   "recent_windows": [
     "14d",
@@ -28,11 +28,11 @@
     "cadence": "flag once when he qualifies, then update after 7d (hitters) / 14d (pitchers)"
   },
   "counts": {
-    "lull": 5,
-    "surge": 2,
-    "steady": 6,
+    "lull": 4,
+    "surge": 3,
+    "steady": 7,
     "il": 3,
-    "insufficient": 16
+    "insufficient": 15
   },
   "players": [
     {
@@ -89,7 +89,7 @@
         }
       ],
       "since": "2026-09-07",
-      "days_standing": 3,
+      "days_standing": 4,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "steady",
@@ -143,15 +143,15 @@
         {
           "window": "14d",
           "status": "lull",
-          "reason": "ERA 4.00 \u2192 5.54 (+1.54) over 13 IP in the last 14 days",
+          "reason": "ERA 3.98 \u2192 6.75 (+2.77) over 8 IP in the last 14 days",
           "delta": {
             "metric": "era",
-            "value": 1.54
+            "value": 2.77
           }
         }
       ],
       "since": "2026-08-15",
-      "days_standing": 26,
+      "days_standing": 27,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "lull",
@@ -231,7 +231,7 @@
         }
       ],
       "since": "2026-08-21",
-      "days_standing": 20,
+      "days_standing": 21,
       "new_today": false,
       "last_posted_date": "2026-09-08",
       "last_posted_status": "lull",
@@ -291,27 +291,27 @@
       "detail": "16-for-74, 0 HR \u00b7 K% down 27.4% \u2192 21.7%",
       "usage_role": {
         "read": "role",
-        "window": "30d",
+        "window": "14d",
         "baseline_pa_per_g": 4.39,
-        "recent_pa_per_g": 4.37,
-        "recent_games": 19,
-        "drop_pct": 0.6,
+        "recent_pa_per_g": 4.33,
+        "recent_games": 9,
+        "drop_pct": 1.4,
         "dropped": false,
-        "summary": "Batting 4.4 times per game over the last 30 days, down from 4.4 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.3 times per game over the last 14 days, down from 4.4 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "14d",
           "status": "steady",
-          "reason": "OPS .754 \u2192 .657 (-.097) in the last 14 days",
+          "reason": "OPS .751 \u2192 .676 (-.075) in the last 14 days",
           "delta": {
             "metric": "ops",
-            "value": -0.097
+            "value": -0.075
           }
         }
       ],
       "since": "2026-08-15",
-      "days_standing": 26,
+      "days_standing": 27,
       "new_today": false,
       "last_posted_date": "2026-09-07",
       "last_posted_status": "lull",
@@ -320,71 +320,84 @@
       "posted_today": false
     },
     {
-      "player_name": "Kyle Jones",
-      "team": "Milwaukee Brewers",
-      "current_level": "A",
-      "roster_priority": 2,
+      "player_name": "Sterlin Thompson",
+      "team": "Colorado Rockies",
+      "current_level": "AAA",
+      "roster_priority": 1,
       "kind": "hitter",
-      "window": "14d",
-      "season_games": 23,
-      "recent_games": 10,
-      "status": "lull",
-      "reason": "OPS .692 \u2192 .542 (-.150) over 45 PA in the last 14 days",
+      "window": "30d",
+      "season_games": 109,
+      "recent_games": 17,
+      "status": "surge",
+      "reason": "OPS .880 \u2192 1.188 (+.308) over 80 PA in the last 30 days",
       "baseline": {
-        "pa": 60,
-        "ab": 53,
-        "h": 15,
-        "hr": 1,
-        "bb": 5,
-        "k": 10,
-        "avg": ".283",
-        "obp": ".333",
-        "slg": ".358",
-        "ops": ".692",
-        "k_pct": "16.7%",
-        "bb_pct": "8.3%",
-        "_ops": 0.692,
-        "_k_pct": 16.7,
-        "grade": "\ud83d\ude10 Steady"
+        "pa": 358,
+        "ab": 292,
+        "h": 86,
+        "hr": 10,
+        "bb": 56,
+        "k": 66,
+        "avg": ".295",
+        "obp": ".425",
+        "slg": ".455",
+        "ops": ".880",
+        "k_pct": "18.4%",
+        "bb_pct": "15.6%",
+        "_ops": 0.88,
+        "_k_pct": 18.4,
+        "grade": "\u2705 Solid"
       },
       "recent": {
-        "pa": 45,
-        "ab": 39,
-        "h": 8,
-        "hr": 0,
-        "bb": 6,
-        "k": 10,
-        "avg": ".205",
-        "obp": ".311",
-        "slg": ".231",
-        "ops": ".542",
-        "k_pct": "22.2%",
-        "bb_pct": "13.3%",
-        "_ops": 0.542,
-        "_k_pct": 22.2,
-        "grade": "\ud83e\udd76 Cold"
+        "pa": 80,
+        "ab": 58,
+        "h": 22,
+        "hr": 3,
+        "bb": 18,
+        "k": 11,
+        "avg": ".379",
+        "obp": ".550",
+        "slg": ".638",
+        "ops": "1.188",
+        "k_pct": "13.8%",
+        "bb_pct": "22.5%",
+        "_ops": 1.188,
+        "_k_pct": 13.8,
+        "grade": "\ud83d\udd25 Hot"
       },
       "delta": {
         "metric": "ops",
-        "value": -0.15
+        "value": 0.308
       },
-      "detail": "8-for-39, 0 HR \u00b7 K% up 16.7% \u2192 22.2%",
+      "detail": "22-for-58, 3 HR",
+      "usage_role": {
+        "read": "role",
+        "window": "30d",
+        "baseline_pa_per_g": 3.89,
+        "recent_pa_per_g": 4.71,
+        "recent_games": 17,
+        "drop_pct": -20.9,
+        "dropped": false,
+        "summary": "Batting 4.7 times per game over the last 30 days, down from 3.9 on the season \u2014 he's playing but not starting"
+      },
       "alternates": [
         {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "Baseline sample too small (4 PA before the last 30 days, need 40)",
-          "delta": null
+          "window": "14d",
+          "status": "surge",
+          "reason": "OPS .911 \u2192 1.115 (+.204) over 48 PA in the last 14 days",
+          "delta": {
+            "metric": "ops",
+            "value": 0.204
+          }
         }
       ],
-      "since": "2026-09-09",
-      "days_standing": 1,
-      "new_today": true,
-      "last_posted_date": null,
-      "last_posted_status": null,
+      "since": "2026-08-26",
+      "days_standing": 16,
+      "new_today": false,
+      "last_posted_date": "2026-09-04",
+      "last_posted_status": "surge",
       "rereport_days": 7,
-      "due_today": true,
-      "posted_today": true
+      "due_today": false,
+      "posted_today": false
     },
     {
       "player_name": "Dax Kilby",
@@ -439,26 +452,39 @@
       "usage_role": {
         "read": "role",
         "window": "14d",
-        "baseline_pa_per_g": 4.67,
-        "recent_pa_per_g": 4.22,
-        "recent_games": 9,
-        "drop_pct": 9.5,
+        "baseline_pa_per_g": 4.61,
+        "recent_pa_per_g": 4.38,
+        "recent_games": 8,
+        "drop_pct": 5.0,
         "dropped": false,
-        "summary": "Batting 4.2 times per game over the last 14 days, down from 4.7 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.4 times per game over the last 14 days, down from 4.6 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "14d",
           "status": "surge",
-          "reason": "OPS .785 \u2192 1.000 (+.215) over 38 PA in the last 14 days",
+          "reason": "OPS .793 \u2192 .986 (+.193) over 35 PA in the last 14 days",
           "delta": {
             "metric": "ops",
-            "value": 0.215
+            "value": 0.193
           }
         }
       ],
+      "roster_check": "checked",
+      "usage_share": {
+        "read": "share",
+        "window": "14d",
+        "recent": "8/13",
+        "prior": "12/14",
+        "recent_pct": 62,
+        "prior_pct": 86,
+        "drop_points": 24,
+        "dropped": false,
+        "summary": "In the lineup for 8 of his team's last 13 games (62%), down from 12 of 14 (86%)",
+        "team": "Tampa Tarpons"
+      },
       "since": "2026-09-01",
-      "days_standing": 9,
+      "days_standing": 10,
       "new_today": false,
       "last_posted_date": "2026-09-08",
       "last_posted_status": "surge",
@@ -467,84 +493,84 @@
       "posted_today": false
     },
     {
-      "player_name": "Sterlin Thompson",
-      "team": "Colorado Rockies",
-      "current_level": "AAA",
-      "roster_priority": 1,
+      "player_name": "Joe Tiroly",
+      "team": "San Diego Padres",
+      "current_level": "A",
+      "roster_priority": 2,
       "kind": "hitter",
-      "window": "30d",
-      "season_games": 108,
-      "recent_games": 16,
+      "window": "14d",
+      "season_games": 17,
+      "recent_games": 7,
       "status": "surge",
-      "reason": "OPS .880 \u2192 1.113 (+.233) over 75 PA in the last 30 days",
+      "reason": "OPS .761 \u2192 1.541 (+.780) over 28 PA in the last 14 days",
       "baseline": {
-        "pa": 358,
-        "ab": 292,
-        "h": 86,
-        "hr": 10,
-        "bb": 56,
-        "k": 66,
-        "avg": ".295",
-        "obp": ".425",
-        "slg": ".455",
-        "ops": ".880",
-        "k_pct": "18.4%",
-        "bb_pct": "15.6%",
-        "_ops": 0.88,
-        "_k_pct": 18.4,
+        "pa": 43,
+        "ab": 39,
+        "h": 10,
+        "hr": 2,
+        "bb": 3,
+        "k": 9,
+        "avg": ".256",
+        "obp": ".326",
+        "slg": ".436",
+        "ops": ".761",
+        "k_pct": "20.9%",
+        "bb_pct": "7.0%",
+        "_ops": 0.761,
+        "_k_pct": 20.9,
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "pa": 75,
-        "ab": 53,
-        "h": 19,
-        "hr": 2,
-        "bb": 18,
-        "k": 11,
-        "avg": ".358",
-        "obp": ".547",
-        "slg": ".566",
-        "ops": "1.113",
-        "k_pct": "14.7%",
-        "bb_pct": "24.0%",
-        "_ops": 1.113,
-        "_k_pct": 14.7,
+        "pa": 28,
+        "ab": 26,
+        "h": 11,
+        "hr": 5,
+        "bb": 2,
+        "k": 5,
+        "avg": ".423",
+        "obp": ".464",
+        "slg": "1.077",
+        "ops": "1.541",
+        "k_pct": "17.9%",
+        "bb_pct": "7.1%",
+        "_ops": 1.541,
+        "_k_pct": 17.9,
         "grade": "\ud83d\udd25 Hot"
       },
       "delta": {
         "metric": "ops",
-        "value": 0.233
+        "value": 0.78
       },
-      "detail": "19-for-53, 2 HR",
-      "usage_role": {
-        "read": "role",
-        "window": "30d",
-        "baseline_pa_per_g": 3.89,
-        "recent_pa_per_g": 4.69,
-        "recent_games": 16,
-        "drop_pct": -20.5,
-        "dropped": false,
-        "summary": "Batting 4.7 times per game over the last 30 days, down from 3.9 on the season \u2014 he's playing but not starting"
-      },
+      "detail": "11-for-26, 5 HR",
       "alternates": [
         {
-          "window": "14d",
-          "status": "steady",
-          "reason": "OPS .916 \u2192 .929 (+.013) in the last 14 days",
-          "delta": {
-            "metric": "ops",
-            "value": 0.013
-          }
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "Baseline sample too small (0 PA before the last 30 days, need 40)",
+          "delta": null
         }
       ],
-      "since": "2026-08-26",
-      "days_standing": 15,
-      "new_today": false,
-      "last_posted_date": "2026-09-04",
-      "last_posted_status": "surge",
+      "roster_check": "checked",
+      "usage_share": {
+        "read": "share",
+        "window": "14d",
+        "recent": "7/11",
+        "prior": "10/14",
+        "recent_pct": 64,
+        "prior_pct": 71,
+        "drop_points": 8,
+        "dropped": false,
+        "summary": "In the lineup for 7 of his team's last 11 games (64%), down from 10 of 14 (71%)",
+        "team": "Lake Elsinore Storm"
+      },
+      "since": "2026-09-10",
+      "days_standing": 1,
+      "new_today": true,
+      "last_posted_date": null,
+      "last_posted_status": null,
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
+      "due_today": true,
+      "posted_today": true
     },
     {
       "player_name": "Jack Cebert",
@@ -553,10 +579,10 @@
       "roster_priority": 1,
       "kind": "pitcher",
       "window": "30d",
-      "season_games": 21,
-      "recent_games": 4,
+      "season_games": 22,
+      "recent_games": 5,
       "status": "steady",
-      "reason": "ERA 3.84 \u2192 4.15 (+0.31) in the last 30 days",
+      "reason": "ERA 3.84 \u2192 4.50 (+0.66) in the last 30 days",
       "baseline": {
         "ip": "86.2",
         "k": 102,
@@ -571,40 +597,133 @@
         "grade": "\ud83d\ude10 Steady"
       },
       "recent": {
-        "ip": "13",
-        "k": 13,
-        "bb": 10,
-        "er": 6,
-        "era": "4.15",
+        "ip": "16",
+        "k": 16,
+        "bb": 11,
+        "er": 8,
+        "era": "4.50",
         "k_per_9": "9.0",
-        "bb_per_9": "6.9",
-        "_era": 4.15,
-        "_bb_per_9": 6.9,
-        "whip": "1.85",
+        "bb_per_9": "6.2",
+        "_era": 4.5,
+        "_bb_per_9": 6.2,
+        "whip": "1.81",
         "grade": "\ud83d\ude10 Steady"
       },
       "delta": {
         "metric": "era",
-        "value": 0.31
+        "value": 0.66
       },
-      "detail": "13 K / 10 BB, 6 ER \u00b7 BB/9 up 2.8 \u2192 6.9",
+      "detail": "16 K / 11 BB, 8 ER \u00b7 BB/9 up 2.8 \u2192 6.2",
       "alternates": [
         {
           "window": "14d",
           "status": "steady",
-          "reason": "ERA 3.88 \u2192 3.86 (-0.02) in the last 14 days",
+          "reason": "ERA 3.88 \u2192 4.50 (+0.62) in the last 14 days",
           "delta": {
             "metric": "era",
-            "value": -0.02
+            "value": 0.62
           }
         }
       ],
       "since": "2026-08-24",
-      "days_standing": 17,
+      "days_standing": 18,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "steady",
       "rereport_days": 14,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Kellon Lindsey",
+      "team": "Los Angeles Dodgers",
+      "current_level": "A",
+      "roster_priority": 1,
+      "kind": "hitter",
+      "window": "14d",
+      "season_games": 66,
+      "recent_games": 9,
+      "status": "steady",
+      "reason": "OPS .941 \u2192 1.045 (+.104) in the last 14 days",
+      "baseline": {
+        "pa": 266,
+        "ab": 211,
+        "h": 63,
+        "hr": 10,
+        "bb": 46,
+        "k": 74,
+        "avg": ".299",
+        "obp": ".425",
+        "slg": ".517",
+        "ops": ".941",
+        "k_pct": "27.8%",
+        "bb_pct": "17.3%",
+        "_ops": 0.941,
+        "_k_pct": 27.8,
+        "grade": "\u2705 Solid"
+      },
+      "recent": {
+        "pa": 46,
+        "ab": 34,
+        "h": 9,
+        "hr": 3,
+        "bb": 10,
+        "k": 10,
+        "avg": ".265",
+        "obp": ".457",
+        "slg": ".588",
+        "ops": "1.045",
+        "k_pct": "21.7%",
+        "bb_pct": "21.7%",
+        "_ops": 1.045,
+        "_k_pct": 21.7,
+        "grade": "\ud83d\udd25 Hot"
+      },
+      "delta": {
+        "metric": "ops",
+        "value": 0.104
+      },
+      "detail": "9-for-34, 3 HR \u00b7 K% down 27.8% \u2192 21.7%",
+      "usage_role": {
+        "read": "role",
+        "window": "30d",
+        "baseline_pa_per_g": 4.64,
+        "recent_pa_per_g": 4.91,
+        "recent_games": 22,
+        "drop_pct": -5.9,
+        "dropped": false,
+        "summary": "Batting 4.9 times per game over the last 30 days, down from 4.6 on the season \u2014 he's playing but not starting"
+      },
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "steady",
+          "reason": "OPS .926 \u2192 1.013 (+.087) in the last 30 days",
+          "delta": {
+            "metric": "ops",
+            "value": 0.087
+          }
+        }
+      ],
+      "roster_check": "checked",
+      "usage_share": {
+        "read": "share",
+        "window": "14d",
+        "recent": "9/11",
+        "prior": "13/14",
+        "recent_pct": 82,
+        "prior_pct": 93,
+        "drop_points": 11,
+        "dropped": false,
+        "summary": "In the lineup for 9 of his team's last 11 games (82%), down from 13 of 14 (93%)",
+        "team": "Ontario Tower Buzzers"
+      },
+      "since": "2026-09-07",
+      "days_standing": 4,
+      "new_today": false,
+      "last_posted_date": "2026-09-04",
+      "last_posted_status": "surge",
+      "rereport_days": 7,
       "due_today": false,
       "posted_today": false
     },
@@ -677,89 +796,9 @@
         }
       ],
       "since": "2026-09-09",
-      "days_standing": 1,
-      "new_today": true,
-      "last_posted_date": "2026-09-05",
-      "last_posted_status": "surge",
-      "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Kellon Lindsey",
-      "team": "Los Angeles Dodgers",
-      "current_level": "A",
-      "roster_priority": 1,
-      "kind": "hitter",
-      "window": "30d",
-      "season_games": 66,
-      "recent_games": 22,
-      "status": "steady",
-      "reason": "OPS .926 \u2192 1.013 (+.087) in the last 30 days",
-      "baseline": {
-        "pa": 204,
-        "ab": 162,
-        "h": 48,
-        "hr": 7,
-        "bb": 35,
-        "k": 59,
-        "avg": ".296",
-        "obp": ".426",
-        "slg": ".500",
-        "ops": ".926",
-        "k_pct": "28.9%",
-        "bb_pct": "17.2%",
-        "_ops": 0.926,
-        "_k_pct": 28.9,
-        "grade": "\u2705 Solid"
-      },
-      "recent": {
-        "pa": 108,
-        "ab": 83,
-        "h": 24,
-        "hr": 6,
-        "bb": 21,
-        "k": 25,
-        "avg": ".289",
-        "obp": ".435",
-        "slg": ".578",
-        "ops": "1.013",
-        "k_pct": "23.1%",
-        "bb_pct": "19.4%",
-        "_ops": 1.013,
-        "_k_pct": 23.1,
-        "grade": "\ud83d\udd25 Hot"
-      },
-      "delta": {
-        "metric": "ops",
-        "value": 0.087
-      },
-      "detail": "24-for-83, 6 HR \u00b7 K% down 28.9% \u2192 23.1%",
-      "usage_role": {
-        "read": "role",
-        "window": "30d",
-        "baseline_pa_per_g": 4.64,
-        "recent_pa_per_g": 4.91,
-        "recent_games": 22,
-        "drop_pct": -5.9,
-        "dropped": false,
-        "summary": "Batting 4.9 times per game over the last 30 days, down from 4.6 on the season \u2014 he's playing but not starting"
-      },
-      "alternates": [
-        {
-          "window": "14d",
-          "status": "steady",
-          "reason": "OPS .953 \u2192 .969 (+.016) in the last 14 days",
-          "delta": {
-            "metric": "ops",
-            "value": 0.016
-          }
-        }
-      ],
-      "since": "2026-09-07",
-      "days_standing": 3,
+      "days_standing": 2,
       "new_today": false,
-      "last_posted_date": "2026-09-04",
+      "last_posted_date": "2026-09-05",
       "last_posted_status": "surge",
       "rereport_days": 7,
       "due_today": false,
@@ -771,75 +810,159 @@
       "current_level": "AA",
       "roster_priority": 1,
       "kind": "hitter",
-      "window": "14d",
-      "season_games": 114,
-      "recent_games": 11,
+      "window": "30d",
+      "season_games": 115,
+      "recent_games": 25,
       "status": "steady",
-      "reason": "OPS .888 \u2192 .966 (+.078) in the last 14 days",
+      "reason": "OPS .888 \u2192 .945 (+.057) in the last 30 days",
       "baseline": {
-        "pa": 446,
-        "ab": 368,
-        "h": 105,
-        "hr": 16,
-        "bb": 56,
-        "k": 74,
-        "avg": ".285",
-        "obp": ".399",
-        "slg": ".489",
+        "pa": 388,
+        "ab": 322,
+        "h": 92,
+        "hr": 14,
+        "bb": 48,
+        "k": 67,
+        "avg": ".286",
+        "obp": ".394",
+        "slg": ".494",
         "ops": ".888",
-        "k_pct": "16.6%",
-        "bb_pct": "12.6%",
+        "k_pct": "17.3%",
+        "bb_pct": "12.4%",
         "_ops": 0.888,
-        "_k_pct": 16.6,
+        "_k_pct": 17.3,
         "grade": "\u2705 Solid"
       },
       "recent": {
-        "pa": 51,
-        "ab": 43,
-        "h": 14,
-        "hr": 2,
-        "bb": 4,
-        "k": 13,
-        "avg": ".326",
-        "obp": ".431",
-        "slg": ".535",
-        "ops": ".966",
-        "k_pct": "25.5%",
-        "bb_pct": "7.8%",
-        "_ops": 0.966,
-        "_k_pct": 25.5,
+        "pa": 115,
+        "ab": 94,
+        "h": 29,
+        "hr": 4,
+        "bb": 13,
+        "k": 20,
+        "avg": ".309",
+        "obp": ".435",
+        "slg": ".511",
+        "ops": ".945",
+        "k_pct": "17.4%",
+        "bb_pct": "11.3%",
+        "_ops": 0.945,
+        "_k_pct": 17.4,
         "grade": "\u2705 Solid"
       },
       "delta": {
         "metric": "ops",
-        "value": 0.078
+        "value": 0.057
       },
-      "detail": "14-for-43, 2 HR \u00b7 K% up 16.6% \u2192 25.5%",
+      "detail": "29-for-94, 4 HR",
       "usage_role": {
         "read": "role",
         "window": "30d",
         "baseline_pa_per_g": 4.31,
-        "recent_pa_per_g": 4.54,
-        "recent_games": 24,
-        "drop_pct": -5.3,
+        "recent_pa_per_g": 4.6,
+        "recent_games": 25,
+        "drop_pct": -6.7,
         "dropped": false,
-        "summary": "Batting 4.5 times per game over the last 30 days, down from 4.3 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.6 times per game over the last 30 days, down from 4.3 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
-          "window": "30d",
+          "window": "14d",
           "status": "steady",
-          "reason": "OPS .888 \u2192 .926 (+.038) in the last 30 days",
+          "reason": "OPS .898 \u2192 .931 (+.033) in the last 14 days",
           "delta": {
             "metric": "ops",
-            "value": 0.038
+            "value": 0.033
           }
         }
       ],
       "since": "2026-09-05",
-      "days_standing": 5,
+      "days_standing": 6,
       "new_today": false,
       "last_posted_date": "2026-09-03",
+      "last_posted_status": "lull",
+      "rereport_days": 7,
+      "due_today": true,
+      "resolution": {
+        "from_status": "lull",
+        "from_date": "2026-09-03"
+      },
+      "posted_today": true
+    },
+    {
+      "player_name": "Kyle Jones",
+      "team": "Milwaukee Brewers",
+      "current_level": "A",
+      "roster_priority": 2,
+      "kind": "hitter",
+      "window": "14d",
+      "season_games": 23,
+      "recent_games": 9,
+      "status": "steady",
+      "reason": "OPS .679 \u2192 .546 (-.133) in the last 14 days",
+      "baseline": {
+        "pa": 64,
+        "ab": 57,
+        "h": 16,
+        "hr": 1,
+        "bb": 5,
+        "k": 10,
+        "avg": ".281",
+        "obp": ".328",
+        "slg": ".351",
+        "ops": ".679",
+        "k_pct": "15.6%",
+        "bb_pct": "7.8%",
+        "_ops": 0.679,
+        "_k_pct": 15.6,
+        "grade": "\ud83d\ude10 Steady"
+      },
+      "recent": {
+        "pa": 41,
+        "ab": 35,
+        "h": 7,
+        "hr": 0,
+        "bb": 6,
+        "k": 10,
+        "avg": ".200",
+        "obp": ".317",
+        "slg": ".229",
+        "ops": ".546",
+        "k_pct": "24.4%",
+        "bb_pct": "14.6%",
+        "_ops": 0.546,
+        "_k_pct": 24.4,
+        "grade": "\ud83e\udd76 Cold"
+      },
+      "delta": {
+        "metric": "ops",
+        "value": -0.133
+      },
+      "detail": "7-for-35, 0 HR \u00b7 K% up 15.6% \u2192 24.4%",
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "Baseline sample too small (4 PA before the last 30 days, need 40)",
+          "delta": null
+        }
+      ],
+      "roster_check": "checked",
+      "usage_share": {
+        "read": "share",
+        "window": "14d",
+        "recent": "9/12",
+        "prior": "13/15",
+        "recent_pct": 75,
+        "prior_pct": 87,
+        "drop_points": 12,
+        "dropped": false,
+        "summary": "In the lineup for 9 of his team's last 12 games (75%), down from 13 of 15 (87%)",
+        "team": "Wilson Warbirds"
+      },
+      "since": "2026-09-10",
+      "days_standing": 1,
+      "new_today": true,
+      "last_posted_date": "2026-09-09",
       "last_posted_status": "lull",
       "rereport_days": 7,
       "due_today": false,
@@ -909,21 +1032,38 @@
         {
           "window": "14d",
           "status": "steady",
-          "reason": "OPS .689 \u2192 .691 (+.002) in the last 14 days",
+          "reason": "OPS .682 \u2192 .751 (+.069) in the last 14 days",
           "delta": {
             "metric": "ops",
-            "value": 0.002
+            "value": 0.069
           }
         }
       ],
+      "roster_check": "checked",
+      "usage_share": {
+        "read": "share",
+        "window": "14d",
+        "recent": "6/10",
+        "prior": "10/15",
+        "recent_pct": 60,
+        "prior_pct": 67,
+        "drop_points": 7,
+        "dropped": false,
+        "summary": "In the lineup for 6 of his team's last 10 games (60%), down from 10 of 15 (67%)",
+        "team": "Rome Emperors"
+      },
       "since": "2026-09-06",
-      "days_standing": 4,
+      "days_standing": 5,
       "new_today": false,
       "last_posted_date": "2026-09-03",
       "last_posted_status": "lull",
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
+      "due_today": true,
+      "resolution": {
+        "from_status": "lull",
+        "from_date": "2026-09-03"
+      },
+      "posted_today": true
     },
     {
       "player_name": "Bryce Fowler",
@@ -933,48 +1073,48 @@
       "kind": "hitter",
       "window": "14d",
       "season_games": 20,
-      "recent_games": 8,
+      "recent_games": 6,
       "status": "steady",
-      "reason": "OPS .744 \u2192 .696 (-.048) in the last 14 days",
+      "reason": "OPS .694 \u2192 .787 (+.093) in the last 14 days",
       "baseline": {
-        "pa": 48,
-        "ab": 35,
-        "h": 9,
+        "pa": 54,
+        "ab": 41,
+        "h": 10,
         "hr": 0,
         "bb": 9,
-        "k": 14,
-        "avg": ".257",
-        "obp": ".458",
-        "slg": ".286",
-        "ops": ".744",
-        "k_pct": "29.2%",
-        "bb_pct": "18.8%",
-        "_ops": 0.744,
-        "_k_pct": 29.2,
+        "k": 17,
+        "avg": ".244",
+        "obp": ".426",
+        "slg": ".268",
+        "ops": ".694",
+        "k_pct": "31.5%",
+        "bb_pct": "16.7%",
+        "_ops": 0.694,
+        "_k_pct": 31.5,
         "grade": "\ud83d\ude10 Steady"
       },
       "recent": {
-        "pa": 32,
-        "ab": 28,
-        "h": 8,
+        "pa": 26,
+        "ab": 22,
+        "h": 7,
         "hr": 0,
         "bb": 4,
-        "k": 12,
-        "avg": ".286",
-        "obp": ".375",
-        "slg": ".321",
-        "ops": ".696",
-        "k_pct": "37.5%",
-        "bb_pct": "12.5%",
-        "_ops": 0.696,
-        "_k_pct": 37.5,
-        "grade": "\ud83d\ude10 Steady"
+        "k": 9,
+        "avg": ".318",
+        "obp": ".423",
+        "slg": ".364",
+        "ops": ".787",
+        "k_pct": "34.6%",
+        "bb_pct": "15.4%",
+        "_ops": 0.787,
+        "_k_pct": 34.6,
+        "grade": "\u2705 Solid"
       },
       "delta": {
         "metric": "ops",
-        "value": -0.048
+        "value": 0.093
       },
-      "detail": "8-for-28, 0 HR \u00b7 K% up 29.2% \u2192 37.5%",
+      "detail": "7-for-22, 0 HR",
       "alternates": [
         {
           "window": "30d",
@@ -983,8 +1123,21 @@
           "delta": null
         }
       ],
+      "roster_check": "checked",
+      "usage_share": {
+        "read": "share",
+        "window": "14d",
+        "recent": "6/12",
+        "prior": "10/15",
+        "recent_pct": 50,
+        "prior_pct": 67,
+        "drop_points": 17,
+        "dropped": false,
+        "summary": "In the lineup for 6 of his team's last 12 games (50%), down from 10 of 15 (67%)",
+        "team": "Fort Myers Mighty Mussels"
+      },
       "since": "2026-09-07",
-      "days_standing": 3,
+      "days_standing": 4,
       "new_today": false,
       "last_posted_date": "2026-09-04",
       "last_posted_status": "lull",
@@ -1022,7 +1175,7 @@
         "team": "Daytona Tortugas"
       },
       "since": "2026-09-03",
-      "days_standing": 7,
+      "days_standing": 8,
       "new_today": false,
       "last_posted_date": "2026-09-02",
       "last_posted_status": "idle",
@@ -1040,7 +1193,7 @@
       "season_games": 72,
       "recent_games": 0,
       "status": "il",
-      "reason": "Development List since 2026-08-18 \u2014 no games in the last 14 days (72 G on the season)",
+      "reason": "Injured 7-Day since 2026-08-18 \u2014 no games in the last 14 days (72 G on the season)",
       "baseline": null,
       "recent": null,
       "delta": null,
@@ -1064,13 +1217,13 @@
       ],
       "roster_check": "checked",
       "il": {
-        "code": "DEV",
-        "description": "Development List",
+        "code": "D7",
+        "description": "Injured 7-Day",
         "since": "2026-08-18",
         "team": "Las Vegas Aviators"
       },
       "since": "2026-09-07",
-      "days_standing": 3,
+      "days_standing": 4,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "surge",
@@ -1108,42 +1261,11 @@
         "team": "Cedar Rapids Kernels"
       },
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
       "rereport_days": 14,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Bo Lowrance",
-      "team": "Los Angeles Dodgers",
-      "current_level": "CPX",
-      "roster_priority": 1,
-      "kind": "hitter",
-      "window": "14d",
-      "season_games": 0,
-      "recent_games": 0,
-      "status": "insufficient",
-      "reason": "Not enough games on the season to judge an absence",
-      "baseline": null,
-      "recent": null,
-      "delta": null,
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "No games in the last 30 days",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-17",
-      "days_standing": 24,
-      "new_today": false,
-      "last_posted_date": null,
-      "last_posted_status": null,
-      "rereport_days": 7,
       "due_today": false,
       "posted_today": false
     },
@@ -1170,7 +1292,99 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
+      "new_today": false,
+      "last_posted_date": null,
+      "last_posted_status": null,
+      "rereport_days": 7,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Trevor Condon",
+      "team": "St. Louis Cardinals",
+      "current_level": "A",
+      "roster_priority": 1,
+      "kind": "hitter",
+      "window": "14d",
+      "season_games": 7,
+      "recent_games": 4,
+      "status": "insufficient",
+      "reason": "Baseline sample too small (14 PA before the last 14 days, need 40)",
+      "baseline": {
+        "pa": 14,
+        "ab": 13,
+        "h": 5,
+        "hr": 0,
+        "bb": 1,
+        "k": 2,
+        "avg": ".385",
+        "obp": ".429",
+        "slg": ".462",
+        "ops": ".890",
+        "k_pct": "14.3%",
+        "bb_pct": "7.1%",
+        "_ops": 0.89,
+        "_k_pct": 14.3
+      },
+      "recent": {
+        "pa": 17,
+        "ab": 15,
+        "h": 4,
+        "hr": 1,
+        "bb": 2,
+        "k": 4,
+        "avg": ".267",
+        "obp": ".353",
+        "slg": ".600",
+        "ops": ".953",
+        "k_pct": "23.5%",
+        "bb_pct": "11.8%",
+        "_ops": 0.953,
+        "_k_pct": 23.5
+      },
+      "delta": null,
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "Baseline sample too small (0 PA before the last 30 days, need 40)",
+          "delta": null
+        }
+      ],
+      "since": "2026-08-17",
+      "days_standing": 25,
+      "new_today": false,
+      "last_posted_date": null,
+      "last_posted_status": null,
+      "rereport_days": 7,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Bo Lowrance",
+      "team": "Los Angeles Dodgers",
+      "current_level": "CPX",
+      "roster_priority": 1,
+      "kind": "hitter",
+      "window": "14d",
+      "season_games": 0,
+      "recent_games": 0,
+      "status": "insufficient",
+      "reason": "Not enough games on the season to judge an absence",
+      "baseline": null,
+      "recent": null,
+      "delta": null,
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "No games in the last 30 days",
+          "delta": null
+        }
+      ],
+      "since": "2026-08-17",
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1186,32 +1400,32 @@
       "kind": "pitcher",
       "window": "14d",
       "season_games": 4,
-      "recent_games": 2,
+      "recent_games": 1,
       "status": "insufficient",
-      "reason": "Baseline sample too small (3.1 IP before the last 14 days, need 15)",
+      "reason": "Baseline sample too small (6.1 IP before the last 14 days, need 15)",
       "baseline": {
-        "ip": "3.1",
-        "k": 4,
-        "bb": 3,
-        "er": 0,
-        "era": "0.00",
-        "k_per_9": "10.8",
-        "bb_per_9": "8.1",
-        "_era": 0.0,
-        "_bb_per_9": 8.1,
-        "whip": "1.20"
-      },
-      "recent": {
-        "ip": "7",
-        "k": 10,
+        "ip": "6.1",
+        "k": 8,
         "bb": 4,
         "er": 0,
         "era": "0.00",
-        "k_per_9": "12.9",
-        "bb_per_9": "5.1",
+        "k_per_9": "11.4",
+        "bb_per_9": "5.7",
         "_era": 0.0,
-        "_bb_per_9": 5.1,
-        "whip": "1.00"
+        "_bb_per_9": 5.7,
+        "whip": "0.95"
+      },
+      "recent": {
+        "ip": "4",
+        "k": 6,
+        "bb": 3,
+        "er": 0,
+        "era": "0.00",
+        "k_per_9": "13.5",
+        "bb_per_9": "6.8",
+        "_era": 0.0,
+        "_bb_per_9": 6.8,
+        "whip": "1.25"
       },
       "delta": null,
       "alternates": [
@@ -1223,72 +1437,11 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
       "rereport_days": 14,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Trevor Condon",
-      "team": "St. Louis Cardinals",
-      "current_level": "A",
-      "roster_priority": 1,
-      "kind": "hitter",
-      "window": "14d",
-      "season_games": 7,
-      "recent_games": 5,
-      "status": "insufficient",
-      "reason": "Baseline sample too small (9 PA before the last 14 days, need 40)",
-      "baseline": {
-        "pa": 9,
-        "ab": 9,
-        "h": 4,
-        "hr": 0,
-        "bb": 0,
-        "k": 1,
-        "avg": ".444",
-        "obp": ".444",
-        "slg": ".556",
-        "ops": "1.000",
-        "k_pct": "11.1%",
-        "bb_pct": "0.0%",
-        "_ops": 1.0,
-        "_k_pct": 11.1
-      },
-      "recent": {
-        "pa": 22,
-        "ab": 19,
-        "h": 5,
-        "hr": 1,
-        "bb": 3,
-        "k": 5,
-        "avg": ".263",
-        "obp": ".364",
-        "slg": ".526",
-        "ops": ".890",
-        "k_pct": "22.7%",
-        "bb_pct": "13.6%",
-        "_ops": 0.89,
-        "_k_pct": 22.7
-      },
-      "delta": null,
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "Baseline sample too small (0 PA before the last 30 days, need 40)",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-17",
-      "days_standing": 24,
-      "new_today": false,
-      "last_posted_date": null,
-      "last_posted_status": null,
-      "rereport_days": 7,
       "due_today": false,
       "posted_today": false
     },
@@ -1315,7 +1468,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1330,10 +1483,10 @@
       "roster_priority": 1,
       "kind": "pitcher",
       "window": "14d",
-      "season_games": 21,
-      "recent_games": 3,
+      "season_games": 22,
+      "recent_games": 4,
       "status": "insufficient",
-      "reason": "Recent sample too small (2.2 IP in the last 14 days, need 6)",
+      "reason": "Recent sample too small (3.2 IP in the last 14 days, need 6)",
       "baseline": {
         "ip": "24",
         "k": 34,
@@ -1347,95 +1500,38 @@
         "whip": "1.42"
       },
       "recent": {
-        "ip": "2.2",
-        "k": 3,
+        "ip": "3.2",
+        "k": 4,
         "bb": 3,
-        "er": 5,
-        "era": "16.88",
-        "k_per_9": "10.1",
-        "bb_per_9": "10.1",
-        "_era": 16.88,
-        "_bb_per_9": 10.1,
-        "whip": "3.38"
+        "er": 6,
+        "era": "14.73",
+        "k_per_9": "9.8",
+        "bb_per_9": "7.4",
+        "_era": 14.73,
+        "_bb_per_9": 7.4,
+        "whip": "2.73"
       },
       "delta": null,
       "alternates": [
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (2.2 IP in the last 30 days, need 12)",
+          "reason": "Recent sample too small (3.2 IP in the last 30 days, need 12)",
           "delta": null
         }
       ],
       "since": "2026-08-28",
-      "days_standing": 13,
+      "days_standing": 14,
       "new_today": false,
       "last_posted_date": "2026-08-27",
       "last_posted_status": "idle",
       "rereport_days": 14,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Joe Tiroly",
-      "team": "San Diego Padres",
-      "current_level": "A",
-      "roster_priority": 2,
-      "kind": "hitter",
-      "window": "14d",
-      "season_games": 17,
-      "recent_games": 8,
-      "status": "insufficient",
-      "reason": "Baseline sample too small (39 PA before the last 14 days, need 40)",
-      "baseline": {
-        "pa": 39,
-        "ab": 35,
-        "h": 10,
-        "hr": 2,
-        "bb": 3,
-        "k": 8,
-        "avg": ".286",
-        "obp": ".359",
-        "slg": ".486",
-        "ops": ".845",
-        "k_pct": "20.5%",
-        "bb_pct": "7.7%",
-        "_ops": 0.845,
-        "_k_pct": 20.5
+      "due_today": true,
+      "resolution": {
+        "from_status": "idle",
+        "from_date": "2026-08-27"
       },
-      "recent": {
-        "pa": 32,
-        "ab": 30,
-        "h": 11,
-        "hr": 5,
-        "bb": 2,
-        "k": 6,
-        "avg": ".367",
-        "obp": ".406",
-        "slg": ".933",
-        "ops": "1.340",
-        "k_pct": "18.8%",
-        "bb_pct": "6.2%",
-        "_ops": 1.34,
-        "_k_pct": 18.8
-      },
-      "delta": null,
-      "alternates": [
-        {
-          "window": "30d",
-          "status": "insufficient",
-          "reason": "Baseline sample too small (0 PA before the last 30 days, need 40)",
-          "delta": null
-        }
-      ],
-      "since": "2026-08-17",
-      "days_standing": 24,
-      "new_today": false,
-      "last_posted_date": null,
-      "last_posted_status": null,
-      "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
+      "posted_today": true
     },
     {
       "player_name": "Mason Eckelman",
@@ -1490,7 +1586,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1521,7 +1617,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1552,7 +1648,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1583,7 +1679,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1636,7 +1732,7 @@
         }
       ],
       "since": "2026-08-29",
-      "days_standing": 12,
+      "days_standing": 13,
       "new_today": false,
       "last_posted_date": "2026-09-05",
       "last_posted_status": "insufficient",
@@ -1689,7 +1785,7 @@
         }
       ],
       "since": "2026-08-30",
-      "days_standing": 11,
+      "days_standing": 12,
       "new_today": false,
       "last_posted_date": "2026-08-29",
       "last_posted_status": "surge",
@@ -1742,7 +1838,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1803,7 +1899,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1834,7 +1930,7 @@
         }
       ],
       "since": "2026-08-17",
-      "days_standing": 24,
+      "days_standing": 25,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
