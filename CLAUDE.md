@@ -24,19 +24,6 @@ tool's hub registration + #sv-automation hookup are canonical requirements of
 being "promoted." When your work decides something reusable, capture it
 (status slice → SOP → canon) before you finish.
 
-**This tool's role in it:** Dugout Pulse reads player identity/roster facts
-(never writes them) and produces its own dataset — live stat pulls, milestone
-detection, MiLB usage/rate windows. It has zero player-fact write-home; its
-`data/**` outputs are this repo's own domain, not a registry projection. Its
-`scripts/_automation_notify.py` is the local implementation of the SV Way's
-#sv-automation message contract (see below) — the one door every alert here
-must go through.
-
-- Bot commits (`Update pulse data [bot]`) land every 15 minutes — always
-  `git pull` before pushing; never force-push main.
-- `data/**` is machine-written (except `data/summer_ball_placements.json`,
-  which is hand-transcribed from Kent's sheet).
-
 ## Slack channels — scope rule (keep every new alert compliant)
 
 - **#dugout-pulse** (`SLACK_WEBHOOK_URL`) — feature output humans read on
