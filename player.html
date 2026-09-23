@@ -87,6 +87,7 @@
 </style>
 </head>
 <body>
+<script src="js/gate.js"></script>
 <div class="wrap">
   <div class="topnav"><a href="index.html">← Back to Dugout Pulse</a></div>
   <h1 id="playerName">Loading…</h1>
@@ -226,6 +227,76 @@ function renderPeak(tags) {
     <div class="stat-grid">${cells.join('')}</div></div>`;
 }
 
+// --- Scouting reference, served on request by the SV Scouting Hub behind the
+// shared password (js/gate.js). Nothing here is committed to this repo.
+// BA reports + TruMedia are subscriber/licensed data: internal only. ---
+function fmtDay(d) {
+  if (!d) return '';
+  const t = new Date(d + 'T00:00:00');
+  return isNaN(t) ? d : t.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+const SRC_LABEL = { mlb_pipeline: 'MLB Pipeline', ba: 'Baseball America', mlb_draft: 'MLB draft board' };
+const KIND_LABEL = { top100: 'Top 100', org_top30: 'org Top 30', draft: 'draft class' };
+const isDateEdition = e => /^\d{4}-\d{2}-\d{2}$/.test(e || '');
+function rankLabel(r) {
+  const ed = r.edition && !['current', 'final', 'player_page'].includes(r.edition) && !isDateEdition(r.edition) ? ' ' + r.edition : '';
+  return `${SRC_LABEL[r.source] || r.source} ${r.season} ${KIND_LABEL[r.list_kind] || r.list_kind}${r.org ? ' (' + r.org + ')' : ''}${ed}`;
+}
+function renderRanks(ref) {
+  if (!ref) return '';
+  const now = ref.ranks_now || [];
+  const same = (a, b) => ['source','list_kind','season','edition','org','rank'].every(k => a[k] === b[k]);
+  const hist = (ref.rank_history || []).filter(h => !now.some(n => same(n, h)));
+  if (!now.length && !hist.length) return `<div class="card"><h2>Prospect lists</h2><div class="empty">Not on any MLB Pipeline or Baseball America list we hold.</div></div>`;
+  const when = r => r.published_at ? fmtDay(r.published_at) : (r.first_seen === r.last_seen ? 'seen ' + fmtDay(r.first_seen) : 'held ' + fmtDay(r.first_seen) + ' to ' + fmtDay(r.last_seen));
+  const row = (r, cur) => `<div class="game-row"><span class="opp">${esc(rankLabel(r))}</span>
+      <span><strong>#${esc(r.rank)}</strong></span>
+      <span class="date" style="min-width:auto;margin-left:10px">${esc(when(r))}</span>
+      <span class="badge" style="margin-left:8px;${cur ? 'color:#4ade80' : 'opacity:.55'}">${cur ? 'current' : 'past'}</span></div>`;
+  return `<div class="card"><h2>Prospect lists</h2>${now.map(r => row(r, true)).join('')}${hist.slice(0, 12).map(r => row(r, false)).join('')}</div>`;
+}
+const TOOL_ORDER = ['hit','power','run','field','arm','fastball','curveball','slider','cutter','changeup','splitter','sweeper','control','command'];
+function toolChips(tg) {
+  const keys = Object.keys(tg || {}).filter(k => !k.endsWith('_future'));
+  keys.sort((a, b) => (TOOL_ORDER.indexOf(a) + 1 || 99) - (TOOL_ORDER.indexOf(b) + 1 || 99));
+  return keys.map(k => `<span class="badge">${esc(k.replace(/_/g, ' '))} ${esc(tg[k])}${tg[k + '_future'] ? '/' + esc(tg[k + '_future']) : ''}</span>`).join('');
+}
+function renderBaReports(ref) {
+  const reps = (ref && ref.ba_reports) || [];
+  if (!reps.length) return '';
+  const sec = (label, v) => v ? `<p style="margin:0 0 .6rem"><strong>${esc(label)}.</strong> ${esc(v)}</p>` : '';
+  const body = reps.map((r, i) => {
+    const listName = `${r.season} ${KIND_LABEL[r.list_kind] || r.list_kind}${r.org ? ' (' + r.org + ')' : ''}${r.edition && !isDateEdition(r.edition) ? ' ' + r.edition : ''}`;
+    const others = Object.entries(r.other_sections || {}).map(([k, v]) => sec(k.charAt(0).toUpperCase() + k.slice(1), v)).join('');
+    const stamp = r.report_date ? 'report ' + fmtDay(r.report_date) : r.list_date ? 'list ' + fmtDay(r.list_date) : '';
+    return `<details ${i === 0 ? 'open' : ''} style="border-top:1px solid var(--border);padding:.55rem 0">
+      <summary style="cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;list-style:none">
+        <span style="font-weight:800;font-size:1.15rem">${esc(r.ba_grade ?? '--')}${r.risk ? ' <span style="font-size:.85rem;color:var(--text-dim)">/ ' + esc(r.risk) + '</span>' : ''}</span>
+        <span style="font-weight:600">${esc(listName)}${r.rank ? ' · No. ' + esc(r.rank) : ''}</span>
+        <span style="color:var(--text-dim);font-size:.8rem">${esc(stamp)}${r.adjusted_grade != null ? ' · adjusted ' + esc(r.adjusted_grade) : ''}${r.previous_rank ? ' · previously ' + esc(r.previous_rank) : ''}</span>
+        <span style="display:inline-flex;flex-wrap:wrap;gap:4px;margin-left:auto">${toolChips(r.tool_grades)}</span>
+      </summary>
+      <div style="font-size:.9rem;line-height:1.5;margin-top:.5rem">
+        ${sec('Track record', r.track_record)}${sec('Scouting report', r.scouting_report)}${sec('The future', r.the_future)}${others}
+        ${r.ba_player_slug ? `<p class="empty">Source: Baseball America, <a class="source" href="https://www.baseballamerica.com/players/${esc(r.ba_player_slug)}/" target="_blank" rel="noopener">player page →</a>. Subscriber content, internal use only.</p>` : ''}
+      </div></details>`;
+  }).join('');
+  return `<div class="card"><h2>Baseball America reports <span style="text-transform:none;letter-spacing:0;font-weight:400;">— internal only</span></h2>${body}</div>`;
+}
+const pctf = v => v == null ? '--' : Number(v).toFixed(1) + '%';
+const r3 = v => v == null ? '--' : Number(v).toFixed(3).replace(/^0/, '');
+function renderTruMedia(ref) {
+  const tm = ref && ref.trumedia;
+  if (!tm || !(tm.levels || []).length) return '';
+  const rows = tm.levels.map(l => `<div class="lvl-row"><span class="lvl-tag">${esc(l.level || '')}</span>
+      <span class="lvl-line">${esc(l.team || '')} · ${esc(l.pa)} PA · ${r3(l.avg)}/${r3(l.obp)}/${r3(l.slg)} · xOPS ${r3(l.xops)} · BB ${pctf(l.bb_pct)} · K ${pctf(l.k_pct)} · EV90 ${l.ev_90 ?? '--'} · max ${l.ev_max ?? '--'} · chase ${pctf(l.chase_pct)} · IZ whiff ${pctf(l.iz_whiff_pct)} · vs BRK ${pctf(l.brk_whiff_pct)} · vs 95+ ${pctf(l.whiff_95_pct)} · GB ${pctf(l.gb_pct)} · pull air ${pctf(l.pull_air_pct)} · barrel ${pctf(l.barrel_pct)}</span></div>`).join('');
+  return `<div class="card"><h2>TruMedia <span style="text-transform:none;letter-spacing:0;font-weight:400;">— ${esc(tm.season)} season through ${esc(fmtDay(tm.through_date))}, internal only</span></h2>${rows}</div>`;
+}
+async function loadScoutingRef(tags) {
+  if (!tags || !tags.mlb_id || typeof window.svHubFetch !== 'function') return null;
+  return window.svHubFetch('mlb_id=' + encodeURIComponent(tags.mlb_id));
+}
+
 function renderLinks(entry, name) {
   const links = [];
   if (entry && entry.player_profile_url) {
@@ -281,13 +352,26 @@ async function load() {
   document.getElementById('playerSub').textContent =
     (anchor.team || '') + (tags.draft_class && tags.draft_class !== 'N/A' ? ' · Draft ' + tags.draft_class : '');
 
-  document.getElementById('content').innerHTML = [
-    renderToday(todayEntries),
-    renderPeak(tags),
-    renderWindows(byWindow, pitcher),
-    renderGameLog(byWindow['7d']),
-    renderLinks(anchor, name),
-  ].join('');
+  const paint = (ref) => {
+    document.getElementById('content').innerHTML = [
+      renderToday(todayEntries),
+      renderPeak(tags),
+      anchor.level === 'Pro' ? renderRanks(ref) : '',
+      renderBaReports(ref),
+      renderTruMedia(ref),
+      renderWindows(byWindow, pitcher),
+      renderGameLog(byWindow['7d']),
+      renderLinks(anchor, name),
+    ].join('');
+  };
+  paint(null);
+  // Pro players: scouting reference arrives from the hub once the gate has a
+  // password; repaint when it lands, and again if the gate unlocks later.
+  if (anchor.level === 'Pro') {
+    const pull = async () => { const ref = await loadScoutingRef(tags); if (ref) paint(ref); };
+    pull();
+    document.addEventListener('sv-hub-unlocked', pull);
+  }
 }
 load();
 </script>

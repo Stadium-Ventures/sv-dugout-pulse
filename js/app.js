@@ -452,6 +452,7 @@ function renderCard(p) {
         <span class="tag">${esc(p.tags.position)}</span>
         ${p.tags.draft_class && p.tags.draft_class !== 'N/A' ? `<span class="tag">${esc(p.tags.draft_class)}</span>` : ''}
         ${peakChipHtml(p)}
+        ${scoutChipHtml(p)}
       </div>
       ${summerSparklineHtml(p)}
       ${summerNoDataHint(p)}
@@ -547,6 +548,33 @@ function peakChipHtml(p) {
   if (!parts.length) return '';
   return `<span class="tag" title="Peak projection — Scout the Statline">Peak: ${parts.join(' · ')}</span>`;
 }
+
+// Scouting reference chips (prospect ranks + Baseball America grade) for Pro
+// players. Served on request by the SV Scouting Hub behind the shared
+// password (js/gate.js) — never committed here. Internal only.
+let scoutSummary = {};
+function scoutChipHtml(p) {
+  const id = p.tags && p.tags.mlb_id;
+  const s = id && scoutSummary[String(id)];
+  if (!s) return '';
+  const parts = [];
+  if (s.pipe_top100) parts.push(`MLB #${esc(s.pipe_top100)}`);
+  if (s.ba_top100) parts.push(`BA #${esc(s.ba_top100)}`);
+  if (s.pipe_org) parts.push(`MLB org #${esc(s.pipe_org)}`);
+  if (s.ba_org) parts.push(`BA org #${esc(s.ba_org)}`);
+  const chips = [];
+  if (parts.length) chips.push(`<span class="tag" title="Current prospect lists (MLB Pipeline / Baseball America)">${parts.join(' · ')}</span>`);
+  if (s.ba_grade != null) chips.push(`<span class="tag" title="Baseball America grade / risk from his latest report (internal only)">BA ${esc(s.ba_grade)}${s.ba_risk ? ' / ' + esc(s.ba_risk) : ''}</span>`);
+  return chips.join('');
+}
+async function loadScoutingSummary() {
+  if (typeof window.svHubFetch !== 'function') return;
+  const ids = [...new Set(allPlayers.filter(p => p.level === 'Pro' && p.tags && p.tags.mlb_id).map(p => String(p.tags.mlb_id)))];
+  if (!ids.length) return;
+  const data = await window.svHubFetch('mlb_ids=' + ids.join(','));
+  if (data && typeof data === 'object') { scoutSummary = data; if (typeof render === 'function' && dataLoaded) render(); }
+}
+document.addEventListener('sv-hub-unlocked', () => { if (dataLoaded) loadScoutingSummary(); });
 
 function levelBadgeClass(level) {
   if (level === 'Pro') return 'badge-pro';
@@ -1939,6 +1967,7 @@ loadMomentum();
     updateTimestamp();
     render();
     loadChangeStrip();  // needs allPlayers — fire-and-forget after first render
+    loadScoutingSummary();  // Pro rank / BA grade chips from the hub — fire-and-forget
   } else {
     document.getElementById('grid').innerHTML = '';
     document.getElementById('empty').textContent = 'Failed to load pulse data — check your connection and refresh.';

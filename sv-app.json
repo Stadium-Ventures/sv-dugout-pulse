@@ -19,7 +19,7 @@
     "Resend (email)"
   ],
   "hosting": "GitHub Pages (static site, rebuilt by scheduled GitHub Actions workflows; repo is public)",
-  "access": "Dashboard is public (unauthenticated GitHub Pages). Repo + Actions require Stadium-Ventures org membership.",
+  "access": "Dashboard sits behind the shared SV team password (js/gate.js; checked server-side by the SV Scouting Hub's /api/scouting-ref, remembered per browser). The static stats data under data/ is still fetchable by URL; the gate keeps casual visitors out, it is not real auth. Repo + Actions require Stadium-Ventures org membership.",
   "links": [
     {
       "label": "Live dashboard",
@@ -53,7 +53,8 @@
       "MLB Stats API (pro), NCAA school-site scraper waterfall (D1Baseball → ESPN → NCAA.com → Sidearm → StatBroadcast → stats.ncaa.org)",
       "Baseball-Reference Register (summer-ball stats; next-day lag is normal)",
       "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)",
-      "MLB Stats API roster entries (person endpoint, rosterEntries hydration) — used by the MiLB watch to drop absence findings for players who are on the IL or rehabbing"
+      "MLB Stats API roster entries (person endpoint, rosterEntries hydration) — used by the MiLB watch to drop absence findings for players who are on the IL or rehabbing",
+      "SV Scouting Hub /api/scouting-ref (on request, per browser, bearer = shared password): MLB Pipeline + Baseball America prospect ranks, Baseball America grades/reports, TruMedia lines for Pro players. Internal only, never committed to this repo."
     ],
     "outputs": [
       "Static dashboard + player pages on GitHub Pages",
@@ -121,7 +122,7 @@
     "NCAA/summer scrapes depend on a rotating proxy pool (SB_PROXY_URL + SB_HTTP_PROXY, _2, _3 secrets) to get past Cloudflare/Incapsula — proxy exhaustion shows up as 403s and blocked-client alerts. 👤 Mike DeCicco",
     "HS_STATS_URL is referenced in a workflow but not set as a repo secret — the HS stats path is dormant until it's set. 👤 Mike DeCicco"
   ],
-  "notes": "Ownership: this entry previously listed Tom Trudeau as owner/builder/maintainer. The repo started on Tom's personal account (thomasmtrudeau-cell) and moved into the org ~2026-05, but Mike DeCicco built the app and does all maintenance — owner field left as Tom pending confirmation between Tom and Mike. Scope-rule question RESOLVED 2026-07-28 (Tom): quiet-streak alerts are agent-facing info, not a system failure — moved to #dugout-pulse with the bar raised from 5 to 8 quiet days (re-alert cooldown 7 → 10 days).",
+  "notes": "Ownership: this entry previously listed Tom Trudeau as owner/builder/maintainer. The repo started on Tom's personal account (thomasmtrudeau-cell) and moved into the org ~2026-05, but Mike DeCicco built the app and does all maintenance — owner field left as Tom pending confirmation between Tom and Mike. Scope-rule question RESOLVED 2026-07-28 (Tom): quiet-streak alerts are agent-facing info, not a system failure — moved to #dugout-pulse with the bar raised from 5 to 8 quiet days (re-alert cooldown 7 → 10 days). 2026-09-23: password gate + scouting reference panels (BA reports / ranks / TruMedia) on Pro player pages and cards, served live by the hub API; nothing licensed is committed here.",
   "runbook": [
     "No server — Python scripts + GitHub Actions rebuild a static site on GitHub Pages; deploy = push to main",
     "Clone Stadium-Ventures/sv-dugout-pulse, pip install -r requirements.txt (Python 3.11), run `python main.py` locally to test a pulse pass",
