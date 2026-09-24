@@ -46,6 +46,7 @@
     var now = opts.now || function () { return Math.floor(Date.now() / 1000); };
     var token = '';          // in memory only
     var claims = null;
+    var denied = false;      // Heartbeat refused a token this page session
     var listeners = [];
 
     function notify() {
@@ -84,6 +85,11 @@
         if (had) notify();
       },
       onChange: function (fn) { listeners.push(fn); },
+      // True once a call was refused (401/403). The page then stops the
+      // automatic One Tap prompt: with auto_select a refused token would
+      // otherwise sign straight back in, be refused again, and loop. The
+      // visible button still works.
+      wasDenied: function () { return denied; },
       // GET with the ID token as Bearer. Never sends a credential-less request.
       //   {state: 'ok', response}      2xx
       //   {state: 'signed-out'}        no usable token — no request made
@@ -98,6 +104,7 @@
           .then(function () { return f(url, { headers: { Authorization: 'Bearer ' + t } }); })
           .then(function (resp) {
             if (resp.status === 401 || resp.status === 403) {
+              denied = true;
               api.clear();
               return { state: 'denied', status: resp.status };
             }
@@ -146,7 +153,7 @@
         if (el && !el.hasChildNodes()) {
           id.renderButton(el, { type: 'standard', size: 'small', text: 'signin_with', theme: 'outline' });
         }
-        id.prompt();
+        if (!auth.wasDenied()) id.prompt();
       });
     };
     // Silent attempt on load; the visible button is rendered by the page.

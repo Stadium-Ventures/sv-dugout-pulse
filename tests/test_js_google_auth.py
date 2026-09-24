@@ -30,6 +30,9 @@ def test_page_wires_heartbeat_through_the_auth_helper():
     assert "if (!isClient || !heartbeatAvailable) return '';" in app
     assert 'id="hbSignIn"' in index and 'body.hb-signed-out [data-filter="heartbeat"]' in index
     assert index.index("js/sv-google-auth.js") < index.index("js/app.js")
+    # After a refusal, no automatic One Tap prompt (auto_select would loop).
+    assert "if (!auth.wasDenied()) id.prompt();" in open(
+        os.path.join(root, "js", "sv-google-auth.js"), encoding="utf-8").read()
     # Token in memory only.
     helper = open(os.path.join(root, "js", "sv-google-auth.js"), encoding="utf-8").read()
     code = "\n".join(l for l in helper.splitlines() if not l.strip().startswith("//"))
