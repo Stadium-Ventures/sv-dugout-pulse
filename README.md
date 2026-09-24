@@ -166,10 +166,26 @@ These are configured in GitHub → Settings → Secrets and variables → Action
 
 | Secret | Purpose |
 |--------|---------|
-| `ROSTER_URL` | Google Sheet CSV URL |
+| `ROSTER_URL` | Google Sheet CSV URL (master roster) — **no default in code** |
+| `RECRUITS_URL` | Google Sheet CSV URL (recruits) — **no default in code**; unset = no recruits |
 | `SLACK_WEBHOOK_URL` | Slack incoming webhook |
 
 **Do not share these publicly.** If compromised, regenerate them.
+
+## Privacy — this repo and its Pages site are PUBLIC
+
+Everything committed under `data/` is served by GitHub Pages and readable by anyone
+(the dashboard password gate is not real auth). So:
+
+- `data/roster_cache.json` is written through an **allowlist**
+  (`ROSTER_CACHE_FIELDS` in `src/config.py`): name, MLB id, team/level/affiliate,
+  position, draft class, tier, status, client flag. Nothing else can reach it.
+- DOB and Age are **not read** from the sheet at all (they had no consumer).
+- Published-sheet links live only in Actions secrets, never in source.
+- Never add contact or personal data (DOB, age, phone, email, address, parents,
+  social handles, home state) to anything under `data/`.
+- Older commits still contain DOB/age in `data/roster_cache.json` history; purging
+  that history is a separate human decision (see the cutover kit).
 
 ## Manual Actions
 

@@ -22,6 +22,7 @@ from .config import (
     INCLUDED_LEVELS,
     MLB_CLUB_NAMES,
     RECRUITS_URL,
+    ROSTER_CACHE_FIELDS,
     ROSTER_CACHE_PATH,
     ROSTER_URL,
 )
@@ -35,7 +36,10 @@ def fetch_roster(url: Optional[str] = None) -> list[dict]:
     (keyed by the original Sheet column headers).
     """
     url = (url or ROSTER_URL).strip()
-    logger.info("Fetching roster from %s", url)
+    if not url:
+        raise ValueError("Roster CSV URL not configured (ROSTER_URL / RECRUITS_URL secret)")
+    # Never log the URL itself — a published-CSV link is a credential-equivalent.
+    logger.info("Fetching roster CSV")
 
     try:
         resp = requests.get(url, timeout=30)
@@ -178,6 +182,11 @@ def get_recruits(url: Optional[str] = None) -> list[dict]:
     Returns recruits (is_client=False).
     """
     url = url or RECRUITS_URL
+    if not url:
+        # No default any more — without the secret, skip recruits rather than
+        # letting fetch_roster("") fall through to the CLIENT roster URL.
+        logger.warning("RECRUITS_URL not configured — continuing without recruits")
+        return []
     try:
         raw_rows = fetch_roster(url)
         players = filter_roster(raw_rows)
@@ -193,14 +202,22 @@ def get_recruits(url: Optional[str] = None) -> list[dict]:
 _ROSTER_CACHE_MAX_AGE_H = 24
 
 
+def cache_safe_player(player: dict) -> dict:
+    """The allowlisted subset of a player dict that may be written to the
+    committed (public) roster cache — see config.ROSTER_CACHE_FIELDS."""
+    return {k: player[k] for k in ROSTER_CACHE_FIELDS if k in player}
+
+
 def _save_roster_cache(players: list[dict]):
-    """Persist roster to disk so we can fall back if Sheets is unreachable."""
+    """Persist roster to disk so we can fall back if Sheets is unreachable.
+
+    Only allowlisted fields are written — the file is public."""
     try:
         dir_path = os.path.dirname(ROSTER_CACHE_PATH)
         os.makedirs(dir_path, exist_ok=True)
         payload = {
             "cached_at": datetime.now(timezone.utc).isoformat(),
-            "players": players,
+            "players": [cache_safe_player(p) for p in players],
         }
         fd, tmp = tempfile.mkstemp(dir=dir_path, suffix=".tmp")
         try:
