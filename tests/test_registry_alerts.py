@@ -138,3 +138,18 @@ def test_dual_run_count_line_is_counts_only(monkeypatch, caplog, posts, fake_reg
     assert "'sheet_only': 1" in line
     assert "Only On Sheet" not in line and "Synthetic" not in line
     assert posts == []
+
+
+def test_registry_retired_rows_are_counted_not_named_in_the_public_log(caplog, fake_registry):
+    with caplog.at_level("INFO"):
+        rm.get_registry_clients()
+    assert "Synthetic Retired" not in caplog.text
+    assert "Synthetic Sheet Retired" not in caplog.text
+    assert "2 retired" in caplog.text
+
+
+def test_sheet_retired_rows_are_still_named_as_today(caplog):
+    with caplog.at_level("INFO"):
+        rm.filter_roster([{"Player Name": "Sheet Retired Synthetic", "Level": "Pro", "Org": "X",
+                           "Status": "Retired", "Tier": "2"}])
+    assert "Excluding Sheet Retired Synthetic" in caplog.text

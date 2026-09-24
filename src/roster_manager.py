@@ -156,7 +156,10 @@ def filter_roster(rows: list[dict]) -> list[dict]:
         org = (raw.get("Org") or "").strip().lower()
         if status == "retired" or org == "retired":
             excluded_retired += 1
-            logger.info("Excluding %s — marked Retired on the sheet", player.get("player_name"))
+            # A registry-sourced row (it has a slug) may be someone who is no
+            # longer a client, and this log is public: count it, never name it.
+            if not player.get("slug"):
+                logger.info("Excluding %s — marked Retired on the sheet", player.get("player_name"))
             continue
         if player.get("mlb_id") in EXCLUDED_MLB_IDS:
             excluded_id += 1
