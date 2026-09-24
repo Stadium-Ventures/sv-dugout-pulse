@@ -19,7 +19,7 @@
     "Resend (email)"
   ],
   "hosting": "GitHub Pages (static site, rebuilt by scheduled GitHub Actions workflows; repo is public)",
-  "access": "Dashboard sits behind the shared SV team password (js/gate.js; checked server-side by the SV Scouting Hub's /api/scouting-ref, remembered per browser). The static stats data under data/ is still fetchable by URL; the gate keeps casual visitors out, it is not real auth. Repo + Actions require Stadium-Ventures org membership.",
+  "access": "Dashboard sits behind the shared SV team password (js/gate.js; checked server-side by the SV Scouting Hub's /api/scouting-ref, remembered per browser). The static stats data under data/ is still fetchable by URL; the gate keeps casual visitors out, it is not real auth. Repo + Actions require Stadium-Ventures org membership. The Heartbeat hearts on cards additionally need the viewer to sign in with their @stadium-ventures.com Google account (js/sv-google-auth.js; ID token sent as Bearer to sv-heartbeat, kept in memory only); signed out, the hearts and the heart filter are hidden behind a sign-in prompt.",
   "links": [
     {
       "label": "Live dashboard",
