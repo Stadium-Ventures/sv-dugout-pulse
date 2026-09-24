@@ -215,13 +215,19 @@ function renderGameLog(e7) {
   return `<div class="card"><h2>Game log (last 7 days)</h2>${rows}</div>`;
 }
 
-// Peak projection (Scout the Statline, via the roster sheet) — Pro players
-// with pro stats only; renders nothing for everyone else.
-function renderPeak(tags) {
+// Peak projection (Scout the Statline). Pro players with pro stats only;
+// renders nothing for everyone else. Values come from the hub detail (`peak`)
+// once it arrives, else from the roster sheet copy in tags (js/gate.js
+// svPeakValues has the rule).
+function renderPeak(tags, ref) {
+  const hubPeak = ref && 'peak' in ref ? ref.peak : undefined;
+  const v = typeof window.svPeakValues === 'function'
+    ? window.svPeakValues(tags, hubPeak)
+    : { war: tags.peak_war, wrc_plus: tags.peak_wrc_plus, era20: tags.peak_era_20tbf };
   const cells = [];
-  if (tags.peak_war) cells.push(cell('Peak WAR', tags.peak_war));
-  if (tags.peak_wrc_plus) cells.push(cell('Peak wRC+', tags.peak_wrc_plus));
-  if (tags.peak_era_20tbf) cells.push(cell('Peak ERA / 20 TBF', tags.peak_era_20tbf));
+  if (v.war) cells.push(cell('Peak WAR', v.war));
+  if (v.wrc_plus) cells.push(cell('Peak wRC+', v.wrc_plus));
+  if (v.era20) cells.push(cell('Peak ERA / 20 TBF', v.era20));
   if (!cells.length) return '';
   return `<div class="card"><h2>Peak projection <span style="text-transform:none;letter-spacing:0;font-weight:400;">— Scout the Statline</span></h2>
     <div class="stat-grid">${cells.join('')}</div></div>`;
@@ -355,7 +361,7 @@ async function load() {
   const paint = (ref) => {
     document.getElementById('content').innerHTML = [
       renderToday(todayEntries),
-      renderPeak(tags),
+      renderPeak(tags, ref),
       anchor.level === 'Pro' ? renderRanks(ref) : '',
       renderBaReports(ref),
       renderTruMedia(ref),
