@@ -79,6 +79,9 @@ jobs:
         env:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          ROSTER_SOURCE: ${{ vars.ROSTER_SOURCE || 'sheet' }}
+          SV_REGISTRY_URL: ${{ vars.SV_REGISTRY_URL || 'https://sv-registry.vercel.app' }}
+          SV_REGISTRY_ROSTER_TOKEN: ${{ secrets.SV_REGISTRY_ROSTER_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           # Roster-move fast path → sv-registry repository_dispatch (fire-and-forget;
           # a missing token just falls back to sv-registry's hourly tripwire).
@@ -100,7 +103,9 @@ jobs:
         run: |
           set -eo pipefail
           if [ -z "$SLACK_WEBHOOK_URL" ]; then echo "⚠️ SLACK_WEBHOOK_URL not set — alerts will be skipped"; fi
-          if [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
+          if [ "$ROSTER_SOURCE" = "registry" ]; then
+            if [ -z "$SV_REGISTRY_ROSTER_TOKEN" ]; then echo "ERROR: ROSTER_SOURCE=registry but SV_REGISTRY_ROSTER_TOKEN not set"; exit 1; fi
+          elif [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
           python -c "import src.config; import src.roster_manager; import src.stats_engine; import src.performance_analyzer; import src.alerts; print('All imports OK')"
           python main.py 2>&1 | tee /dev/stderr
 
@@ -109,6 +114,9 @@ jobs:
         env:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          ROSTER_SOURCE: ${{ vars.ROSTER_SOURCE || 'sheet' }}
+          SV_REGISTRY_URL: ${{ vars.SV_REGISTRY_URL || 'https://sv-registry.vercel.app' }}
+          SV_REGISTRY_ROSTER_TOKEN: ${{ secrets.SV_REGISTRY_ROSTER_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           # Roster-move fast path → sv-registry repository_dispatch (fire-and-forget;
           # a missing token just falls back to sv-registry's hourly tripwire).
@@ -121,7 +129,9 @@ jobs:
           SB_HTTP_PROXY_3: ${{ secrets.SB_HTTP_PROXY_3 }}
         run: |
           set -eo pipefail
-          if [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
+          if [ "$ROSTER_SOURCE" = "registry" ]; then
+            if [ -z "$SV_REGISTRY_ROSTER_TOKEN" ]; then echo "ERROR: ROSTER_SOURCE=registry but SV_REGISTRY_ROSTER_TOKEN not set"; exit 1; fi
+          elif [ -z "$ROSTER_URL" ]; then echo "ERROR: ROSTER_URL not set"; exit 1; fi
           python main.py --backfill 2>&1 | tee /dev/stderr
 
       - name: Run historical aggregation
@@ -129,6 +139,9 @@ jobs:
         env:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          ROSTER_SOURCE: ${{ vars.ROSTER_SOURCE || 'sheet' }}
+          SV_REGISTRY_URL: ${{ vars.SV_REGISTRY_URL || 'https://sv-registry.vercel.app' }}
+          SV_REGISTRY_ROSTER_TOKEN: ${{ secrets.SV_REGISTRY_ROSTER_TOKEN }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
           SB_PROXY_URL: ${{ secrets.SB_PROXY_URL }}

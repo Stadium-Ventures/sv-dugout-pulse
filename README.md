@@ -172,6 +172,43 @@ These are configured in GitHub → Settings → Secrets and variables → Action
 
 **Do not share these publicly.** If compromised, regenerate them.
 
+## Roster source (sheet → SV Registry)
+
+Clients come from `ROSTER_SOURCE` (repo Actions **variable**):
+`sheet` (default when unset — the master sheet's published CSV, `ROSTER_URL`) or
+`registry` — the SV Registry's authenticated projection
+(`GET https://sv-registry.vercel.app/api/roster-projection`, Bearer token from the
+Actions **secret** `SV_REGISTRY_ROSTER_TOKEN`, scope `read:roster-projection`).
+Rollback is "set `ROSTER_SOURCE` back to `sheet`". Recruits (non-clients) always
+come from their own sheet (`RECRUITS_URL`) and are never pruned against the
+projection.
+
+- Registry rows are mapped onto the sheet's headers, so everything downstream is
+  unchanged. Canon position labels map to this app's routing: RHP/LHP/SP/RP/P/…
+  → Pitcher, "RHP/OF"-style or Two-Way → Two-Way, everything else → Hitter.
+- Joins: each player carries the registry `slug` and MLB id.
+- Fail closed: a missing token, 401/403, a malformed or too-small (< 40 rows)
+  response, or a response that does not assert `contains_no_contact_data` is an
+  error. There is **no fallback to the sheet**; the run uses the last good
+  *registry* cache (< 24 h, prunes disabled) or aborts.
+- Peak WAR / wRC+ / ERA have no canon source and are not in the projection; on
+  the registry their chips and cards simply do not render.
+- Dual run: with `ROSTER_SOURCE=sheet` and the token set, each run logs difference
+  **counts** only (these Actions logs are public). Names: run
+  `python -m scripts.roster_dual_run` locally.
+
+**Open decision (Tom) — the token is BLOCKED until it is made.** This repo and its
+Pages site are public, and the registry's policy ("no public anything", enforced by
+its roster-projection selftest) forbids assigning a service token to a public repo.
+Either:
+1. make the repo private (check the plan: Pages on a private repo may still be
+   publicly served unless it is private Pages), or
+2. keep it public and never commit or publish roster-derived fields beyond what the
+   dashboard already shows — the cache allowlist below enforces that — with the
+   token held only as an Actions secret, and record that exception in sv-registry.
+
+The code works unchanged either way; only where the token may live differs.
+
 ## Privacy — this repo and its Pages site are PUBLIC
 
 Everything committed under `data/` is served by GitHub Pages and readable by anyone

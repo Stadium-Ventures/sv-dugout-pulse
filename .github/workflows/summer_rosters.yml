@@ -50,6 +50,9 @@ jobs:
         env:
           ROSTER_URL: ${{ secrets.ROSTER_URL }}
           RECRUITS_URL: ${{ secrets.RECRUITS_URL }}
+          ROSTER_SOURCE: ${{ vars.ROSTER_SOURCE || 'sheet' }}
+          SV_REGISTRY_URL: ${{ vars.SV_REGISTRY_URL || 'https://sv-registry.vercel.app' }}
+          SV_REGISTRY_ROSTER_TOKEN: ${{ secrets.SV_REGISTRY_ROSTER_TOKEN }}
           HS_STATS_URL: ${{ secrets.HS_STATS_URL }}
           # Pointstreak (Northwoods backend) is Incapsula-gated; reuse the
           # SB residential proxy pool to punch through.

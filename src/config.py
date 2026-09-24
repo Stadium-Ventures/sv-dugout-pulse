@@ -13,8 +13,31 @@ import os
 # ---------------------------------------------------------------------------
 ROSTER_URL = os.environ.get("ROSTER_URL", "")
 
-# Recruits/Following sheet — players we're tracking but not yet clients
+# Recruits/Following sheet — players we're tracking but not yet clients.
+# Recruits are NOT clients and are not in the registry projection: this list
+# always comes from its own sheet, whatever ROSTER_SOURCE says.
 RECRUITS_URL = os.environ.get("RECRUITS_URL", "")
+
+# ---------------------------------------------------------------------------
+# Client roster source switch (read at call time so tests / rollbacks work):
+#   ROSTER_SOURCE=sheet     (default) master sheet published CSV (ROSTER_URL)
+#   ROSTER_SOURCE=registry  sv-registry authenticated roster projection,
+#                           GET $SV_REGISTRY_URL/api/roster-projection with the
+#                           svt_ token in $SV_REGISTRY_ROSTER_TOKEN as Bearer.
+# Rollback = set ROSTER_SOURCE back to "sheet". There is no automatic
+# registry→sheet fallback.
+# ---------------------------------------------------------------------------
+DEFAULT_REGISTRY_URL = "https://sv-registry.vercel.app"
+REGISTRY_PROJECTION_PATH = "/api/roster-projection"
+REGISTRY_TOKEN_ENV = "SV_REGISTRY_ROSTER_TOKEN"
+REGISTRY_MIN_ROWS = 40  # fewer rows than this = truncated/broken response → fail closed
+
+# Canon position labels (sv-registry identity.position) → this app's
+# Pitcher / Hitter / Two-Way routing (stats_engine._is_pitcher_pos etc.).
+PITCHER_POSITION_LABELS = {
+    "p", "pitcher", "rhp", "lhp", "sp", "rp", "cl", "rhsp", "lhsp", "rhrp", "lhrp",
+}
+TWO_WAY_POSITION_LABELS = {"two-way", "two way", "twp", "2-way"}
 
 # ---------------------------------------------------------------------------
 # Column name mapping (Sheet header -> internal key)

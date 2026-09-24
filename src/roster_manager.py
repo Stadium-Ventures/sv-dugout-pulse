@@ -18,13 +18,19 @@ import requests
 
 from .config import (
     COLUMN_MAP,
+    DEFAULT_REGISTRY_URL,
     EXCLUDED_MLB_IDS,
     INCLUDED_LEVELS,
     MLB_CLUB_NAMES,
+    PITCHER_POSITION_LABELS,
     RECRUITS_URL,
+    REGISTRY_MIN_ROWS,
+    REGISTRY_PROJECTION_PATH,
+    REGISTRY_TOKEN_ENV,
     ROSTER_CACHE_FIELDS,
     ROSTER_CACHE_PATH,
     ROSTER_URL,
+    TWO_WAY_POSITION_LABELS,
 )
 
 logger = logging.getLogger(__name__)
@@ -78,6 +84,9 @@ def normalize_player(raw: dict) -> dict:
     player = {}
     for sheet_col, internal_key in COLUMN_MAP.items():
         player[internal_key] = raw.get(sheet_col, "").strip()
+    # Registry slug (stable join key). Present on registry-sourced rows and
+    # the registry's sheet-shaped CSV; blank on the legacy sheet.
+    player["slug"] = str(raw.get("slug") or "").strip()
 
     # Coerce roster_priority to int (default 99 if missing/invalid)
     try:
@@ -164,11 +173,146 @@ def filter_roster(rows: list[dict]) -> list[dict]:
     return filtered
 
 
+class RegistryRosterError(ValueError):
+    """The registry roster read failed or looked implausible — fail closed."""
+
+
+def roster_source() -> str:
+    """Client roster source: "sheet" (default) or "registry" (ROSTER_SOURCE)."""
+    src = (os.environ.get("ROSTER_SOURCE") or "sheet").strip().lower()
+    if src not in ("sheet", "registry"):
+        raise RegistryRosterError(f"ROSTER_SOURCE must be 'sheet' or 'registry', got {src!r}")
+    return src
+
+
+def position_role(label) -> str:
+    """Canon position label (RHP, SS, OF, SP, Two-Way, "RHP/OF", …) → this
+    app's routing vocabulary: "Pitcher", "Hitter" or "Two-Way". Blank stays
+    blank (callers already default a blank position to Hitter)."""
+    text = str(label or "").strip()
+    if not text:
+        return ""
+    if text.lower() in TWO_WAY_POSITION_LABELS:
+        return "Two-Way"
+    parts = [p.strip().lower() for p in text.replace(",", "/").split("/") if p.strip()]
+    pitch = [p in PITCHER_POSITION_LABELS for p in parts]
+    if all(pitch):
+        return "Pitcher"
+    if any(pitch):
+        return "Two-Way"          # e.g. "RHP/OF"
+    return "Hitter"
+
+
+def fetch_registry_rows(session=None) -> tuple[dict, list[dict]]:
+    """GET the sv-registry roster projection → (_meta, rows). Fails closed.
+
+    Raises RegistryRosterError on: no token (no request is made), 401, 403
+    (token not scoped read:roster-projection — a re-mint, not a retry), any
+    other HTTP error, a body that is not the projection, a body that does not
+    assert contains_no_contact_data, a row without slug/name, duplicate slugs,
+    one MLB id on two slugs, or fewer than REGISTRY_MIN_ROWS rows.
+    """
+    token = (os.environ.get(REGISTRY_TOKEN_ENV) or "").strip()
+    if not token:
+        raise RegistryRosterError(f"{REGISTRY_TOKEN_ENV} is not set — ROSTER_SOURCE=registry needs the registry token")
+    base = (os.environ.get("SV_REGISTRY_URL") or DEFAULT_REGISTRY_URL).rstrip("/")
+    http = session or requests
+    try:
+        resp = http.get(base + REGISTRY_PROJECTION_PATH, timeout=30,
+                        headers={"Authorization": f"Bearer {token}", "Accept": "application/json"})
+    except requests.RequestException as exc:
+        raise RegistryRosterError(f"registry roster projection unreachable: {exc}") from exc
+    if resp.status_code == 401:
+        raise RegistryRosterError(f"registry roster projection returned 401 — {REGISTRY_TOKEN_ENV} is wrong or revoked")
+    if resp.status_code == 403:
+        raise RegistryRosterError("registry roster projection returned 403 — token not scoped "
+                                  "read:roster-projection (re-mint, don't retry)")
+    if resp.status_code != 200:
+        raise RegistryRosterError(f"registry roster projection returned HTTP {resp.status_code}")
+    try:
+        body = resp.json()
+    except ValueError as exc:
+        raise RegistryRosterError("registry roster projection did not return JSON") from exc
+    meta = body.get("_meta") if isinstance(body, dict) else None
+    rows = body.get("rows") if isinstance(body, dict) else None
+    if not isinstance(meta, dict) or not isinstance(rows, list):
+        raise RegistryRosterError("registry response is not a roster projection ({_meta, rows} missing)")
+    if meta.get("contains_no_contact_data") is not True:
+        raise RegistryRosterError("registry projection does not assert contains_no_contact_data — refusing it")
+    slugs: set[str] = set()
+    id_to_slug: dict[int, str] = {}
+    for r in rows:
+        slug = str((r or {}).get("slug") or "").strip() if isinstance(r, dict) else ""
+        if not slug or not str(r.get("name") or "").strip():
+            raise RegistryRosterError("registry projection has a row without slug/name")
+        if slug in slugs:
+            raise RegistryRosterError(f"registry projection repeats slug {slug!r}")
+        slugs.add(slug)
+        if r.get("mlb_id") not in (None, ""):
+            try:
+                mid = int(r["mlb_id"])
+            except (TypeError, ValueError):
+                continue
+            if mid in id_to_slug:
+                raise RegistryRosterError(f"registry projection maps MLB id {mid} to two slugs")
+            id_to_slug[mid] = slug
+    if len(rows) < REGISTRY_MIN_ROWS:
+        raise RegistryRosterError(f"registry roster projection returned only {len(rows)} rows "
+                                  f"(< {REGISTRY_MIN_ROWS}) — refusing a possibly-truncated roster")
+    logger.info("Registry roster projection: %d rows, generated_at=%s", len(rows), meta.get("generated_at"))
+    return meta, rows
+
+
+def registry_row_to_sheet_row(row: dict) -> dict:
+    """One projection row → a sheet-shaped raw row (the sheet's own headers),
+    so filter_roster / normalize_player / every downstream consumer is
+    unchanged. ONLY the fields this app uses are copied: lead agent, Slack
+    channel, agency, visits, home state, high school, bats/throws, social
+    handles and nicknames never enter a player dict (and so can never reach
+    the public cache or dashboard). Peaks are absent from the projection
+    (no canon source) and stay blank, which hides their chips/cards."""
+    tier = str(row.get("tier") or "").strip().lower()
+    if tier == "pro":
+        level = "Pro"
+    else:
+        level = str(row.get("sheet_level") or row.get("level") or "").strip()
+    retired = (str(row.get("career_status") or "").strip().lower() == "retired"
+               or str(row.get("sheet_status") or "").strip().lower() == "retired")
+    status = "Retired" if retired else str(row.get("sheet_status") or "").strip()
+    mlb_id = row.get("mlb_id")
+    return {
+        "slug": str(row.get("slug") or "").strip(),
+        "Player Name": str(row.get("name") or "").strip(),
+        "MLB_ID": "" if mlb_id in (None, "") else str(mlb_id),
+        "Org": str(row.get("org") or "").strip(),
+        "Level": level,
+        "Position": position_role(row.get("position")),
+        "Primary Position": str(row.get("position") or "").strip(),
+        "Draft Class": str(row.get("draft_class") or "").strip(),
+        "Affiliate": str(row.get("affiliate") or "").strip(),
+        "Tier": "" if row.get("priority_tier") in (None, "") else str(row.get("priority_tier")),
+        "Status": status,
+        "Is Coach": "Yes" if (row.get("is_coach") or tier == "coach") else "",
+    }
+
+
+def get_registry_clients(session=None) -> list[dict]:
+    """Clients from the registry projection, filtered exactly like the sheet
+    (Level Pro/NCAA/HS, no coaches, no retired, EXCLUDED_MLB_IDS)."""
+    _meta, rows = fetch_registry_rows(session)
+    players = filter_roster([registry_row_to_sheet_row(r) for r in rows])
+    for p in players:
+        p["is_client"] = True
+    return players
+
+
 def get_active_roster(url: Optional[str] = None) -> list[dict]:
     """
     Convenience wrapper: fetch + filter in one call.
-    Returns clients (is_client=True).
+    Returns clients (is_client=True) from ROSTER_SOURCE (sheet by default).
     """
+    if url is None and roster_source() == "registry":
+        return get_registry_clients()
     raw_rows = fetch_roster(url)
     players = filter_roster(raw_rows)
     for p in players:
@@ -217,6 +361,7 @@ def _save_roster_cache(players: list[dict]):
         os.makedirs(dir_path, exist_ok=True)
         payload = {
             "cached_at": datetime.now(timezone.utc).isoformat(),
+            "source": roster_source(),
             "players": [cache_safe_player(p) for p in players],
         }
         fd, tmp = tempfile.mkstemp(dir=dir_path, suffix=".tmp")
@@ -295,6 +440,12 @@ def _load_roster_cache() -> list[dict] | None:
         age_h = (datetime.now(timezone.utc) - cached_at).total_seconds() / 3600
         if age_h > _ROSTER_CACHE_MAX_AGE_H:
             logger.warning("Roster cache is %.1f h old — too stale to use", age_h)
+            return None
+        # On the registry, never serve a cache that the SHEET wrote — that
+        # would be a silent sheet fallback by another route.
+        if roster_source() == "registry" and data.get("source") != "registry":
+            logger.error("Roster cache was written from source %r — not usable on ROSTER_SOURCE=registry",
+                         data.get("source", "sheet"))
             return None
         players = data.get("players", [])
         players = [p for p in players if p.get("mlb_id") not in EXCLUDED_MLB_IDS]
@@ -429,14 +580,72 @@ def get_all_players() -> list[dict]:
             raise ValueError(
                 f"implausible roster: fetched {len(players)} players vs {prior} cached"
             )
+        if roster_source() == "sheet":
+            _log_dual_run(clients)
         _enrich_pro_team_from_api(players)
         _save_roster_cache(players)
         _roster_fetch_fresh = True
         return players
-    except Exception:
+    except Exception as exc:
+        if isinstance(exc, RegistryRosterError):
+            # Loud in the Actions log. The registry path never falls back to
+            # the sheet; the last good REGISTRY cache (< 24 h) keeps the
+            # dashboard up with destructive steps disabled (roster_is_fresh
+            # stays False), and an empty result aborts the run.
+            print(f"::error::Registry roster read failed: {exc}")
         logger.exception("Roster fetch failed or implausible — trying cached roster")
         cached = _load_roster_cache()
         if cached:
             return cached
         logger.error("No roster available (fetch failed, no usable cache)")
         return []
+
+
+# ---------------------------------------------------------------------------
+# Dual run (ROSTER_SOURCE=sheet + token set): compare, never act.
+# ---------------------------------------------------------------------------
+
+def dual_run_diff(sheet_clients: list[dict], registry_clients: list[dict]) -> dict:
+    """Compare the sheet's clients with the registry's, matched by MLB id
+    first, then by exact (case-insensitive) name. Returns lists of names per
+    category — for LOCAL review only (scripts/roster_dual_run.py); the CI log
+    gets counts only, because this repo's Actions logs are public."""
+    reg_by_id = {p["mlb_id"]: p for p in registry_clients if p.get("mlb_id")}
+    reg_by_name = {p["player_name"].strip().lower(): p for p in registry_clients}
+    matched_reg: set[str] = set()
+    out = {k: [] for k in ("sheet_only", "registry_only", "name_differs", "level_differs",
+                           "role_differs", "org_differs")}
+    for s in sheet_clients:
+        r = (reg_by_id.get(s.get("mlb_id")) if s.get("mlb_id") else None) \
+            or reg_by_name.get(s["player_name"].strip().lower())
+        if r is None:
+            out["sheet_only"].append(s["player_name"])
+            continue
+        matched_reg.add(r.get("slug") or r["player_name"])
+        if r["player_name"] != s["player_name"]:
+            out["name_differs"].append(f"{s['player_name']} → {r['player_name']}")
+        if r.get("level") != s.get("level"):
+            out["level_differs"].append(f"{s['player_name']}: {s.get('level')} → {r.get('level')}")
+        s_role = s.get("position") or "Hitter"
+        r_role = r.get("position") or "Hitter"
+        if s_role != r_role:
+            out["role_differs"].append(f"{s['player_name']}: {s_role} → {r_role}")
+        if (s.get("team") or "").strip().lower() != (r.get("team") or "").strip().lower():
+            out["org_differs"].append(f"{s['player_name']}: {s.get('team')!r} → {r.get('team')!r}")
+    for r in registry_clients:
+        if (r.get("slug") or r["player_name"]) not in matched_reg:
+            out["registry_only"].append(r["player_name"])
+    return out
+
+
+def _log_dual_run(sheet_clients: list[dict]) -> None:
+    if not (os.environ.get(REGISTRY_TOKEN_ENV) or "").strip():
+        return
+    try:
+        diff = dual_run_diff(sheet_clients, get_registry_clients())
+    except Exception as exc:  # observational only — never affects the run
+        logger.warning("[dual-run] registry read failed: %s", exc)
+        return
+    counts = {k: len(v) for k, v in diff.items()}
+    logger.info("[dual-run] sheet %d vs registry clients — differences (counts only; "
+                "details: python -m scripts.roster_dual_run): %s", len(sheet_clients), counts)
