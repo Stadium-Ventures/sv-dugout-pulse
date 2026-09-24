@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T17:53:50.534506+00:00",
+  "generated_at": "2026-09-24T20:28:21.182108+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 294,
       "team_count": 10,
       "error": null,
-      "duration_ms": 1248,
+      "duration_ms": 1550,
       "sample_players": [
         "Adam Haight",
         "Blaine Brown",
@@ -22,7 +22,7 @@
       "player_count": 231,
       "team_count": 8,
       "error": null,
-      "duration_ms": 894,
+      "duration_ms": 1086,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 159,
       "team_count": 7,
       "error": null,
-      "duration_ms": 804,
+      "duration_ms": 932,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -52,7 +52,7 @@
       "player_count": 646,
       "team_count": 13,
       "error": null,
-      "duration_ms": 54810,
+      "duration_ms": 59413,
       "sample_players": [
         "TJ Schmalzle",
         "Aaron Forgues",
@@ -67,7 +67,7 @@
       "player_count": 381,
       "team_count": 8,
       "error": null,
-      "duration_ms": 52348,
+      "duration_ms": 56767,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -79,16 +79,16 @@
     {
       "league": "PGCBL",
       "status": "ok",
-      "player_count": 125,
+      "player_count": 373,
       "team_count": 16,
       "error": null,
-      "duration_ms": 120001,
+      "duration_ms": 67312,
       "sample_players": [
-        "D Abaga",
-        "D Abbate",
-        "L Abell",
-        "K Ackert",
-        "T Adamo"
+        "D Denten",
+        "M Helmer Jr.",
+        "X Johnson",
+        "A Holub",
+        "C Delaney"
       ]
     },
     {
@@ -97,7 +97,7 @@
       "player_count": 465,
       "team_count": 7,
       "error": null,
-      "duration_ms": 32819,
+      "duration_ms": 30533,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -112,7 +112,7 @@
       "player_count": 1040,
       "team_count": 20,
       "error": null,
-      "duration_ms": 118788,
+      "duration_ms": 127255,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -136,7 +136,7 @@
       "player_count": 481,
       "team_count": 15,
       "error": null,
-      "duration_ms": 7142,
+      "duration_ms": 5684,
       "sample_players": [
         "Abdriel Figueroa",
         "AJ Malzone",
@@ -169,12 +169,12 @@
     "matched": 0,
     "blocked": 3,
     "errors": 0,
-    "skipped": 21
+    "skipped": 19
   },
   "ncaa_clients_total": 35,
-  "ncaa_clients_matched": 6,
-  "ncaa_clients_possible": 0,
-  "ncaa_clients_unmatched": 24,
+  "ncaa_clients_matched": 7,
+  "ncaa_clients_possible": 1,
+  "ncaa_clients_unmatched": 22,
   "ncaa_clients_ambiguous": 5,
   "matched": [
     {
@@ -198,14 +198,14 @@
       "profile_url": "https://coastalplain.com/rosters/lexington-county-blowfish-roster/"
     },
     {
-      "player_name": "Devin Diaz",
-      "college": "University of Miami",
-      "summer_team": "Morehead City Marlins",
-      "league": "Coastal Plain",
-      "summer_name": "Diego Diaz",
-      "source_id": "",
+      "player_name": "Evan Taylor",
+      "college": "Alabama",
+      "summer_team": "Amsterdam Mohawks",
+      "league": "PGCBL",
+      "summer_name": "E Taylor",
+      "source_id": "evantaylorvx6g",
       "match_strength": "initial+last",
-      "profile_url": "https://coastalplain.com/rosters/morehead-city-marlins-roster/"
+      "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/evantaylorvx6g"
     },
     {
       "player_name": "Eamon McDermott",
@@ -236,9 +236,41 @@
       "source_id": "",
       "match_strength": "initial+last",
       "profile_url": "https://coastalplain.com/rosters/tri-city-chilipeppers-roster/"
+    },
+    {
+      "player_name": "Zack Johnson",
+      "college": "Alabama",
+      "summer_team": "Amsterdam Mohawks",
+      "league": "PGCBL",
+      "summer_name": "Z Johnson",
+      "source_id": "zackjohnson00l4",
+      "match_strength": "initial+last",
+      "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/zackjohnson00l4"
     }
   ],
-  "possible_matches": [],
+  "possible_matches": [
+    {
+      "player_name": "Devin Diaz",
+      "college": "University of Miami",
+      "match_strength": "initial+last (manual review)",
+      "candidates": [
+        {
+          "summer_team": "Glens Falls Dragons",
+          "league": "PGCBL",
+          "summer_name": "D Diaz",
+          "summer_college": "",
+          "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/derekdiaz42tn"
+        },
+        {
+          "summer_team": "Morehead City Marlins",
+          "league": "Coastal Plain",
+          "summer_name": "Diego Diaz",
+          "summer_college": "UT-San Antonio",
+          "profile_url": "https://coastalplain.com/rosters/morehead-city-marlins-roster/"
+        }
+      ]
+    }
+  ],
   "unmatched": [
     {
       "player_name": "Caleb Daniel",
@@ -281,10 +313,6 @@
       "college": "UCF"
     },
     {
-      "player_name": "Evan Taylor",
-      "college": "Alabama"
-    },
-    {
       "player_name": "Henry Zatkowski",
       "college": "Virginia"
     },
@@ -315,10 +343,6 @@
     {
       "player_name": "Michael Gillen",
       "college": "UCF"
-    },
-    {
-      "player_name": "Zack Johnson",
-      "college": "Alabama"
     },
     {
       "player_name": "Will Myhand",
@@ -427,11 +451,16 @@
         "team": "Cotuit Kettleers"
       },
       {
-        "player_name": "Devin Diaz",
-        "school": "Miami",
-        "league": "FCBL",
-        "team": "New Britian Bees",
-        "cross_league_namesake_ignored": true
+        "player_name": "Zack Johnson",
+        "school": "Alabama",
+        "league": "PGCBL",
+        "team": "Amsterdam Mohawks"
+      },
+      {
+        "player_name": "Evan Taylor",
+        "school": "Alabama",
+        "league": "PGCBL",
+        "team": "Amsterdam Mohawks"
       }
     ],
     "conflicts": [],
@@ -535,20 +564,13 @@
         "status": "Confirmed"
       },
       {
-        "player_name": "Zack Johnson",
-        "school": "Alabama",
-        "placement_team": "Amsterdam Mohawks",
-        "league": "PGCBL",
-        "status": "Confirmed"
-      },
-      {
-        "player_name": "Evan Taylor",
-        "school": "Alabama",
-        "placement_team": "Amsterdam Mohawks",
-        "league": "PGCBL",
+        "player_name": "Devin Diaz",
+        "school": "Miami",
+        "placement_team": "New Britian Bees",
+        "league": "FCBL",
         "status": "Confirmed"
       }
     ]
   },
-  "all_players_count": 3822
+  "all_players_count": 4070
 }
