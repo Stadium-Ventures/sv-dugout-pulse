@@ -316,6 +316,10 @@
   .heartbeat-yellow { color: #eab308; }
   .heartbeat-green  { color: #22c55e; }
   .heartbeat-gray   { color: #6b7280; }
+  /* Heartbeat needs a signed-in SV Google account (js/sv-google-auth.js) */
+  .hb-signin { display: none; align-items: center; gap: 8px; font-size: 12px; color: #9ca3af; margin: 6px 0; }
+  body.hb-signed-out .hb-signin { display: flex; }
+  body.hb-signed-out [data-filter="heartbeat"] { display: none; }
   @keyframes heart-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.25); }
@@ -1065,7 +1069,7 @@
   .lvl-g { flex: none; color: var(--text-dim); font-size: 0.72rem; }
 </style>
 </head>
-<body>
+<body class="hb-signed-out">
 <script src="js/gate.js"></script>
 
 <div class="pull-refresh" id="pullRefresh">Refreshing...</div>
@@ -1125,6 +1129,7 @@
     <button class="filter-btn" data-value="Final">Final</button>
     <button class="filter-btn" data-value="Cancelled">Postponed</button>
   </div>
+  <div class="hb-signin" id="hbSignIn">&#x2665; Heartbeat: sign in with your Stadium Ventures Google account to see it. <span id="hbSignInButton"></span></div>
   <div class="filter-group" data-filter="heartbeat">
     <button class="filter-btn active" data-value="all">&#x2665; All</button>
     <button class="filter-btn" data-value="red" style="color:#ef4444">&#x2665;</button>
@@ -1160,6 +1165,7 @@
 </div>
 <div class="empty" id="empty" style="display:none;">No players match the current filters.</div>
 
-<script src="js/app.js?v=2026-07-07"></script>
+<script src="js/sv-google-auth.js?v=2026-09-24"></script>
+<script src="js/app.js?v=2026-09-24"></script>
 </body>
 </html>

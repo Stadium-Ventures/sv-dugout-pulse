@@ -171,6 +171,31 @@ These are configured in GitHub → Settings → Secrets and variables → Action
 
 **Do not share these publicly.** If compromised, regenerate them.
 
+## Heartbeat hearts need Google sign-in
+
+The ♥ status on each client card and the ♥ filter come from Heartbeat
+(`sv-heartbeat.vercel.app/api/heartbeat/summary`), which is closing its API to
+anonymous callers. This page has no server and cannot hold a secret, so the
+**viewer** signs in with their `@stadium-ventures.com` Google account (Google
+Identity Services, sv-registry's OAuth client id) and `js/sv-google-auth.js`
+sends that Google ID token as `Authorization: Bearer` on the Heartbeat call.
+
+- The token is kept **in memory only** (never localStorage/sessionStorage/cookies);
+  returning users are signed in silently on load.
+- Not signed in, or Heartbeat answers 401/403 → the hearts and the ♥ filter are
+  hidden and a "sign in" prompt with the Google button is shown. Everything else
+  on the dashboard works without sign-in. The page never calls Heartbeat without
+  a token.
+- Owner step: `https://stadium-ventures.github.io` must be an Authorized
+  JavaScript origin on OAuth client `970904391216-emekreu9hdntj6k76qhkr0fjvrvd9fcm`
+  (Google Cloud console). Without it the sign-in button fails and the hearts stay
+  hidden (nothing else breaks).
+- Tied to Tom's D1 decision on this being a public site: if it stays public, the
+  heartbeat panel is sign-in-only; if the repo/site goes private, the same code
+  works unchanged.
+- Tests: `node --test tests/js/sv_google_auth.test.js` (also run by pytest via
+  `tests/test_js_google_auth.py`).
+
 ## Manual Actions
 
 ### Run the pulse manually (without waiting for cron)
