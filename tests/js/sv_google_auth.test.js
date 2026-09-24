@@ -104,3 +104,15 @@ test('onChange fires on sign-in and a throwing listener does not break it', () =
   a.setCredential(good());
   assert.deepStrictEqual(seen, [true]);
 });
+
+test('a 401/403 marks the session denied so the page stops auto re-prompting', async () => {
+  const a = mk(); a.setCredential(good());
+  assert.strictEqual(a.wasDenied(), false);
+  await a.authorizedFetch('u', fakeFetch(503));
+  assert.strictEqual(a.wasDenied(), false);          // transient errors do not count
+  await a.authorizedFetch('u', fakeFetch(401));
+  assert.strictEqual(a.wasDenied(), true);
+  a.setCredential(good());                           // a button sign-in still works
+  assert.ok(a.getToken());
+  assert.strictEqual(a.wasDenied(), true);           // but no automatic prompt loop
+});
