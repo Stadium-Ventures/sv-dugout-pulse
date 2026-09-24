@@ -40,6 +40,9 @@ function _persistFilters() {
 }
 let searchQuery = '';
 let heartbeatData = new Map();
+// Heartbeat needs a signed-in SV Google identity (js/sv-google-auth.js). When
+// false, hearts and the heart filter are hidden and a sign-in prompt shows.
+let heartbeatAvailable = false;
 
 // Time window state
 let currentWindow = 'today';
@@ -261,7 +264,7 @@ function matchesFilters(p) {
 }
 
 function heartbeatHtml(playerName, isClient) {
-  if (!isClient) return '';
+  if (!isClient || !heartbeatAvailable) return '';
   const key = playerName.toLowerCase();
   const hb = heartbeatData.get(key);
   const status = hb ? hb.status : 'gray';
@@ -1681,12 +1684,36 @@ async function refreshData() {
   }
 }
 
-// Fetch Heartbeat summary (fire-and-forget, graceful degradation)
+// Fetch Heartbeat summary (fire-and-forget, graceful degradation).
+// Sends the viewer's Google ID token as Bearer; never calls Heartbeat without
+// one. Signed out (or 401/403) → hide the Heartbeat UI and offer sign-in.
+const HEARTBEAT_SUMMARY_URL = 'https://sv-heartbeat.vercel.app/api/heartbeat/summary';
+
+function setHeartbeatAvailable(ok) {
+  heartbeatAvailable = !!ok;
+  document.body.classList.toggle('hb-signed-out', !heartbeatAvailable);
+  if (!heartbeatAvailable && filters.heartbeat !== 'all') {
+    filters.heartbeat = 'all';
+    document.querySelectorAll('[data-filter="heartbeat"] .filter-btn').forEach(b =>
+      b.classList.toggle('active', b.dataset.value === 'all'));
+  }
+  if (!heartbeatAvailable && window.svGoogleAuth && window.svGoogleAuth.requestSignIn) {
+    window.svGoogleAuth.requestSignIn(document.getElementById('hbSignInButton'));
+  }
+}
+
 async function fetchHeartbeat() {
+  const auth = window.svGoogleAuth;
+  if (!auth) { setHeartbeatAvailable(false); return; }
   try {
-    const resp = await fetch('https://sv-heartbeat.vercel.app/api/heartbeat/summary');
-    if (!resp.ok) return;
-    const data = await resp.json();
+    const result = await auth.authorizedFetch(HEARTBEAT_SUMMARY_URL);
+    if (result.state === 'signed-out' || result.state === 'denied') {
+      heartbeatData = new Map();
+      setHeartbeatAvailable(false);
+      return;
+    }
+    if (result.state !== 'ok') return;   // transient: keep whatever we had
+    const data = await result.response.json();
     const entries = Array.isArray(data) ? data : (data.players || data.summary || []);
     for (const p of entries) {
       const name = (p.name || p.player_name || '').toLowerCase();
@@ -1696,6 +1723,7 @@ async function fetchHeartbeat() {
         daysSinceContact: p.daysSinceLeadContact ?? p.daysSinceContact ?? p.days_since_contact ?? null
       });
     }
+    setHeartbeatAvailable(true);
   } catch (e) {
     // Heartbeat unavailable — hearts won't render, that's fine
   }
@@ -1944,6 +1972,11 @@ loadSummerGameLog().then(() => {
 });
 // Recent-form momentum (Pro 7D-vs-30D) — fire-and-forget; re-renders when ready.
 loadMomentum();
+
+// Re-fetch Heartbeat as soon as the viewer signs in (or drop it on sign-out).
+if (window.svGoogleAuth) {
+  window.svGoogleAuth.onChange(async () => { await fetchHeartbeat(); render(); });
+}
 
 // Load data — supports both envelope {generated_at, players} and legacy array
 (async () => {
