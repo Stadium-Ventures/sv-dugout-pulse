@@ -537,14 +537,21 @@ function summerPendingHint(p) {
     + `Stats fill in automatically once they get on the field.`);
 }
 
-// Peak projection chip (Scout the Statline, via the roster sheet). Pro
-// players with pro stats only — everyone else renders nothing.
+// Peak projection chip (Scout the Statline). Pro players with pro stats only;
+// everyone else renders nothing. Values come from the hub summary (`peak`)
+// once it has loaded, else from the roster sheet copy in tags (js/gate.js
+// svPeakValues has the rule).
 function peakChipHtml(p) {
   const t = p.tags || {};
+  const s = t.mlb_id ? scoutSummary[String(t.mlb_id)] : null;
+  const hubPeak = s && 'peak' in s ? s.peak : undefined;
+  const v = typeof window.svPeakValues === 'function'
+    ? window.svPeakValues(t, hubPeak)
+    : { war: t.peak_war, wrc_plus: t.peak_wrc_plus, era20: t.peak_era_20tbf };
   const parts = [];
-  if (t.peak_war) parts.push(`${esc(t.peak_war)} WAR`);
-  if (t.peak_wrc_plus) parts.push(`${esc(t.peak_wrc_plus)} wRC+`);
-  if (t.peak_era_20tbf) parts.push(`${esc(t.peak_era_20tbf)} ERA/20`);
+  if (v.war) parts.push(`${esc(v.war)} WAR`);
+  if (v.wrc_plus) parts.push(`${esc(v.wrc_plus)} wRC+`);
+  if (v.era20) parts.push(`${esc(v.era20)} ERA/20`);
   if (!parts.length) return '';
   return `<span class="tag" title="Peak projection — Scout the Statline">Peak: ${parts.join(' · ')}</span>`;
 }

@@ -660,6 +660,11 @@ def build_pulse_entry(player: dict, stats: dict, analysis: dict) -> dict:
         entry["tags"]["mlb_id"] = player["mlb_id"]
     # Scout the Statline peak projections, passed through from the roster
     # sheet (roster-sync fills them for Pro players with pro stats).
+    # TODO(peaks-from-source): the front end now prefers the `peak` field the
+    # SV Scouting Hub serves from /api/scouting-ref (js/gate.js svPeakValues)
+    # and only falls back to these tags. Once the hub path is confirmed live,
+    # stop copying peaks here. That also takes them out of the public
+    # current_pulse.json, and lets the roster move off the sheet columns.
     for key in ("peak_war", "peak_wrc_plus", "peak_era_20tbf"):
         if player.get(key):
             entry["tags"][key] = player[key]

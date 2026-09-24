@@ -17,6 +17,28 @@
       .catch(function () { return null; });
   };
 
+  // Scout the Statline peak values for one player, as display strings.
+  // hubPeak is the `peak` field from /api/scouting-ref ({war_hit, war_pit,
+  // wrc_plus, era20} or null). When the hub answered with that field it wins,
+  // null included (no peak, or an unclear id match). When it did not (hub
+  // locked, unreachable, or an older hub build) we fall back to the
+  // tags.peak_* values main.py copies from the roster sheet.
+  // WAR pick matches sv-scouting-data roster_sync: pitching WAR for pitchers,
+  // hitting WAR otherwise, then the other one if that is blank.
+  var PITCHER_POS = ['PITCHER', 'P', 'SP', 'RP', 'RHP', 'LHP', 'CP', 'TWP', 'LHR', 'RHR', 'CL'];
+  window.svPeakValues = function (tags, hubPeak) {
+    tags = tags || {};
+    if (hubPeak === undefined) {
+      return { war: tags.peak_war || '', wrc_plus: tags.peak_wrc_plus || '', era20: tags.peak_era_20tbf || '' };
+    }
+    if (!hubPeak) return { war: '', wrc_plus: '', era20: '' };
+    var str = function (v) { return v == null ? '' : String(v); };
+    var pitcher = PITCHER_POS.indexOf(String(tags.position || '').trim().toUpperCase()) !== -1;
+    var first = pitcher ? hubPeak.war_pit : hubPeak.war_hit;
+    var other = pitcher ? hubPeak.war_hit : hubPeak.war_pit;
+    return { war: str(first != null ? first : other), wrc_plus: str(hubPeak.wrc_plus), era20: str(hubPeak.era20) };
+  };
+
   function verify(pw) {
     return fetch(window.SV_HUB + '/api/scouting-ref?ping=1', { headers: { Authorization: 'Bearer ' + pw } })
       .then(function (r) { return r.status === 204; })
