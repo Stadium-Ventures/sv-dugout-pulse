@@ -192,7 +192,15 @@ projection.
   error. There is **no fallback to the sheet**; the run uses the last good
   *registry* cache (< 24 h, prunes disabled) or aborts.
 - Peak WAR / wRC+ / ERA have no canon source and are not in the projection; on
-  the registry their chips and cards simply do not render.
+  the registry their chips and cards simply do not render. **So do not flip to
+  `registry` until SV Registry serves peaks** (sv-scouting-data owns them). If the
+  flip happens anyway and no Pro client carries a peak, the run posts once a day to
+  #sv-automation.
+- #sv-automation alerts on this path (at most once a day each, state in
+  `data/_roster_source_alerts.json`): the registry read failed and the run is on the
+  last saved list; the dual-run read failed; the registry roster has no peaks. A
+  registry failure with no saved list fails the run, and `pulse.yml`'s "Alert on
+  failure" step posts.
 - Dual run: with `ROSTER_SOURCE=sheet` and the token set, each run logs difference
   **counts** only (these Actions logs are public). Names: run
   `python -m scripts.roster_dual_run` locally.

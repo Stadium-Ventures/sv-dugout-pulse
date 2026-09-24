@@ -585,6 +585,8 @@ def get_all_players() -> list[dict]:
         _enrich_pro_team_from_api(players)
         _save_roster_cache(players)
         _roster_fetch_fresh = True
+        if roster_source() == "registry":
+            _check_registry_peaks(clients)
         return players
     except Exception as exc:
         if isinstance(exc, RegistryRosterError):
@@ -596,6 +598,8 @@ def get_all_players() -> list[dict]:
         logger.exception("Roster fetch failed or implausible — trying cached roster")
         cached = _load_roster_cache()
         if cached:
+            if isinstance(exc, RegistryRosterError) or os.environ.get("ROSTER_SOURCE", "").strip().lower() == "registry":
+                _alert_registry_on_saved_list(exc)
             return cached
         logger.error("No roster available (fetch failed, no usable cache)")
         return []
@@ -645,7 +649,122 @@ def _log_dual_run(sheet_clients: list[dict]) -> None:
         diff = dual_run_diff(sheet_clients, get_registry_clients())
     except Exception as exc:  # observational only — never affects the run
         logger.warning("[dual-run] registry read failed: %s", exc)
+        _alert_dual_run_failed(exc)
         return
     counts = {k: len(v) for k, v in diff.items()}
     logger.info("[dual-run] sheet %d vs registry clients — differences (counts only; "
                 "details: python -m scripts.roster_dual_run): %s", len(sheet_clients), counts)
+
+
+# ---------------------------------------------------------------------------
+# #sv-automation alerts for the registry path. Before these, a registry read
+# failure that fell back to the saved list, a failed dual-run read, and a
+# registry roster with no peaks all landed only in the (public) Actions log.
+# Each alert posts at most once a day per kind (timestamps in a small state
+# file the pulse run commits), goes through scripts/_automation_notify.py,
+# and never affects the run. No player names, URLs or tokens in the text.
+# ---------------------------------------------------------------------------
+
+ROSTER_ALERT_STATE_PATH = os.path.join(os.path.dirname(ROSTER_CACHE_PATH), "_roster_source_alerts.json")
+_ROSTER_ALERT_COOLDOWN_H = 24
+_PEAK_KEYS = ("peak_war", "peak_wrc_plus", "peak_era_20tbf")
+_VARIABLES_URL = "https://github.com/Stadium-Ventures/sv-dugout-pulse/settings/variables/actions"
+_SECRETS_URL = "https://github.com/Stadium-Ventures/sv-dugout-pulse/settings/secrets/actions"
+
+
+def _send_automation(text: str) -> bool:
+    """Seam for tests. The one door to #sv-automation."""
+    from scripts._automation_notify import post_automation
+    return post_automation(text)
+
+
+def _post_roster_alert(kind: str, text: str) -> bool:
+    """Post once per _ROSTER_ALERT_COOLDOWN_H per kind. Never raises."""
+    try:
+        now = datetime.now(timezone.utc)
+        state: dict = {}
+        try:
+            with open(ROSTER_ALERT_STATE_PATH) as f:
+                state = json.load(f) or {}
+        except Exception:
+            state = {}
+        try:
+            last = datetime.fromisoformat(str(state.get(kind, "")))
+            if (now - last).total_seconds() < _ROSTER_ALERT_COOLDOWN_H * 3600:
+                return False
+        except ValueError:
+            pass  # never alerted, or unreadable timestamp
+        if not _send_automation(text):
+            return False
+        state[kind] = now.isoformat()
+        dir_path = os.path.dirname(ROSTER_ALERT_STATE_PATH)
+        os.makedirs(dir_path, exist_ok=True)
+        fd, tmp = tempfile.mkstemp(dir=dir_path, suffix=".tmp")
+        with os.fdopen(fd, "w") as f:
+            json.dump(state, f, indent=2, sort_keys=True)
+        os.replace(tmp, ROSTER_ALERT_STATE_PATH)
+        return True
+    except Exception:
+        logger.exception("Roster-source alert failed (non-fatal)")
+        return False
+
+
+def _plain_reason(exc: BaseException) -> tuple[str, str]:
+    """(what happened, what to do) in plain English for a registry read error."""
+    msg = str(exc)
+    if "is not set" in msg:
+        return ("the SV Registry key is missing from this repo's secrets",
+                f"add the SV_REGISTRY_ROSTER_TOKEN secret ({_SECRETS_URL})")
+    if "401" in msg:
+        return ("SV Registry turned the key down as wrong or revoked",
+                f"re-issue the dugout-pulse registry key and update SV_REGISTRY_ROSTER_TOKEN ({_SECRETS_URL})")
+    if "403" in msg:
+        return ("SV Registry said the key has no roster access",
+                "re-issue the dugout-pulse registry key with roster read access")
+    if "unreachable" in msg or "HTTP " in msg:
+        return ("SV Registry did not answer normally",
+                "check that sv-registry.vercel.app is up; it usually clears on its own")
+    if "only" in msg or "implausible" in msg:
+        return ("SV Registry sent a client list that looked cut short",
+                "check the roster projection in SV Registry before the next run")
+    return ("SV Registry sent something that did not look like the client list",
+            "check the roster projection in SV Registry")
+
+
+def _alert_registry_on_saved_list(exc: BaseException) -> None:
+    what, fix = _plain_reason(exc)
+    _post_roster_alert("registry_read_failed", (
+        ":warning: *The client list could not be read from SV Registry, so the dashboard is running on the last saved list.*\n"
+        f"How we know: this run's roster read failed because {what}. Stats still update, but roster changes "
+        "will not show, and the runs start failing once the saved list is a day old.\n"
+        f"What to do: 👤 {fix}. To go back to the sheet right away, set ROSTER_SOURCE to sheet ({_VARIABLES_URL})."
+    ))
+
+
+def _alert_dual_run_failed(exc: BaseException) -> None:
+    what, fix = _plain_reason(exc)
+    _post_roster_alert("dual_run_read_failed", (
+        ":warning: *The daily roster check against SV Registry could not run.*\n"
+        f"How we know: the stats run tried to read the client list from SV Registry to compare it with the "
+        f"sheet, and {what}. The dashboard is fine; it still uses the sheet.\n"
+        f"What to do: 👤 {fix}. Days without a clean comparison do not count toward the switch."
+    ))
+
+
+def _check_registry_peaks(clients: list[dict]) -> None:
+    """Registry mode: if no Pro client carries any peak, the dashboard's peak
+    chips are blank for everyone. Say so instead of shipping it silently."""
+    try:
+        pros = [p for p in clients if p.get("level") == "Pro"]
+        if not pros or any(p.get(k) for p in pros for k in _PEAK_KEYS):
+            return
+        logger.error("Registry roster carries no peak projections for any of %d Pro clients", len(pros))
+        _post_roster_alert("registry_peaks_missing", (
+            ":warning: *Peak projection chips are blank for every Pro client on the dashboard.*\n"
+            f"How we know: the client list now comes from SV Registry, and it carried no Peak WAR, wRC+ or ERA "
+            f"for any of the {len(pros)} Pro players.\n"
+            f"What to do: 👤 set ROSTER_SOURCE back to sheet to bring the chips back ({_VARIABLES_URL}). "
+            "🛠️ Switch again once SV Registry serves peaks."
+        ))
+    except Exception:
+        logger.exception("Peak check failed (non-fatal)")
