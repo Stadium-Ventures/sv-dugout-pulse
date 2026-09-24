@@ -49,7 +49,7 @@
   ],
   "pipes": {
     "inputs": [
-      "Master roster + recruits Google Sheets (published CSVs — ROSTER_URL / RECRUITS_URL secrets)",
+      "Client roster: master Google Sheet published CSV (ROSTER_URL secret, default) or the SV Registry roster projection (GET /api/roster-projection, svt_ token SV_REGISTRY_ROSTER_TOKEN) — switched by the ROSTER_SOURCE repo variable. Recruits: their own Google Sheet (RECRUITS_URL secret) either way",
       "MLB Stats API (pro), NCAA school-site scraper waterfall (D1Baseball → ESPN → NCAA.com → Sidearm → StatBroadcast → stats.ncaa.org)",
       "Baseball-Reference Register (summer-ball stats; next-day lag is normal)",
       "Kent's summer placement sheet — transcribed by hand into data/summer_ball_placements.json in the repo (source of truth for summer assignments)",

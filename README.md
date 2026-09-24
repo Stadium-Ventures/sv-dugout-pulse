@@ -166,10 +166,71 @@ These are configured in GitHub → Settings → Secrets and variables → Action
 
 | Secret | Purpose |
 |--------|---------|
-| `ROSTER_URL` | Google Sheet CSV URL |
+| `ROSTER_URL` | Google Sheet CSV URL (master roster) — **no default in code** |
+| `RECRUITS_URL` | Google Sheet CSV URL (recruits) — **no default in code**; unset = no recruits |
 | `SLACK_WEBHOOK_URL` | Slack incoming webhook |
 
 **Do not share these publicly.** If compromised, regenerate them.
+
+## Roster source (sheet → SV Registry)
+
+Clients come from `ROSTER_SOURCE` (repo Actions **variable**):
+`sheet` (default when unset — the master sheet's published CSV, `ROSTER_URL`) or
+`registry` — the SV Registry's authenticated projection
+(`GET https://sv-registry.vercel.app/api/roster-projection`, Bearer token from the
+Actions **secret** `SV_REGISTRY_ROSTER_TOKEN`, scope `read:roster-projection`).
+Rollback is "set `ROSTER_SOURCE` back to `sheet`". Recruits (non-clients) always
+come from their own sheet (`RECRUITS_URL`) and are never pruned against the
+projection.
+
+- Registry rows are mapped onto the sheet's headers, so everything downstream is
+  unchanged. Canon position labels map to this app's routing: RHP/LHP/SP/RP/P/…
+  → Pitcher, "RHP/OF"-style or Two-Way → Two-Way, everything else → Hitter.
+- Joins: each player carries the registry `slug` and MLB id.
+- Fail closed: a missing token, 401/403, a malformed or too-small (< 40 rows)
+  response, or a response that does not assert `contains_no_contact_data` is an
+  error. There is **no fallback to the sheet**; the run uses the last good
+  *registry* cache (< 24 h, prunes disabled) or aborts.
+- Peak WAR / wRC+ / ERA have no canon source and are not in the projection; on
+  the registry their chips and cards simply do not render. **So do not flip to
+  `registry` until SV Registry serves peaks** (sv-scouting-data owns them). If the
+  flip happens anyway and no Pro client carries a peak, the run posts once a day to
+  #sv-automation.
+- #sv-automation alerts on this path (at most once a day each, state in
+  `data/_roster_source_alerts.json`): the registry read failed and the run is on the
+  last saved list; the dual-run read failed; the registry roster has no peaks. A
+  registry failure with no saved list fails the run, and `pulse.yml`'s "Alert on
+  failure" step posts.
+- Dual run: with `ROSTER_SOURCE=sheet` and the token set, each run logs difference
+  **counts** only (these Actions logs are public). Names: run
+  `python -m scripts.roster_dual_run` locally.
+
+**Open decision (Tom) — the token is BLOCKED until it is made.** This repo and its
+Pages site are public, and the registry's policy ("no public anything", enforced by
+its roster-projection selftest) forbids assigning a service token to a public repo.
+Either:
+1. make the repo private (check the plan: Pages on a private repo may still be
+   publicly served unless it is private Pages), or
+2. keep it public and never commit or publish roster-derived fields beyond what the
+   dashboard already shows — the cache allowlist below enforces that — with the
+   token held only as an Actions secret, and record that exception in sv-registry.
+
+The code works unchanged either way; only where the token may live differs.
+
+## Privacy — this repo and its Pages site are PUBLIC
+
+Everything committed under `data/` is served by GitHub Pages and readable by anyone
+(the dashboard password gate is not real auth). So:
+
+- `data/roster_cache.json` is written through an **allowlist**
+  (`ROSTER_CACHE_FIELDS` in `src/config.py`): name, MLB id, team/level/affiliate,
+  position, draft class, tier, status, client flag. Nothing else can reach it.
+- DOB and Age are **not read** from the sheet at all (they had no consumer).
+- Published-sheet links live only in Actions secrets, never in source.
+- Never add contact or personal data (DOB, age, phone, email, address, parents,
+  social handles, home state) to anything under `data/`.
+- Older commits still contain DOB/age in `data/roster_cache.json` history; purging
+  that history is a separate human decision (see the cutover kit).
 
 ## Manual Actions
 

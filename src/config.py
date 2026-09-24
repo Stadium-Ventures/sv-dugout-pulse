@@ -6,20 +6,38 @@ import logging
 import os
 
 # ---------------------------------------------------------------------------
-# Google Sheet "Publish to Web" CSV URL
-# Set via environment variable or replace the default with your URL.
-# In Google Sheets: File -> Share -> Publish to Web -> CSV format -> copy link
+# Google Sheet "Publish to Web" CSV URLs — ONLY from the environment
+# (GitHub Actions secrets ROSTER_URL / RECRUITS_URL). There is deliberately no
+# default: this repo is public, and a published-CSV link in source is a public
+# door to the sheet behind it.
 # ---------------------------------------------------------------------------
-ROSTER_URL = os.environ.get(
-    "ROSTER_URL",
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vROl4fVdpx2LKElwbZ9kqtXsMY2CmiHn5Jsjn7R5NAyJ5rqpt-EG2JiRj5YExQ1Asi47PO8vEXbum-N/pub?output=csv",
-)
+ROSTER_URL = os.environ.get("ROSTER_URL", "")
 
-# Recruits/Following sheet — players we're tracking but not yet clients
-RECRUITS_URL = os.environ.get(
-    "RECRUITS_URL",
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vRz1OQbckLK52-dxY9YqRNL8U-BRS6p6ipVPCVnhe7W-Bpo2v2imyqaV3hoz0HKRjx6dz207LShEg6j/pub?output=csv",
-)
+# Recruits/Following sheet — players we're tracking but not yet clients.
+# Recruits are NOT clients and are not in the registry projection: this list
+# always comes from its own sheet, whatever ROSTER_SOURCE says.
+RECRUITS_URL = os.environ.get("RECRUITS_URL", "")
+
+# ---------------------------------------------------------------------------
+# Client roster source switch (read at call time so tests / rollbacks work):
+#   ROSTER_SOURCE=sheet     (default) master sheet published CSV (ROSTER_URL)
+#   ROSTER_SOURCE=registry  sv-registry authenticated roster projection,
+#                           GET $SV_REGISTRY_URL/api/roster-projection with the
+#                           svt_ token in $SV_REGISTRY_ROSTER_TOKEN as Bearer.
+# Rollback = set ROSTER_SOURCE back to "sheet". There is no automatic
+# registry→sheet fallback.
+# ---------------------------------------------------------------------------
+DEFAULT_REGISTRY_URL = "https://sv-registry.vercel.app"
+REGISTRY_PROJECTION_PATH = "/api/roster-projection"
+REGISTRY_TOKEN_ENV = "SV_REGISTRY_ROSTER_TOKEN"
+REGISTRY_MIN_ROWS = 40  # fewer rows than this = truncated/broken response → fail closed
+
+# Canon position labels (sv-registry identity.position) → this app's
+# Pitcher / Hitter / Two-Way routing (stats_engine._is_pitcher_pos etc.).
+PITCHER_POSITION_LABELS = {
+    "p", "pitcher", "rhp", "lhp", "sp", "rp", "cl", "rhsp", "lhsp", "rhrp", "lhrp",
+}
+TWO_WAY_POSITION_LABELS = {"two-way", "two way", "twp", "2-way"}
 
 # ---------------------------------------------------------------------------
 # Column name mapping (Sheet header -> internal key)
@@ -41,8 +59,8 @@ COLUMN_MAP = {
     "State (High School)": "state",
     "State": "state",  # Recruits sheet uses "State" instead of "State (High School)"
     "IG Handle": "ig_handle",
-    "DOB": "dob",
-    "Age": "age",
+    # DOB / Age are deliberately NOT mapped: nothing here uses them, and the
+    # roster cache is committed to this PUBLIC repo and served by Pages.
     # Scout the Statline peak projections — written to the roster sheet daily
     # by sv-scouting-data's roster-sync; Pro players with pro stats only.
     "Peak WAR": "peak_war",
@@ -123,6 +141,30 @@ SCHOOL_LOOKUP_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "scho
 SIDEARM_FOLDER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sidearm_folder_cache.json")
 SENT_ALERTS_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "sent_alerts.json")
 ROSTER_CACHE_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "roster_cache.json")
+
+# The ONLY player fields persisted to data/roster_cache.json. That file is
+# committed to this PUBLIC repo and served by GitHub Pages, so it is an
+# allowlist, not a denylist: a new sheet column (or registry field) can never
+# leak into it by default. Every field here is either already shown on the
+# public dashboard or is an internal flag. Never add contact or personal data
+# (DOB, age, phone, email, address, parents, social handles, home state).
+ROSTER_CACHE_FIELDS = (
+    "slug",
+    "player_name",
+    "mlb_id",
+    "team",
+    "level",
+    "position",
+    "draft_class",
+    "affiliate",
+    "roster_priority",
+    "status",
+    "is_client",
+    "peak_war",
+    "peak_wrc_plus",
+    "peak_era_20tbf",
+    "_api_team_applied",
+)
 HS_GAME_LOG_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "hs_game_log.json")
 PLAYER_HEALTH_HISTORY_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "player_health_history.json")
 

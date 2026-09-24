@@ -16,7 +16,8 @@ set with `gh secret set NAME -R Stadium-Ventures/sv-dugout-pulse`.
 | `SV_AUTOMATION_WEBHOOK_URL` | Failure alerts → #sv-automation | Same Slack app page. Reference copy: Vercel sv-heartbeat env (https://vercel.com/stadium-ventures/sv-heartbeat/settings/environment-variables). |
 | `SLACK_BOT_TOKEN` | Slack Web API access | Slack app → OAuth & Permissions |
 | `RESEND_API_KEY` | Email sends | Resend dashboard → API Keys (https://resend.com/api-keys) |
-| `ROSTER_URL`, `RECRUITS_URL` | Published-CSV URLs of source Google Sheets (config) | Google Sheets → File → Share → Publish to web → CSV |
+| `ROSTER_URL`, `RECRUITS_URL` | Published-CSV URLs of source Google Sheets (config). **Secret-only — there is no default in code** (public repo); unset `RECRUITS_URL` = run without recruits | Google Sheets → File → Share → Publish to web → CSV |
+| `SV_REGISTRY_ROSTER_TOKEN` | Registry roster projection read — used when the `ROSTER_SOURCE` repo **variable** is `registry` (and for the counts-only dual-run log while it is `sheet`). **BLOCKED until Tom decides** the public-repo question (README → "Roster source") | sv-registry: `node scripts/mint-service-token.cjs mint sv-dugout-pulse --scopes read:roster-projection` (plaintext shown once) |
 | `HS_STATS_URL` | HS stats source sheet — **referenced in a workflow but NOT currently set on the repo** | Google Sheets published-CSV URL; set it if/when the HS workflow needs it |
 | `SB_PROXY_URL`, `SB_HTTP_PROXY`, `SB_HTTP_PROXY_2`, `SB_HTTP_PROXY_3` | Proxy endpoints for the StatBroadcast bypass | Provisioned by Tom at the proxy provider; ask Tom |
 | `GITHUB_TOKEN` | Built-in Actions token | Provided automatically by GitHub — nothing to set |

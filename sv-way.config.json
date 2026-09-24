@@ -16,7 +16,7 @@
   "write_door": null,
   "upstream": {
     "repo": null,
-    "mechanism": "Player identity comes from the master roster + recruits Google Sheets (ROSTER_URL / RECRUITS_URL secrets), NOT from Stadium-Ventures/sv-registry."
+    "mechanism": "Client identity comes from the master roster Google Sheet (ROSTER_URL, default) or, with ROSTER_SOURCE=registry, from Stadium-Ventures/sv-registry's authenticated roster projection (GET /api/roster-projection, svt_ token SV_REGISTRY_ROSTER_TOKEN). Recruits (non-clients) always come from their own sheet (RECRUITS_URL)."
   },
   "canon_doc": "THE-SV-WAY.md",
   "canon_doc_home": false,
