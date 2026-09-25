@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T20:17:05.956272+00:00",
+  "generated_at": "2026-09-25T20:31:14.332677+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -352,6 +352,45 @@
         "peak_war": "3",
         "peak_wrc_plus": "105"
       }
+    },
+    {
+      "player_name": "Garrett Whitlock",
+      "team": "Boston Red Sox",
+      "level": "Pro",
+      "stats_summary": "Did Not Play",
+      "game_context": "Chicago Cubs 3, Boston Red Sox 4 | Final",
+      "game_status": "Final",
+      "game_time": "1:05 PM ET",
+      "game_date": "2026-09-25",
+      "is_yesterday": false,
+      "next_game": {
+        "date": "Sat 09/26",
+        "date_full": "2026-09-26",
+        "opponent": "Chicago Cubs",
+        "home_away": "vs",
+        "time": "7:15 PM ET",
+        "display": "vs Chicago Cubs - Sat 09/26 7:15 PM ET"
+      },
+      "box_score_url": "https://www.mlb.com/gameday/824703",
+      "player_profile_url": "https://www.mlb.com/player/676477",
+      "performance_grade": "— DNP",
+      "grade_reason": "",
+      "social_search_url": "https://x.com/search?q=%22Garrett%20Whitlock%22%20Sox&f=live",
+      "data_source": "MLB Stats API",
+      "fetch_diagnostic": null,
+      "stats_captured_at": null,
+      "stats_captured_status": null,
+      "is_client": true,
+      "tags": {
+        "draft_class": "N/A",
+        "position": "Pitcher",
+        "roster_priority": 1,
+        "mlb_id": 676477,
+        "peak_war": "2.5",
+        "peak_era_20tbf": "4.18"
+      },
+      "current_level": "MLB",
+      "game_number": 1
     },
     {
       "player_name": "Garrett Whitlock",
@@ -3230,7 +3269,7 @@
       "player_name": "Trevor Story",
       "team": "Boston Red Sox",
       "level": "Pro",
-      "stats_summary": "Game at 5:35 PM ET",
+      "stats_summary": "In lineup — batting 4th (SS)",
       "game_context": "Chicago Cubs vs Boston Red Sox | 5:35 PM ET",
       "game_status": "Scheduled",
       "game_time": "5:35 PM ET",
@@ -3271,8 +3310,10 @@
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
-    "total_clients": 88,
+    "fallback_clients": [
+      "Garrett Whitlock"
+    ],
+    "total_clients": 89,
     "proxy_pool": {
       "pool": [
         "p.webshare.io",
