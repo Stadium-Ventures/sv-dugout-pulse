@@ -960,20 +960,58 @@ class PGCBL(PrestoSportsLeague):
     ]
 
     def _discover_via_league_index(self) -> list[PlayerEntry]:
+        # Coverage requires the union of all _INDEX_VIEWS — losing even one
+        # view silently caps us at that view's own ~125-row display limit
+        # (2026-09-24: PGCBL 373 -> 125 when 4 of 5 view fetches got blocked
+        # and there was no cache to fall back on, unlike the per-team scrape
+        # path other PrestoSports leagues use — see PRESTO_CACHE_PATH docs
+        # and the NECBL/Cal Ripken precedents above). Cache each view's
+        # parsed player list so a transient block on one view restores from
+        # the last good fetch instead of just dropping that slice of the
+        # league for the day.
         year = self._year()
         out: list[PlayerEntry] = []
         seen: set[str] = set()
+        cache = _load_presto_cache()
+        cache_dirty = False
         for view in self._INDEX_VIEWS:
             url = f"{self.host_url}/sports/bsb/{year}/players{view}"
+            cache_key = f"{self.short_name}/index/{view or 'default'}"
             html = self._fetch_page(url)
+            view_players: list[PlayerEntry] = []
             if not html or len(html) < 50000:
                 logger.info("%s: players index view %s empty/short (%d bytes)",
                             self.short_name, view, len(html or ""))
-                continue
-            before = len(out)
-            self._parse_league_index_page(html, year=year, seen=seen, out=out)
-            logger.info("%s: view %s added %d players",
-                        self.short_name, view, len(out) - before)
+                cached = cache.get(cache_key)
+                if cached and _presto_cache_fresh(cached):
+                    view_players = [PlayerEntry(**p) for p in cached["players"]]
+                    logger.warning(
+                        "%s: view %s fetch failed; restored %d players from cache (%s)",
+                        self.short_name, view, len(view_players), cached["cached_at"])
+                else:
+                    logger.warning(
+                        "%s: view %s fetch failed and no fresh cache — view dropped this run",
+                        self.short_name, view)
+            else:
+                view_seen: set[str] = set()
+                self._parse_league_index_page(html, year=year, seen=view_seen, out=view_players)
+                if view_players:
+                    cache[cache_key] = {
+                        "cached_at": datetime.now(timezone.utc).isoformat(),
+                        "players": [p.to_dict() for p in view_players],
+                    }
+                    cache_dirty = True
+            added = 0
+            for p in view_players:
+                if p.source_id and p.source_id in seen:
+                    continue
+                if p.source_id:
+                    seen.add(p.source_id)
+                out.append(p)
+                added += 1
+            logger.info("%s: view %s added %d players", self.short_name, view, added)
+        if cache_dirty:
+            _save_presto_cache(cache)
         logger.info("%s: %d players from league-wide index", self.short_name, len(out))
         return out
 
