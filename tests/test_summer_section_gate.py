@@ -16,6 +16,16 @@ def test_section_is_dropped_once_the_season_is_over(monkeypatch):
 
 
 def test_wrap_note_replaces_the_list_right_after_the_season(monkeypatch):
+    # _render_summer_placements_section() takes no `today` argument -- it
+    # falls through to _summer_wrap_note()'s own date.today() default -- so
+    # pinning "today" here means pinning the module's `date`, the same way
+    # test_wrap_note_expires pins it via _summer_wrap_note(today=...).
+    class _FixedDate(date):
+        @classmethod
+        def today(cls):
+            return date(2026, 8, 20)  # within the 30-day wrap window
+
+    monkeypatch.setattr(m, "date", _FixedDate)
     monkeypatch.setattr(m, "season_is_active", lambda: False)
     monkeypatch.setattr(m, "last_real_game_day", lambda: "2026-08-08")
     html = m._render_summer_placements_section()
