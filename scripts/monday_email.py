@@ -35,6 +35,11 @@ DEFAULT_RECIPIENTS = [
 FROM_ADDRESS = "Dugout Pulse <noreply@stadium-ventures.com>"
 SUBJECT_TEMPLATE = "Dugout Pulse — Weekly Recap, {period}"
 
+# Offseason pause (Kent, 2026-09-28: "pause this until 2nd week of April").
+# Scheduled sends before this date exit cleanly without emailing; the first
+# recap back is Monday 2027-04-12. Dry runs and --to test sends still work.
+PAUSED_UNTIL = date(2027, 4, 12)
+
 PITCHER_POS = {"Pitcher", "LHP", "RHP", "Two-Way"}
 LEVEL_ORDER = ["Pro", "NCAA", "HS"]
 LEVEL_HEADER = {
@@ -1190,6 +1195,11 @@ def send_via_resend(subject: str, html: str, to: list[str], api_key: str,
 
 # ---------- CLI ----------
 
+def is_paused(today: date, dry_run: bool = False, to_override: bool = False) -> bool:
+    """True when a scheduled send to the default list falls in the offseason pause."""
+    return not dry_run and not to_override and today < PAUSED_UNTIL
+
+
 def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument("--dry-run", action="store_true")
@@ -1201,6 +1211,9 @@ def main(argv=None):
     args = p.parse_args(argv)
 
     today = date.fromisoformat(args.today) if args.today else date.today()
+    if is_paused(today, dry_run=args.dry_run, to_override=bool(args.to)):
+        sys.stderr.write(f"[monday_email] paused until {PAUSED_UNTIL.isoformat()}; not sending\n")
+        return
     payload = build_payload(today)
     subject = render_subject(payload) + (args.subject_suffix or "")
     html = render_html(payload)
