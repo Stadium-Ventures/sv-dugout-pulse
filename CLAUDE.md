@@ -18,11 +18,12 @@ chokepoint / governed writers); one write-home per dataset; firm work is
 first-class but becomes a player fact only when it actualizes through that one
 door; systems doing work about a player resolve them against canon first (read
 duty); automation is silent when healthy and posts actionable-only to
-#sv-automation; collaborative tools live in Stadium-Ventures org repos; locked
-client-facing artifacts (Report Packets) are never moved or regenerated. This
-tool's hub registration + #sv-automation hookup are canonical requirements of
-being "promoted." When your work decides something reusable, capture it
-(status slice → SOP → canon) before you finish.
+#sv-automation; every Claude-drafted message is brief: answer first, sized to
+the ask, decisions asked once as questions (rule 20); collaborative tools live
+in Stadium-Ventures org repos; locked client-facing artifacts (Report Packets)
+are never moved or regenerated. This tool's hub registration + #sv-automation
+hookup are canonical requirements of being "promoted." When your work decides
+something reusable, capture it (status slice → SOP → canon) before you finish.
 
 ## Slack channels — scope rule (keep every new alert compliant)
 
