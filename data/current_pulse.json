@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-30T00:01:35.788418+00:00",
+  "generated_at": "2026-09-30T00:16:52.173166+00:00",
   "players": [
     {
       "player_name": "Aaron Watson",
@@ -357,9 +357,9 @@
       "player_name": "Garrett Whitlock",
       "team": "Boston Red Sox",
       "level": "Pro",
-      "stats_summary": "Game at 8:00 PM ET",
-      "game_context": "Boston Red Sox vs New York Yankees | 8:00 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Boston Red Sox 0, New York Yankees 0 | Top 1",
+      "game_status": "Live",
       "game_time": "8:00 PM ET",
       "game_date": "2026-09-30",
       "is_yesterday": false,
@@ -373,7 +373,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/849851",
       "player_profile_url": "https://www.mlb.com/player/676477",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Garrett%20Whitlock%22%20Sox&f=live",
       "data_source": "MLB Stats API",
@@ -1548,8 +1548,8 @@
       "team": "Houston Astros",
       "level": "Pro",
       "stats_summary": "1-3, R, K",
-      "game_context": "Chicago White Sox vs Houston Astros | Manager challenge",
-      "game_status": "Manager challenge",
+      "game_context": "Chicago White Sox 6, Houston Astros 3 | Bottom 9",
+      "game_status": "Live",
       "game_time": "5:00 PM ET",
       "game_date": "2026-09-29",
       "is_yesterday": false,
@@ -3237,8 +3237,8 @@
       "team": "Boston Red Sox",
       "level": "Pro",
       "stats_summary": "In lineup — batting 8th (SS)",
-      "game_context": "Boston Red Sox vs New York Yankees | 8:00 PM ET",
-      "game_status": "Scheduled",
+      "game_context": "Boston Red Sox 0, New York Yankees 0 | Top 1",
+      "game_status": "Live",
       "game_time": "8:00 PM ET",
       "game_date": "2026-09-30",
       "is_yesterday": false,
@@ -3252,7 +3252,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/849851",
       "player_profile_url": "https://www.mlb.com/player/596115",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Trevor%20Story%22%20Sox&f=live",
       "data_source": "MLB Stats API",
@@ -3276,7 +3276,9 @@
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Garrett Whitlock"
+    ],
     "total_clients": 89,
     "proxy_pool": {
       "pool": [
