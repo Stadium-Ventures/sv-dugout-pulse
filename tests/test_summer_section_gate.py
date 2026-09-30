@@ -18,6 +18,10 @@ def test_section_is_dropped_once_the_season_is_over(monkeypatch):
 def test_wrap_note_replaces_the_list_right_after_the_season(monkeypatch):
     monkeypatch.setattr(m, "season_is_active", lambda: False)
     monkeypatch.setattr(m, "last_real_game_day", lambda: "2026-08-08")
+    # The section calls the wrap note with the real clock; pin "today" to a
+    # week after the last game so the test doesn't expire with the calendar.
+    real_note = m._summer_wrap_note
+    monkeypatch.setattr(m, "_summer_wrap_note", lambda today=None: real_note(today=date(2026, 8, 15)))
     html = m._render_summer_placements_section()
     assert "season wrapped Aug 8" in html
     assert "Active placements" not in html
