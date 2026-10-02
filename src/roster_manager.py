@@ -588,8 +588,6 @@ def get_all_players() -> list[dict]:
         _enrich_pro_team_from_api(players)
         _save_roster_cache(players)
         _roster_fetch_fresh = True
-        if roster_source() == "registry":
-            _check_registry_peaks(clients)
         return players
     except Exception as exc:
         if isinstance(exc, RegistryRosterError):
@@ -661,8 +659,8 @@ def _log_dual_run(sheet_clients: list[dict]) -> None:
 
 # ---------------------------------------------------------------------------
 # #sv-automation alerts for the registry path. Before these, a registry read
-# failure that fell back to the saved list, a failed dual-run read, and a
-# registry roster with no peaks all landed only in the (public) Actions log.
+# failure that fell back to the saved list, and a failed dual-run read both
+# landed only in the (public) Actions log.
 # Each alert posts at most once a day per kind (timestamps in a small state
 # file the pulse run commits), goes through scripts/_automation_notify.py,
 # and never affects the run. No player names, URLs or tokens in the text.
@@ -670,7 +668,6 @@ def _log_dual_run(sheet_clients: list[dict]) -> None:
 
 ROSTER_ALERT_STATE_PATH = os.path.join(os.path.dirname(ROSTER_CACHE_PATH), "_roster_source_alerts.json")
 _ROSTER_ALERT_COOLDOWN_H = 24
-_PEAK_KEYS = ("peak_war", "peak_wrc_plus", "peak_era_20tbf")
 _VARIABLES_URL = "https://github.com/Stadium-Ventures/sv-dugout-pulse/settings/variables/actions"
 _SECRETS_URL = "https://github.com/Stadium-Ventures/sv-dugout-pulse/settings/secrets/actions"
 
@@ -754,20 +751,3 @@ def _alert_dual_run_failed(exc: BaseException) -> None:
     ))
 
 
-def _check_registry_peaks(clients: list[dict]) -> None:
-    """Registry mode: if no Pro client carries any peak, the dashboard's peak
-    chips are blank for everyone. Say so instead of shipping it silently."""
-    try:
-        pros = [p for p in clients if p.get("level") == "Pro"]
-        if not pros or any(p.get(k) for p in pros for k in _PEAK_KEYS):
-            return
-        logger.error("Registry roster carries no peak projections for any of %d Pro clients", len(pros))
-        _post_roster_alert("registry_peaks_missing", (
-            ":warning: *Peak projection chips are blank for every Pro client on the dashboard.*\n"
-            f"How we know: the client list now comes from SV Registry, and it carried no Peak WAR, wRC+ or ERA "
-            f"for any of the {len(pros)} Pro players.\n"
-            f"What to do: 👤 set ROSTER_SOURCE back to sheet to bring the chips back ({_VARIABLES_URL}). "
-            "🛠️ Switch again once SV Registry serves peaks."
-        ))
-    except Exception:
-        logger.exception("Peak check failed (non-fatal)")

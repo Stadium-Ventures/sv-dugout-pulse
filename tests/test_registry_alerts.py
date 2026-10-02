@@ -1,9 +1,9 @@
 """#sv-automation alerts on the registry roster path.
 
-Three things used to land only in the Actions log: a registry read failure
-that fell back to the saved list, a failed dual-run read, and a registry
-roster with no peaks (blank peak chips for every Pro client). Offline;
-synthetic fixtures only.
+Two things used to land only in the Actions log: a registry read failure
+that fell back to the saved list, and a failed dual-run read. A registry
+roster with no peaks is expected (peaks come from the SV Scouting Hub) and
+stays silent. Offline; synthetic fixtures only.
 """
 import json
 from datetime import datetime, timedelta, timezone
@@ -32,49 +32,6 @@ def assert_three_beats(text):
     assert "👤" in lines[2]
     for bad in ("—", "–", " -- ", "...", "…", "svt_", "Bearer"):
         assert bad not in text
-
-
-# ── peaks guard ──────────────────────────────────────────────────────────
-
-def test_registry_roster_without_peaks_alerts_once(fake_registry, isolated, posts):
-    rm.get_all_players()
-    assert rm.roster_is_fresh() is True        # the run still ships; the alert says why chips are blank
-    assert len(posts) == 1
-    assert "Peak projection chips are blank" in posts[0]
-    assert "ROSTER_SOURCE back to sheet" in posts[0]
-    assert_three_beats(posts[0])
-    rm.get_all_players()                       # next 15-minute run: same day, no repeat
-    assert len(posts) == 1
-
-
-def test_registry_roster_with_any_peak_is_silent(monkeypatch, fake_registry, isolated, posts):
-    real = rm.registry_row_to_sheet_row
-
-    def with_peak(row):
-        out = real(row)
-        if row["slug"] == "synthetic-pro-bat":
-            out["Peak WAR"] = "2.0"
-        return out
-    monkeypatch.setattr(rm, "registry_row_to_sheet_row", with_peak)
-    rm.get_all_players()
-    assert posts == []
-
-
-def test_sheet_mode_never_runs_the_peak_guard(monkeypatch, isolated, posts):
-    monkeypatch.delenv("ROSTER_SOURCE", raising=False)
-    monkeypatch.delenv("SV_REGISTRY_ROSTER_TOKEN", raising=False)
-    monkeypatch.setattr(rm, "fetch_roster", lambda url=None: [
-        {"Player Name": f"Sheet Pro {i:02d}", "Level": "Pro", "Org": "X", "Tier": "2"} for i in range(30)])
-    rm.get_all_players()
-    assert posts == []
-
-
-def test_cooldown_expires_after_a_day(fake_registry, isolated, posts):
-    old = (datetime.now(timezone.utc) - timedelta(hours=25)).isoformat()
-    with open(rm.ROSTER_ALERT_STATE_PATH, "w") as f:
-        json.dump({"registry_peaks_missing": old}, f)
-    rm.get_all_players()
-    assert len(posts) == 1
 
 
 # ── registry read failure on the saved list ──────────────────────────────
@@ -153,3 +110,21 @@ def test_sheet_retired_rows_are_still_named_as_today(caplog):
         rm.filter_roster([{"Player Name": "Sheet Retired Synthetic", "Level": "Pro", "Org": "X",
                            "Status": "Retired", "Tier": "2"}])
     assert "Excluding Sheet Retired Synthetic" in caplog.text
+
+
+def test_cooldown_expires_after_a_day(monkeypatch, registry_env, isolated, posts):
+    old = (datetime.now(timezone.utc) - timedelta(hours=25)).isoformat()
+    with open(rm.ROSTER_ALERT_STATE_PATH, "w") as f:
+        json.dump({"registry_read_failed": old}, f)
+    monkeypatch.setattr(rm, "requests", _RequestsShim(FakeSession(FakeResp(503, {}))))
+    _write_cache(isolated, "registry", [{"player_name": "Registry Era Player", "level": "Pro"}])
+    rm.get_all_players()
+    assert len(posts) == 1
+
+
+def test_registry_roster_without_peaks_is_silent(fake_registry, isolated, posts):
+    # Peaks come from the SV Scouting Hub in the browser (js/gate.js
+    # svPeakValues), not from the roster, so no peaks on the registry rows
+    # is expected and must not alert.
+    rm.get_all_players()
+    assert posts == []
