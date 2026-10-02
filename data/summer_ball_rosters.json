@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T01:39:14.425241+00:00",
+  "generated_at": "2026-10-02T14:40:59.357532+00:00",
   "league_health": [
     {
       "league": "Cape Cod",
@@ -7,7 +7,7 @@
       "player_count": 294,
       "team_count": 10,
       "error": null,
-      "duration_ms": 2350,
+      "duration_ms": 648,
       "sample_players": [
         "Adam Haight",
         "Blaine Brown",
@@ -22,7 +22,7 @@
       "player_count": 231,
       "team_count": 8,
       "error": null,
-      "duration_ms": 2079,
+      "duration_ms": 431,
       "sample_players": [
         "Austin Rose",
         "Bo Strickland",
@@ -37,7 +37,7 @@
       "player_count": 159,
       "team_count": 7,
       "error": null,
-      "duration_ms": 1778,
+      "duration_ms": 412,
       "sample_players": [
         "Alexander Llinas",
         "Blake Barker",
@@ -52,7 +52,7 @@
       "player_count": 646,
       "team_count": 13,
       "error": null,
-      "duration_ms": 65812,
+      "duration_ms": 60574,
       "sample_players": [
         "TJ Schmalzle",
         "Aaron Forgues",
@@ -67,7 +67,7 @@
       "player_count": 381,
       "team_count": 8,
       "error": null,
-      "duration_ms": 72681,
+      "duration_ms": 65292,
       "sample_players": [
         "Alex Cromwell",
         "Connor Doherty",
@@ -82,7 +82,7 @@
       "player_count": 373,
       "team_count": 16,
       "error": null,
-      "duration_ms": 110126,
+      "duration_ms": 45500,
       "sample_players": [
         "D Denten",
         "M Helmer Jr.",
@@ -97,7 +97,7 @@
       "player_count": 465,
       "team_count": 7,
       "error": null,
-      "duration_ms": 33891,
+      "duration_ms": 34921,
       "sample_players": [
         "Dylan Izenman",
         "Marco Zirpolo",
@@ -112,7 +112,7 @@
       "player_count": 1040,
       "team_count": 20,
       "error": null,
-      "duration_ms": 114124,
+      "duration_ms": 112237,
       "sample_players": [
         "Caynen Patterson",
         "Hayden Wilson",
@@ -136,7 +136,7 @@
       "player_count": 481,
       "team_count": 15,
       "error": null,
-      "duration_ms": 9180,
+      "duration_ms": 5479,
       "sample_players": [
         "Abdriel Figueroa",
         "AJ Malzone",
@@ -178,24 +178,14 @@
   "ncaa_clients_ambiguous": 5,
   "matched": [
     {
-      "player_name": "Ty Finkbeiner",
-      "college": "Michigan",
-      "summer_team": "COT",
-      "league": "Cape Cod",
-      "summer_name": "Tyler Finkbeiner",
-      "source_id": "802774",
-      "match_strength": "initial+last",
-      "profile_url": "https://www.mlb.com/player/802774"
-    },
-    {
-      "player_name": "Lucas Lawrence",
-      "college": "Ole Miss",
-      "summer_team": "Lexington County Blowfish",
-      "league": "Coastal Plain",
-      "summer_name": "Logan Lawrence",
-      "source_id": "",
-      "match_strength": "initial+last",
-      "profile_url": "https://coastalplain.com/rosters/lexington-county-blowfish-roster/"
+      "player_name": "Eamon McDermott",
+      "college": "Dartmouth",
+      "summer_team": "Keeneswampbats",
+      "league": "NECBL",
+      "summer_name": "Eamon McDermott",
+      "source_id": "eamonmcdermottjjsa",
+      "match_strength": "name-only",
+      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
     },
     {
       "player_name": "Evan Taylor",
@@ -208,14 +198,14 @@
       "profile_url": "https://pgcbl.prestosports.com/sports/bsb/2025-26/players/evantaylorvx6g"
     },
     {
-      "player_name": "Eamon McDermott",
-      "college": "Dartmouth",
-      "summer_team": "Keeneswampbats",
-      "league": "NECBL",
-      "summer_name": "Eamon McDermott",
-      "source_id": "eamonmcdermottjjsa",
-      "match_strength": "name-only",
-      "profile_url": "https://necbl.com/sports/bsb/2026/teams/keeneswampbats?view=roster"
+      "player_name": "Lucas Lawrence",
+      "college": "Ole Miss",
+      "summer_team": "Lexington County Blowfish",
+      "league": "Coastal Plain",
+      "summer_name": "Logan Lawrence",
+      "source_id": "",
+      "match_strength": "initial+last",
+      "profile_url": "https://coastalplain.com/rosters/lexington-county-blowfish-roster/"
     },
     {
       "player_name": "Luke Fithian",
@@ -238,6 +228,16 @@
       "profile_url": "https://coastalplain.com/rosters/tri-city-chilipeppers-roster/"
     },
     {
+      "player_name": "Ty Finkbeiner",
+      "college": "Michigan",
+      "summer_team": "COT",
+      "league": "Cape Cod",
+      "summer_name": "Tyler Finkbeiner",
+      "source_id": "802774",
+      "match_strength": "initial+last",
+      "profile_url": "https://www.mlb.com/player/802774"
+    },
+    {
       "player_name": "Zack Johnson",
       "college": "Alabama",
       "summer_team": "Amsterdam Mohawks",
@@ -251,7 +251,7 @@
   "possible_matches": [
     {
       "player_name": "Devin Diaz",
-      "college": "University of Miami",
+      "college": "Miami",
       "match_strength": "initial+last (manual review)",
       "candidates": [
         {
@@ -273,28 +273,8 @@
   ],
   "unmatched": [
     {
-      "player_name": "Caleb Daniel",
-      "college": "Georgia Tech"
-    },
-    {
-      "player_name": "Riley Goodman",
-      "college": "University of Georgia"
-    },
-    {
-      "player_name": "Will Rhine",
-      "college": "Alabama"
-    },
-    {
       "player_name": "Adam McKelvey",
       "college": "Georgia Tech"
-    },
-    {
-      "player_name": "Cole Katayama-Stall",
-      "college": "University of Portland"
-    },
-    {
-      "player_name": "Phinn Beaird",
-      "college": "University of Texas"
     },
     {
       "player_name": "Boston Torres",
@@ -309,68 +289,88 @@
       "college": "Tennessee"
     },
     {
+      "player_name": "Caleb Daniel",
+      "college": "Georgia Tech"
+    },
+    {
+      "player_name": "Cole Katayama-Stall",
+      "college": "University of Portland"
+    },
+    {
+      "player_name": "Dominic Woodward",
+      "college": "UCF"
+    },
+    {
       "player_name": "Drew Bellis",
       "college": "UCF"
+    },
+    {
+      "player_name": "Griffin Loy",
+      "college": "Virginia"
     },
     {
       "player_name": "Henry Zatkowski",
       "college": "Virginia"
     },
     {
-      "player_name": "Sam Mitchell",
-      "college": "Southern Miss"
-    },
-    {
-      "player_name": "Sam Harry",
-      "college": "Sacramento State"
-    },
-    {
-      "player_name": "Griffin Loy",
-      "college": "University of Virginia"
-    },
-    {
-      "player_name": "Tanner Chun",
-      "college": "Hawaii"
-    },
-    {
       "player_name": "Lee Ellis",
-      "college": "University of Kentucky"
+      "college": "Kentucky"
     },
     {
       "player_name": "Lucas Steele",
       "college": "Auburn"
     },
     {
+      "player_name": "Mason Barth",
+      "college": "Notre Dame"
+    },
+    {
       "player_name": "Michael Gillen",
       "college": "UCF"
+    },
+    {
+      "player_name": "Phinn Beaird",
+      "college": "Texas"
+    },
+    {
+      "player_name": "Riley Goodman",
+      "college": "Georgia"
+    },
+    {
+      "player_name": "Sam Harry",
+      "college": "Sacramento State"
+    },
+    {
+      "player_name": "Sam Mitchell",
+      "college": "Southern Miss"
+    },
+    {
+      "player_name": "Tanner Chun",
+      "college": "Hawaii"
+    },
+    {
+      "player_name": "Tripp Rosenberger",
+      "college": "Stetson"
     },
     {
       "player_name": "Will Myhand",
       "college": "North Carolina"
     },
     {
-      "player_name": "Dominic Woodward",
-      "college": "Central Florida"
-    },
-    {
-      "player_name": "Mason Barth",
-      "college": "Notre Dame"
-    },
-    {
-      "player_name": "Tripp Rosenberger",
-      "college": "Stetson"
+      "player_name": "Will Rhine",
+      "college": "Alabama"
     }
   ],
   "ambiguous": [
     {
-      "player_name": "Brooks Wright",
-      "college": "SE Louisiana",
+      "player_name": "Bennett Edwards",
+      "college": "Clemson",
       "candidates": [
         {
-          "summer_team": "Boone Bigfoots",
+          "summer_team": "Lexington County Blowfish",
           "league": "Coastal Plain",
-          "summer_name": "Brooks Wright",
-          "summer_college": "Appalachian State"
+          "summer_name": "Bennett Edwards",
+          "summer_college": "Georgia Southern"
         }
       ],
       "conflict_reason": "college mismatch"
@@ -389,27 +389,14 @@
       "conflict_reason": "college mismatch"
     },
     {
-      "player_name": "Taylor Kirk",
-      "college": "UCLA",
+      "player_name": "Brooks Wright",
+      "college": "SE Louisiana",
       "candidates": [
         {
-          "summer_team": "HYA",
-          "league": "Cape Cod",
-          "summer_name": "Taylor Kirk",
-          "summer_college": "Fordham"
-        }
-      ],
-      "conflict_reason": "college mismatch"
-    },
-    {
-      "player_name": "Bennett Edwards",
-      "college": "Clemson",
-      "candidates": [
-        {
-          "summer_team": "Lexington County Blowfish",
+          "summer_team": "Boone Bigfoots",
           "league": "Coastal Plain",
-          "summer_name": "Bennett Edwards",
-          "summer_college": "Georgia Southern"
+          "summer_name": "Brooks Wright",
+          "summer_college": "Appalachian State"
         }
       ],
       "conflict_reason": "college mismatch"
@@ -423,6 +410,19 @@
           "league": "Coastal Plain",
           "summer_name": "Lee Sowers",
           "summer_college": "North Carolina"
+        }
+      ],
+      "conflict_reason": "college mismatch"
+    },
+    {
+      "player_name": "Taylor Kirk",
+      "college": "UCLA",
+      "candidates": [
+        {
+          "summer_team": "HYA",
+          "league": "Cape Cod",
+          "summer_name": "Taylor Kirk",
+          "summer_college": "Fordham"
         }
       ],
       "conflict_reason": "college mismatch"
