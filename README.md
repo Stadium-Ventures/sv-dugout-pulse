@@ -191,11 +191,12 @@ projection.
   response, or a response that does not assert `contains_no_contact_data` is an
   error. There is **no fallback to the sheet**; the run uses the last good
   *registry* cache (< 24 h, prunes disabled) or aborts.
-- Peak WAR / wRC+ / ERA have no canon source and are not in the projection; on
-  the registry their chips and cards simply do not render. **So do not flip to
-  `registry` until SV Registry serves peaks** (sv-scouting-data owns them). If the
-  flip happens anyway and no Pro client carries a peak, the run posts once a day to
-  #sv-automation.
+- Peak WAR / wRC+ / ERA are not in the registry projection. The chips and the
+  Peak card read them from the Scouting Hub (`/api/scouting-ref`, by MLB id) for
+  anyone signed in with the hub password, so the flip to `registry` does not blank
+  them. Without the hub, the page falls back to the roster's peak fields, which
+  the registry does not carry, so those viewers see no chips. The daily
+  no-peaks alert was removed in #47.
 - #sv-automation alerts on this path (at most once a day each, state in
   `data/_roster_source_alerts.json`): the registry read failed and the run is on the
   last saved list; the dual-run read failed; the registry roster has no peaks. A
