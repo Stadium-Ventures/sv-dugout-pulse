@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T15:15:13.571819+00:00",
+  "generated_at": "2026-10-04T16:00:09.962210+00:00",
   "baseline_window": "season minus the recent window",
   "recent_windows": [
     "14d",
@@ -57,77 +57,11 @@
       ],
       "season_check": "schedule unreadable \u2014 left as graded",
       "since": "2026-09-29",
-      "days_standing": 5,
+      "days_standing": 6,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
       "rereport_days": 7,
-      "due_today": false,
-      "posted_today": false
-    },
-    {
-      "player_name": "Jack Cebert",
-      "team": "Washington Nationals",
-      "current_level": "AAA",
-      "roster_priority": 1,
-      "kind": "pitcher",
-      "window": "30d",
-      "season_games": 24,
-      "recent_games": 4,
-      "status": "season_over",
-      "reason": "Season over for Rochester Red Wings \u2014 last game 2026-09-26",
-      "baseline": {
-        "ip": "95.2",
-        "k": 111,
-        "bb": 33,
-        "er": 41,
-        "era": "3.86",
-        "k_per_9": "10.4",
-        "bb_per_9": "3.1",
-        "_era": 3.86,
-        "_bb_per_9": 3.1,
-        "whip": "1.22",
-        "grade": "\ud83d\ude10 Steady"
-      },
-      "recent": {
-        "ip": "13.2",
-        "k": 11,
-        "bb": 10,
-        "er": 8,
-        "era": "5.27",
-        "k_per_9": "7.2",
-        "bb_per_9": "6.6",
-        "_era": 5.27,
-        "_bb_per_9": 6.6,
-        "whip": "1.98",
-        "grade": "\ud83e\udd76 Cold"
-      },
-      "delta": {
-        "metric": "era",
-        "value": 1.41
-      },
-      "detail": "",
-      "alternates": [
-        {
-          "window": "14d",
-          "status": "insufficient",
-          "reason": "Recent sample too small (2.1 IP in the last 14 days, need 6)",
-          "delta": null
-        }
-      ],
-      "season_over": {
-        "team_id": 534,
-        "team": "Rochester Red Wings",
-        "last_game": "2026-09-26",
-        "since": "2026-09-23"
-      },
-      "season_over_noted": false,
-      "since": "2026-09-23",
-      "days_standing": 11,
-      "new_today": false,
-      "last_posted_date": "2026-09-21",
-      "last_posted_status": "lull",
-      "rereport_days": 14,
       "due_today": false,
       "posted_today": false
     },
@@ -145,21 +79,11 @@
       "baseline": null,
       "recent": null,
       "delta": null,
-      "usage_role": {
-        "read": "role",
-        "window": "30d",
-        "baseline_pa_per_g": 4.22,
-        "recent_pa_per_g": 4.67,
-        "recent_games": 3,
-        "drop_pct": -10.7,
-        "dropped": false,
-        "summary": "Batting 4.7 times per game over the last 30 days, down from 4.2 on the season \u2014 he's playing but not starting"
-      },
       "alternates": [
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (14 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (9 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -172,7 +96,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-05",
       "last_posted_status": "surge",
@@ -211,7 +135,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-02",
       "last_posted_status": "idle",
@@ -250,7 +174,7 @@
       "detail": "",
       "season_over_noted": false,
       "since": "2026-09-24",
-      "days_standing": 10,
+      "days_standing": 11,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "steady",
@@ -275,18 +199,18 @@
       "usage_role": {
         "read": "role",
         "window": "30d",
-        "baseline_pa_per_g": 4.71,
-        "recent_pa_per_g": 5.0,
-        "recent_games": 4,
-        "drop_pct": -6.2,
+        "baseline_pa_per_g": 4.7,
+        "recent_pa_per_g": 5.33,
+        "recent_games": 3,
+        "drop_pct": -13.5,
         "dropped": false,
-        "summary": "Batting 5.0 times per game over the last 30 days, down from 4.7 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 5.3 times per game over the last 30 days, down from 4.7 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (20 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (16 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -299,7 +223,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-04",
       "last_posted_status": "surge",
@@ -339,7 +263,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -365,7 +289,7 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Baseline sample too small (6.1 IP before the last 30 days, need 15)",
+          "reason": "No games in the last 30 days",
           "delta": null
         }
       ],
@@ -378,10 +302,71 @@
       "detail": "",
       "season_over_noted": false,
       "since": "2026-10-02",
-      "days_standing": 2,
+      "days_standing": 3,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
+      "rereport_days": 14,
+      "due_today": false,
+      "posted_today": false
+    },
+    {
+      "player_name": "Jack Cebert",
+      "team": "Washington Nationals",
+      "current_level": "AAA",
+      "roster_priority": 1,
+      "kind": "pitcher",
+      "window": "14d",
+      "season_games": 24,
+      "recent_games": 1,
+      "status": "season_over",
+      "reason": "Season over for Rochester Red Wings \u2014 last game 2026-09-26",
+      "baseline": {
+        "ip": "107",
+        "k": 120,
+        "bb": 42,
+        "er": 47,
+        "era": "3.95",
+        "k_per_9": "10.1",
+        "bb_per_9": "3.5",
+        "_era": 3.95,
+        "_bb_per_9": 3.5,
+        "whip": "1.32"
+      },
+      "recent": {
+        "ip": "2.1",
+        "k": 2,
+        "bb": 1,
+        "er": 2,
+        "era": "7.71",
+        "k_per_9": "7.7",
+        "bb_per_9": "3.9",
+        "_era": 7.71,
+        "_bb_per_9": 3.9,
+        "whip": "1.29"
+      },
+      "delta": null,
+      "alternates": [
+        {
+          "window": "30d",
+          "status": "insufficient",
+          "reason": "Recent sample too small (9.2 IP in the last 30 days, need 12)",
+          "delta": null
+        }
+      ],
+      "season_over": {
+        "team_id": 534,
+        "team": "Rochester Red Wings",
+        "last_game": "2026-09-26",
+        "since": "2026-09-23"
+      },
+      "detail": "",
+      "season_over_noted": false,
+      "since": "2026-09-23",
+      "days_standing": 12,
+      "new_today": false,
+      "last_posted_date": "2026-09-21",
+      "last_posted_status": "lull",
       "rereport_days": 14,
       "due_today": false,
       "posted_today": false
@@ -418,7 +403,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -444,7 +429,7 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Baseline sample too small (28 PA before the last 30 days, need 40)",
+          "reason": "No games in the last 30 days",
           "delta": null
         }
       ],
@@ -457,7 +442,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -483,7 +468,7 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (10 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (6 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -496,7 +481,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-17",
-      "days_standing": 17,
+      "days_standing": 18,
       "new_today": false,
       "last_posted_date": "2026-09-10",
       "last_posted_status": "surge",
@@ -521,10 +506,10 @@
       "usage_role": {
         "read": "role",
         "window": "30d",
-        "baseline_pa_per_g": 4.47,
+        "baseline_pa_per_g": 4.5,
         "recent_pa_per_g": 5.0,
-        "recent_games": 4,
-        "drop_pct": -11.8,
+        "recent_games": 3,
+        "drop_pct": -11.1,
         "dropped": false,
         "summary": "Batting 5.0 times per game over the last 30 days, down from 4.5 on the season \u2014 he's playing but not starting"
       },
@@ -532,7 +517,7 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (20 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (15 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -545,7 +530,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-09",
       "last_posted_status": "lull",
@@ -571,7 +556,7 @@
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (6 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (3 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -584,7 +569,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-08",
       "last_posted_status": "lull",
@@ -623,7 +608,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "lull",
@@ -663,7 +648,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -702,7 +687,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -741,7 +726,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-05",
       "last_posted_status": "insufficient",
@@ -780,7 +765,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-16",
-      "days_standing": 18,
+      "days_standing": 19,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -819,7 +804,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-10",
       "last_posted_status": "steady",
@@ -858,7 +843,7 @@
       "detail": "",
       "season_over_noted": false,
       "since": "2026-09-25",
-      "days_standing": 9,
+      "days_standing": 10,
       "new_today": false,
       "last_posted_date": "2026-08-31",
       "last_posted_status": "surge",
@@ -897,7 +882,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-08-29",
       "last_posted_status": "surge",
@@ -936,7 +921,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -976,7 +961,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1016,7 +1001,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1056,7 +1041,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
@@ -1082,17 +1067,17 @@
         "read": "role",
         "window": "30d",
         "baseline_pa_per_g": 3.88,
-        "recent_pa_per_g": 4.5,
-        "recent_games": 4,
-        "drop_pct": -16.1,
+        "recent_pa_per_g": 4.67,
+        "recent_games": 3,
+        "drop_pct": -20.2,
         "dropped": false,
-        "summary": "Batting 4.5 times per game over the last 30 days, down from 3.9 on the season \u2014 he's playing but not starting"
+        "summary": "Batting 4.7 times per game over the last 30 days, down from 3.9 on the season \u2014 he's playing but not starting"
       },
       "alternates": [
         {
           "window": "30d",
           "status": "insufficient",
-          "reason": "Recent sample too small (18 PA in the last 30 days, need 45)",
+          "reason": "Recent sample too small (14 PA in the last 30 days, need 45)",
           "delta": null
         }
       ],
@@ -1105,7 +1090,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": "2026-09-04",
       "last_posted_status": "lull",
@@ -1144,7 +1129,7 @@
       "detail": "",
       "season_over_noted": true,
       "since": "2026-09-11",
-      "days_standing": 23,
+      "days_standing": 24,
       "new_today": false,
       "last_posted_date": null,
       "last_posted_status": null,
