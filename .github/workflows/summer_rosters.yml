@@ -11,12 +11,17 @@ name: Summer Ball Roster Refresh
 # 13:00 UTC = 9 AM ET   — after Cube's typical batch finishes
 # 17:00 UTC = 1 PM ET   — afternoon catch-up
 # 22:00 UTC = 6 PM ET   — last pass before evening games begin
+#
+# May through August only (Tom, 2026-10-05): summer leagues run late May to
+# early August, and off-season passes were still pulling league pages
+# through the paid proxies (ScraperAPI is cancelled for the offseason).
+# Run it by hand with workflow_dispatch if a league starts or ends early.
 on:
   schedule:
-    - cron: "0 8 * * *"
-    - cron: "0 13 * * *"
-    - cron: "0 17 * * *"
-    - cron: "0 22 * * *"
+    - cron: "0 8 * 5-8 *"
+    - cron: "0 13 * 5-8 *"
+    - cron: "0 17 * 5-8 *"
+    - cron: "0 22 * 5-8 *"
   workflow_dispatch:
     inputs:
       dry_run:
