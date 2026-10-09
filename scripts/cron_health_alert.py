@@ -13,7 +13,8 @@ Checks:
                                  >48h = stale
   3. data/summer_ball_rosters.json — summer roster refresh; 4 runs/day, >36h
                                  old means the workflow is silently dying
-                                 (e.g. the 2026-07 timeout-cancellation streak)
+                                 (e.g. the 2026-07 timeout-cancellation streak);
+                                 checked May–August only, when it's scheduled
 
 Posts ONE message to #sv-automation listing only the checks that failed,
 following the SV message contract (what broke / how we know / what to do,
@@ -75,6 +76,11 @@ def _file_age_hours(filename: str, ts_field: str) -> float:
     return _hours_since(str(data.get(ts_field, "")))
 
 
+def _summer_roster_season(now: datetime | None = None) -> bool:
+    """True in the months the Summer Ball Roster Refresh is scheduled (May–Aug)."""
+    return 5 <= (now or datetime.now(timezone.utc)).month <= 8
+
+
 def run_checks() -> list[str]:
     """Returns one contract-formatted finding string per failed check."""
     findings: list[str] = []
@@ -114,8 +120,10 @@ def run_checks() -> list[str]:
     # 3. Summer roster snapshot — refreshed 4×/day. Catches the failure mode
     #    where the workflow is repeatedly timeout-cancelled (cancelled runs
     #    never trigger `if: failure()` alerts, so staleness is the only tell).
+    #    The refresh only runs May through August (summer_rosters.yml), so a
+    #    stale snapshot the rest of the year is expected, not a failure.
     age = _file_age_hours("summer_ball_rosters.json", "generated_at")
-    if age > 36:
+    if _summer_roster_season() and age > 36:
         findings.append(
             ":warning: *Summer-league rosters have stopped refreshing, so team "
             "assignments on the dashboard may be out of date.*\n"

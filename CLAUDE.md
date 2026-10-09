@@ -47,7 +47,8 @@ something reusable, capture it (status slice → SOP → canon) before you finis
 
 - `scripts/cron_health_alert.py` + `.github/workflows/cron_health_alert.yml`
   ("Daily Health Check", 22:00 UTC) — daily self-health-check: freshness of
-  `current_pulse.json`, `bbref_stats.json`, `summer_ball_rosters.json`.
+  `current_pulse.json`, `bbref_stats.json`, `summer_ball_rosters.json`
+  (rosters May–August only, matching the refresh schedule).
   Catches silent cron skips and timeout-CANCELLED runs (those never trigger
   `if: failure()` alerts). Test the wiring:
   `gh workflow run cron_health_alert.yml -f test=true`.
