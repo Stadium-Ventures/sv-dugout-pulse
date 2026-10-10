@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T18:31:55.740707+00:00",
+  "generated_at": "2026-10-10T18:46:26.154374+00:00",
   "players": [
     {
       "player_name": "Mason Barth",
@@ -461,9 +461,9 @@
       "player_name": "Jake Munroe",
       "team": "Mesa Solar Sox",
       "level": "Pro",
-      "stats_summary": "In lineup — batting 3rd (3B)",
-      "game_context": "Peoria Javelinas vs Mesa Solar Sox | 2:30 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "1-1, RBI",
+      "game_context": "Peoria Javelinas 1, Mesa Solar Sox 1 | Bottom 1",
+      "game_status": "Live",
       "game_time": "2:30 PM ET",
       "game_date": "2026-10-10",
       "is_yesterday": false,
@@ -477,8 +477,8 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/867705",
       "player_profile_url": "https://www.mlb.com/player/827719",
-      "performance_grade": "🕒 Scheduled",
-      "grade_reason": "",
+      "performance_grade": "✅ Good",
+      "grade_reason": "Productive game",
       "social_search_url": "https://x.com/search?q=%22Jake%20Munroe%22%20Commissioner&f=live",
       "data_source": "MLB Stats API",
       "fetch_diagnostic": null,
@@ -635,9 +635,9 @@
       "player_name": "Najer Victor",
       "team": "Mesa Solar Sox",
       "level": "Pro",
-      "stats_summary": "Game at 2:30 PM ET",
-      "game_context": "Peoria Javelinas vs Mesa Solar Sox | 2:30 PM ET",
-      "game_status": "Scheduled",
+      "stats_summary": "Game in progress — hasn't pitched",
+      "game_context": "Peoria Javelinas 1, Mesa Solar Sox 1 | Bottom 1",
+      "game_status": "Live",
       "game_time": "2:30 PM ET",
       "game_date": "2026-10-10",
       "is_yesterday": false,
@@ -651,7 +651,7 @@
       },
       "box_score_url": "https://www.mlb.com/gameday/867705",
       "player_profile_url": "https://www.mlb.com/player/695402",
-      "performance_grade": "🕒 Scheduled",
+      "performance_grade": "😐 Routine",
       "grade_reason": "",
       "social_search_url": "https://x.com/search?q=%22Najer%20Victor%22%20Commissioner&f=live",
       "data_source": "MLB Stats API",
@@ -3231,7 +3231,9 @@
     "blocked_event_count": 0,
     "blocked_clients": [],
     "carry_forward_clients": [],
-    "fallback_clients": [],
+    "fallback_clients": [
+      "Najer Victor"
+    ],
     "total_clients": 90,
     "proxy_pool": {
       "pool": [
