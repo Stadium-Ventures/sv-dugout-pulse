@@ -1,12 +1,10 @@
 {
-  "fetch_failures": 0,
-  "generated_at_utc": "2026-10-09T20:32:08.276630+00:00",
+  "fetch_failures": 4,
+  "generated_at_utc": "2026-10-10T00:33:39.882881+00:00",
   "players": {
     "Bennett Edwards": {
       "bbref_id": "edward003ben",
-      "fetched_at_utc": "2026-10-09T20:31:29.594253+00:00",
-      "summary": "",
-      "year": 2026
+      "error": "fetch failed"
     },
     "Brady St. Pierre": {
       "bb": 9,
@@ -17,10 +15,12 @@
       "games": 6,
       "h_allowed": 8,
       "ip": "17.2",
+      "is_stale": true,
       "kind": "pitcher",
       "league": "Cape Cod",
       "league_code": "CCBL",
       "so": 13,
+      "stale_reason": "BBRef fetch failed; showing last-known-good",
       "summary": "17.2 IP, 2 ER, 13 K, 9 BB \u00b7 ERA 1.02, WHIP 0.962 (6 G)",
       "summer_team": "Hyannis",
       "whip": "0.962",
@@ -35,10 +35,12 @@
       "games": 2,
       "h_allowed": 3,
       "ip": "2.2",
+      "is_stale": true,
       "kind": "pitcher",
       "league": "Cape Cod",
       "league_code": "CCBL",
       "so": 2,
+      "stale_reason": "BBRef fetch failed; showing last-known-good",
       "summary": "2.2 IP, 1 ER, 2 K, 1 BB \u00b7 ERA 3.38, WHIP 1.500 (2 G)",
       "summer_team": "Wareham",
       "whip": "1.500",
@@ -54,6 +56,7 @@
       "games": 16,
       "h": 16,
       "hr": 1,
+      "is_stale": true,
       "kind": "hitter",
       "league": "NWDS",
       "league_code": "NWDS",
@@ -64,6 +67,7 @@
       "sb": 7,
       "slg": ".415",
       "so": 15,
+      "stale_reason": "BBRef fetch failed; showing last-known-good",
       "summary": "16-for-53, 1 HR, 6 RBI \u00b7 .302/.431/.415 (16 G, 65 PA)",
       "summer_team": "Willmar",
       "triples": 0,
@@ -75,7 +79,7 @@
       "bb": 7,
       "bbref_id": "daniel002cal",
       "doubles": 2,
-      "fetched_at_utc": "2026-10-09T20:31:42.562681+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:13.213500+00:00",
       "games": 20,
       "h": 13,
       "hr": 2,
@@ -96,19 +100,19 @@
     },
     "Drew Bellis": {
       "bbref_id": "bellis000dre",
-      "fetched_at_utc": "2026-10-09T20:31:45.716919+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:16.944704+00:00",
       "summary": "",
       "year": 2026
     },
     "Evan Taylor": {
       "bbref_id": "taylor002eva",
-      "fetched_at_utc": "2026-10-09T20:31:48.873310+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:20.222307+00:00",
       "summary": "",
       "year": 2026
     },
     "Henry Zatkowski": {
       "bbref_id": "zatkow000hen",
-      "fetched_at_utc": "2026-10-09T20:31:52.091175+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:23.490305+00:00",
       "summary": "",
       "year": 2026
     },
@@ -117,7 +121,7 @@
       "bbref_id": "fithia000luk",
       "earned_runs": 2,
       "era": "2.70",
-      "fetched_at_utc": "2026-10-09T20:31:55.262673+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:26.777768+00:00",
       "games": 3,
       "h_allowed": 6,
       "ip": "6.2",
@@ -136,7 +140,7 @@
       "bb": 25,
       "bbref_id": "harry-000sam",
       "doubles": 6,
-      "fetched_at_utc": "2026-10-09T20:31:58.535425+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:30.015122+00:00",
       "games": 38,
       "h": 65,
       "hr": 8,
@@ -160,7 +164,7 @@
       "bbref_id": "mitche006sam",
       "earned_runs": 5,
       "era": "6.43",
-      "fetched_at_utc": "2026-10-09T20:32:01.740485+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:33.287600+00:00",
       "games": 4,
       "h_allowed": 6,
       "ip": "7.0",
@@ -178,7 +182,7 @@
       "bbref_id": "webb--000tru",
       "earned_runs": 5,
       "era": "2.55",
-      "fetched_at_utc": "2026-10-09T20:32:05.088333+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:36.599152+00:00",
       "games": 10,
       "h_allowed": 7,
       "ip": "17.2",
@@ -193,7 +197,7 @@
     },
     "Will Rhine": {
       "bbref_id": "rhine-000wil",
-      "fetched_at_utc": "2026-10-09T20:32:08.276506+00:00",
+      "fetched_at_utc": "2026-10-10T00:33:39.882813+00:00",
       "summary": "",
       "year": 2026
     }
