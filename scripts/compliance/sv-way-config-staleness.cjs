@@ -13,14 +13,29 @@
 // pass, instead of it silently drifting for weeks (which is how the
 // 2026-07-29 batch got caught 5-6 weeks behind on 2026-09-03).
 //
-// Method: pull the latest date out of the config's own "_note" field (every
-// copy in this org stamps "Authored <date>" and/or "Corrected <date>" there),
-// then check whether any commit since that date touched a path this config's
-// own content depends on. The watch-path list is derived from the config
-// itself (its `roles` keys, `canon_trees`, `repo`) plus a fixed generic list
-// (CLAUDE.md, package.json, sv-app.json, supabase/, api/) — so a config that
-// declares more roles automatically gets watched more closely, with zero
-// per-repo hand-tuning.
+// Method: the baseline is the most recent commit that changed
+// sv-way.config.json itself, made by a person rather than a bot. That commit
+// is the last time someone read the repo and wrote the config down, so the
+// check flags any later commit (<baseline>..HEAD) that touched a path this
+// config's own content depends on. Work done earlier the same day, including
+// the very commits a refresh covered, sits before the baseline and no longer
+// counts. If the config has no usable history (a shallow clone, or a config
+// never committed), the check falls back to the date in `_last_reviewed`, or
+// the latest date in `_note` ("Authored <date>" / "Corrected <date>"), and
+// counts every commit since that date. A config with no date at all is still
+// skipped (see main()).
+//
+// Bot commits never count, as the baseline or as drift: an author name
+// ending in "[bot]" (sv-way-sync[bot], github-actions[bot]), the GitHub
+// Actions bot email, or a subject starting with "[bot]" (the org's marker
+// for a scheduled job that commits under a person's name). Without this the
+// doctrine-block sync in this same workflow, and any daily data refresh,
+// would raise the alarm on their own every week.
+//
+// The watch-path list is derived from the config itself (its `roles` keys,
+// `canon_trees`, `repo`) plus a fixed generic list (CLAUDE.md, package.json,
+// sv-app.json, supabase/, api/), so a config that declares more roles
+// automatically gets watched more closely, with zero per-repo hand-tuning.
 //
 // REPO-AGNOSTIC ON PURPOSE, same as sv-way-check.cjs — drops into any
 // Stadium Ventures repo unchanged. Exit 0 + silent when nothing looks stale;
@@ -79,13 +94,39 @@ function watchPaths(cfg) {
   return [...set].filter((p) => fs.existsSync(path.join(ROOT, p)));
 }
 
-function commitsTouchingSince(p, sinceDate) {
-  const out = git(['log', `--since=${sinceDate}T00:00:00`, '--format=%H|%ad|%s', '--date=short', '--', p]);
+// One commit per line: sha, author date, author name, author email, subject,
+// separated by the ASCII unit separator so a "|" in a subject is harmless.
+const LOG_FORMAT = '--format=%H%x1f%ad%x1f%an%x1f%ae%x1f%s';
+
+function gitLog(args) {
+  const out = git(['log', LOG_FORMAT, '--date=short', ...args]);
   if (!out) return [];
   return out.split('\n').map((line) => {
-    const [sha, date, ...rest] = line.split('|');
-    return { sha: sha.slice(0, 7), date, subject: rest.join('|') };
+    const [sha, date, name, email, subject] = line.split('\x1f');
+    return { sha, date, name: name || '', email: email || '', subject: subject || '' };
   });
+}
+
+const BOT_EMAIL = /^(?:actions?@github\.com|(?:\d+\+)?github-actions\[bot\]@users\.noreply\.github\.com)$/i;
+
+function isBot(c) {
+  return /\[bot\]$/i.test(c.name.trim()) || BOT_EMAIL.test(c.email.trim()) || /^\[bot\]/i.test(c.subject.trim());
+}
+
+// The last human commit that changed the config, or null when there is no
+// usable history to anchor on (a shallow clone's oldest commit would look
+// like it "added" every file, so a shallow checkout always falls back).
+function configBaseline() {
+  if (git(['rev-parse', '--is-shallow-repository']) !== 'false') return null;
+  const human = gitLog(['--', 'sv-way.config.json']).find((c) => !isBot(c));
+  return human ? human.sha : null;
+}
+
+function commitsTouchingSince(p, baseline, sinceDate) {
+  const range = baseline ? [`${baseline}..HEAD`] : [`--since=${sinceDate}T00:00:00`];
+  return gitLog([...range, '--', p])
+    .filter((c) => !isBot(c))
+    .map((c) => ({ sha: c.sha.slice(0, 7), date: c.date, subject: c.subject }));
 }
 
 function main() {
@@ -107,12 +148,13 @@ function main() {
     return { stale: false, skipped: 'no _last_reviewed field and no dated _note to check freshness against' };
   }
   if (!git(['rev-parse', '--is-inside-work-tree'])) {
-    return { stale: false, skipped: 'not a git checkout (or full history unavailable) — cannot diff since note date' };
+    return { stale: false, skipped: 'not a git checkout (or full history unavailable), so there is nothing to diff since the note date' };
   }
 
+  const baseline = configBaseline();
   const signals = [];
   for (const p of watchPaths(cfg)) {
-    const commits = commitsTouchingSince(p, noteDate);
+    const commits = commitsTouchingSince(p, baseline, noteDate);
     if (commits.length) signals.push({ path: p, mostRecent: commits[0], count: commits.length });
   }
 
@@ -144,5 +186,5 @@ if (result.reason) {
     console.log(`  - ${s.path} (${s.count} commit${s.count === 1 ? '' : 's'}, most recent ${s.mostRecent.date} ${s.mostRecent.sha}: ${s.mostRecent.subject})`);
   }
 }
-console.log('\nThis check only detects drift — it does not rewrite the file. Have a Claude Code session (or the repo owner) re-read the repo and refresh sv-way.config.json, same method as the original authoring pass.');
+console.log('\nThis check only detects drift; it does not rewrite the file. Have a Claude Code session (or the repo owner) re-read the repo and refresh sv-way.config.json, same method as the original authoring pass.');
 process.exit(1);
