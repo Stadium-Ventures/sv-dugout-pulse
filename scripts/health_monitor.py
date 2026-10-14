@@ -28,7 +28,7 @@ Env:
   GITHUB_TOKEN               (required to open issues) provided by Actions
   GITHUB_REPOSITORY          (default Stadium-Ventures/sv-dugout-pulse)
   DUGOUT_PULSE_CHANNEL_ID    (default C0ACLMAHXPF)
-  HEALTH_MONITOR_MODEL       (default claude-opus-4-8)
+  HEALTH_MONITOR_MODEL       (default claude-opus-5-5)
 """
 
 from __future__ import annotations
@@ -55,7 +55,7 @@ _GITHUB_REPO = os.environ.get("GITHUB_REPOSITORY", "Stadium-Ventures/sv-dugout-p
 _GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 _SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN", "")
 _CHANNEL_ID = os.environ.get("DUGOUT_PULSE_CHANNEL_ID", "C0ACLMAHXPF")
-_MODEL = os.environ.get("HEALTH_MONITOR_MODEL", "claude-opus-4-8")
+_MODEL = os.environ.get("HEALTH_MONITOR_MODEL", "claude-opus-5-5")
 _ISSUE_LABEL = "pulse-health"
 
 
@@ -289,14 +289,22 @@ def reason(context: dict) -> dict:
         + json.dumps(context, indent=2, default=str)[:120000]
         + "\n```"
     )
-    resp = client.messages.create(
+    resp = client.beta.messages.create(
         model=_MODEL,
         max_tokens=16000,
         thinking={"type": "adaptive"},
+        # Opus 5.5 defaults to medium; high keeps the depth the monitor had on 4.8.
+        output_config={"effort": "high",
+                       "format": {"type": "json_schema", "schema": _SCHEMA}},
+        # Safety classifiers can decline a request; route those to the default
+        # fallback model server-side instead of skipping the check.
+        betas=["server-side-fallback-2026-07-01"],
+        fallbacks="default",
         system=_SYSTEM,
-        output_config={"format": {"type": "json_schema", "schema": _SCHEMA}},
         messages=[{"role": "user", "content": user}],
     )
+    if resp.stop_reason == "refusal":
+        raise RuntimeError(f"model declined the health check: {resp.stop_details}")
     text = next((b.text for b in resp.content if b.type == "text"), "{}")
     return json.loads(text)
 
