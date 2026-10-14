@@ -30,7 +30,7 @@ rather than firing on a single rule:
 4. Recent GitHub Actions run conclusions
 5. Open `pulse-health` GitHub issues (so it doesn't re-raise known problems)
 
-Claude (`claude-opus-4-8`) decides what's a real, novel, actionable problem, then:
+Claude (`claude-opus-5-5`, effort high) decides what's a real, novel, actionable problem, then:
 
 - **Opens a GitHub issue** labelled `pulse-health` with a diagnosis + a
   ready-to-paste Claude Code fix prompt — the handoff for human/Claude rework.
