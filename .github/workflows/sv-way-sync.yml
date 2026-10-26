@@ -1,126 +1,85 @@
 name: SV Way sync
 
-# Two jobs, two different safety levels, both weekly and free (no LLM/API
-# cost — plain GitHub Actions + a public HTTP GET).
+# One weekly job, identical in every Stadium Ventures repo (BE 2026-10-26, "fix sv
+# automation durably"). Plain GitHub Actions plus public HTTP GETs; no LLM, no API cost.
 #
-# 1. sync-doctrine-block: the "🧭 The SV Way — North Star doctrine" block every
-#    CLAUDE.md carries is required (by THE-SV-WAY.md's own words) to be
-#    verbatim, byte-identical everywhere. That's a zero-judgment text-match
-#    requirement, so this job fetches the canonical block from the public
-#    doctrine mirror and auto-commits a fix if this repo's copy drifted.
-#    Silent when already in sync; commits directly (no PR needed — there is
-#    nothing to review, the target text is externally fixed) when not.
+# 1. Pull the shared tools. scripts/compliance/sync-sv-way-block.cjs and
+#    sv-way-config-staleness.cjs live in ONE place, Stadium-Ventures/sv-registry, and
+#    the hub serves them at https://sv-internal-hub.vercel.app/tools/<file>. Every
+#    other repo refreshes its copy here on each run, so the copies cannot fall behind
+#    canon again (they had: old copies counted bot commits as drift). If the hub is
+#    unreachable the repo keeps the copy it has.
+# 2. Sync the doctrine block in CLAUDE.md (verbatim, zero judgment).
+# 3. Record the sv-way.config.json staleness verdict in sv-way.staleness.json. Only
+#    structural change counts (files added, deleted or renamed in a tree the config
+#    makes a role claim about). The SV Internal Hub's Monday hygiene digest reads
+#    that file from every repo and lists a stale config there. A stale config is
+#    housekeeping, not a break, so it is never posted to #sv-automation.
+# 4. Commit whatever changed, as a bot commit (never counted as drift).
 #
-# 2. check-config-staleness: sv-way.config.json's role/roles_why/open_questions
-#    are a hand-authored judgment call, not a verbatim string — a script
-#    can't safely rewrite it (that risks inventing facts). This job only
-#    DETECTS that it's probably stale and posts to #sv-automation so a human
-#    or a Claude session knows to redo the reading pass. Never rewrites.
+# #sv-automation hears from this job only if the job itself fails.
 
 on:
   schedule:
     - cron: "0 13 * * 1" # Monday 13:00 UTC
   workflow_dispatch:
-    inputs:
-      test:
-        description: "Send a clearly-labeled test post instead of running the real checks"
-        type: boolean
-        default: false
 
 permissions:
   contents: write
 
 jobs:
-  sync-doctrine-block:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Sync the SV Way doctrine block
-        id: sync
-        run: |
-          if [ ! -f scripts/compliance/sync-sv-way-block.cjs ]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "sync-sv-way-block.cjs not present in this repo yet — nothing to run."
-            exit 0
-          fi
-          node scripts/compliance/sync-sv-way-block.cjs
-          if git diff --quiet -- CLAUDE.md; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Commit if changed
-        if: steps.sync.outputs.changed == 'true'
-        run: |
-          git config user.name "sv-way-sync[bot]"
-          git config user.email "actions@github.com"
-          git add CLAUDE.md
-          git commit -m "Sync SV Way doctrine block to canon (automated, verbatim text only)"
-          git push
-
-  check-config-staleness:
-    runs-on: ubuntu-latest
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # full history — the check diffs commits since the config's own date stamp
+          fetch-depth: 0 # full history: the staleness check diffs commits since the config's last human review
 
-      - name: Run staleness check
-        id: check
+      - name: Pull the shared tools from canon
+        if: github.repository != 'Stadium-Ventures/sv-registry'
         run: |
-          if [ ! -f scripts/compliance/sv-way-config-staleness.cjs ]; then
-            echo "stale=false" >> "$GITHUB_OUTPUT"
-            echo "sv-way-config-staleness.cjs not present in this repo yet — nothing to run."
-            exit 0
-          fi
-          set +e
-          OUTPUT=$(node scripts/compliance/sv-way-config-staleness.cjs)
-          CODE=$?
-          set -e
-          echo "$OUTPUT"
-          echo "output<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$OUTPUT" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-          if [ "$CODE" -ne 0 ]; then echo "stale=true" >> "$GITHUB_OUTPUT"; else echo "stale=false" >> "$GITHUB_OUTPUT"; fi
+          mkdir -p scripts/compliance
+          for f in sync-sv-way-block.cjs sv-way-config-staleness.cjs; do
+            if curl -fsS --max-time 20 "https://sv-internal-hub.vercel.app/tools/$f" -o "$RUNNER_TEMP/$f" \
+               && [ -s "$RUNNER_TEMP/$f" ] && node --check "$RUNNER_TEMP/$f"; then
+              cp "$RUNNER_TEMP/$f" "scripts/compliance/$f"
+            else
+              echo "::warning::could not fetch $f from the hub; keeping this repo's copy"
+            fi
+          done
 
-      # D130 follow-up (2026-09-08): sv-way-config-staleness fires once PER SIBLING
-      # REPO about the same class of finding — BE ruled "one digest per detector
-      # per day, findings grouped." This repo keeps its own house notify module
-      # (scripts/_automation_notify.py) as the ONE door for #sv-automation posts
-      # per its own CLAUDE.md rule, so — unlike sv-registry/sv-travel-hub, which
-      # have no notify module of their own — the fix here is a CLAIM step only:
-      # gate against the same durable ledger sv-registry's poster uses (so any
-      # repo firing this detector on the same day contends for the same row),
-      # then send through this repo's own module exactly as before.
-      - name: Claim the shared #sv-automation digest slot
-        id: claim
-        if: steps.check.outputs.stale == 'true' || github.event.inputs.test == 'true'
+      - name: Sync the doctrine block
+        run: |
+          if [ -f scripts/compliance/sync-sv-way-block.cjs ] && [ -f CLAUDE.md ]; then
+            node scripts/compliance/sync-sv-way-block.cjs
+          fi
+
+      - name: Record sv-way.config.json staleness
+        run: |
+          if [ -f scripts/compliance/sv-way-config-staleness.cjs ]; then
+            node scripts/compliance/sv-way-config-staleness.cjs --write
+          fi
+
+      - name: Commit if anything changed
+        run: |
+          for p in CLAUDE.md scripts/compliance/sync-sv-way-block.cjs scripts/compliance/sv-way-config-staleness.cjs sv-way.staleness.json; do
+            [ -e "$p" ] && git add -- "$p"
+          done
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git config user.name "sv-way-sync[bot]"
+          git config user.email "actions@github.com"
+          git commit -m "[bot] SV Way sync: doctrine block, shared tools, config staleness [skip ci] [vercel skip]"
+          git push
+
+      - name: Tell #sv-automation the sync itself failed
+        if: failure()
         env:
-          GITHUB_TOKEN: ${{ secrets.SV_REGISTRY_PAT }}
+          WEBHOOK: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          NAME=$(echo "${{ github.repository }}" | cut -d/ -f2)
-          RESULT=$(python3 scripts/sv_automation_claim.py sv-way-config-staleness --finding "${NAME}: sv-way.config.json may be stale")
-          echo "$RESULT"
-          POST=$(echo "$RESULT" | python3 -c "import json,sys; print('true' if json.load(sys.stdin)['post'] else 'false')")
-          echo "post=$POST" >> "$GITHUB_OUTPUT"
-
-      - name: Post to #sv-automation
-        if: (steps.check.outputs.stale == 'true' || github.event.inputs.test == 'true') && steps.claim.outputs.post == 'true'
-        env:
-          SV_AUTOMATION_WEBHOOK_URL: ${{ secrets.SV_AUTOMATION_WEBHOOK_URL }}
-          BODY: ${{ steps.check.outputs.output }}
-          IS_TEST: ${{ github.event.inputs.test }}
-        run: |
-          if [ -z "$SV_AUTOMATION_WEBHOOK_URL" ]; then
-            echo "No SV_AUTOMATION_WEBHOOK_URL secret set — cannot post, but the check result is above in the log."
-            exit 0
-          fi
-          if [ "$IS_TEST" = "true" ]; then
-            TEXT="TEST post: sv-way.config.json staleness check\n\nWhat broke: nothing — this is a manual test post.\nHow we know: workflow_dispatch was run with test=true.\nWhat to do: nothing; this confirms the webhook wiring works."
-          else
-            TEXT="sv-way.config.json may be stale\n\nWhat broke: this repo's sv-way.config.json declares roles/facts that may no longer match the repo's current state.\nHow we know:\n${BODY}\nWhat to do: have a Claude Code session (or the repo owner) re-read the repo and refresh sv-way.config.json — same method as the original hand-authoring pass. This check only detects drift; it never rewrites the file. (The doctrine pointer block in CLAUDE.md is a separate, fully-automated sync — see the sync-doctrine-block job in this same workflow.)"
-          fi
-          export TEXT="$(printf '%b' "$TEXT")"
-          python3 -c "import sys, os; sys.path.insert(0, 'scripts'); from _automation_notify import post_automation; post_automation(os.environ['TEXT'])"
+          [ -z "$WEBHOOK" ] && { echo "::error::SV_AUTOMATION_WEBHOOK_URL is not set"; exit 1; }
+          NAME="${REPO#*/}"
+          TEXT=$(printf '🛠️ *%s (%s) — the weekly SV Way sync failed*\n*What broke:* the job that syncs the doctrine block and records sv-way.config.json staleness did not finish.\n*How we know:* the SV Way sync workflow failed on its Monday run.\n*What to do:* open the run log and fix the failing step: %s' "$NAME" "$NAME" "$RUN_URL")
+          jq -n --arg t "$TEXT" '{text:$t}' | curl -fsS -X POST -H 'Content-Type: application/json' -d @- "$WEBHOOK"
