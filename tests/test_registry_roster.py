@@ -203,6 +203,22 @@ def test_peaks_absent_so_dashboard_chips_stay_hidden(fake_registry):
     assert entry["tags"]["mlb_id"] == 900002
 
 
+def test_projection_peaks_reach_the_cards():
+    # Since 2026-11-17 the registry projection carries Scout the Statline
+    # peaks for Pro and college clients (registry PR 2351); Tom allowed them
+    # in this public app. College rows have no MLB id, so these tags are the
+    # only way their peak chips render.
+    pro = rm.registry_row_to_sheet_row(prow("p", "Synthetic Peak Pro", tier="pro", mlb_id=900010,
+                                            level="AA", peak_war=2.2, peak_wrc_plus=113.0))
+    college = rm.registry_row_to_sheet_row(prow("c", "Synthetic Peak College",
+                                                peak_war=-0.5, peak_wrc_plus=73))
+    arm = rm.registry_row_to_sheet_row(prow("a", "Synthetic Peak Arm", tier="pro", mlb_id=900011,
+                                            position="RHP", peak_war=0.0, peak_era_20tbf=3.85))
+    assert (pro["Peak WAR"], pro["Peak wRC+"], pro["Peak ERA (20 TBF)"]) == ("2.2", "113", "")
+    assert (college["Peak WAR"], college["Peak wRC+"]) == ("-0.5", "73")
+    assert (arm["Peak WAR"], arm["Peak ERA (20 TBF)"]) == ("0", "3.85")
+
+
 @pytest.mark.parametrize("label,role", [
     ("RHP", "Pitcher"), ("LHP", "Pitcher"), ("SP", "Pitcher"), ("RP", "Pitcher"), ("P", "Pitcher"),
     ("Pitcher", "Pitcher"), ("SS", "Hitter"), ("OF", "Hitter"), ("C", "Hitter"), ("Hitter", "Hitter"),
