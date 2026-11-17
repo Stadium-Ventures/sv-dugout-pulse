@@ -215,11 +215,15 @@ function renderGameLog(e7) {
   return `<div class="card"><h2>Game log (last 7 days)</h2>${rows}</div>`;
 }
 
-// Peak projection (Scout the Statline). Pro players with pro stats only;
-// renders nothing for everyone else. Values come from the hub detail (`peak`)
+// Peak projection (Scout the Statline). Pro players with pro stats, and
+// since 2026-11-17 college hitters (roster_sync fills NCAA rows); renders
+// nothing for everyone else. College rows carry the caveat Tom asked for:
+// StS has no college defense yet, so college peak WAR assumes a slightly
+// below average corner outfielder. Values come from the hub detail (`peak`)
 // once it arrives, else from the roster sheet copy in tags (js/gate.js
 // svPeakValues has the rule).
-function renderPeak(tags, ref) {
+const COLLEGE_PEAK_NOTE = 'College peak WAR assumes a slightly below average corner outfielder, since Scout the Statline has no college defense yet.';
+function renderPeak(tags, ref, level) {
   const hubPeak = ref && 'peak' in ref ? ref.peak : undefined;
   const v = typeof window.svPeakValues === 'function'
     ? window.svPeakValues(tags, hubPeak)
@@ -230,7 +234,7 @@ function renderPeak(tags, ref) {
   if (v.era20) cells.push(cell('Peak ERA / 20 TBF', v.era20));
   if (!cells.length) return '';
   return `<div class="card"><h2>Peak projection <span style="text-transform:none;letter-spacing:0;font-weight:400;">— Scout the Statline</span></h2>
-    <div class="stat-grid">${cells.join('')}</div></div>`;
+    <div class="stat-grid">${cells.join('')}</div>${level === 'NCAA' ? `<div class="stat-label" style="margin-top:0.5rem;text-transform:none;letter-spacing:0;">${COLLEGE_PEAK_NOTE}</div>` : ''}</div>`;
 }
 
 // --- Scouting reference, served on request by the SV Scouting Hub behind the
@@ -361,7 +365,7 @@ async function load() {
   const paint = (ref) => {
     document.getElementById('content').innerHTML = [
       renderToday(todayEntries),
-      renderPeak(tags, ref),
+      renderPeak(tags, ref, anchor.level),
       anchor.level === 'Pro' ? renderRanks(ref) : '',
       renderBaReports(ref),
       renderTruMedia(ref),
