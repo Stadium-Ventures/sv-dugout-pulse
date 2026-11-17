@@ -272,8 +272,10 @@ def registry_row_to_sheet_row(row: dict) -> dict:
     unchanged. ONLY the fields this app uses are copied: lead agent, Slack
     channel, agency, visits, home state, high school, bats/throws, social
     handles and nicknames never enter a player dict (and so can never reach
-    the public cache or dashboard). Peaks are absent from the projection
-    (no canon source) and stay blank, which hides their chips/cards."""
+    the public cache or dashboard). Scout the Statline peaks ride along since
+    2026-11-17 (registry PR 2351 adds them to the projection for Pro and
+    college clients; Tom allowed them in this public app: "no one is going to
+    look at it"). A row without them stays blank, which hides the chips."""
     tier = str(row.get("tier") or "").strip().lower()
     if tier == "pro":
         level = "Pro"
@@ -296,7 +298,20 @@ def registry_row_to_sheet_row(row: dict) -> dict:
         "Tier": "" if row.get("priority_tier") in (None, "") else str(row.get("priority_tier")),
         "Status": status,
         "Is Coach": "Yes" if (row.get("is_coach") or tier == "coach") else "",
+        "Peak WAR": _peak_str(row.get("peak_war")),
+        "Peak wRC+": _peak_str(row.get("peak_wrc_plus")),
+        "Peak ERA (20 TBF)": _peak_str(row.get("peak_era_20tbf")),
     }
+
+
+def _peak_str(v) -> str:
+    """A projection peak as the sheet showed it: "" when absent, else the
+    number as text ("2.2", "-0.5", "113"). 0 is a real value, not blank."""
+    if v is None or v == "":
+        return ""
+    if isinstance(v, float) and v.is_integer():
+        return str(int(v))
+    return str(v)
 
 
 def get_registry_clients(session=None) -> list[dict]:
