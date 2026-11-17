@@ -556,7 +556,10 @@ function peakChipHtml(p) {
   if (v.wrc_plus) parts.push(`${esc(v.wrc_plus)} wRC+`);
   if (v.era20) parts.push(`${esc(v.era20)} ERA/20`);
   if (!parts.length) return '';
-  return `<span class="tag" title="Peak projection — Scout the Statline">Peak: ${parts.join(' · ')}</span>`;
+  const title = p.level === 'NCAA'
+    ? 'Peak projection, Scout the Statline. College peak WAR assumes a slightly below average corner outfielder, since Scout the Statline has no college defense yet. wRC+ is not affected.'
+    : 'Peak projection — Scout the Statline';
+  return `<span class="tag" title="${title}">Peak: ${parts.join(' · ')}</span>`;
 }
 
 // Scouting reference chips (prospect ranks + Baseball America grade) for Pro
