@@ -222,7 +222,7 @@ function renderGameLog(e7) {
 // below average corner outfielder. Values come from the hub detail (`peak`)
 // once it arrives, else from the roster sheet copy in tags (js/gate.js
 // svPeakValues has the rule).
-const COLLEGE_PEAK_NOTE = 'College peak WAR assumes a slightly below average corner outfielder, since Scout the Statline has no college defense yet.';
+const COLLEGE_PEAK_NOTE = 'College peak WAR assumes a slightly below average corner outfielder, since Scout the Statline has no college defense yet. wRC+ is not affected.';
 function renderPeak(tags, ref, level) {
   const hubPeak = ref && 'peak' in ref ? ref.peak : undefined;
   const v = typeof window.svPeakValues === 'function'

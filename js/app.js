@@ -557,7 +557,7 @@ function peakChipHtml(p) {
   if (v.era20) parts.push(`${esc(v.era20)} ERA/20`);
   if (!parts.length) return '';
   const title = p.level === 'NCAA'
-    ? 'Peak projection, Scout the Statline. College peak WAR assumes a slightly below average corner outfielder, since Scout the Statline has no college defense yet.'
+    ? 'Peak projection, Scout the Statline. College peak WAR assumes a slightly below average corner outfielder, since Scout the Statline has no college defense yet. wRC+ is not affected.'
     : 'Peak projection — Scout the Statline';
   return `<span class="tag" title="${title}">Peak: ${parts.join(' · ')}</span>`;
 }
